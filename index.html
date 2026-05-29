@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Careless Journey — Manuale del Mondo</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080a0f;--bg2:#0d1018;--bg3:#111520;--gold:#c8a84b;--gold2:#e8c870;--gold3:#a07830;--ice:#7ec8e3;--fire:#e05a20;--lightning:#f0d020;--earth:#8b6840;--radiant:#d4a8ff;--dark:#8860d0;--neutral:#a8a8b8;--text:#d0c8b8;--text2:#908878;--border:rgba(200,168,75,0.2);--master:#c84848;--master2:#ff6060;--master-bg:#180808}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:"Crimson Pro",Georgia,serif;font-size:17px;line-height:1.7;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--gold3);border-radius:3px}
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(1px 1px at 10% 20%,rgba(200,168,75,.4) 0%,transparent 100%),radial-gradient(1px 1px at 30% 60%,rgba(255,255,255,.25) 0%,transparent 100%),radial-gradient(1px 1px at 70% 40%,rgba(255,255,255,.2) 0%,transparent 100%),radial-gradient(1px 1px at 90% 80%,rgba(200,168,75,.35) 0%,transparent 100%),radial-gradient(1px 1px at 55% 55%,rgba(200,168,75,.25) 0%,transparent 100%)}
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(8,10,15,.94);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);padding:0 1rem}
+.nav-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;height:56px}
+.nav-logo{font-family:"Cinzel Decorative",serif;font-size:.8rem;color:var(--gold);text-decoration:none;letter-spacing:.05em;margin-right:auto;white-space:nowrap}
+.nav-links{display:flex;list-style:none;overflow-x:auto}
+.nav-links li a{display:block;padding:0 .65rem;font-family:"Cinzel",serif;font-size:.56rem;letter-spacing:.1em;color:var(--text2);text-decoration:none;text-transform:uppercase;line-height:56px;transition:color .2s;white-space:nowrap}
+.nav-links li a:hover,.nav-links li a.active{color:var(--gold)}
+.master-btn{font-family:"Cinzel",serif;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;padding:.3rem .7rem;background:rgba(200,56,56,.1);border:1px solid rgba(200,56,56,.35);color:#e88;cursor:pointer;transition:all .2s;white-space:nowrap;margin-left:.5rem}
+.master-btn:hover{background:rgba(200,56,56,.2);color:var(--master2)}
+.master-btn.unlocked{border-color:rgba(200,56,56,.6);color:var(--master2)}
+#hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(200,168,75,.08) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 20% 80%,rgba(96,64,160,.12) 0%,transparent 60%),var(--bg)}
+.hero-orn{position:absolute;width:600px;height:600px;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(200,168,75,.08);pointer-events:none}
+.hero-content{position:relative;z-index:2;padding:2rem}
+.hero-eyebrow{font-family:"Cinzel",serif;font-size:.7rem;letter-spacing:.4em;color:var(--gold3);text-transform:uppercase;margin-bottom:1.5rem;opacity:0;animation:fadeUp 1s .3s forwards}
+.hero-title{font-family:"Cinzel Decorative",serif;font-size:clamp(2.5rem,8vw,6rem);font-weight:900;line-height:1.05;color:#fff;text-shadow:0 0 60px rgba(200,168,75,.3);margin-bottom:1rem;opacity:0;animation:fadeUp 1s .5s forwards}
+.hero-title span{color:var(--gold)}
+.hero-sub{font-style:italic;font-size:1.3rem;color:var(--text2);margin-bottom:2.5rem;opacity:0;animation:fadeUp 1s .7s forwards}
+.hero-div{width:120px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 2.5rem;opacity:0;animation:fadeUp 1s .9s forwards}
+.hero-tag{font-size:1.05rem;color:var(--text2);max-width:500px;margin:0 auto;opacity:0;animation:fadeUp 1s 1.1s forwards}
+.hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);font-family:"Cinzel",serif;font-size:.6rem;letter-spacing:.3em;color:var(--gold3);text-transform:uppercase;opacity:0;animation:fadeUp 1s 1.5s forwards;display:flex;flex-direction:column;align-items:center;gap:.5rem}
+.hero-scroll::after{content:"";width:1px;height:40px;background:linear-gradient(to bottom,var(--gold3),transparent);animation:pulse 2s infinite}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+section{position:relative;z-index:1;padding:5rem 2rem}
+.si{max-width:1200px;margin:0 auto}
+.sh{text-align:center;margin-bottom:3.5rem}
+.sl{font-family:"Cinzel",serif;font-size:.65rem;letter-spacing:.4em;color:var(--gold3);text-transform:uppercase;margin-bottom:.75rem}
+.st{font-family:"Cinzel Decorative",serif;font-size:clamp(1.6rem,4vw,2.8rem);color:var(--gold);font-weight:700;line-height:1.1;margin-bottom:1rem}
+.sline{width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 1.5rem}
+.sdesc{font-size:1.05rem;color:var(--text2);max-width:600px;margin:0 auto;font-style:italic}
+section:nth-child(even){background:var(--bg2)}
+.g2{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem}
+.g3{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem}
+.g4{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
+.card{background:var(--bg3);border:1px solid var(--border);padding:1.5rem;position:relative;transition:border-color .3s,box-shadow .3s}
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity .3s}
+.card:hover{box-shadow:0 8px 40px rgba(0,0,0,.5)}
+.card:hover::before{opacity:1}
+.card[data-a="glaciale"]::before{background:linear-gradient(90deg,transparent,var(--ice),transparent)}
+.card[data-a="glaciale"]:hover{border-color:rgba(126,200,227,.4)}
+.card[data-a="ardente"]::before{background:linear-gradient(90deg,transparent,var(--fire),transparent)}
+.card[data-a="ardente"]:hover{border-color:rgba(224,90,32,.4)}
+.card[data-a="folgorante"]::before{background:linear-gradient(90deg,transparent,var(--lightning),transparent)}
+.card[data-a="folgorante"]:hover{border-color:rgba(240,208,32,.4)}
+.card[data-a="terrestre"]::before{background:linear-gradient(90deg,transparent,var(--earth),transparent)}
+.card[data-a="terrestre"]:hover{border-color:rgba(139,104,64,.4)}
+.card[data-a="radiante"]::before{background:linear-gradient(90deg,transparent,var(--radiant),transparent)}
+.card[data-a="radiante"]:hover{border-color:rgba(212,168,255,.4)}
+.card[data-a="oscuro"]::before{background:linear-gradient(90deg,transparent,var(--dark),transparent)}
+.card[data-a="oscuro"]:hover{border-color:rgba(136,96,208,.4)}
+.card[data-a="neutro"]::before{background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.card[data-a="neutro"]:hover{border-color:rgba(200,168,75,.4)}
+.ct{font-family:"Cinzel",serif;font-size:1rem;font-weight:700;color:var(--gold2);margin-bottom:.25rem}
+.cs{font-size:.8rem;color:var(--text2);margin-bottom:.75rem}
+.cb{font-size:.93rem;color:var(--text);line-height:1.65}
+.tag{display:inline-block;padding:.15rem .55rem;font-family:"Cinzel",serif;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;border-radius:1px;border:1px solid;margin:.1rem}
+.tg{color:var(--ice);border-color:rgba(126,200,227,.3)}.ta{color:var(--fire);border-color:rgba(224,90,32,.3)}.tf{color:var(--lightning);border-color:rgba(240,208,32,.3)}.tt{color:var(--earth);border-color:rgba(139,104,64,.3)}.tr{color:var(--radiant);border-color:rgba(212,168,255,.3)}.to{color:var(--dark);border-color:rgba(136,96,208,.3)}.tn{color:var(--neutral);border-color:rgba(168,168,184,.3)}.tgo{color:var(--gold2);border-color:rgba(200,168,75,.3)}
+.tcj-t{width:100%;border-collapse:collapse;margin-bottom:1.5rem;font-size:.9rem}
+.tcj-t th{font-family:"Cinzel",serif;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold3);text-align:left;padding:.6rem 1rem;border-bottom:1px solid var(--border);background:rgba(200,168,75,.04)}
+.tcj-t td{padding:.6rem 1rem;color:var(--text);border-bottom:1px solid rgba(200,168,75,.05);vertical-align:top}
+.tcj-t tr:hover td{background:rgba(200,168,75,.02)}
+.timeline{position:relative;padding-left:2.5rem;max-width:900px;margin:0 auto}
+.timeline::before{content:"";position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,var(--gold3),var(--gold3),transparent)}
+.tle{margin-bottom:2.5rem}
+.tlet{font-family:"Cinzel Decorative",serif;font-size:.95rem;color:var(--gold);margin-bottom:1.25rem;display:flex;align-items:center;gap:.75rem;margin-left:-2.5rem;padding-left:2.5rem;position:relative}
+.tlet::before{content:"";position:absolute;left:-4px;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold)}
+.tlev{position:relative;margin-bottom:1.25rem;padding:1rem 1.25rem;background:var(--bg3);border:1px solid var(--border);border-left:2px solid var(--gold3)}
+.tlev::before{content:"";position:absolute;left:-1.6rem;top:1.3rem;width:5px;height:5px;border-radius:50%;background:var(--gold3)}
+.tld{font-family:"Cinzel",serif;font-size:.65rem;letter-spacing:.15em;color:var(--gold3);text-transform:uppercase;margin-bottom:.35rem}
+.tlt{font-size:.93rem;color:var(--text);line-height:1.6}
+.bfilt{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-bottom:2rem}
+.fb{font-family:"Cinzel",serif;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;padding:.3rem .8rem;background:transparent;border:1px solid var(--border);color:var(--text2);cursor:pointer;transition:all .2s}
+.fb:hover,.fb.active{background:rgba(200,168,75,.1);border-color:var(--gold3);color:var(--gold2)}
+.bcard{background:var(--bg3);border:1px solid var(--border);padding:1rem;transition:all .2s}
+.bcard:hover{border-color:var(--gold3);transform:translateY(-2px)}
+.bcard.hidden{display:none}
+.bn{font-family:"Cinzel",serif;font-size:.8rem;font-weight:600;color:var(--gold2);margin-bottom:.45rem}
+.mtabs{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:2rem;border-bottom:1px solid var(--border);padding-bottom:1.25rem}
+.mtab{font-family:"Cinzel",serif;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem .9rem;background:transparent;border:1px solid transparent;color:var(--text2);cursor:pointer;transition:all .2s}
+.mtab:hover{color:var(--gold2)}
+.mtab.active{border-color:var(--gold3);color:var(--gold2);background:rgba(200,168,75,.06)}
+.mpanel{display:none}.mpanel.active{display:block}
+.cct{font-family:"Cinzel Decorative",serif;font-size:.9rem;color:var(--gold);margin:2rem 0 .75rem;display:flex;align-items:center;gap:.75rem}
+.cct::after{content:"";flex:1;height:1px;background:var(--border)}
+.ccrd{background:var(--bg3);border:1px solid var(--border);padding:.85rem 1rem}
+.cn{font-family:"Cinzel",serif;font-size:.8rem;font-weight:600;color:var(--gold2);margin-bottom:.45rem}
+.cr{display:flex;gap:.5rem;margin-bottom:.25rem;font-size:.82rem}
+.clbl{font-family:"Cinzel",serif;font-size:.55rem;letter-spacing:.1em;color:var(--gold3);text-transform:uppercase;min-width:26px;padding-top:.1rem}
+.trc{background:var(--bg3);border:1px solid var(--border);padding:1.1rem;position:relative;overflow:hidden}
+.trn{position:absolute;top:.6rem;right:.9rem;font-family:"Cinzel Decorative",serif;font-size:1.6rem;color:rgba(200,168,75,.06);line-height:1}
+.trnm{font-family:"Cinzel",serif;font-size:.88rem;font-weight:600;color:var(--gold2);margin-bottom:.2rem}
+.trtm{font-size:.86rem;color:var(--text);font-style:italic}
+.bly{display:inline-block;padding:.1rem .4rem;background:rgba(212,168,255,.08);border:1px solid rgba(212,168,255,.2);color:var(--radiant);font-family:"Cinzel",serif;font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.45rem}
+.bko{display:inline-block;padding:.1rem .4rem;background:rgba(96,64,160,.08);border:1px solid rgba(96,64,160,.3);color:var(--dark);font-family:"Cinzel",serif;font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.45rem}
+.tbanner{background:linear-gradient(135deg,rgba(212,168,255,.04),rgba(96,64,160,.04));border:1px solid rgba(200,168,75,.1);padding:.85rem 1.5rem;margin:1.25rem 0;text-align:center;font-style:italic;color:var(--text2);font-size:.88rem}
+.nrole{font-family:"Cinzel",serif;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold3);margin-bottom:.45rem}
+.ndiv{display:flex;align-items:center;gap:.75rem;font-family:"Cinzel Decorative",serif;font-size:.95rem;color:var(--gold);margin:2.5rem 0 1.5rem}
+.ndiv::before,.ndiv::after{content:"";flex:1;height:1px;background:var(--border)}
+.dentry{background:var(--bg3);border:1px solid var(--border);border-left:2px solid var(--gold3);padding:1.5rem;margin-bottom:1.5rem}
+.ddate{font-family:"Cinzel",serif;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem}
+.dbody{font-size:.92rem;color:var(--text);line-height:1.7}
+.dbody p{margin-bottom:.6rem}.dbody p:last-child{margin-bottom:0}
+.dbody ul{margin:.4rem 0 .6rem 1.2rem}.dbody ul li{margin-bottom:.25rem}
+.dbody strong{color:var(--gold2)}
+.ntabs{display:flex;gap:.5rem;margin-bottom:1.5rem}
+.ntab{font-family:"Cinzel",serif;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:.45rem 1.1rem;background:transparent;border:1px solid var(--border);color:var(--text2);cursor:pointer;transition:all .2s}
+.ntab:hover{color:var(--gold2)}
+.ntab.active{border-color:var(--gold3);color:var(--gold2);background:rgba(200,168,75,.06)}
+.npanel{display:none}.npanel.active{display:block}
+.nhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.nnm{font-family:"Cinzel Decorative",serif;font-size:1.1rem;color:var(--gold2)}
+.nsave{font-family:"Cinzel",serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;padding:.35rem .9rem;background:transparent;border:1px solid var(--gold3);color:var(--gold3);cursor:pointer;transition:all .2s}
+.nsave:hover{background:rgba(200,168,75,.1);color:var(--gold2)}
+.nsave.saved{border-color:var(--ice);color:var(--ice)}
+textarea.na{width:100%;min-height:260px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:"Crimson Pro",serif;font-size:1rem;line-height:1.7;padding:1.25rem;resize:vertical;outline:none;transition:border-color .2s}
+textarea.na:focus{border-color:var(--gold3)}
+textarea.na::placeholder{color:var(--text2)}
+.nhint{font-size:.78rem;color:var(--text2);margin-top:.5rem;font-style:italic}
+.pwo{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center}
+.pwo.open{display:flex}
+.pwbox{background:var(--bg2);border:1px solid rgba(200,56,56,.3);padding:2.5rem;max-width:400px;width:90%;text-align:center}
+.pwtit{font-family:"Cinzel Decorative",serif;font-size:1.2rem;color:var(--master2);margin-bottom:.5rem}
+.pwsub{font-size:.88rem;color:var(--text2);margin-bottom:1.75rem;font-style:italic}
+.pwinp{width:100%;padding:.7rem 1rem;background:var(--bg3);border:1px solid rgba(200,56,56,.3);color:var(--text);font-family:"Crimson Pro",serif;font-size:1rem;outline:none;text-align:center;letter-spacing:.1em;margin-bottom:1rem;transition:border-color .2s}
+.pwinp:focus{border-color:var(--master)}
+.pwbtn{font-family:"Cinzel",serif;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;padding:.55rem 2rem;background:rgba(200,56,56,.1);border:1px solid var(--master);color:var(--master2);cursor:pointer;transition:all .2s;width:100%}
+.pwbtn:hover{background:rgba(200,56,56,.2)}
+.pwerr{color:var(--fire);font-size:.82rem;margin-top:.75rem;display:none}
+.pwcanc{font-size:.75rem;color:var(--text2);margin-top:1rem;cursor:pointer;text-decoration:underline}
+#ms{display:none;background:var(--master-bg);border-top:2px solid rgba(200,56,56,.4);position:relative;z-index:1}
+#ms section{background:transparent}
+#ms section:nth-child(even){background:rgba(255,255,255,.02)}
+.mshdr{text-align:center;padding:4rem 2rem 2rem;border-bottom:1px solid rgba(200,56,56,.15)}
+.mstit{font-family:"Cinzel Decorative",serif;font-size:clamp(1.4rem,3vw,2.2rem);color:var(--master2);margin-bottom:.5rem}
+.mssub{font-size:.9rem;color:#a08080;font-style:italic}
+.msnav{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;padding:1.5rem 2rem;border-bottom:1px solid rgba(200,56,56,.1);background:rgba(255,255,255,.02)}
+.msnav a{font-family:"Cinzel",serif;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:#a08080;text-decoration:none;padding:.3rem .65rem;border:1px solid rgba(200,56,56,.2);transition:all .2s}
+.msnav a:hover{border-color:var(--master);color:var(--master2)}
+.msec{padding:3rem 2rem;max-width:1100px;margin:0 auto}
+.msect{font-family:"Cinzel Decorative",serif;font-size:1.4rem;color:var(--master2);margin-bottom:.5rem}
+.msecl{width:60px;height:1px;background:var(--master);margin-bottom:2rem}
+.msecsub{font-family:"Cinzel",serif;font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:#a06060;margin-bottom:.3rem}
+.sc{background:rgba(200,56,56,.05);border:1px solid rgba(200,56,56,.15);padding:1.25rem;margin-bottom:1rem}
+.scl{font-family:"Cinzel",serif;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:#c08080;margin-bottom:.4rem}
+.sct{font-size:.91rem;color:var(--text);line-height:1.65}
+.mq{border-left:2px solid var(--master);padding:.65rem 1.25rem;margin:1.25rem 0;font-style:italic;color:#b09090;font-size:.91rem;background:rgba(200,56,56,.04)}
+.mmc{background:rgba(200,56,56,.04);border:1px solid rgba(200,56,56,.12);padding:1.4rem;margin-bottom:1.2rem}
+.mmn{font-family:"Cinzel",serif;font-size:1rem;font-weight:700;color:var(--master2);margin-bottom:.2rem}
+.mms{font-family:"Cinzel",serif;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:#a06060;margin:.9rem 0 .35rem;display:flex;align-items:center;gap:.5rem}
+.mms::after{content:"";flex:1;height:1px;background:rgba(200,56,56,.15)}
+.mr{display:flex;gap:.7rem;margin-bottom:.4rem;font-size:.86rem}
+.mk{font-family:"Cinzel",serif;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:#a06060;min-width:115px;flex-shrink:0;padding-top:.15rem}
+.mv{color:var(--text);line-height:1.55}
+.bmc{background:rgba(200,56,56,.04);border:1px solid rgba(200,56,56,.12);padding:1rem;margin-bottom:.65rem}
+p{margin-bottom:.7rem}p:last-child{margin-bottom:0}
+.gold{color:var(--gold2)}.sdiv{width:36px;height:1px;background:var(--gold3);margin:.7rem 0}
+strong{color:var(--gold2)}
+.qi{border-left:2px solid var(--gold3);padding:.6rem 1.2rem;margin:1.2rem 0;font-style:italic;color:var(--text2);font-size:.91rem;background:rgba(200,168,75,.03)}
+.ctb{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+@media(max-width:768px){section{padding:3rem 1rem}.g2,.g3{grid-template-columns:1fr}.timeline{padding-left:1.75rem}.tlet{margin-left:-1.75rem;padding-left:1.75rem}.ctb{grid-template-columns:1fr!important}}
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<div class="pwo" id="pwo">
+  <div class="pwbox">
+    <div class="pwtit">🔒 Accesso Master</div>
+    <div class="pwsub">Inserisci la password per accedere alla sezione riservata al Dungeon Master.</div>
+    <input type="password" class="pwinp" id="pwi" placeholder="••••••••••" onkeydown="if(event.key==='Enter')chkpw()">
+    <button class="pwbtn" onclick="chkpw()">Accedi</button>
+    <div class="pwerr" id="pwe">Password errata. Riprova.</div>
+    <div class="pwcanc" onclick="closepw()">Annulla</div>
+  </div>
+</div>
+<nav>
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">🜂 TCJ</a>
+    <ul class="nav-links">
+      <li><a href="#mondo">Mondo</a></li><li><a href="#timeline">Timeline</a></li>
+      <li><a href="#personaggi">Personaggi</a></li><li><a href="#mael">Mael</a></li>
+      <li><a href="#behemoth">Behemoth</a></li><li><a href="#manuale">Manuale</a></li>
+      <li><a href="#calendario">Calendario</a></li><li><a href="#corone">Corone</a></li>
+      <li><a href="#npc">NPC</a></li><li><a href="#diario">Diario</a></li>
+      <li><a href="#note">Note</a></li>
+    </ul>
+    <button class="master-btn" id="mbtn" onclick="openpw()">🔒 Master</button>
+  </div>
+</nav>
+<section id="hero">
+  <div class="hero-bg"></div><div class="hero-orn"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">🜂 Manuale del Mondo</div>
+    <h1 class="hero-title">The Careless<br><span>Journey</span></h1>
+    <div class="hero-sub">Un gioco di ruolo cooperativo</div>
+    <div class="hero-div"></div>
+    <p class="hero-tag">Isole Frantumate. Behemoth senza fine. Slayer che scelgono di affrontare l'ignoto — non per gloria, ma perché non esiste un'altra strada.</p>
+  </div>
+  <div class="hero-scroll">Scorri</div>
+</section>
+
+<section id="mondo">
+  <div class="si">
+    <div class="sh"><div class="sl">Lore</div><h2 class="st">Le Isole Frantumate</h2><div class="sline"></div><p class="sdesc">Sei isole fluttuanti, ognuna plasmata da un Aether dominante, ognuna con la propria storia di potere, conflitto e sopravvivenza.</p></div>
+    <div class="g2">
+      <div class="card" data-a="glaciale"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="width:36px;height:36px;border-radius:50%;background:rgba(126,200,227,.1);color:var(--ice);display:flex;align-items:center;justify-content:center;font-size:1.1rem">❄️</div><div><div class="ct">Isole Glaciali</div><div class="cs">Capitale: NetherWinter</div></div></div><div class="cb"><p>Dominate dalla monarchia assoluta della <strong>Famiglia Silver</strong>, guidata dal tiranno <strong>Ragnar Silver</strong>. Un tempo regno cosmopolita e aperto, si è trasformato in uno stato militarista. Il regime Silver esercita il dominio da circa cinque decadi, con un accordo con le Guardie di Ostia per lo scambio di tecnologie militari.</p><div class="qi">Ispirazione culturale: Medioevo occidentale europeo.</div></div><span class="tag tg">❄ Glaciale</span></div>
+      <div class="card" data-a="folgorante"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="width:36px;height:36px;border-radius:50%;background:rgba(240,208,32,.1);color:var(--lightning);display:flex;align-items:center;justify-content:center;font-size:1.1rem">⚡</div><div><div class="ct">Isole Folgoranti</div><div class="cs">Capitale: Ostia</div></div></div><div class="cb"><p>Una distopia steampunk industriale governata con pugno di ferro dagli <strong>Ostinguard</strong> di <strong>Godrik E. Tasher</strong>. I <strong>TecnoSlayer</strong> — robot che mimano le capacità degli Slayer — sono prodotti in massa. I ribelli <strong>Eroi di Ostia</strong> resistono nell'ombra.</p><div class="qi">Sopravvive la scuola dei Monaci dell'Aether, fondata dalla Maestra Sfregiata.</div></div><span class="tag tf">⚡ Folgorante</span></div>
+      <div class="card" data-a="terrestre"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="width:36px;height:36px;border-radius:50%;background:rgba(139,104,64,.1);color:var(--earth);display:flex;align-items:center;justify-content:center;font-size:1.1rem">🌍</div><div><div class="ct">Isole Terrestri</div><div class="cs">Capitale: Greenshard</div></div></div><div class="cb"><p>Due anime: i <strong>Far Slayer</strong>, aperti e pacifici, e i <strong>Thornguard</strong>, radicali custodi che non tollerano estranei. Una scissione nata dalla disputa tra i figli di Ermonium Baalz. I Thornguard subiscono la minaccia crescente dell'<strong>Agarus</strong>.</p></div><span class="tag tt">🌍 Terrestre</span></div>
+      <div class="card" data-a="ardente"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="width:36px;height:36px;border-radius:50%;background:rgba(224,90,32,.1);color:var(--fire);display:flex;align-items:center;justify-content:center;font-size:1.1rem">🔥</div><div><div class="ct">Isole Ardenti</div><div class="cs">Capitale: Nuova Amorgoth</div></div></div><div class="cb"><p>Due tribù Krolachi convivono dopo aver perso le proprie capitali: gli <strong>Amorlarien</strong> (guerrieri viscerali) e i <strong>Gothzian</strong> (calcolatori e schivi). <strong>Salaman Rebenek</strong> guida la comunità mentre tratta un'alleanza militare con le Isole Congelanti.</p></div><span class="tag ta">🔥 Ardente</span></div>
+      <div class="card" data-a="radiante"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="width:36px;height:36px;border-radius:50%;background:rgba(212,168,255,.1);color:var(--radiant);display:flex;align-items:center;justify-content:center;font-size:1.1rem">✨</div><div><div class="ct">Isole Radianti</div><div class="cs">Terra di Nessuno</div></div></div><div class="cb"><p>Una terra desolata: altopiani di rocce secche, dominati dai pirati nelle zone periferiche. Le leggende parlano dei <strong>Solcavuoto</strong> — una civiltà antica mai provata concretamente. I <strong>Paradossisti</strong> e i <strong>Primordialisti</strong> sopravvivono nell'interno. A <strong>Rupenigma</strong> si dice sia nascosto qualcosa di antico.</p></div><span class="tag tr">✨ Radiante</span></div>
+      <div class="card" data-a="oscuro"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="width:36px;height:36px;border-radius:50%;background:rgba(136,96,208,.1);color:var(--dark);display:flex;align-items:center;justify-content:center;font-size:1.1rem">🌑</div><div><div class="ct">Isole Oscure</div><div class="cs">Capitale: Zoa Shia</div></div></div><div class="cb"><p>Avvolte nell'oscurità, governate da un sistema feudale basato sul baratto. Il prestigio dipende dalle capacità dimostrabili. Famiglie principali: <strong>Zeraora, Grimstone, Batuk, Monkuiced</strong>. Gli <strong>Haunted Slayer</strong> — con uniformi a fiamme violacee — dominano le zone periferiche.</p><div class="qi">Ispirazione: Medioevo giapponese, cinese e mongolo.</div></div><span class="tag to">🌑 Oscuro</span></div>
+    </div>
+    <div style="max-width:900px;margin:2rem auto 0"><div class="card" data-a="neutro" style="padding:1.75rem"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="width:36px;height:36px;border-radius:50%;background:rgba(200,168,75,.1);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.1rem">🏰</div><div><div class="ct">Ramsgate — Baluardo degli Slayer</div><div class="cs">Governata da Estarossa, Mael dell'Aether Terrestre</div></div></div><div class="cb"><p>Città simbolo degli Slayer, distrutta durante il cataclisma del Tradimento e ricostruita sulle sue rovine. Cosmopolita per eccellenza. Ramsgate regola il rilascio del titolo ufficiale di Slayer. L'unica zona vietata è l'isola della <strong>Vecchia Ramsgate</strong>: le scariche di aether puro la rendono altamente instabile.</p></div><span class="tag tgo">Neutro</span></div></div>
+  </div>
+</section>
+
+<section id="timeline">
+  <div class="si">
+    <div class="sh"><div class="sl">Storia Ufficiale</div><h2 class="st">Timeline del Mondo</h2><div class="sline"></div><p class="sdesc">La storia delle Isole Frantumate così come è conosciuta dalla Gilda, dagli studiosi e dalla popolazione.</p></div>
+    <div class="timeline">
+      <div class="tle"><div class="tlet">🌍 Età della Creazione</div>
+        <div class="tlev"><div class="tld">Anno 0 — Triade Radiante</div><div class="tlt">Nascita del Maelstrom e delle Isole Frantumate. L'origine di <strong>Lyra</strong> e <strong>Kornos</strong> è interpretata come il primo squarcio del cielo dopo la Frantumazione.</div></div>
+        <div class="tlev"><div class="tld">Anno 50 — Triade Folgorante</div><div class="tlt">La prima Slayer uccide un Behemoth. Nascono i <strong>Mael</strong> — Slayer di potenza straordinaria che hanno stretto un patto con il Maelstrom. La loro statua veglia ancora sulla piazza portuale di Ramsgate.</div></div>
+      </div>
+      <div class="tle"><div class="tlet">🌟 Età dei Mael (Anno 50–1800)</div>
+        <div class="tlev"><div class="tld">Ciclo lungo — 1800 anni</div><div class="tlt">Millenni di dominio dei Mael. Le lune vengono venerate come i <em>due occhi del Creatore</em>. Consolidamento culturale, religioso e politico delle Isole Frantumate.</div></div>
+      </div>
+      <div class="tle"><div class="tlet">⚡ Il Tradimento (~Anno 1800)</div>
+        <div class="tlev"><div class="tld">Anno 1800 — Triade Oscura</div><div class="tlt">Conflitto catastrofico tra i Mael: i fratelli combatterono per ascendere al rango di Maelstrom. <strong>Gabrael</strong> fu ucciso nel corso della battaglia. <strong>Estarossa</strong>, rifiutando di combattere, salvò gli abitanti e supervisionò la ricostruzione. Un pentavirato di figure influenti aveva sobillato il conflitto.</div></div>
+      </div>
+      <div class="tle"><div class="tlet">🏰 Ricostruzione (1805–1820)</div>
+        <div class="tlev"><div class="tld">Anno 1805 — Triade Alborea</div><div class="tlt">Ricostruzione di Ramsgate sopra le rovine della città antica. Estarossa governa la città e la Gilda degli Slayer. Avvio delle ricerche sull'Aether: nasce la via dei MechaSlayer.</div></div>
+        <div class="tlev"><div class="tld">Anno 1810 — Triade Sporizzata</div><div class="tlt">Morte di Gregor E. Tasher. Il figlio <strong>Godrik E. Tasher</strong> porta i TecnoSlayer alla produzione di massa, avviando l'era industriale di Ostia.</div></div>
+      </div>
+      <div class="tle"><div class="tlet">🎭 Età Presente (1825–1855)</div>
+        <div class="tlev"><div class="tld">Anno 1825–1827</div><div class="tlt">Nascono i tre Slayer protagonisti: <strong>Athena de la Roche</strong> (1825), <strong>Pan Lan Batuk</strong> (1826), <strong>Asonnes Eninbaal</strong> (1827).</div></div>
+        <div class="tlev"><div class="tld">Anno 1855 — Triade Congelante</div><div class="tlt">Gli Ostinguard occupano Greenshard. Scoperta della Foresta del Silenzio nelle isole terrestri. I tre Slayer si incontrano a Ramsgate e intraprendono la loro prima missione congiunta.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="personaggi">
+  <div class="si">
+    <div class="sh"><div class="sl">Protagonisti</div><h2 class="st">I Tre Slayer</h2><div class="sline"></div><p class="sdesc">Tre storie, tre origini, tre destini intrecciati nell'Anno 1855 della Triade Congelante.</p></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:2rem">
+      <div class="card" data-a="glaciale"><div style="font-size:2.2rem;margin-bottom:.75rem">❄️</div><div class="ct">Athena de la Roche</div><div class="cs" style="font-style:italic">Origine: Isole Glaciali</div><div class="sdiv"></div>
+        <div style="display:flex;gap:.6rem;margin-bottom:.35rem;font-size:.88rem"><span style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;color:var(--gold3);text-transform:uppercase;min-width:68px">Arma</span><span>Lancia</span></div>
+        <div style="display:flex;gap:.6rem;margin-bottom:.35rem;font-size:.88rem"><span style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;color:var(--gold3);text-transform:uppercase;min-width:68px">Maestro</span><span>Xelya</span></div>
+        <div style="margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--border)"><div style="font-size:.84rem;color:var(--text2);padding:.2rem 0;border-bottom:1px solid rgba(200,168,75,.05)">Educazione militare e autoritaria</div><div style="font-size:.84rem;color:var(--text2);padding:.2rem 0">Legami familiari che preferisce non rivelare</div></div></div>
+      <div class="card" data-a="oscuro"><div style="font-size:2.2rem;margin-bottom:.75rem">🌑</div><div class="ct">Pan Lan Batuk</div><div class="cs" style="font-style:italic">Origine: Isole Oscure · Famiglia Batuk</div><div class="sdiv"></div>
+        <div style="display:flex;gap:.6rem;margin-bottom:.35rem;font-size:.88rem"><span style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;color:var(--gold3);text-transform:uppercase;min-width:68px">Arma</span><span>Spada</span></div>
+        <div style="display:flex;gap:.6rem;margin-bottom:.35rem;font-size:.88rem"><span style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;color:var(--gold3);text-transform:uppercase;min-width:68px">Maestro</span><span>Katerin Sorrel</span></div>
+        <div style="margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--border)"><div style="font-size:.84rem;color:var(--text2);padding:.2rem 0;border-bottom:1px solid rgba(200,168,75,.05)">Erede di una stirpe nobile decaduta</div><div style="font-size:.84rem;color:var(--text2);padding:.2rem 0">In cerca di redenzione per un passato che preferisce non svelare</div></div></div>
+      <div class="card" data-a="radiante"><div style="font-size:2.2rem;margin-bottom:.75rem">✨</div><div class="ct">Asonnes Eninbaal</div><div class="cs" style="font-style:italic">Origine: Isole Terrestri</div><div class="sdiv"></div>
+        <div style="display:flex;gap:.6rem;margin-bottom:.35rem;font-size:.88rem"><span style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;color:var(--gold3);text-transform:uppercase;min-width:68px">Arma</span><span>Doppie Lame</span></div>
+        <div style="display:flex;gap:.6rem;margin-bottom:.35rem;font-size:.88rem"><span style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;color:var(--gold3);text-transform:uppercase;min-width:68px">Maestro</span><span>Lady Luck</span></div>
+        <div style="margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--border)"><div style="font-size:.84rem;color:var(--text2);padding:.2rem 0;border-bottom:1px solid rgba(200,168,75,.05)">Legato ai culti e riti delle Isole Radianti</div><div style="font-size:.84rem;color:var(--text2);padding:.2rem 0">Connesso ai <strong>Solcavuoto</strong> in modo ancora non del tutto compreso</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="mael">
+  <div class="si">
+    <div class="sh"><div class="sl">Figure Leggendarie</div><h2 class="st">I Mael</h2><div class="sline"></div><p class="sdesc">Slayer che hanno stretto un patto con il Maelstrom e forgiato artefatti personali. La missione: recuperare gli artefatti perduti.</p></div>
+    <div class="qi" style="max-width:800px;margin:0 auto 2.5rem">Estarossa ha rivelato l'esistenza dei Mael e dei loro artefatti. La missione è recuperare questi oggetti di potere, dispersi dopo il Tradimento.</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem">
+      <div class="card" data-a="terrestre"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem"><div class="ct">Estarossa</div><span class="tag tt">Terrestre</span></div><div style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;color:var(--gold3);text-transform:uppercase;margin-bottom:.25rem">Artefatto</div><div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold2);margin-bottom:.25rem">Corona di Gondor</div><div style="font-size:.85rem;color:var(--text2);font-style:italic">Posizione attuale sconosciuta.</div><div style="margin-top:.7rem;padding:.55rem;background:rgba(200,168,75,.04);border:1px solid var(--border);font-size:.8rem;color:var(--text2)">📍 Governa Ramsgate</div></div>
+      <div class="card" data-a="glaciale"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem"><div class="ct">Symael</div><span class="tag tg">Glaciale</span></div><div style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;color:var(--gold3);text-transform:uppercase;margin-bottom:.25rem">Artefatto</div><div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold2);margin-bottom:.25rem">Collana del Desufiora</div><div style="font-size:.85rem;color:var(--text2);font-style:italic">Da recuperare.</div></div>
+      <div class="card" data-a="oscuro"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem"><div class="ct">Azrael</div><span class="tag to">Oscuro</span></div><div style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;color:var(--gold3);text-transform:uppercase;margin-bottom:.25rem">Artefatto</div><div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold2);margin-bottom:.25rem">Flauto di Elias Folfo</div><div style="font-size:.85rem;color:var(--text2);font-style:italic">Da recuperare.</div></div>
+      <div class="card" data-a="ardente"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem"><div class="ct">Raphael</div><span class="tag ta">Ardente</span></div><div style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;color:var(--gold3);text-transform:uppercase;margin-bottom:.25rem">Artefatto</div><div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold2);margin-bottom:.25rem">Braccio del Mixitron</div><div style="font-size:.85rem;color:var(--text2);font-style:italic">Da recuperare.</div></div>
+      <div class="card" data-a="radiante" style="opacity:.75"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem"><div class="ct">Gabrael</div><span class="tag tr">Radiante</span></div><div style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;color:var(--gold3);text-transform:uppercase;margin-bottom:.25rem">Artefatto</div><div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--text2);margin-bottom:.25rem">Manto di Rinmole</div><div style="font-size:.85rem;color:var(--fire);font-style:italic">⚠ Distrutto durante il Tradimento.</div></div>
+      <div class="card" data-a="folgorante"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem"><div class="ct">Mykael</div><span class="tag tf">Folgorante</span></div><div style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;color:var(--gold3);text-transform:uppercase;margin-bottom:.25rem">Artefatto</div><div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold2);margin-bottom:.25rem">Armatura del Ragnarok</div><div style="font-size:.85rem;color:var(--text2);font-style:italic">Da recuperare.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="behemoth">
+  <div class="si">
+    <div class="sh"><div class="sl">Catalogo</div><h2 class="st">I Behemoth</h2><div class="sline"></div><p class="sdesc">Creature che incarnano l'eccesso dell'Aether. Classificate per categoria e tipo elementale.</p></div>
+    <div class="bfilt">
+      <button class="fb active" onclick="fbeh('all',this)">Tutti</button>
+      <button class="fb" onclick="fbeh('classico',this)">Classici</button><button class="fb" onclick="fbeh('variante',this)">Varianti</button>
+      <button class="fb" onclick="fbeh('anomalo',this)">Anomali</button><button class="fb" onclick="fbeh('leggendario',this)">Leggendari</button>
+      <button class="fb" onclick="fbeh('evoluto',this)">Evoluti</button><button class="fb" onclick="fbeh('nuovo',this)">Nuove Aggiunte</button>
+      <button class="fb" onclick="fbeh('glaciale',this)">❄ Glaciale</button><button class="fb" onclick="fbeh('ardente',this)">🔥 Ardente</button>
+      <button class="fb" onclick="fbeh('folgorante',this)">⚡ Folgorante</button><button class="fb" onclick="fbeh('terrestre',this)">🌍 Terrestre</button>
+      <button class="fb" onclick="fbeh('radiante',this)">✨ Radiante</button><button class="fb" onclick="fbeh('oscuro',this)">🌑 Oscuro</button>
+      <button class="fb" onclick="fbeh('neutro',this)">◆ Neutro</button>
+    </div>
+    <div class="g4" id="bgrid"></div>
+  </div>
+</section>
+
+<section id="manuale">
+  <div class="si">
+    <div class="sh"><div class="sl">Regole</div><h2 class="st">Manuale dello Slayer</h2><div class="sline"></div><p class="sdesc">Tutto ciò che serve per giocare: armi, celle, combattimento, nuclei elementali e progressione.</p></div>
+    <div class="mtabs">
+      <button class="mtab active" onclick="swTab('armi',this)">Armi</button>
+      <button class="mtab" onclick="swTab('tipologie',this)">Tipologie Attacco</button>
+      <button class="mtab" onclick="swTab('celle',this)">Celle di Aether</button>
+      <button class="mtab" onclick="swTab('combattimento',this)">Combattimento</button>
+      <button class="mtab" onclick="swTab('elementi',this)">Nuclei & Elementi</button>
+      <button class="mtab" onclick="swTab('stati',this)">Stati & Effetti</button>
+      <button class="mtab" onclick="swTab('equipaggiamento',this)">Equipaggiamento</button>
+      <button class="mtab" onclick="swTab('progressione',this)">Progressione</button>
+    </div>
+    <div class="mpanel active" id="p-armi">
+      <div class="qi">Le armi aetheriche sono catalizzatori di Aether, progettati per affrontare creature che superano l'umano in forza, resistenza e dimensioni.</div>
+      <table class="tcj-t" style="margin-top:1.25rem"><thead><tr><th>Categoria</th><th>Mod.</th><th>Dado</th><th>Regola</th></tr></thead><tbody>
+        <tr><td><strong>Pesanti</strong> (Martelli, Asce)</td><td>−1 DES, +2 COST</td><td>1D8</td><td>Nessun secondo attacco nello stesso turno</td></tr>
+        <tr><td><strong>Leggere</strong> (Pugni, Lame)</td><td>+2 DES, −1 COST</td><td>1D4</td><td>Due attacchi per turno; se il primo fallisce si può ritirare</td></tr>
+        <tr><td><strong>Bilanciate</strong> (Lance, Spade)</td><td>+1 DES, +1 COST</td><td>1D6</td><td>Secondo attacco solo se il primo va a segno</td></tr>
+      </tbody></table>
+      <div id="wgrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.25rem"></div>
+    </div>
+    <div class="mpanel" id="p-tipologie">
+      <table class="tcj-t"><thead><tr><th>Tipologia</th><th>Obiettivo</th><th>Colpire</th><th>Danni</th><th>Effetto</th></tr></thead><tbody>
+        <tr><td><strong>Mirato</strong></td><td>Colpo preciso su una parte</td><td>DES</td><td>DES</td><td>Rompe la parte. Una parte rotta non può essere rotta nuovamente.</td></tr>
+        <tr><td><strong>Lacerante</strong></td><td>Indebolisce senza rompere</td><td>DES</td><td>FOR</td><td>+2 ai danni del prossimo attacco sulla stessa parte. Dura 2 turni.</td></tr>
+        <tr><td><strong>Stordente</strong></td><td>Sopraffare con forza bruta</td><td>FOR</td><td>FOR</td><td>Behemoth inerme 1 turno. Più efficace sulla testa. Stordimenti successivi più difficili.</td></tr>
+      </tbody></table>
+    </div>
+    <div class="mpanel" id="p-celle">
+      <div class="qi">Ogni Slayer può equipaggiare fino a 6 celle, suddivise in tre categorie potenziabili (+3 e +6).</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.85rem;margin-top:1.25rem" id="cgrid"></div>
+    </div>
+    <div class="mpanel" id="p-combattimento">
+      <div class="qi">Combattimento strutturato in round alternati tra Slayer e Behemoth. Cooperazione, controllo dello spazio e gestione delle parti del mostro sono fondamentali.</div>
+      <h3 style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold2);margin:1.25rem 0 .7rem">Tiri Fondamentali</h3>
+      <table class="tcj-t"><thead><tr><th>Azione</th><th>Contro Behemoth</th><th>Contro Slayer / NPC</th></tr></thead><tbody>
+        <tr><td><strong>Colpire</strong></td><td>CD = 5 + Bonus DES mostro → 1D20 puro</td><td>CD = 13 + Bonus COST NPC → 1D20 + Bonus DES</td></tr>
+        <tr><td><strong>Schivare</strong></td><td>CD fissa 15 → 1D20 + Bonus DES</td><td>CD = 13 + Bonus DES NPC → 1D20 + Bonus DES</td></tr>
+        <tr><td><strong>Tankare</strong></td><td>CD = 13 + Bonus FOR → 1D20 + FOR + COST</td><td>CD = 13 + Bonus FOR NPC → 1D20 + FOR + COST</td></tr>
+      </tbody></table>
+      <h3 style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold2);margin:1.25rem 0 .7rem">Stanchezza</h3>
+      <table class="tcj-t"><thead><tr><th>Livello</th><th>Effetto</th></tr></thead><tbody>
+        <tr><td>1</td><td>Velocità dimezzata</td></tr><tr><td>2</td><td>Svantaggio alle prove di caratteristica</td></tr>
+        <tr><td>3</td><td>Svantaggio ai tiri per colpire e tiri salvezza</td></tr><tr><td>4</td><td>PV massimi dimezzati</td></tr>
+        <tr><td>5</td><td>Velocità ridotta a 0</td></tr><tr><td>6</td><td>Svenimento</td></tr>
+      </tbody></table>
+      <p style="font-size:.86rem;color:var(--text2)">Riposo breve: −2 livelli. Riposo lungo: rimozione completa. A 0 PV si viene atterrati (non si muore): ci si può rialzare rinunciando all'azione principale tornando con 5 PV.</p>
+    </div>
+    <div class="mpanel" id="p-elementi">
+      <div class="qi">In difesa conviene adottare lo stesso elemento del Behemoth; in attacco, l'elemento opposto.</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-top:1.25rem">
+        <div class="card"><div style="font-family:'Cinzel',serif;font-size:.88rem;font-weight:700;color:var(--fire);margin-bottom:.7rem">🔥 Fiammeggiante</div><div style="display:flex;gap:.45rem;margin-bottom:.25rem;font-size:.82rem"><span style="color:var(--text2);min-width:50px;font-family:'Cinzel',serif;font-size:.56rem;text-transform:uppercase">Arma</span><span>+2 vs glaciali; può Bruciare</span></div><div style="display:flex;gap:.45rem;font-size:.82rem"><span style="color:var(--text2);min-width:50px;font-family:'Cinzel',serif;font-size:.56rem;text-transform:uppercase">Armatura</span><span>Riduce ¼ danni da infuocati; aumenta ¼ da glaciali</span></div></div>
+        <div class="card"><div style="font-family:'Cinzel',serif;font-size:.88rem;font-weight:700;color:var(--ice);margin-bottom:.7rem">❄️ Glaciale</div><div style="display:flex;gap:.45rem;margin-bottom:.25rem;font-size:.82rem"><span style="color:var(--text2);min-width:50px;font-family:'Cinzel',serif;font-size:.56rem;text-transform:uppercase">Arma</span><span>+2 vs infuocati; può Ibernare</span></div><div style="display:flex;gap:.45rem;font-size:.82rem"><span style="color:var(--text2);min-width:50px;font-family:'Cinzel',serif;font-size:.56rem;text-transform:uppercase">Armatura</span><span>Riduce ¼ danni da glaciali; aumenta ¼ da infuocati</span></div></div>
+        <div class="card"><div style="font-family:'Cinzel',serif;font-size:.88rem;font-weight:700;color:var(--earth);margin-bottom:.7rem">🌍 Terrestre</div><div style="display:flex;gap:.45rem;margin-bottom:.25rem;font-size:.82rem"><span style="color:var(--text2);min-width:50px;font-family:'Cinzel',serif;font-size:.56rem;text-transform:uppercase">Arma</span><span>+2 vs elettrici; può Fulminare</span></div><div style="display:flex;gap:.45rem;font-size:.82rem"><span style="color:var(--text2);min-width:50px;font-family:'Cinzel',serif;font-size:.56rem;text-transform:uppercase">Armatura</span><span>Riduce ¼ da terrestri; aumenta ¼ da elettrici</span></div></div>
+        <div class="card"><div style="font-family:'Cinzel',serif;font-size:.88rem;font-weight:700;color:var(--lightning);margin-bottom:.7rem">⚡ Elettrico</div><div style="display:flex;gap:.45rem;margin-bottom:.25rem;font-size:.82rem"><span style="color:var(--text2);min-width:50px;font-family:'Cinzel',serif;font-size:.56rem;text-transform:uppercase">Arma</span><span>+2 vs terrestri; può Interrare</span></div><div style="display:flex;gap:.45rem;font-size:.82rem"><span style="color:var(--text2);min-width:50px;font-family:'Cinzel',serif;font-size:.56rem;text-transform:uppercase">Armatura</span><span>Riduce ¼ da elettrici; aumenta ¼ da terrestri</span></div></div>
+        <div class="card"><div style="font-family:'Cinzel',serif;font-size:.88rem;font-weight:700;color:var(--dark);margin-bottom:.7rem">🌑 Oscuro</div><div style="display:flex;gap:.45rem;margin-bottom:.25rem;font-size:.82rem"><span style="color:var(--text2);min-width:50px;font-family:'Cinzel',serif;font-size:.56rem;text-transform:uppercase">Arma</span><span>+2 vs radianti; può Corrompere</span></div><div style="display:flex;gap:.45rem;font-size:.82rem"><span style="color:var(--text2);min-width:50px;font-family:'Cinzel',serif;font-size:.56rem;text-transform:uppercase">Armatura</span><span>Riduce ¼ da oscuri; aumenta ¼ da radianti</span></div></div>
+        <div class="card"><div style="font-family:'Cinzel',serif;font-size:.88rem;font-weight:700;color:var(--radiant);margin-bottom:.7rem">✨ Radiante</div><div style="display:flex;gap:.45rem;margin-bottom:.25rem;font-size:.82rem"><span style="color:var(--text2);min-width:50px;font-family:'Cinzel',serif;font-size:.56rem;text-transform:uppercase">Arma</span><span>+2 vs oscuri; può Abbagliare</span></div><div style="display:flex;gap:.45rem;font-size:.82rem"><span style="color:var(--text2);min-width:50px;font-family:'Cinzel',serif;font-size:.56rem;text-transform:uppercase">Armatura</span><span>Riduce ¼ da radianti; aumenta ¼ da oscuri</span></div></div>
+      </div>
+    </div>
+    <div class="mpanel" id="p-stati">
+      <h3 style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold2);margin-bottom:.9rem">Malus Aetherici</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.6rem;margin-bottom:1.75rem">
+        <div class="card" style="padding:.7rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--fire);margin-bottom:.15rem">Scottato</div><div style="font-size:.8rem;color:var(--text2)">3 turni → −2 PV/turno</div></div>
+        <div class="card" style="padding:.7rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--fire);margin-bottom:.15rem">Bruciato</div><div style="font-size:.8rem;color:var(--text2)">3 turni → −5 PV/turno</div></div>
+        <div class="card" style="padding:.7rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--ice);margin-bottom:.15rem">Ghiacciato</div><div style="font-size:.8rem;color:var(--text2)">3 turni → −3 DES</div></div>
+        <div class="card" style="padding:.7rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--ice);margin-bottom:.15rem">Ibernato</div><div style="font-size:.8rem;color:var(--text2)">3 turni → −5 DES</div></div>
+        <div class="card" style="padding:.7rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--lightning);margin-bottom:.15rem">Elettrificato</div><div style="font-size:.8rem;color:var(--text2)">3 turni → −1 PV, no azioni bonus</div></div>
+        <div class="card" style="padding:.7rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--lightning);margin-bottom:.15rem">Fulminato</div><div style="font-size:.8rem;color:var(--text2)">3 turni → −3 PV, no azioni bonus</div></div>
+        <div class="card" style="padding:.7rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--earth);margin-bottom:.15rem">Interrato</div><div style="font-size:.8rem;color:var(--text2)">3 turni → movimento dimezzato</div></div>
+        <div class="card" style="padding:.7rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--earth);margin-bottom:.15rem">Drenato</div><div style="font-size:.8rem;color:var(--text2)">3 turni → impossibile muoversi</div></div>
+        <div class="card" style="padding:.7rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--dark);margin-bottom:.15rem">Corrotto</div><div style="font-size:.8rem;color:var(--text2)">5 turni → −5 PV, svantaggio COST</div></div>
+        <div class="card" style="padding:.7rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--radiant);margin-bottom:.15rem">Abbagliato</div><div style="font-size:.8rem;color:var(--text2)">5 turni → −5 PV, svantaggio DES</div></div>
+      </div>
+      <h3 style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold2);margin-bottom:.9rem">Malus di Stato</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.6rem">
+        <div class="card" style="padding:.7rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--gold2);margin-bottom:.15rem">Sanguinante</div><div style="font-size:.8rem;color:var(--text2)">3 turni → −2 PV per azione/mov. Si rimuove rinunciando al turno.</div></div>
+        <div class="card" style="padding:.7rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--gold2);margin-bottom:.15rem">Emorragia</div><div style="font-size:.8rem;color:var(--text2)">5 turni → −5 PV per azione/mov. Si rimuove rinunciando al turno.</div></div>
+        <div class="card" style="padding:.7rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--gold2);margin-bottom:.15rem">Stordito</div><div style="font-size:.8rem;color:var(--text2)">Perde il 1° turno. No movimento nel 2°.</div></div>
+        <div class="card" style="padding:.7rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--gold2);margin-bottom:.15rem">Frenesia</div><div style="font-size:.8rem;color:var(--text2)">1 turno → +8 FOR. Al termine no azione nel turno successivo.</div></div>
+      </div>
+    </div>
+    <div class="mpanel" id="p-equipaggiamento">
+      <div class="qi">5 tonici di guarigione gratuiti (1D6 PV). Tre slot: 5 tonici per slot o 2 piloni per slot.</div>
+      <h3 style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold2);margin:1.25rem 0 .7rem">Tonici Base <span style="font-weight:300;color:var(--text2);font-size:.78rem">(1 turno)</span></h3>
+      <table class="tcj-t"><thead><tr><th>Tonico</th><th>Effetto</th></tr></thead><tbody><tr><td>Salute</td><td>+1D6 PV</td></tr><tr><td>Resistenza</td><td>+2 COST</td></tr><tr><td>Stamina</td><td>+2 DES</td></tr><tr><td>Assalto</td><td>+2 FOR</td></tr></tbody></table>
+      <h3 style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold2);margin:1.25rem 0 .7rem">Tonici Avanzati <span style="font-weight:300;color:var(--text2);font-size:.78rem">(3 turni)</span></h3>
+      <table class="tcj-t"><thead><tr><th>Tonico</th><th>Effetto</th></tr></thead><tbody><tr><td>Aether Carica</td><td>+1 token elementali e +2 DES</td></tr><tr><td>Frenesia</td><td>+4 FOR; effetti negativi identici al termine</td></tr><tr><td>Antidoto</td><td>+2 COST; conclude o riduce stati aetherici attivi</td></tr><tr><td>Rubavita</td><td>−1 PV nel tempo; +5 PV ad ogni attacco al mostro</td></tr></tbody></table>
+      <h3 style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold2);margin:1.25rem 0 .7rem">Piloni <span style="font-weight:300;color:var(--text2);font-size:.78rem">(3 turni, area 5×5)</span></h3>
+      <table class="tcj-t"><thead><tr><th>Pilone</th><th>Effetto</th></tr></thead><tbody><tr><td>Ripulente</td><td>Blocca il progresso dei Malus aetherici nell'area</td></tr><tr><td>Inamovibile</td><td>Immunità da sbalzi e stordimento; se atterrati si può attaccare ancora</td></tr><tr><td>Ispirazione</td><td>Chi sta per cadere torna in assetto prima del colpo fatale</td></tr><tr><td>Accogliente</td><td>Cura 4 PV/turno a chiunque nell'area</td></tr></tbody></table>
+    </div>
+    <div class="mpanel" id="p-progressione">
+      <div class="qi">+5 PV + Bonus COST ad ogni livello. +2 punti caratteristiche ogni 2 livelli.</div>
+      <table class="tcj-t" style="margin-top:1.25rem"><thead><tr><th>Stadio</th><th>Livelli</th><th>Celle</th><th>Capacità</th></tr></thead><tbody>
+        <tr><td style="color:var(--text2)"><strong>Novizio</strong></td><td>1–5</td><td>Max 3 (Vigore e Tecnica)</td><td>Guidato dalla gilda.</td></tr>
+        <tr><td style="color:var(--earth)"><strong>Cacciatore</strong></td><td>6–10</td><td>+Forza disponibile</td><td>Accesso alle celle Forza.</td></tr>
+        <tr><td style="color:var(--ice)"><strong>Discepolo</strong></td><td>11–15</td><td>6 celle</td><td>Vigore e Tecnica superiori; +6. Build con bilanciamento imposto.</td></tr>
+        <tr><td style="color:var(--gold2)"><strong>Maestro</strong></td><td>16–20</td><td>Celle Forza superiori</td><td>Tutte le celle al +6 (a discrezione DM).</td></tr>
+        <tr><td style="color:var(--radiant)"><strong>Fenice</strong></td><td>21–30</td><td>Nessun limite</td><td>Tutti i limiti cadono.</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</section>
+
+<section id="calendario">
+  <div class="si">
+    <div class="sh"><div class="sl">Ciclo delle Lune</div><h2 class="st">Le 12 Triadi di Lyra e Kornos</h2><div class="sline"></div><p class="sdesc">Il ciclo annuale è scandito da 12 Triadi, alternate tra Lyra (luna bianca) e Kornos (luna nera).</p></div>
+    <div style="display:flex;gap:2rem;justify-content:center;margin-bottom:2rem;flex-wrap:wrap">
+      <div style="text-align:center"><div class="bly" style="font-size:.7rem;padding:.3rem .9rem">🌕 Lyra — Luna Bianca</div><div style="font-size:.8rem;color:var(--text2);margin-top:.3rem">Triadi 1–6</div></div>
+      <div style="text-align:center"><div class="bko" style="font-size:.7rem;padding:.3rem .9rem">🌑 Kornos — Luna Nera</div><div style="font-size:.8rem;color:var(--text2);margin-top:.3rem">Triadi 7–12</div></div>
+    </div>
+    <div class="g3" id="trgrid"></div>
+  </div>
+</section>
+
+<section id="corone">
+  <div class="si">
+    <div class="sh"><div class="sl">Riconoscimenti</div><h2 class="st">Corone Aetheriche</h2><div class="sline"></div><p class="sdesc">Conquistate attraverso le Sfide Indomabili — cacce di difficoltà eccezionale durante i periodi di timeout.</p></div>
+    <div style="background:rgba(200,168,75,.04);border:1px solid var(--border);padding:1.75rem;margin-bottom:2rem">
+      <p>Le <strong>Corone Aetheriche</strong> garantiscono un introito passivo riscuotibile ad ogni triade a Ramsgate o in un centro affiliato alla Gilda. Il sistema si basa interamente sui <strong>D6</strong>: conta quante facce uguali si ottengono in un singolo tiro. Ogni giocatore esegue 3 tiri, con possibilità di ritirare una sola volta per tiro.</p>
+    </div>
+    <div class="ctb">
+      <div>
+        <h3 style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold2);margin-bottom:.9rem">Livelli di Successo</h3>
+        <table class="tcj-t"><thead><tr><th>Risultato</th><th>Condizione</th><th>Effetto</th></tr></thead><tbody>
+          <tr><td>Nullo</td><td>0 facce uguali</td><td style="color:var(--fire)">−1</td></tr>
+          <tr><td>Base</td><td>2 facce uguali</td><td>±0</td></tr>
+          <tr><td>Critico</td><td>3 facce uguali</td><td style="color:var(--earth)">+1</td></tr>
+          <tr><td>Extreme</td><td>4 facce uguali</td><td style="color:var(--gold2)">+3</td></tr>
+          <tr><td>Impossible</td><td>5 facce uguali</td><td style="color:var(--radiant)">+5</td></tr>
+          <tr><td><strong>Jackpot</strong></td><td>6 facce uguali</td><td style="color:var(--gold2);font-weight:bold">+7</td></tr>
+        </tbody></table>
+        <div class="qi">Soglia: <strong>15 successi totali</strong>. Chi contribuisce di più ottiene la Corona.</div>
+      </div>
+      <div>
+        <h3 style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold2);margin-bottom:.9rem">Preparazione</h3>
+        <table class="tcj-t"><thead><tr><th>Livello</th><th>Requisito</th><th>Dadi</th></tr></thead><tbody>
+          <tr><td>Nessuna</td><td>—</td><td>3</td></tr><tr><td>Livello 1</td><td>1 elemento su 3</td><td>4</td></tr>
+          <tr><td>Livello 2</td><td>2 elementi su 3</td><td>5</td></tr><tr><td><strong>Massima</strong></td><td>Tutti e 3</td><td><strong>6</strong></td></tr>
+        </tbody></table>
+        <div style="display:flex;flex-direction:column;gap:.45rem;margin-top:.75rem">
+          <div class="card" style="padding:.65rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--gold2);margin-bottom:.1rem">Pozioni</div><div style="font-size:.8rem;color:var(--text2)">Pozioni adeguate alla tipologia di caccia</div></div>
+          <div class="card" style="padding:.65rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--gold2);margin-bottom:.1rem">Nucleo Difensivo</div><div style="font-size:.8rem;color:var(--text2)">Nucleo difensivo coerente con il Behemoth</div></div>
+          <div class="card" style="padding:.65rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--gold2);margin-bottom:.1rem">Nucleo Offensivo</div><div style="font-size:.8rem;color:var(--text2)">Nucleo offensivo efficace contro il Behemoth</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="npc">
+  <div class="si">
+    <div class="sh"><div class="sl">Personaggi Non Giocanti</div><h2 class="st">I Maestri di Ramsgate</h2><div class="sline"></div><p class="sdesc">Figure chiave della Gilda e della città.</p></div>
+    <div class="ndiv">Otto Alti Maestri</div>
+    <div class="g2">
+      <div class="card"><div class="nrole">Maestro d'armi — Forgiatore ufficiale</div><div class="ct">Wils Bormen</div><div style="font-size:.88rem;color:var(--text);line-height:1.6;margin-top:.5rem">Uno dei pilastri di Ramsgate, ha dedicato la vita alla creazione di armi per gli Slayer. Allegro, amato da tutti per la sua disponibilità.</div><div style="font-size:.8rem;color:var(--text2);margin-top:.5rem;font-style:italic">Mentore di Moyra Heigsketter.</div></div>
+      <div class="card"><div class="nrole">Maestra delle armature</div><div class="ct">Moyra Heigsketter</div><div style="font-size:.88rem;color:var(--text);line-height:1.6;margin-top:.5rem">Ha perso la madre a causa di un Behemoth. Seria, determinata, con un forte senso di responsabilità verso chi rischia la vita.</div><div style="font-size:.8rem;color:var(--text2);margin-top:.5rem;font-style:italic">Allieva di Wils Bormen.</div></div>
+      <div class="card"><div class="nrole">Maestra della spada</div><div class="ct">Katerin Sorrel</div><div style="font-size:.88rem;color:var(--text);line-height:1.6;margin-top:.5rem">Supervisiona e allena gli Slayer che scelgono la spada. Seria e autorevole, guida con equilibrio tra rigore e sostegno.</div><div style="font-size:.8rem;color:var(--text2);margin-top:.5rem;font-style:italic">Compagna di Linnea Silver.</div></div>
+      <div class="card"><div class="nrole">Maestra dell'ascia</div><div class="ct">Linnea Silver</div><div style="font-size:.88rem;color:var(--text);line-height:1.6;margin-top:.5rem">Originaria delle Isole Glaciali, si è allontanata dalla propria famiglia per scelta. Rispettata per aver scelto una via pacifica. Fredda nelle apparenze, profondamente empatica.</div><div style="font-size:.8rem;color:var(--text2);margin-top:.5rem;font-style:italic">Compagna di Katerin Sorrel.</div></div>
+      <div class="card"><div class="nrole">Maestro del martello — Navi e porto</div><div class="ct">Markus Boher</div><div style="font-size:.88rem;color:var(--text);line-height:1.6;margin-top:.5rem">Supervisiona il martello e gestisce le navi degli Slayer. Rigoroso, ma con un cuore aperto.</div><div style="font-size:.8rem;color:var(--text2);margin-top:.5rem;font-style:italic">Compagno di Lady Luck.</div></div>
+      <div class="card"><div class="nrole">Maestra della catena — Economia Slayer</div><div class="ct">Lady Luck</div><div style="font-size:.88rem;color:var(--text);line-height:1.6;margin-top:.5rem">Ex piratessa delle zone Radianti. Porta un occhio aetherico, ricordo delle ferite subite durante gli anni di pirateria. Pragmatica, carismatica, scaltra.</div><div style="font-size:.8rem;color:var(--text2);margin-top:.5rem;font-style:italic">Compagna di Markus Boher.</div></div>
+      <div class="card"><div class="nrole">Maestra dei pugni aetherici</div><div class="ct">La Maestra Sfregiata</div><div style="font-size:.88rem;color:var(--text);line-height:1.6;margin-top:.5rem">Proveniente dalle Isole Elettriche, ha viaggiato tra le isole per apprendere il senso della lotta. Insegna i pugni aetherici unendo disciplina fisica e filosofia di vita. Austera, segnata nel corpo e nello spirito.</div></div>
+      <div class="card"><div class="nrole">Maestra della lancia</div><div class="ct">Xelya</div><div style="font-size:.88rem;color:var(--text);line-height:1.6;margin-top:.5rem">Slayer di frontiera, rappresenta i suoi compatrioti nei ranghi ufficiali. Introversa e riservata, mediatrice tra mondi diversi.</div></div>
+    </div>
+    <div class="ndiv">Otto Maestri Minori</div>
+    <div class="g2">
+      <div class="card"><div class="nrole">Il Mediatore — Esperto di celle</div><div class="ct">Il Mediatore</div><div style="font-size:.88rem;color:var(--text);line-height:1.6;margin-top:.5rem">Ex professore di fisica aetherica, sfigurato da un esperimento fallito. Vive nei bassifondi continuando le ricerche sulle celle aetheriche. Schivo, enigmatico, rispettato ma mai del tutto accettato.</div></div>
+      <div class="card"><div class="nrole">Inventore e scienziato</div><div class="ct">Arkan Drew</div><div style="font-size:.88rem;color:var(--text);line-height:1.6;margin-top:.5rem">Studia celle, contenitori e meccanismi. Sperimenta prototipi di mecha Slayer, tra cui il Ravengard. Geniale ma goffo nei rapporti sociali, con modi stravaganti.</div></div>
+      <div class="card"><div class="nrole">Esperta di behemothologia</div><div class="ct">Shaed Priyani</div><div style="font-size:.88rem;color:var(--text);line-height:1.6;margin-top:.5rem">Massima esperta dei Behemoth. Segue gli Slayer nelle spedizioni per raccogliere dati. Curiosa, brillante.</div></div>
+      <div class="card"><div class="nrole">Ammiraglio Zai — Armi da fuoco</div><div class="ct">Janek Zai</div><div style="font-size:.88rem;color:var(--text);line-height:1.6;margin-top:.5rem">Ex Guardia Ostiense. Addestra gli Slayer alle armi da fuoco. Rigoroso come un ufficiale, empatico e comprensivo.</div></div>
+      <div class="card"><div class="nrole">Il Gregario — Materiali rari</div><div class="ct">Gregorio Flynt</div><div style="font-size:.88rem;color:var(--text);line-height:1.6;margin-top:.5rem">Aiuta gli Slayer a procurarsi materiali rari soprattutto estetici. Eccentrico e creativo.</div></div>
+      <div class="card"><div class="nrole">Ozz l'Onesto — Messaggero</div><div class="ct">Ernest "Ozz" Honest</div><div style="font-size:.88rem;color:var(--text);line-height:1.6;margin-top:.5rem">Orfano cresciuto da solo a Ramsgate, viaggiava clandestinamente sulle navi. Ora messaggero ufficiale. Allegro, esplosivo, instancabile.</div></div>
+      <div class="card"><div class="nrole">Barista della Coda di Gnasher</div><div class="ct">Tressa</div><div style="font-size:.88rem;color:var(--text);line-height:1.6;margin-top:.5rem">Nata a Ramsgate, ha conosciuto migliaia di Slayer attraverso il suo locale. Accogliente, ironica, schietta — confidente naturale.</div></div>
+      <div class="card"><div class="nrole">Esperta di pozioni e botanica</div><div class="ct">Nonna Yaga</div><div style="font-size:.88rem;color:var(--text);line-height:1.6;margin-top:.5rem">Anziana enigmatica, prepara pozioni curative e potenzianti. Stravagante, apparentemente folle — ma lucida nelle sue arti.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="diario">
+  <div class="si">
+    <div class="sh"><div class="sl">Cronaca delle Avventure</div><h2 class="st">Diario di Campagna</h2><div class="sline"></div><p class="sdesc">La storia dei tre Slayer, giornata per giornata — così come si è svolta.</p></div>
+
+    <div class="dentry">
+      <div class="ddate">🗓 Anno 1855 · 20° giorno · Triade Algente — Ramsgate</div>
+      <div class="dbody">
+        <p>I tre Slayer si trovano a Ramsgate per la cerimonia di convocazione alla Gilda. <strong>Pan Lan</strong> aveva già affrontato separatamente un Nayzaga con altri due Slayer, non senza difficoltà.</p>
+        <p>Durante la cerimonia parte un allarme d'assedio in città. <strong>Athena</strong> e <strong>Asonnes</strong> — ancora estranei — affrontano uno Shrike nella piazza e lo abbattono insieme. Come gesto di stima, Asonnes regala ad Athena una collana con un artiglio del Behemoth.</p>
+        <p>I due vengono convocati nelle stanze di <strong>Estarossa</strong>, che rivela le proprie origini divine, la storia dei Mael e la sorte dei loro artefatti. La missione è chiara: <em>recuperare gli artefatti perduti</em>. Prima di congedarsi, scoprono che qualcuno stava origliando — è <strong>Pan Lan</strong>, che decide di unirsi alla ricerca.</p>
+        <p>I tre visitano i rispettivi maestri d'armi — <strong>Xelya, Lady Luck, Katerin Sorrel</strong> — per raccogliere i materiali per la forgiatura. Un'esplosione in un laboratorio fa conoscere loro <strong>Arkan Drew</strong>, che dona i dispositivi per le celle aetheriche. Nella forgia, <strong>Wils Bormen</strong> e <strong>Moyra Heigsketter</strong> realizzano armi e armature su misura. Ogni Slayer battezza la propria arma e armatura.</p>
+        <p>Nel corso della giornata fermano dei mafiosi che minacciano <strong>Tressa</strong> al bar. Completato l'equipaggiamento — pozioni, pistola aetherica, celle Medico e Agilità — battezzano la nave: <strong>Careless Journey</strong>.</p>
+      </div>
+    </div>
+
+    <div class="dentry">
+      <div class="ddate">🗓 Anno 1855 · 21° giorno · Triade Algente — Nave → Isole Terrestri</div>
+      <div class="dbody">
+        <p>Salpati verso le isole terrestri, i tre vengono attaccati nella notte da una nave Ostinguard. L'abbordaggio si trasforma in uno scontro contro due TecnoSlayer. Durante il combattimento il pilota automatico va in avaria: la nave si schianta.</p>
+        <p>Al risveglio si trovano in un accampamento degli Slayer di Frontiera, privati delle armi. <strong>Asonnes</strong> viene tenuto separato, trattato come estraneo — come spesso accade con lui. Il capo dell'accampamento, <strong>Revelor Baalz</strong>, affida loro una missione: liberare <strong>Greenshard</strong> dall'occupazione Ostinguard e salvare suo figlio.</p>
+        <p>Giunti a Greenshard, <strong>Athena</strong> e <strong>Pan Lan</strong> si travestono da guardie di Ostia. Nella zona più povera incontrano i ribelli locali e <strong>Paramir</strong>, il figlio di Revelor. Grazie alle informazioni di <strong>Volanz Soloy</strong> e <strong>Railen Krona</strong>, localizzano il deposito delle armi. Mentre Asonnes recupera l'equipaggiamento, gli altri distraggono il generale <strong>Cendrik Vollz</strong>. Tornano alla base per pianificare l'attacco.</p>
+      </div>
+    </div>
+
+    <div class="dentry">
+      <div class="ddate">🗓 Anno 1855 · 22° giorno · Triade Algente — Greenshard</div>
+      <div class="dbody">
+        <p>Nel cuore della notte i tre si infiltrano nella base principale e raggiungono un'arena sotterranea. Vi trovano uno Slayer ferito e un <strong>Koshai</strong> anch'esso ferito. Li curano e liberano entrambi.</p>
+        <p>Attraverso un condotto di scarico entrano nel cuore della fabbrica, dove affrontano un <strong>Embermane</strong> e un <strong>Charrogg</strong> a guardia del computer principale. Lo hackerano causando un sovraccarico di Aether: le guardie perdono l'uso delle armi e gli Slayer di Frontiera riprendono il controllo della città.</p>
+        <p>Si tiene un funerale simbolico nell'arena per onorare i caduti. <strong>Asonnes</strong> viene finalmente accettato dalla comunità. Il gruppo trascorre una settimana di riposo mentre gli Slayer di Frontiera riparano la nave. Scoprono il motivo della presenza Ostinguard: un'anomalia di aether oscuro nella zona.</p>
+      </div>
+    </div>
+
+    <div class="dentry">
+      <div class="ddate">🗓 Anno 1855 · 6° giorno · Triade Foscomanto — Foresta del Silenzio</div>
+      <div class="dbody">
+        <p><strong>Revelor</strong> avvisa che <strong>Volanz Soloy</strong> ha rilevato una forte presenza di aether oscuro nella zona nota come <strong>Foresta del Silenzio</strong>. Nessuno di chi è entrato è mai uscito.</p>
+        <p>Un fuoco fatuo guida il gruppo all'interno, mutando forma nel corso del cammino. Una voce accompagna ogni tappa con frammenti di una storia antica su un principe e una foresta. Le prove affrontate:</p>
+        <ul>
+          <li>Un <strong>fiume</strong> con cadaveri galleggianti — attraversato in equilibrio su un tronco. Asonnes lega il gruppo con una corda.</li>
+          <li>Una <strong>radura nella nebbia</strong> che trasforma ogni sentiero in vicolo cieco. Il gruppo impara a fermarsi e ascoltare.</li>
+          <li>Un <strong>albero antico</strong> le cui voci promettono gloria e potere — Asonnes suggerisce di tapparsi le orecchie.</li>
+          <li>Un <strong>lago nero</strong> con visioni del passato di ciascuno. Il gruppo sceglie di nuotare.</li>
+          <li>Un <strong>portale di ossa</strong> che richiede di lasciare qualcosa di caro — Asonnes lascia il suo pupazzo.</li>
+        </ul>
+        <p>Al cuore della foresta: un palazzo in rovina, cadaveri e un liquido violaceo. La figura guida si trasforma in una creatura simile a un <strong>Koshai corrotto</strong> — sconfitta dopo un duro combattimento. Asonnes quasi muore dopo aver ingerito una delle sfere del mostro.</p>
+        <p>Il gruppo trova una porta grigia con un frammento di metallo. Al ritorno al campo: dall'esterno sono passati solo 10 minuti. Scoperta: toccando il frammento, <strong>Asonnes diventa viola</strong>.</p>
+      </div>
+    </div>
+
+    <div class="dentry">
+      <div class="ddate">🗓 Anno 1855 · 7°–17° giorno · Triade Foscomanto — Ramsgate</div>
+      <div class="dbody">
+        <p>Rientrati a Ramsgate, accolti da <strong>Markus</strong> e <strong>Arkan</strong>. Al mercato <strong>Pan Lan</strong> nota di essere seguiti — è <strong>Ozz l'Onesto</strong>, che li indirizza alla biblioteca. Lì la <strong>Dottoressa Priyani</strong> acquista i pezzi di Behemoth per 13.000 monete. Il gruppo deposita 12.000 monete in banca.</p>
+        <p>Convocati sulla nave di Estarossa, nell'ufficio del Mael scoprono che l'artefatto trovato nella Foresta del Silenzio sembra legato al passato di <strong>Asonnes</strong> e ai Solcavuoto. La prossima missione è una <em>scorta diplomatica</em>.</p>
+        <p>Nel frattempo: Athena si perde cercando Ozz e finisce dalla <strong>Nonna Yaga</strong>, che la droga. Pan Lan e Asonnes la liberano e salvano un cagnolino che battezzano <strong>Pauly</strong>.</p>
+        <p>Nei giorni seguenti Athena conduce ricerche su Solcavuoto e alterazioni di Aether — trova solo leggende e miti. Scopre che <strong>Athena e Minerva Silver</strong> saranno presenti alla missione diplomatica. Nel cuore della notte la nave riceve un pacco misterioso: contiene un arco aetherico, che prende <strong>Pan Lan</strong>.</p>
+      </div>
+    </div>
+
+    <div class="dentry">
+      <div class="ddate">🗓 Anno 1855 · 20°–22° giorno · Triade Foscomanto — Missione Diplomatica</div>
+      <div class="dbody">
+        <p>Briefing sulle culture delle isole coinvolte. Il gruppo impara che nelle isole glaciali l'ultima figlia di ogni casata viene chiamata <strong>Athena</strong> — un nome che blocca il lignaggio. Si imbarcano con <strong>Arkan Drew</strong> come passeggero.</p>
+        <p>Una scaramuccia con degli scagnozzi mette in pericolo <strong>Ozz</strong> — il gruppo interviene e viene aiutato da una squadra di sconosciuti. Vengono poi presentati i rappresentanti diplomatici: <strong>Jsur Lume</strong> e <strong>Rebenek Wkor</strong> (ardenti), <strong>Atreo Silver</strong> (glaciali), <strong>Malevola Zeraora</strong> (oscure), <strong>Godrik Tasher</strong> (folgoranti) — arrivato in ritardo con un ingresso pittoresco.</p>
+        <p>Al banchetto <strong>Malevola Zeraora</strong> avvicina <strong>Pan Lan</strong> in privato: le chiede se siano stati trovati segni dei Solcavuoto. Pan Lan nega. <strong>Minerva Silver</strong> mantiene le distanze da Athena senza spiegazioni.</p>
+        <p>Il trattato proposto dai Silver è squilibrato. I rappresentanti ardenti sollevano obiezioni. La seduta viene interrotta da un attacco: diversi <strong>Skraev</strong> e uno ibrido, guidati dal <strong>Kaltuga</strong> — uno Skraev antico con cicatrici attorno agli occhi, noto per aver ucciso la madre della casata Silver. Il Kaltuga fugge dopo lo scontro.</p>
+        <p>I rappresentanti glaciali e oscuri decidono di riscrivere il trattato. <strong>Godrik Tasher</strong> se ne va bruscamente. Nella sua stanza, <strong>Pan Lan</strong> trova un cofanetto con lo stemma dei Batuk contenente una mano mozzata — un avvertimento.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="note">
+  <div class="si">
+    <div class="sh"><div class="sl">Personali</div><h2 class="st">Note degli Slayer</h2><div class="sline"></div><p class="sdesc">Uno spazio personale per ogni Slayer. Salvate localmente in questo browser.</p></div>
+    <div class="ntabs">
+      <button class="ntab active" onclick="swN('athena',this)">❄️ Athena</button>
+      <button class="ntab" onclick="swN('panlan',this)">🌑 Pan Lan</button>
+      <button class="ntab" onclick="swN('asonnes',this)">✨ Asonnes</button>
+    </div>
+    <div class="npanel active" id="np-athena">
+      <div class="nhdr"><div class="nnm">Athena de la Roche</div><button class="nsave" id="sv-athena" onclick="svN('athena')">Salva</button></div>
+      <textarea class="na" id="n-athena" placeholder="Scrivi qui i tuoi appunti, teorie, osservazioni..."></textarea>
+      <div class="nhint">Le note vengono salvate localmente in questo browser. Riapri il file dallo stesso browser per ritrovarle.</div>
+    </div>
+    <div class="npanel" id="np-panlan">
+      <div class="nhdr"><div class="nnm">Pan Lan Batuk</div><button class="nsave" id="sv-panlan" onclick="svN('panlan')">Salva</button></div>
+      <textarea class="na" id="n-panlan" placeholder="Scrivi qui i tuoi appunti, teorie, osservazioni..."></textarea>
+      <div class="nhint">Le note vengono salvate localmente in questo browser. Riapri il file dallo stesso browser per ritrovarle.</div>
+    </div>
+    <div class="npanel" id="np-asonnes">
+      <div class="nhdr"><div class="nnm">Asonnes Eninbaal</div><button class="nsave" id="sv-asonnes" onclick="svN('asonnes')">Salva</button></div>
+      <textarea class="na" id="n-asonnes" placeholder="Scrivi qui i tuoi appunti, teorie, osservazioni..."></textarea>
+      <div class="nhint">Le note vengono salvate localmente in questo browser. Riapri il file dallo stesso browser per ritrovarle.</div>
+    </div>
+  </div>
+</section>
+
+<footer style="background:var(--bg);border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;position:relative;z-index:1">
+  <div style="font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold3);margin-bottom:.5rem">🜂 The Careless Journey</div>
+  <div style="font-size:.85rem;color:var(--text2);font-style:italic">Un viaggio che non è sicuro, non è giusto, e non è pensato per premiare l'imprudenza.</div>
+</footer>
+
+<!-- MASTER SECTION -->
+<div id="ms">
+  <div class="mshdr">
+    <div class="mstit">🔐 Sezione Master</div>
+    <div class="mssub">Informazioni riservate al Dungeon Master. Non condividere con i player.</div>
+  </div>
+  <div class="msnav">
+    <a href="#m-trad">Il Vero Tradimento</a>
+    <a href="#m-gab">Gabrael Oggi</a>
+    <a href="#m-mael">Mael Completi</a>
+    <a href="#m-seg">Segreti Personaggi</a>
+    <a href="#m-solc">I Solcavuoto</a>
+    <a href="#m-med">Il Mediatore</a>
+    <a href="#m-stat">Statistiche Behemoth</a>
+  </div>
+
+  <div class="msec" id="m-trad">
+    <div class="msecsub">Storia Reale</div>
+    <div class="msect">Il Vero Tradimento</div>
+    <div class="msecl"></div>
+    <div class="sc"><div class="scl">Quello che veramente è accaduto</div><div class="sct">
+      <p><strong>Gabrael</strong> — Mael dell'aether radiante — covava un profondo malcontento verso i fratelli. Voleva essere riconosciuto come entità superiore. Orchestrò un pentavirato (Ragnar Silver, Joseph D. Galvez, Rodovan Grimstone, Aldaril Gil-galad, Gregor E. Tasher) per sobillare gli umani contro i Mael e costringere un Concilio a Estarossa.</p>
+      <p>Al Concilio propose di unire gli artefatti per far ascendere uno di loro a Maelstrom. Il dissenso fu netto. Gabrael allora attaccò direttamente: dopo un lungo combattimento riuscì a impossessarsi della <strong>Corona di Gondor</strong> di Estarossa. Tentando di usare due artefatti insieme scatenò il cataclisma che distrusse la Vecchia Ramsgate.</p>
+      <p>Mentre gli altri Mael respingevano i traditori, Gabrael approfittò del caos: usando la Corona assunse le <strong>sembianze di Estarossa</strong>, imprigionò il vero fratello nella fortezza più sicura delle isole folgoranti ed eliminò ogni prova. I traditori divennero capri espiatori.</p>
+    </div></div>
+    <div class="mq">La versione pubblica — Gabrael ucciso dai fratelli, Estarossa salva tutti — è una bugia costruita da Gabrael stesso. Nessun testimone chiave è sopravvissuto o è libero di parlare.</div>
+    <div class="sc"><div class="scl">Dove si trovano i Mael oggi</div><div class="sct">
+      <p><strong>Estarossa (reale)</strong>: imprigionato nella fortezza più sicura delle isole folgoranti. Gabrael controlla l'accesso.</p>
+      <p><strong>Gabrael</strong>: governa Ramsgate fingendo di essere Estarossa. Usa il <strong>Manto di Rinmole</strong> per le sembianze e la <strong>Corona di Gondor</strong> per manipolare chi gli sta vicino.</p>
+      <p>Gli altri Mael — Symael, Azrael, Raphael, Mykael — sono dispersi. I loro artefatti sono perduti. Gabrael invia Slayer selezionati (tra cui i protagonisti) per recuperarli, con l'obiettivo finale di ascendere a Maelstrom.</p>
+    </div></div>
+  </div>
+
+  <div class="msec" id="m-gab" style="border-top:1px solid rgba(200,56,56,.1)">
+    <div class="msecsub">Antagonista Principale</div>
+    <div class="msect">Gabrael — Stato Attuale</div>
+    <div class="msecl"></div>
+    <div class="sc"><div class="scl">Identità attuale</div><div class="sct">Gabrael si presenta come <strong>Estarossa</strong>, governa Ramsgate e coordina la Gilda. I player credono di parlare con il vero Mael dell'Aether Terrestre. In realtà stanno eseguendo gli ordini dell'artefice del Tradimento.</div></div>
+    <div class="sc"><div class="scl">I suoi veri obiettivi</div><div class="sct"><p>Gabrael vuole ancora ascendere a Maelstrom. Ha adottato un approccio più paziente: invia Slayer con forte connessione all'aether per recuperare gli artefatti dei fratelli. Una volta in possesso di tutti, tenterà nuovamente l'ascensione.</p><p>I protagonisti sono pedine inconsapevoli di questo piano.</p></div></div>
+    <div class="sc"><div class="scl">Artefatti in suo possesso</div><div class="sct"><strong>Corona di Gondor</strong> (di Estarossa) — muta il volere altrui, mantiene il controllo su Ramsgate.<br><strong>Manto di Rinmole</strong> (suo) — mantiene le sembianze di Estarossa. Non distrutto, al contrario di quanto credono i player.</div></div>
+    <div class="mq">Quando i player recuperano un artefatto e lo consegnano a "Estarossa", lo stanno consegnando a Gabrael.</div>
+  </div>
+
+  <div class="msec" id="m-mael" style="border-top:1px solid rgba(200,56,56,.1)">
+    <div class="msecsub">Meccaniche Complete</div>
+    <div class="msect">I Mael — Armi e Meccaniche</div>
+    <div class="msecl"></div>
+    <div class="mmc"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="mmn">Estarossa (imprigionato)</div><span class="tag tt">Terrestre</span></div>
+      <div class="mms">Artefatto — Corona di Gondor</div><div style="font-size:.87rem;color:var(--text)">Muta il volere altrui. In possesso di Gabrael.</div>
+      <div class="mms">Arma — Le Fondamenta di Ramsgate (Pugni Aetherici, Support)</div>
+      <div class="mr"><span class="mk">Zona Aetherica</span><span class="mv">Proietta zona 5×5: chiunque dentro subisce 1D8/turno, convertiti in PV per un alleato a scelta.</span></div>
+      <div class="mr"><span class="mk">Divincolarsi</span><span class="mv">Il nemico può tentare un tiro per liberarsi. Successo → esce ma con velocità dimezzata.</span></div>
+      <div class="mr"><span class="mk">Limite</span><span class="mv">Una sola zona per volta. Può spostarla liberamente nel proprio turno.</span></div>
+    </div>
+    <div class="mmc"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="mmn">Symael</div><span class="tag tg">Glaciale</span></div>
+      <div class="mms">Artefatto — Collana del Desufiora</div><div style="font-size:.87rem;color:var(--text);margin-bottom:.5rem">Permette di comunicare con i Behemoth, stabilendo un canale di comprensione.</div>
+      <div class="mms">Arma — Alatreon (Lancia Pesante Uncinata, Ibrido Bilanciato/Pesante)</div>
+      <div class="mr"><span class="mk">Dado danno</span><span class="mv">1D8 base, progressione fino a 6D8.</span></div>
+      <div class="mr"><span class="mk">Meccanica</span><span class="mv">Regole lancia: attacchi ravvicinati o con allungo, flessibilità posizionale.</span></div>
+    </div>
+    <div class="mmc"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="mmn">Azrael</div><span class="tag to">Oscuro</span></div>
+      <div class="mms">Artefatto — Flauto di Elias Folfo</div><div style="font-size:.87rem;color:var(--text);margin-bottom:.5rem">Evoca ombre di guerrieri caduti per combattere al fianco del portatore.</div>
+      <div class="mms">Arma — Vita Mortale (Falce, Guerra di Logoramento)</div>
+      <div class="mr"><span class="mk">Accumulo ferite</span><span class="mv">Ogni colpo aggiunge 1D4 di danno passivo/turno. Cumulativo e permanente per tutta la durata del combattimento.</span></div>
+      <div class="mr"><span class="mk">Effetto</span><span class="mv">Con molti stack, il bersaglio muore anche senza ulteriori attacchi di Azrael.</span></div>
+    </div>
+    <div class="mmc"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="mmn">Raphael</div><span class="tag ta">Ardente</span></div>
+      <div class="mms">Artefatto — Braccio del Mixitron</div><div style="font-size:.87rem;color:var(--text);margin-bottom:.5rem">Permette di assumere sembianze meccaniche di un Behemoth ardente.</div>
+      <div class="mms">Arma — Carmilla (Bastone da Passeggio / Fucile Aetherico)</div>
+      <div class="mr"><span class="mk">Dado danno</span><span class="mv">Superiore alla pistola aetherica standard.</span></div>
+      <div class="mr"><span class="mk">Gittata</span><span class="mv">Significativamente maggiore delle pistole, vicina alla versatilità di un arco aetherico.</span></div>
+      <div class="mr"><span class="mk">Effetti</span><span class="mv">Proiettili aetherici con effetti elementali più intensi e duraturi.</span></div>
+    </div>
+    <div class="mmc" style="border-color:rgba(212,168,255,.2)"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="mmn">Gabrael <span style="font-size:.73rem;color:var(--fire)">(si spaccia per Estarossa)</span></div><span class="tag tr">Radiante</span></div>
+      <div class="mms">Artefatti in suo possesso</div><div style="font-size:.87rem;color:var(--text);margin-bottom:.5rem"><strong>Manto di Rinmole</strong>: nasconde vere sembianze e volontà. <strong>Corona di Gondor</strong>: muta il volere altrui.</div>
+      <div class="mms">Arma — Tasca Dimensionale (Pugnale, Controllo della Luce)</div>
+      <div class="mr"><span class="mk">Attivazione</span><span class="mv">Tocca una superficie riflettente → diventa specchio aetherico. Più specchi = campo più ampio.</span></div>
+      <div class="mr"><span class="mk">Difesa</span><span class="mv">Il nemico crede di avanzare verso Gabrael ma colpisce chiunque Gabrael decida. Non teletrasporto — manipolazione della percezione.</span></div>
+      <div class="mr"><span class="mk">Attacco</span><span class="mv">Lancia l'attacco verso uno specchio: emerge da una direzione imprevedibile.</span></div>
+      <div class="mr"><span class="mk">Contromisure</span><span class="mv">1) Osservare i riflessi (mostrano la realtà) — richiede rinunciare al turno. 2) Distruggere fisicamente tutti gli specchi.</span></div>
+      <div class="mr"><span class="mk">Fallback</span><span class="mv">Senza specchi: il pugnale assume la forma di qualsiasi arma del manuale per un singolo attacco.</span></div>
+      <div class="mq">Gabrael è un enigma da risolvere prima di essere un avversario da sconfiggere. Chi non capisce il meccanismo colpisce i propri alleati.</div>
+    </div>
+    <div class="mmc"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="mmn">Mykael</div><span class="tag tf">Folgorante</span></div>
+      <div class="mms">Artefatto — Armatura del Ragnarok</div><div style="font-size:.87rem;color:var(--text);margin-bottom:.5rem">Dona immunità temporanea a qualsiasi danno — completamente impenetrabile per un breve periodo.</div>
+      <div class="mms">Arma — Valstrax (Due Spade, Ibrido Bilanciato/Leggero)</div>
+      <div class="mr"><span class="mk">Dado danno</span><span class="mv">1D6 base per spada, progressione fino a 6D6.</span></div>
+      <div class="mr"><span class="mk">Doppio attacco</span><span class="mv">Il secondo attacco è quasi sempre disponibile — cadenza vicina alle armi leggere.</span></div>
+    </div>
+  </div>
+
+  <div class="msec" id="m-seg" style="border-top:1px solid rgba(200,56,56,.1)">
+    <div class="msecsub">Solo per il DM</div>
+    <div class="msect">Segreti dei Personaggi</div>
+    <div class="msecl"></div>
+    <div class="sc"><div class="scl">❄️ Athena de la Roche — vero nome: Athena Silver</div><div class="sct">
+      <p>Athena è la figlia di <strong>Ragnar Silver</strong>, il tiranno delle Isole Glaciali. "De la Roche" è un'identità falsa. Nelle isole glaciali, l'ultima figlia di ogni casata viene chiamata Athena — un nome che blocca il lignaggio.</p>
+      <p><strong>Linnea Silver</strong> (Maestra dell'ascia) e <strong>Markus Boher</strong> conoscono il segreto e lo custodiscono. La presenza di <strong>Atreo Silver</strong> e <strong>Minerva Silver</strong> alla missione diplomatica non è casuale — sono parenti.</p>
+    </div></div>
+    <div class="sc"><div class="scl">🌑 Pan Lan Batuk — passato negli Occulti</div><div class="sct">
+      <p>Prima di diventare Slayer, Pan Lan era membro degli <strong>Occulti</strong> — la rete di influenza fondata da Joseph D. Galvez, membro del pentavirato del Tradimento.</p>
+      <p>La taglia sulla sua testa è legata a questo passato. La famiglia Batuk ha perso ogni diritto politico dopo l'assassinio di Vestron Zeraora — commissionato dalla stessa casa Batuk. Il <strong>cofanetto con la mano mozzata</strong> ricevuto durante la missione è un avvertimento diretto. Godrik Tasher l'aveva avvisata prima di andarsene.</p>
+    </div></div>
+    <div class="sc"><div class="scl">✨ Asonnes Eninbaal — discendente dei Solcavuoto</div><div class="sct">
+      <p>Asonnes è un discendente diretto dei <strong>Solcavuoto</strong>. I suoi poteri latenti — il fatto che diventi viola toccando il frammento di metallo, la sua connessione con l'artefatto della Foresta — sono manifestazioni di questa discendenza.</p>
+      <p>I player sanno che esiste un legame tra Asonnes e i Solcavuoto, ma non conoscono la natura profonda di questa connessione. L'interesse di <strong>Malevola Zeraora</strong> per i Solcavuoto durante la missione non è casuale.</p>
+    </div></div>
+  </div>
+
+  <div class="msec" id="m-solc" style="border-top:1px solid rgba(200,56,56,.1)">
+    <div class="msecsub">Lore Completa — Non nota ai Player</div>
+    <div class="msect">I Solcavuoto — Custodi del Crepuscolo</div>
+    <div class="msecl"></div>
+    <div class="sc"><div class="scl">Origine e natura</div><div class="sct"><p>I Solcavuoto erano umani che ottennero una sintonia perfetta con l'aether <em>radiante</em> e quello <em>oscuro</em>, fondendoli nel proprio essere. Dalla pelle perlacea e scintillante. Maestri combattenti, esploratori del tempo e custodi dell'equilibrio aetherico. La convivenza di queste due forze era sostenibile solo nella <strong>Soglia Crepuscolare</strong> — un regno fluttuante tra tempo e spazio.</p></div></div>
+    <div class="sc"><div class="scl">La Forgia Temporale</div><div class="sct">Al cuore della Soglia si trovava la <strong>Forgia Temporale</strong>: una macchina vivente capace di plasmare eventi, correggere linee temporali deviate e forgiare reliquie capaci di alterare il destino. Il <strong>Thrax</strong> e il <strong>Cronovoro</strong> costituiscono una minaccia costante: se raggiungeranno la Forgia, le conseguenze saranno apocalittiche.</div></div>
+    <div class="sc"><div class="scl">Le Tre Categorie</div><div class="sct">
+      <p><strong>Solcavuoto</strong>: equilibrio perfetto tra aether radiante e oscuro.</p>
+      <p><strong>Tessiitempo</strong>: guidati dall'aether radiante. Filosofi-temporali e veggenti, custodi dei Segni degli Echi — iscrizioni contenenti eventi futuri codificati. Attraverso un rituale del Primo Tessitore evocarono il <strong>Sommo Vuoto</strong>: un sigillo vivente che separò la Soglia dal mondo reale.</p>
+      <p><strong>Forgiabattaglie</strong>: dediti all'aether oscuro. Guerrieri possenti, manipolatori delle ombre, capaci di fermare i Behemoth crepuscolari.</p>
+    </div></div>
+    <div class="sc"><div class="scl">Rupenigma e il Collegamento Perduto</div><div class="sct">Un tempo i Solcavuoto giungevano nel mondo attraverso <strong>Rupenigma</strong>, città-portale. Dopo la faida tra i Mael, questo collegamento fu reciso per sempre. Oggi Rupenigma è un deserto di rune. Certi segni inquietano: frammenti temporali che saltano, oggetti anacronistici nelle sabbie, <strong>bambini nati con occhi di galassia e visioni del futuro</strong>.</div></div>
+  </div>
+
+  <div class="msec" id="m-med" style="border-top:1px solid rgba(200,56,56,.1)">
+    <div class="msecsub">Identità Nascosta</div>
+    <div class="msect">Il Mediatore — Edgar Solomon</div>
+    <div class="msecl"></div>
+    <div class="sc"><div class="scl">Vera identità</div><div class="sct">
+      <p>Il personaggio noto come <strong>Il Mediatore</strong> è in realtà <strong>Edgar Solomon</strong> — ex professore di Fisica Aetherica all'università di Ostia, esperto di potenziamento aetherico attraverso la risonanza nucleare microbiologica.</p>
+      <p>Assieme a Gregor E. Tasher e Arkan Drew fu allievo del Mael <strong>Raphael</strong> a Leeran Dax, prima del Tradimento. Venne espulso dall'accademia dopo il fallimento di un esperimento che causò la morte di 26 colleghi.</p>
+      <p>Oggi vive nei bassifondi di Ramsgate, continuando le ricerche sulle celle aetheriche. È l'artefice dell'idea che porterà alle <strong>Omnicelle</strong> — in un'alleanza futura con Arkan Drew.</p>
+    </div></div>
+    <div class="mq">I player lo conoscono solo come "Il Mediatore". Non devono sapere il suo vero nome finché la storia non lo richieda.</div>
+  </div>
+
+  <div class="msec" id="m-stat" style="border-top:1px solid rgba(200,56,56,.1)">
+    <div class="msecsub">Dati Completi</div>
+    <div class="msect">Statistiche Behemoth</div>
+    <div class="msecl"></div>
+    <input type="text" id="mss" placeholder="Cerca un Behemoth..." oninput="fmst(this.value)" style="width:100%;padding:.6rem 1rem;background:rgba(200,56,56,.06);border:1px solid rgba(200,56,56,.2);color:var(--text);font-family:'Crimson Pro',serif;font-size:1rem;outline:none;margin-bottom:1.25rem">
+    <div id="msl"></div>
+  </div>
+
+</div>
+
+<script>
+const BD=[
+  {n:"Boreus",c:"classico",a:"glaciale",s:{FOR:32,DES:14,COST:20,INT:6,SAG:14,CAR:14},hp:[240,260,280,300]},
+  {n:"Frostwülf",c:"classico",a:"glaciale",s:{FOR:24,DES:20,COST:16,INT:6,SAG:14,CAR:4},hp:[192,208,224,240]},
+  {n:"Pangar",c:"classico",a:"glaciale",s:{FOR:38,DES:16,COST:22,INT:4,SAG:14,CAR:8},hp:[264,286,308,330]},
+  {n:"Skraev",c:"classico",a:"glaciale",s:{FOR:30,DES:20,COST:20,INT:14,SAG:16,CAR:6},hp:[240,260,280,300]},
+  {n:"Charrogg",c:"classico",a:"ardente",s:{FOR:32,DES:10,COST:22,INT:2,SAG:8,CAR:2},hp:[264,286,308,330]},
+  {n:"Embermane",c:"classico",a:"ardente",s:{FOR:24,DES:20,COST:14,INT:6,SAG:12,CAR:10},hp:[168,182,196,210]},
+  {n:"Hellion",c:"classico",a:"ardente",s:{FOR:36,DES:18,COST:20,INT:4,SAG:14,CAR:8},hp:[240,260,280,300]},
+  {n:"Drask",c:"classico",a:"folgorante",s:{FOR:34,DES:12,COST:22,INT:10,SAG:4,CAR:6},hp:[264,286,308,330]},
+  {n:"Nayzaga",c:"classico",a:"folgorante",s:{FOR:26,DES:18,COST:18,INT:12,SAG:14,CAR:4},hp:[216,234,251,270]},
+  {n:"Stormclaw",c:"classico",a:"folgorante",s:{FOR:30,DES:22,COST:16,INT:6,SAG:10,CAR:4},hp:[192,208,224,240]},
+  {n:"Fenroar",c:"classico",a:"terrestre",s:{FOR:26,DES:18,COST:16,INT:4,SAG:16,CAR:6},hp:[192,208,224,240]},
+  {n:"Kharabak",c:"classico",a:"terrestre",s:{FOR:22,DES:26,COST:8,INT:6,SAG:12,CAR:12},hp:[96,104,112,120]},
+  {n:"Koshai",c:"classico",a:"terrestre",s:{FOR:30,DES:22,COST:16,INT:14,SAG:16,CAR:14},hp:[192,208,224,240]},
+  {n:"Skarn",c:"classico",a:"terrestre",s:{FOR:26,DES:6,COST:28,INT:4,SAG:4,CAR:2},hp:[336,364,392,420]},
+  {n:"Rezakiri",c:"classico",a:"radiante",s:{FOR:42,DES:26,COST:22,INT:18,SAG:24,CAR:22},hp:[264,286,308,330]},
+  {n:"Valomyr",c:"classico",a:"radiante",s:{FOR:26,DES:12,COST:20,INT:8,SAG:14,CAR:10},hp:[240,260,280,300]},
+  {n:"Riftstalker",c:"classico",a:"oscuro",s:{FOR:28,DES:18,COST:14,INT:4,SAG:14,CAR:6},hp:[168,182,196,210]},
+  {n:"Shrowd",c:"classico",a:"oscuro",s:{FOR:42,DES:22,COST:26,INT:24,SAG:18,CAR:22},hp:[312,338,364,390]},
+  {n:"Gnasher",c:"classico",a:"neutro",s:{FOR:26,DES:16,COST:18,INT:4,SAG:12,CAR:6},hp:[216,234,251,270]},
+  {n:"Quillshot",c:"classico",a:"neutro",s:{FOR:28,DES:18,COST:18,INT:4,SAG:14,CAR:4},hp:[216,234,251,270]},
+  {n:"Shrike",c:"classico",a:"neutro",s:{FOR:28,DES:18,COST:16,INT:4,SAG:10,CAR:6},hp:[192,208,224,240]},
+  {n:"Gnasher Algente",c:"variante",a:"glaciale"},{n:"Skarn Algente",c:"variante",a:"glaciale"},
+  {n:"Gnasher Fiammeggiante",c:"variante",a:"ardente"},{n:"Quillshot Fiammeggiante",c:"variante",a:"ardente"},{n:"Rezakiri Fiammeggiante",c:"variante",a:"ardente"},
+  {n:"Drask Tuonante",c:"variante",a:"folgorante"},{n:"Charrogg Sporizzato",c:"variante",a:"terrestre"},
+  {n:"Boreus Alboreo",c:"variante",a:"radiante"},{n:"Koshai Alboreo",c:"variante",a:"radiante"},
+  {n:"Drask Foscomanto",c:"variante",a:"oscuro"},{n:"Koshai Foscomanto",c:"variante",a:"oscuro",s:{FOR:32,DES:22,COST:16,INT:16,SAG:18,CAR:10},hp:[192,208,224,240]},{n:"Nayzaga Foscomanto",c:"variante",a:"oscuro"},
+  {n:"Phaelanx",c:"anomalo",a:"ardente"},{n:"Sahavyt",c:"anomalo",a:"folgorante"},{n:"Alyra",c:"anomalo",a:"radiante"},{n:"Karkonos",c:"anomalo",a:"oscuro"},{n:"Shrowd Spargisangue",c:"anomalo",a:"oscuro"},
+  {n:"Urska",c:"leggendario",a:"glaciale"},{n:"Torgadoro",c:"leggendario",a:"ardente"},{n:"Malkarion",c:"leggendario",a:"folgorante"},{n:"Agarus",c:"leggendario",a:"terrestre"},{n:"Cronovoro",c:"leggendario",a:"radiante"},{n:"Thrax",c:"leggendario",a:"oscuro"},
+  {n:"Pangar Gelovelo",c:"evoluto",a:"glaciale"},{n:"Hellion Magmatico",c:"evoluto",a:"ardente"},{n:"Charrogg Spinofiamma",c:"evoluto",a:"ardente"},{n:"Nayzaga Statico",c:"evoluto",a:"folgorante"},{n:"Sahavyt 2.0",c:"evoluto",a:"folgorante"},{n:"Skarn Fortificato",c:"evoluto",a:"terrestre"},{n:"Kharabak Regina",c:"evoluto",a:"terrestre"},{n:"Alyra Primo",c:"evoluto",a:"radiante"},{n:"Valomyr Regnante",c:"evoluto",a:"radiante"},{n:"Riftstalker Sopravvissuto",c:"evoluto",a:"oscuro"},{n:"Shrike Magno",c:"evoluto",a:"neutro"},
+  {n:"Cryomuth",c:"nuovo",a:"glaciale"},{n:"Shar'dmaw",c:"nuovo",a:"glaciale"},{n:"Yondrake",c:"nuovo",a:"folgorante"},{n:"Yondrake Tuonante",c:"nuovo",a:"folgorante"},{n:"Alpheion",c:"nuovo",a:"terrestre"},{n:"Noctylume",c:"nuovo",a:"radiante"},{n:"Noctylume Foscomanto",c:"nuovo",a:"oscuro"},{n:"Prysaloose",c:"nuovo",a:"neutro"}
+];
+const aC={glaciale:"var(--ice)",ardente:"var(--fire)",folgorante:"var(--lightning)",terrestre:"var(--earth)",radiante:"var(--radiant)",oscuro:"var(--dark)",neutro:"var(--neutral)"};
+const aI={glaciale:"❄",ardente:"🔥",folgorante:"⚡",terrestre:"🌍",radiante:"✨",oscuro:"🌑",neutro:"◆"};
+const cL={classico:"Classico",variante:"Variante",anomalo:"Anomalo",leggendario:"Leggendario",evoluto:"Evoluto",nuovo:"Nuova Aggiunta"};
+const cC={classico:"var(--text2)",variante:"var(--ice)",anomalo:"var(--fire)",leggendario:"var(--gold2)",evoluto:"var(--radiant)",nuovo:"var(--lightning)"};
+const aTC={glaciale:"tg",ardente:"ta",folgorante:"tf",terrestre:"tt",radiante:"tr",oscuro:"to",neutro:"tn"};
+
+function buildBeh(){
+  document.getElementById("bgrid").innerHTML=BD.map(b=>`<div class="bcard" data-cat="${b.c}" data-ae="${b.a}"><div class="bn">${b.n}</div><div style="display:flex;gap:.35rem;flex-wrap:wrap"><span class="tag ${aTC[b.a]}">${aI[b.a]} ${b.a}</span><span class="tag" style="color:${cC[b.c]};border-color:${cC[b.c]}33">${cL[b.c]}</span></div></div>`).join("");
+}
+
+function fbeh(t,btn){
+  document.querySelectorAll(".fb").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  document.querySelectorAll(".bcard").forEach(c=>{c.classList.toggle("hidden",t!=="all"&&c.dataset.cat!==t&&c.dataset.ae!==t)});
+}
+
+function buildMStats(){
+  const ws=BD.filter(b=>b.s&&b.s.FOR);
+  document.getElementById("msl").innerHTML=ws.map(b=>`<div class="bmc"><div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'"><div><span style="font-family:'Cinzel',serif;font-size:.86rem;color:var(--master2)">${b.n}</span><span class="tag ${aTC[b.a]}" style="margin-left:.5rem">${aI[b.a]} ${b.a}</span></div><span style="color:#a06060;font-size:.7rem">▼</span></div><div style="display:none;margin-top:.7rem"><div style="display:grid;grid-template-columns:repeat(6,1fr);gap:.35rem;margin-bottom:.65rem">${Object.entries(b.s).map(([k,v])=>{const bn=Math.floor((v-10)/2);const bs=bn>=0?"+"+bn:""+bn;return`<div style="background:rgba(200,56,56,.06);padding:.3rem .35rem;text-align:center"><div style="font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.08em;color:#a06060;text-transform:uppercase">${k}</div><div style="font-size:.88rem;color:var(--text)">${v}</div><div style="font-size:.72rem;color:${bn>=0?"var(--ice)":"var(--fire)"}">${bs}</div></div>`}).join("")}</div>${b.hp?`<div style="font-size:.58rem;font-family:'Cinzel',serif;letter-spacing:.1em;text-transform:uppercase;color:#a06060;margin-bottom:.3rem">PV</div><div style="display:flex;gap:.65rem;flex-wrap:wrap">${b.hp.map((v,i)=>`<span style="font-size:.8rem;color:var(--text2)">×${[1.2,1.3,1.4,1.5][i]}: <strong style="color:var(--text)">${v}</strong></span>`).join("")}</div>`:""}</div></div>`).join("");
+}
+
+function fmst(q){document.querySelectorAll(".bmc").forEach(c=>{c.style.display=c.querySelector("span").textContent.toLowerCase().includes(q.toLowerCase())?"":"none"});}
+
+const WD=[
+  {n:"Spada",t:"Bilanciata · Mirato",tr:["1D6","2D6","3D6","4D6","6D6"],ch:"4-5 (1c) / 6 (2c)",sp:[{n:"Onda Lama",d:"Vicino: +dado extra +4. A distanza: attacco ignorando distanza +dado."},{n:"Parata",d:"Vicino: nega danno, poi attacca con dadi +1 +4. A distanza: ignora attacchi a distanza."},{n:"Eco della Forgia",d:"Zona 3×3: Behemoth entrando subisce dado danno +4."}]},
+  {n:"Lancia",t:"Bilanciata · Lacerante",tr:["1D6","2D6","3D6","4D6","6D6"],ch:"4-5 (1c) / 6 (2c)",sp:[{n:"Proiettile Aetherico",d:"Vicino: +dado extra +4. A distanza: attacco ignorando distanza +dado."},{n:"Balzo Spericolato",d:"Vicino: nega danno, allontana 6 quadretti. A distanza: avvicina 2× spostamento, 2 dadi +4."},{n:"Carica Rivalsa",d:"Avvicini ignorando distanza: 1 dado +4 fisso +1 ogni 2 quadretti."}]},
+  {n:"Martello",t:"Pesante · Stordente",tr:["1D8","2D8","3D8","4D8","6D8"],ch:"6-7 (1c) / 8 (2c)",sp:[{n:"Squarciaterra Rovinoso",d:"Esplosione aetherica: danno base +1 dado +4 stordente, indipendentemente dalla distanza."},{n:"Cannone Aetherico",d:"Bonus FOR +8 danni stordenti senza consumare l'azione di attacco."}]},
+  {n:"Ascia",t:"Pesante · Stordente + Lacerante",tr:["1D8","2D8","3D8","4D8","6D8"],ch:"6-7 (1c) / 8 (2c)",sp:[{n:"Mietitura Aetherica",d:"Lanci l'ascia: +1 dado +2 stordente. TirSalv DES per riprenderla; successo → +4 att. successivo."},{n:"Lancio Rovinoso",d:"Lanci l'ascia: +1 dado +2 lacerante. TirSalv DES; successo → +4 lacerante turno successivo."}]},
+  {n:"Pugni Aetherici",t:"Leggera · Mirato + Stordente",tr:["1D4","2D4","3D4","4D4","6D4"],ch:"3 (1c) / 4 (2c)",sp:[{n:"Schianto Titanico",d:"In prossimità: 2 dadi extra +4 danni stordenti."},{n:"Laser Aetherico",d:"1 dado extra +6 danno mirato. Maggiore la distanza, maggiore la CD."}]},
+  {n:"Lame a Catena",t:"Leggera · Lacerante + Mirato",tr:["1D4","2D4","3D4","4D4","6D4"],ch:"3-4 (1c)",sp:[{n:"Schianto Rovinoso",d:"A distanza spostamento: 1 dado extra alla parte scelta, −4 alle altre vicine."},{n:"Slancio Rovinoso",d:"A distanza spostamento: 1 dado extra +4 lacerante, spostandoti dalla parte opposta."}]}
+];
+
+function buildW(){
+  document.getElementById("wgrid").innerHTML=WD.map(w=>`<div class="card" style="padding:1.2rem"><div style="font-family:'Cinzel',serif;font-size:.92rem;font-weight:700;color:var(--gold2);margin-bottom:.2rem">${w.n}</div><div style="display:inline-block;font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:.1rem .4rem;border:1px solid rgba(200,168,75,.3);color:var(--gold3);margin-bottom:.8rem">${w.t}</div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:.2rem;margin-bottom:.75rem">${["Lv1-5","Lv6-10","Lv11-15","Lv16-20","Lv21-30"].map((l,i)=>`<div style="background:rgba(200,168,75,.04);padding:.28rem .22rem;text-align:center"><div style="font-family:'Cinzel',serif;font-size:.44rem;color:var(--text2)">${l}</div><div style="font-size:.78rem;color:var(--text)">${w.tr[i]}</div></div>`).join("")}</div><div style="font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.1em;color:var(--gold3);text-transform:uppercase;margin-bottom:.5rem">Cariche: ${w.ch}</div>${w.sp.map(s=>`<div style="padding:.45rem 0;border-bottom:1px solid rgba(200,168,75,.05)"><div style="font-family:'Cinzel',serif;font-size:.7rem;color:var(--gold2);margin-bottom:.18rem">${s.n}</div><div style="font-size:.8rem;color:var(--text2);line-height:1.5">${s.d}</div></div>`).join("")}</div>`).join("");
+}
+
+const CD={"Celle di Forza — Offensiva":[
+  {n:"Re del Knockout",p3:"×1.5 danni vs storditi",p6:"×2 danni vs storditi"},
+  {n:"Cacciatore di Aether",p3:"×1.5 danni vs aethercaricati",p6:"×2 danni vs aethercaricati"},
+  {n:"Cacciatore Furioso",p3:"×1.5 danni vs infuriati",p6:"×2 danni vs infuriati"},
+  {n:"Lavoro di Squadra",p3:"+2 danni; bonus agli alleati sullo stesso bersaglio",p6:"+4 danni; alleati ottengono vantaggio"},
+  {n:"Incremento Aetherico",p3:"+1 token elementale",p6:"+2 token elementali"},
+  {n:"Tempesta di Lame",p3:"Attacco mirato ×1.2",p6:"Attacco mirato ×1.5"},
+  {n:"Sopraffazione",p3:"Attacco stordente ×1.2",p6:"Attacco stordente ×1.5"},
+  {n:"Acido",p3:"Attacco lacerante ×1.2",p6:"Attacco lacerante ×1.5"}],
+"Celle di Vigore — Sopravvivenza":[
+  {n:"Ignifuga",p3:"Immune a SCOTTATO",p6:"Immune a BRUCIATO"},
+  {n:"Antigelo",p3:"Immune a CONGELATO",p6:"Immune a IBERNATO"},
+  {n:"Isolante",p3:"Immune a ELETTRIFICATO",p6:"Immune a FULMINATO"},
+  {n:"Ferreo",p3:"Immune a INTERRATO",p6:"Immune a DRENATO"},
+  {n:"Benedetto",p3:"CORROTTO dimezzato",p6:"Immune a CORROTTO"},
+  {n:"Marchiato",p3:"ABBAGLIATO dimezzato",p6:"Immune a ABBAGLIATO"},
+  {n:"Coagulante",p3:"Immune a SANGUINATO",p6:"Immune a EMORRAGICO"},
+  {n:"Corazzato",p3:"STORDITO dimezzato",p6:"Immune a STORDITO"}],
+"Celle di Tecnica — Stile di gioco":[
+  {n:"Agilità",p3:"+2 caselle movimento",p6:"+4 caselle movimento"},
+  {n:"Granpasso",p3:"Schivando: 2 danni al Behemoth",p6:"Schivando: 4 danni al Behemoth"},
+  {n:"Medico",p3:"Alleato a terra → metà PV",p6:"Alleato a terra → tutti PV; prima caduta automatica a metà PV"},
+  {n:"Rammendo",p3:"Oggetti curativi +4 PV extra",p6:"Oggetti curativi si attivano due volte; puoi ritirare gli 1"},
+  {n:"Astuzia",p3:"5° attacco: critico automatico",p6:"I 2 valori più alti del dado valgono il massimo"},
+  {n:"Riciclo",p3:"Stessa parte 3×: 3° colpo automatico",p6:"Stessa parte 2×: 2° colpo automatico"},
+  {n:"Parassita",p3:"Sotto ¼ PV: prossimo attacco dimezzato",p6:"Sotto ¼ PV: prossimo attacco annullato"},
+  {n:"Catalizzatore",p3:"Strumenti non curativi: durata +50%",p6:"Durata +50%, 50% di non consumare l'oggetto"}]};
+
+function buildC(){
+  let h="";
+  for(const[cat,items] of Object.entries(CD)){
+    h+=`<div class="cct" style="grid-column:1/-1">${cat}</div>`;
+    h+=items.map(c=>`<div class="ccrd"><div class="cn">${c.n}</div><div class="cr"><span class="clbl">+3</span><span style="color:var(--text)">${c.p3}</span></div><div class="cr"><span class="clbl">+6</span><span style="color:var(--gold2)">${c.p6}</span></div></div>`).join("");
+  }
+  document.getElementById("cgrid").innerHTML=h;
+}
+
+const TR=[
+  {n:1,b:"ly",nm:"Triade Radiante",t:"Nascita, inizio, luce pura"},
+  {n:2,b:"ly",nm:"Triade Folgorante",t:"Scoperta, energia, espansione"},
+  {n:3,b:"ly",nm:"Triade Ardente",t:"Conflitto, coraggio, passione"},
+  {n:4,b:"ly",nm:"Triade Terrestre",t:"Stabilità, costruzione, prosperità"},
+  {n:5,b:"ly",nm:"Triade Congelante",t:"Silenzio, attesa, gelo"},
+  {n:6,b:"ly",nm:"Triade Oscura",t:"Crepuscolo, introspezione"},
+  {n:"p",txt:"✦ Passaggio da Lyra a Kornos ✦",sub:"Giorno 30 Triade Oscura → Giorno 1 Triade Alborea"},
+  {n:7,b:"ko",nm:"Triade Alborea",t:"Rinascita, memoria, chiarore dopo l'ombra"},
+  {n:8,b:"ko",nm:"Triade Tuonante",t:"Turbolenza, prova, voce interiore"},
+  {n:9,b:"ko",nm:"Triade Fiammeggiante",t:"Purificazione, rivoluzione"},
+  {n:10,b:"ko",nm:"Triade Sporizzata",t:"Decomposizione, metamorfosi"},
+  {n:11,b:"ko",nm:"Triade Algente",t:"Morte apparente, immobilità"},
+  {n:12,b:"ko",nm:"Triade Foscomanto",t:"Oscurità totale, fine del ciclo"},
+  {n:"p2",txt:"✦ Passaggio da Kornos a Lyra ✦",sub:"Giorno 30 Triade Foscomanto → Giorno 1 Triade Radiante"}
+];
+
+function buildTR(){
+  document.getElementById("trgrid").innerHTML=TR.map(t=>{
+    if(t.n==="p"||t.n==="p2") return`<div class="tbanner" style="grid-column:1/-1">${t.txt}<br><span style="font-size:.8rem">${t.sub}</span></div>`;
+    const badge=t.b==="ly"?`<div class="bly">🌕 Lyra</div>`:`<div class="bko">🌑 Kornos</div>`;
+    return`<div class="trc"><div class="trn">${t.n}</div>${badge}<div class="trnm">${t.nm}</div><div class="trtm">${t.t}</div></div>`;
+  }).join("");
+}
+
+function swTab(id,btn){
+  document.querySelectorAll(".mtab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".mpanel").forEach(p=>p.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("p-"+id).classList.add("active");
+}
+
+function swN(id,btn){
+  document.querySelectorAll(".ntab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".npanel").forEach(p=>p.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("np-"+id).classList.add("active");
+}
+
+function svN(ch){
+  localStorage.setItem("tcj-n-"+ch,document.getElementById("n-"+ch).value);
+  const b=document.getElementById("sv-"+ch);
+  b.textContent="✓ Salvato";b.classList.add("saved");
+  setTimeout(()=>{b.textContent="Salva";b.classList.remove("saved")},2000);
+}
+
+function loadN(){["athena","panlan","asonnes"].forEach(c=>{const s=localStorage.getItem("tcj-n-"+c);if(s)document.getElementById("n-"+c).value=s;})}
+
+const PW="Golden_Sun";
+let mOpen=false;
+
+function openpw(){
+  if(mOpen){document.getElementById("ms").scrollIntoView({behavior:"smooth"});return;}
+  document.getElementById("pwo").classList.add("open");
+  setTimeout(()=>document.getElementById("pwi").focus(),100);
+}
+
+function closepw(){
+  document.getElementById("pwo").classList.remove("open");
+  document.getElementById("pwi").value="";
+  document.getElementById("pwe").style.display="none";
+}
+
+function chkpw(){
+  if(document.getElementById("pwi").value===PW){
+    mOpen=true;closepw();
+    document.getElementById("ms").style.display="block";
+    const b=document.getElementById("mbtn");
+    b.textContent="🔓 Master";b.classList.add("unlocked");
+    buildMStats();
+    setTimeout(()=>document.getElementById("ms").scrollIntoView({behavior:"smooth"}),100);
+  } else {
+    document.getElementById("pwe").style.display="block";
+    document.getElementById("pwi").value="";
+    document.getElementById("pwi").focus();
+  }
+}
+
+function updNav(){
+  const ss=document.querySelectorAll("section[id]");
+  const ls=document.querySelectorAll(".nav-links a");
+  let cur="";
+  ss.forEach(s=>{if(window.scrollY>=s.offsetTop-80)cur=s.id});
+  ls.forEach(l=>l.classList.toggle("active",l.getAttribute("href")==="#"+cur));
+}
+
+window.addEventListener("load",()=>{buildBeh();buildW();buildC();buildTR();loadN();});
+window.addEventListener("scroll",updNav,{passive:true});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closepw();});
+</script>
+</body>
+</html>
