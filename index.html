@@ -194,7 +194,7 @@ strong{color:var(--gold2)}
       <li><a href="#personaggi">Personaggi</a></li><li><a href="#mael">Mael</a></li>
       <li><a href="#behemoth">Behemoth</a></li><li><a href="#manuale">Manuale</a></li>
       <li><a href="#calendario">Calendario</a></li><li><a href="#corone">Corone</a></li>
-      <li><a href="#npc">NPC</a></li><li><a href="#diario">Diario</a></li>
+      <li><a href="#npc">NPC</a></li><li><a href="#nave">Nave</a></li><li><a href="#diario">Diario</a></li>
       <li><a href="#note">Note</a></li>
     </ul>
     <button class="master-btn" id="mbtn" onclick="openpw()">🔒 Master</button>
@@ -479,6 +479,116 @@ strong{color:var(--gold2)}
       <div class="card"><div class="nrole">Ozz l'Onesto — Messaggero</div><div class="ct">Ernest "Ozz" Honest</div><div style="font-size:.88rem;color:var(--text);line-height:1.6;margin-top:.5rem">Orfano cresciuto da solo a Ramsgate, viaggiava clandestinamente sulle navi. Ora messaggero ufficiale. Allegro, esplosivo, instancabile.</div></div>
       <div class="card"><div class="nrole">Barista della Coda di Gnasher</div><div class="ct">Tressa</div><div style="font-size:.88rem;color:var(--text);line-height:1.6;margin-top:.5rem">Nata a Ramsgate, ha conosciuto migliaia di Slayer attraverso il suo locale. Accogliente, ironica, schietta — confidente naturale.</div></div>
       <div class="card"><div class="nrole">Esperta di pozioni e botanica</div><div class="ct">Nonna Yaga</div><div style="font-size:.88rem;color:var(--text);line-height:1.6;margin-top:.5rem">Anziana enigmatica, prepara pozioni curative e potenzianti. Stravagante, apparentemente folle — ma lucida nelle sue arti.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="nave">
+  <div class="si">
+    <div class="sh">
+      <div class="sl">La Nave degli Slayer</div>
+      <h2 class="st">Careless Journey</h2>
+      <div class="sline"></div>
+      <p class="sdesc">Battezzata dal gruppo al termine della prima giornata a Ramsgate. Aeronave da esplorazione potenziata, equipaggiata con tecnologie avanzate e personalizzata per le esigenze di un gruppo di Slayer.</p>
+    </div>
+
+    <!-- SCHEDE STANZE -->
+    <div class="g2">
+
+      <div class="card" data-a="glaciale">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+          <div style="font-size:1.6rem">🛏️</div>
+          <div><div class="ct">Alloggi Principali</div><div class="cs">1° Piano Poppa · 6 stanze</div></div>
+        </div>
+        <div class="cb">
+          <p>Sei stanze private disposte sul piano superiore verso poppa, di cui <strong>tre occupate dai player</strong>. Ogni alloggio è fornito di ogni comfort e può essere personalizzato e migliorato nel corso del tempo.</p>
+          <p>Le tre stanze rimanenti sono disponibili per ospiti, alleati o nuovi membri dell'equipaggio.</p>
+        </div>
+        <div style="margin-top:.75rem;display:flex;gap:.4rem;flex-wrap:wrap">
+          <span class="tag tg">Athena</span><span class="tag to">Pan Lan</span><span class="tag tr">Asonnes</span>
+          <span class="tag tn">+ 3 libere</span>
+        </div>
+      </div>
+
+      <div class="card" data-a="folgorante">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+          <div style="font-size:1.6rem">🎛️</div>
+          <div><div class="ct">Ponte di Comando</div><div class="cs">1° Piano Prua · rialzato sulla Sala Mappe</div></div>
+        </div>
+        <div class="cb">
+          <p>Zona rialzata rispetto alla Sala Mappe, accessibile tramite una rampa interna. Divisa in <strong>tre postazioni indipendenti</strong> per il controllo della nave: navigazione, sistemi di bordo e comunicazioni.</p>
+          <p>È possibile attivare il <strong>pilota automatico</strong> — con i rischi che i player già conoscono. Potenziabile in futuro con nuovi sistemi.</p>
+        </div>
+      </div>
+
+      <div class="card" data-a="ardente">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+          <div style="font-size:1.6rem">🍽️</div>
+          <div><div class="ct">Mensa</div><div class="cs">2° Piano Poppa · sotto gli alloggi</div></div>
+        </div>
+        <div class="cb">
+          <p>Zona di ristoro e convivialità posizionata direttamente sotto gli alloggi. Dotata di <strong>cucina attrezzata, sistemi di refrigerazione avanzati</strong>, svariate sedute e tavoli di diverse dimensioni.</p>
+          <p>Il luogo naturale per riunioni informali, pasti condivisi e conversazioni fuori missione.</p>
+        </div>
+      </div>
+
+      <div class="card" data-a="radiante">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+          <div style="font-size:1.6rem">🗺️</div>
+          <div><div class="ct">Sala Mappe</div><div class="cs">2° Piano Prua · cuore operativo</div></div>
+        </div>
+        <div class="cb">
+          <p>Ampia sala circondata per quasi tutta la sua estensione dal <strong>parabrezza panoramico</strong> della nave — la visuale è a 180° sull'esterno. Al centro si trova un <strong>tavolo olografico interattivo</strong> che permette di visualizzare la mappa completa di tutte le isole.</p>
+          <p>Integrato con un <strong>radar molto avanzato</strong> per il tracciamento di navi, behemoth e fenomeni aetherici nell'area.</p>
+        </div>
+      </div>
+
+      <div class="card" data-a="terrestre">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+          <div style="font-size:1.6rem">🌬️</div>
+          <div><div class="ct">Ponte Esterno</div><div class="cs">2° Piano Prua Esterna</div></div>
+        </div>
+        <div class="cb">
+          <p>Piattaforma esterna posizionata sulla prua della nave, accessibile dalla Sala Mappe. Esposta completamente all'esterno, offre una vista libera sul cielo aperto e sulle isole durante la navigazione.</p>
+          <p>Utile per osservazioni dirette, approdi rapidi e operazioni che richiedono accesso immediato all'esterno.</p>
+        </div>
+      </div>
+
+      <div class="card" data-a="neutro">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+          <div style="font-size:1.6rem">📦</div>
+          <div><div class="ct">Stiva Modulare</div><div class="cs">3° Piano Poppa · adattabile</div></div>
+        </div>
+        <div class="cb">
+          <p>Ampia stiva che può essere <strong>riconfigurabile su richiesta</strong>: alloggi aggiuntivi, studi scientifici, laboratori, sale di addestramento. Comunica con la Stiva Primaria tramite un ascensore centrale per lo spostamento merci.</p>
+          <p>Attualmente non ancora configurata — in attesa di una destinazione d'uso.</p>
+        </div>
+        <div style="margin-top:.75rem"><span class="tag tgo">Modulare</span><span class="tag tn">Espandibile</span></div>
+      </div>
+
+      <div class="card" data-a="neutro">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+          <div style="font-size:1.6rem">⚙️</div>
+          <div><div class="ct">Stiva Primaria</div><div class="cs">4° Piano Poppa · stiva principale</div></div>
+        </div>
+        <div class="cb">
+          <p>La stiva principale della nave — la più grande. Comunica con la Stiva Modulare tramite l'ascensore centrale e con l'esterno attraverso il <strong>portellone di carico</strong> sul lato di poppa.</p>
+          <p>Destinata al trasporto di materiali, pezzi di behemoth, equipaggiamenti pesanti e rifornimenti per le spedizioni lunghe.</p>
+        </div>
+      </div>
+
+      <div class="card" data-a="oscuro">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+          <div style="font-size:1.6rem">⚡</div>
+          <div><div class="ct">Sala Macchine</div><div class="cs">3° Piano Prua · cuore energetico</div></div>
+        </div>
+        <div class="cb">
+          <p>Il cuore pulsante della nave, protetto da <strong>ampi muri rinforzati</strong> che la rendono la zona più sicura e difesa dell'intera imbarcazione. Ospita i sistemi energetici principali della Careless Journey.</p>
+          <p>Nascosta dietro uno dei muri rinforzati si trova una <strong>zona segreta</strong> — accessibile solo a chi conosce l'accesso — dedicata alla conservazione di reliquie, artefatti e oggetti di valore che non devono essere visti da occhi indiscreti.</p>
+        </div>
+        <div style="margin-top:.75rem"><span class="tag to" style="border-style:dashed">🔒 Zona Segreta</span></div>
+      </div>
+
     </div>
   </div>
 </section>
