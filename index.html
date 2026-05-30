@@ -602,6 +602,7 @@ strong{color:var(--gold2)}
     <a href="#m-solc">I Solcavuoto</a>
     <a href="#m-med">Il Mediatore</a>
     <a href="#m-stat">Statistiche Behemoth</a>
+    <a href="#m-note">Note Master</a>
   </div>
 
   <div class="msec" id="m-trad">
@@ -729,6 +730,50 @@ strong{color:var(--gold2)}
     <div class="msecl"></div>
     <input type="text" id="mss" placeholder="Cerca un Behemoth..." oninput="fmst(this.value)" style="width:100%;padding:.6rem 1rem;background:rgba(200,56,56,.06);border:1px solid rgba(200,56,56,.2);color:var(--text);font-family:'Crimson Pro',serif;font-size:1rem;outline:none;margin-bottom:1.25rem">
     <div id="msl"></div>
+  </div>
+
+  <div class="msec" id="m-note" style="border-top:1px solid rgba(200,56,56,.1)">
+    <div class="msecsub">Riservato al DM</div>
+    <div class="msect">Note del Master</div>
+    <div class="msecl"></div>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.5rem">
+      <button class="ntab active" style="border-color:rgba(200,56,56,.3);color:#c08080" onclick="swMN('generale',this)">📋 Generale</button>
+      <button class="ntab" style="border-color:rgba(200,56,56,.2);color:#a08080" onclick="swMN('sessione',this)">🗓 Prossima Sessione</button>
+      <button class="ntab" style="border-color:rgba(200,56,56,.2);color:#a08080" onclick="swMN('trame',this)">🕸 Trame in corso</button>
+      <button class="ntab" style="border-color:rgba(200,56,56,.2);color:#a08080" onclick="swMN('npc',this)">🎭 NPC & Fazioni</button>
+    </div>
+    <div id="mnp-generale" style="display:block">
+      <div class="nhdr">
+        <div style="font-family:'Cinzel Decorative',serif;font-size:1rem;color:#c08080">Note Generali</div>
+        <button class="nsave" id="msv-generale" onclick="svMN('generale')" style="border-color:rgba(200,56,56,.4);color:#c08080">Salva</button>
+      </div>
+      <textarea class="na" id="mn-generale" placeholder="Appunti generali sulla campagna, idee, rimandi, cose da non dimenticare..." style="border-color:rgba(200,56,56,.2);min-height:300px"></textarea>
+      <div class="nhint" style="color:#806060">Le note vengono salvate localmente in questo browser.</div>
+    </div>
+    <div id="mnp-sessione" style="display:none">
+      <div class="nhdr">
+        <div style="font-family:'Cinzel Decorative',serif;font-size:1rem;color:#c08080">Prossima Sessione</div>
+        <button class="nsave" id="msv-sessione" onclick="svMN('sessione')" style="border-color:rgba(200,56,56,.4);color:#c08080">Salva</button>
+      </div>
+      <textarea class="na" id="mn-sessione" placeholder="Cosa succederà nella prossima sessione? Incontri pianificati, eventi, rivelazioni, NPC da introdurre..." style="border-color:rgba(200,56,56,.2);min-height:300px"></textarea>
+      <div class="nhint" style="color:#806060">Le note vengono salvate localmente in questo browser.</div>
+    </div>
+    <div id="mnp-trame" style="display:none">
+      <div class="nhdr">
+        <div style="font-family:'Cinzel Decorative',serif;font-size:1rem;color:#c08080">Trame in Corso</div>
+        <button class="nsave" id="msv-trame" onclick="svMN('trame')" style="border-color:rgba(200,56,56,.4);color:#c08080">Salva</button>
+      </div>
+      <textarea class="na" id="mn-trame" placeholder="Trame aperte, fili narrativi in corso, conseguenze di scelte passate, archi da completare..." style="border-color:rgba(200,56,56,.2);min-height:300px"></textarea>
+      <div class="nhint" style="color:#806060">Le note vengono salvate localmente in questo browser.</div>
+    </div>
+    <div id="mnp-npc" style="display:none">
+      <div class="nhdr">
+        <div style="font-family:'Cinzel Decorative',serif;font-size:1rem;color:#c08080">NPC & Fazioni</div>
+        <button class="nsave" id="msv-npc" onclick="svMN('npc')" style="border-color:rgba(200,56,56,.4);color:#c08080">Salva</button>
+      </div>
+      <textarea class="na" id="mn-npc" placeholder="Note su NPC specifici, motivazioni nascoste, stato delle fazioni, alleanze e rivalità..." style="border-color:rgba(200,56,56,.2);min-height:300px"></textarea>
+      <div class="nhint" style="color:#806060">Le note vengono salvate localmente in questo browser.</div>
+    </div>
   </div>
 
 </div>
@@ -925,7 +970,28 @@ function updNav(){
   ls.forEach(l=>l.classList.toggle("active",l.getAttribute("href")==="#"+cur));
 }
 
-window.addEventListener("load",()=>{buildBeh();buildW();buildC();buildTR();loadN();});
+function swMN(id,btn){
+  document.querySelectorAll("[id^='mnp-']").forEach(p=>p.style.display="none");
+  document.getElementById("mnp-"+id).style.display="block";
+  btn.parentElement.querySelectorAll(".ntab").forEach(t=>{t.style.borderColor="rgba(200,56,56,.2)";t.style.color="#a08080";});
+  btn.style.borderColor="rgba(200,56,56,.5)";btn.style.color="#c08080";
+}
+
+function svMN(tab){
+  localStorage.setItem("tcj-mn-"+tab,document.getElementById("mn-"+tab).value);
+  const b=document.getElementById("msv-"+tab);
+  b.textContent="✓ Salvato";b.classList.add("saved");
+  setTimeout(()=>{b.textContent="Salva";b.classList.remove("saved")},2000);
+}
+
+function loadMN(){
+  ["generale","sessione","trame","npc"].forEach(t=>{
+    const s=localStorage.getItem("tcj-mn-"+t);
+    if(s) document.getElementById("mn-"+t).value=s;
+  });
+}
+
+window.addEventListener("load",()=>{buildBeh();buildW();buildC();buildTR();loadN();loadMN();});
 window.addEventListener("scroll",updNav,{passive:true});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closepw();});
 </script>
