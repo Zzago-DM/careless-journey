@@ -711,7 +711,10 @@ strong{color:var(--gold2)}
     <a href="#m-seg">Segreti Personaggi</a>
     <a href="#m-solc">I Solcavuoto</a>
     <a href="#m-med">Il Mediatore</a>
-    <a href="#m-stat">Statistiche Behemoth</a>
+    <a href="#m-stat-mael">Stat Mael</a>
+    <a href="#m-stat-alti">Alti Maestri</a>
+    <a href="#m-stat-minori">Maestri Minori</a>
+    <a href="#m-stat">Stat Behemoth</a>
     <a href="#m-note">Note Master</a>
   </div>
 
@@ -788,6 +791,31 @@ strong{color:var(--gold2)}
       <div class="mr"><span class="mk">Dado danno</span><span class="mv">1D6 base per spada, progressione fino a 6D6.</span></div>
       <div class="mr"><span class="mk">Doppio attacco</span><span class="mv">Il secondo attacco è quasi sempre disponibile — cadenza vicina alle armi leggere.</span></div>
     </div>
+  </div>
+
+
+  <div class="msec" id="m-stat-mael" style="border-top:1px solid rgba(200,56,56,.1)">
+    <div class="msecsub">Statistiche Complete</div>
+    <div class="msect">Schede Statistiche — I Mael</div>
+    <div class="msecl"></div>
+    <div class="mq">Formula HP: (FOR + COST) × 8. Soglia max player al Lv.20: ~40 in una stat primaria.</div>
+    <div id="grid-mael" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;margin-top:1rem"></div>
+  </div>
+
+  <div class="msec" id="m-stat-alti" style="border-top:1px solid rgba(200,56,56,.1)">
+    <div class="msecsub">Livello 20 — Boss Finali Umani</div>
+    <div class="msect">Schede Statistiche — Alti Maestri</div>
+    <div class="msecl"></div>
+    <div class="mq">Formula HP: Livello × (5 + mod COST). Stat max teorico al Lv.20: 26. Ogni Maestro ha ottimizzato la propria crescita intorno alla sua arte.</div>
+    <div id="grid-alti" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;margin-top:1rem"></div>
+  </div>
+
+  <div class="msec" id="m-stat-minori" style="border-top:1px solid rgba(200,56,56,.1)">
+    <div class="msecsub">Livelli Variabili</div>
+    <div class="msect">Schede Statistiche — Maestri Minori</div>
+    <div class="msecl"></div>
+    <div class="mq">Stessa formula HP dei Maestri. Profili più specializzati — spesso pericolosi per le loro conoscenze più che per la potenza marziale.</div>
+    <div id="grid-minori" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;margin-top:1rem"></div>
   </div>
 
   <div class="msec" id="m-seg" style="border-top:1px solid rgba(200,56,56,.1)">
@@ -1064,6 +1092,9 @@ function chkpw(){
     const b=document.getElementById("mbtn");
     b.textContent="🔓 Master";b.classList.add("unlocked");
     buildMStats();
+    renderStatCards(MD,50,"grid-mael");
+    renderStatCards(AD,26,"grid-alti");
+    renderStatCards(MND,26,"grid-minori");
     setTimeout(()=>document.getElementById("ms").scrollIntoView({behavior:"smooth"}),100);
   } else {
     document.getElementById("pwe").style.display="block";
@@ -1100,6 +1131,85 @@ function loadMN(){
     if(s) document.getElementById("mn-"+t).value=s;
   });
 }
+
+
+// ═══ STAT CARD RENDERER ═══
+function mod(v){const m=Math.floor((v-10)/2);return(m>=0?"+":"")+m;}
+
+function renderStatCards(data,maxStat,containerId){
+  const el=document.getElementById(containerId);
+  if(!el)return;
+  el.innerHTML=data.map(d=>{
+    const sHtml=Object.entries(d.s).map(([k,v])=>{
+      const pct=Math.round(v/maxStat*100);
+      return `<div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+          <span style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;color:#a06060">${k}</span>
+          <span style="font-size:.78rem;color:var(--text)">${v} <span style="color:#906060;font-size:.68rem">(${mod(v)})</span></span>
+        </div>
+        <div style="height:2px;background:rgba(200,56,56,.1);border-radius:1px">
+          <div style="height:100%;width:${pct}%;background:${d.ac};border-radius:1px;opacity:.75"></div>
+        </div>
+      </div>`;
+    }).join("");
+    const lvl=d.lv?`<div style="font-size:.58rem;color:#806060;margin-top:.15rem">Lv.${d.lv}</div>`:"";
+    const wpn=d.wp?`<div style="font-size:.7rem;color:#907070;margin-top:.15rem">⚔ ${d.wp}</div>`:"";
+    const art=d.ar?`<div style="font-size:.7rem;color:#907070">◈ ${d.ar}</div>`:"";
+    const nt=d.nt?`<div style="font-size:.76rem;color:#907070;font-style:italic;border-top:1px solid rgba(200,56,56,.08);padding-top:.55rem;margin-top:.55rem">${d.nt}</div>`:"";
+    return `<div style="background:rgba(200,56,56,.04);border:1px solid rgba(200,56,56,.12);border-top:3px solid ${d.ac};padding:1.1rem">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:.55rem;font-family:'Cinzel',serif;letter-spacing:.1em;text-transform:uppercase;color:${d.ac};margin-bottom:.15rem">${d.ae}</div>
+          <div style="font-family:'Cinzel',serif;font-size:.92rem;font-weight:700;color:var(--master2)">${d.nm}</div>
+          <div style="font-size:.72rem;color:#a08080;margin-top:.1rem">${d.rl}</div>
+          ${wpn}${art}${lvl}
+        </div>
+        <div style="text-align:right;flex-shrink:0;margin-left:.75rem">
+          <div style="font-size:.5rem;color:#a06060;font-family:'Cinzel',serif;letter-spacing:.08em;text-transform:uppercase">HP</div>
+          <div style="font-size:1.4rem;color:${d.ac};font-family:'Cinzel Decorative',serif;line-height:1;font-weight:700">${d.hp}</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem .75rem;border-top:1px solid rgba(200,56,56,.1);padding-top:.65rem">
+        ${sHtml}
+      </div>${nt}
+    </div>`;
+  }).join("");
+}
+
+// ═══ MAEL DATA ═══
+const MD=[
+  {nm:"Estarossa",ae:"Terrestre",rl:"Controllore · Supporto",wp:"Le Fondamenta di Ramsgate",ar:"Corona di Gondor",hp:530,ac:"#a07830",s:{FOR:20,DES:26,COST:46,INT:40,SAG:50,CAR:44},nt:"Non combatte direttamente. SAG al massimo: legge il campo con perfezione millenaria. FOR volutamente bassa — non è la sua strada."},
+  {nm:"Symael",ae:"Glaciale",rl:"Combattente Heavy · Bilanciato",wp:"Alatreon",ar:"Collana del Desufiora",hp:624,ac:"#7ec8e3",s:{FOR:40,DES:34,COST:38,INT:28,SAG:44,CAR:24},nt:"L'unico Mael con profilo davvero bilanciato. SAG elevatissima per la comunicazione con i Behemoth. CAR bassa: non è un leader, è un sopravvissuto selvaggio."},
+  {nm:"Azrael",ae:"Oscuro",rl:"Logoramento · Controllo Campo",wp:"Vita Mortale",ar:"Flauto di Elias Folfo",hp:512,ac:"#8860d0",s:{FOR:30,DES:36,COST:34,INT:46,SAG:40,CAR:22},nt:"Ogni colpo è un investimento. INT (46): calcola quando smettere perché il bersaglio è già morto. CAR quasi nulla — è il più silenzioso dei Mael."},
+  {nm:"Raphael",ae:"Ardente",rl:"Artigliere · Lunga Distanza",wp:"Carmilla",ar:"Braccio del Mixitron",hp:400,ac:"#e05a20",s:{FOR:22,DES:46,COST:28,INT:50,SAG:34,CAR:44},nt:"Glass cannon: INT e DES al massimo, COST e FOR al minimo. Se raggiunto in mischia è vulnerabile. CAR alta (44) riflette il gentleman raffinato."},
+  {nm:"Gabrael",ae:"Radiante",rl:"Inganno · Manipolazione della Luce",wp:"Tasca Dimensionale",ar:"Manto di Rinmole",hp:464,ac:"#b888ff",s:{FOR:22,DES:48,COST:36,INT:50,SAG:44,CAR:48},nt:"⚠ Il villain principale. INT e CAR rotte (50, 48): impossibile da ingannare. DES straordinaria per il controllo degli specchi. FOR quasi irrilevante."},
+  {nm:"Mykael",ae:"Folgorante",rl:"DPS Aggressivo · Doppie Spade",wp:"Valstrax",ar:"Armatura del Ragnarok",hp:704,ac:"#d4b800",s:{FOR:48,DES:46,COST:40,INT:22,SAG:26,CAR:28},nt:"Opposto speculare di Estarossa. FOR e DES massime, INT e SAG quasi trascurabili. Il combattente più puro. HP più elevate (704). Devastante, quasi inarrestabile."}
+];
+
+
+// ═══ ALTI MAESTRI DATA ═══
+const AD=[
+  {nm:"Wils Bormen",ae:"Ascia · Lv.20",rl:"Maestro d'armi · Forgiatore",wp:"Ascia",lv:20,hp:240,ac:"#c8a84b",s:{FOR:21,DES:14,COST:24,INT:20,SAG:18,CAR:16},nt:"Non è in prima linea ma conosce ogni arma. COST alta (24) da anni di lavoro alla forgia. SAG e INT elevate per decenni di studio pratico."},
+  {nm:"Moyra Heigsketter",ae:"Martello · Lv.20",rl:"Maestra delle armature",wp:"Martello",lv:20,hp:240,ac:"#8b6840",s:{FOR:18,DES:14,COST:24,INT:22,SAG:20,CAR:16},nt:"Più analitica di Wils ma meno potente fisicamente. COST al massimo per la filosofia difensiva. INT alta per la progettazione di armature avanzate."},
+  {nm:"Katerin Sorrel",ae:"Spada · Lv.20",rl:"Maestra della spada",wp:"Spada",lv:20,hp:200,ac:"#7ec8e3",s:{FOR:22,DES:24,COST:20,INT:16,SAG:18,CAR:18},nt:"Probabilmente il miglior duellante puro di Ramsgate. Profilo bilanciato — riflette la spada. SAG alta per la guida dei discepoli."},
+  {nm:"Linnea Silver",ae:"Ascia · Lv.20",rl:"Maestra dell'ascia",wp:"Ascia",lv:20,hp:220,ac:"#e05a20",s:{FOR:26,DES:18,COST:22,INT:18,SAG:18,CAR:16},nt:"La più forte fisicamente degli Otto. FOR al massimo teorico. CAR bassa — ha abbandonato il privilegio della famiglia Silver."},
+  {nm:"Markus Boher",ae:"Martello · Lv.20",rl:"Maestro del martello · Porto",wp:"Martello",lv:20,hp:240,ac:"#a07830",s:{FOR:26,DES:14,COST:24,INT:16,SAG:18,CAR:18},nt:"Se Linnea è la forza pura, Markus è il muro. FOR e COST dominanti. Costruito per fronteggiare direttamente un Behemoth."},
+  {nm:"Lady Luck",ae:"Catena · Lv.20",rl:"Maestra della catena",wp:"Lame a Catena",lv:20,hp:180,ac:"#f0d020",s:{FOR:18,DES:26,COST:18,INT:20,SAG:18,CAR:22},nt:"Velocità, astuzia e presenza scenica. DES al massimo. COST bassa — non è costruita per assorbire colpi, ma per non essere mai colpita."},
+  {nm:"La Maestra Sfregiata",ae:"Pugni · Lv.20",rl:"Maestra dei pugni aetherici",wp:"Pugni Aetherici",lv:20,hp:220,ac:"#8860d0",s:{FOR:20,DES:22,COST:22,INT:16,SAG:26,CAR:14},nt:"Quasi un monaco. SAG al massimo (26): la forza nasce dalla disciplina interiore. CAR quasi nulla — non le importa di essere capita."},
+  {nm:"Xelya",ae:"Lancia · Lv.20",rl:"Maestra della lancia",wp:"Lancia",lv:20,hp:200,ac:"#d4a8ff",s:{FOR:20,DES:24,COST:20,INT:18,SAG:22,CAR:18},nt:"Probabilmente la miglior tattica del gruppo. DES dominante per il controllo dello spazio. SAG alta. Parla poco, osserva tutto."}
+];
+
+// ═══ MAESTRI MINORI DATA ═══
+const MND=[
+  {nm:"Janek Zai",ae:"Armi da fuoco · Lv.20",rl:"Ammiraglio · Veterano di guerra",wp:"Pistola/Arco Aetherico",lv:20,hp:220,ac:"#f0d020",s:{FOR:18,DES:26,COST:22,INT:18,SAG:22,CAR:18},nt:"Il combattente più pericoloso tra i Minori. DES e SAG dominanti — precisione militare affinata in decenni di servizio."},
+  {nm:"Nonna Yaga",ae:"Botanica · Lv.20",rl:"Esperta di pozioni",wp:"—",lv:20,hp:180,ac:"#8b6840",s:{FOR:10,DES:12,COST:18,INT:26,SAG:26,CAR:18},nt:"In uno scontro fisico non impressiona. INT e SAG massime: è un'enciclopedia vivente di conoscenze rare."},
+  {nm:"Il Mediatore",ae:"Celle Aetheriche · Lv.18",rl:"Ricercatore · Padre delle Omnicelle",wp:"—",lv:18,hp:162,ac:"#a07830",s:{FOR:10,DES:14,COST:18,INT:26,SAG:22,CAR:14},nt:"⚠ Vera identità: Edgar Solomon. INT al massimo. Il suo vero potere non è il combattimento, ma ciò che riesce a creare."},
+  {nm:"Shaed Priyani",ae:"Behemothologia · Lv.18",rl:"Massima esperta dei Behemoth",wp:"—",lv:18,hp:162,ac:"#8860d0",s:{FOR:12,DES:18,COST:18,INT:24,SAG:26,CAR:16},nt:"Conosce punti deboli, anatomia e comportamento di quasi ogni creatura. SAG al massimo per la lettura comportamentale."},
+  {nm:"Gregorio Flynt",ae:"Risorse · Lv.16",rl:"Il Gregario · Veterano",wp:"Generico",lv:16,hp:160,ac:"#c8a84b",s:{FOR:20,DES:18,COST:20,INT:16,SAG:18,CAR:20},nt:"Non è il più tecnico, ma è estremamente equilibrato e carismatico. La sua forza è l'affidabilità e la rete di contatti."},
+  {nm:"Tressa",ae:"Sociale · Lv.16",rl:"Barista · Cuore di Ramsgate",wp:"—",lv:16,hp:128,ac:"#e05a20",s:{FOR:10,DES:14,COST:16,INT:18,SAG:22,CAR:24},nt:"Non nasce come combattente. La sua influenza deriva dalla capacità di comprendere e guidare le persone. CAR dominante."},
+  {nm:"Arkan Drew",ae:"Inventore · Lv.16",rl:"Ingegnere · Prototipista",wp:"Prototipi Meccanici",lv:16,hp:128,ac:"#7ec8e3",s:{FOR:10,DES:12,COST:16,INT:26,SAG:20,CAR:14},nt:"Da solo non è devastante, ma con i suoi prototipi può cambiare il corso di una battaglia. INT al massimo."},
+  {nm:"Ozz l'Onesto",ae:"Corriere · Lv.10",rl:"Messaggero · Esploratore urbano",wp:"—",lv:10,hp:90,ac:"#d4b800",s:{FOR:12,DES:20,COST:18,INT:14,SAG:18,CAR:22},nt:"Il più umano del gruppo. Non ha la potenza marziale degli altri Maestri, ma conosce Ramsgate come le proprie tasche."}
+];
 
 window.addEventListener("load",()=>{buildBeh();buildW();buildC();buildTR();loadN();loadMN();});
 window.addEventListener("scroll",updNav,{passive:true});
