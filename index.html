@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Careless Journey — Manuale del Mondo</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap&family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#080a0f;--bg2:#0d1018;--bg3:#111520;--gold:#c8a84b;--gold2:#e8c870;--gold3:#a07830;--ice:#7ec8e3;--fire:#e05a20;--lightning:#f0d020;--earth:#8b6840;--radiant:#d4a8ff;--dark:#8860d0;--neutral:#a8a8b8;--text:#d0c8b8;--text2:#908878;--border:rgba(200,168,75,0.2);--master:#c84848;--master2:#ff6060;--master-bg:#180808}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -195,7 +195,7 @@ strong{color:var(--gold2)}
       <li><a href="#behemoth">Behemoth</a></li><li><a href="#manuale">Manuale</a></li>
       <li><a href="#calendario">Calendario</a></li><li><a href="#corone">Corone</a></li>
       <li><a href="#npc">NPC</a></li><li><a href="#nave">Nave</a></li><li><a href="#diario">Diario</a></li>
-      <li><a href="#note">Note</a></li>
+      <li><a href="#scheda">Scheda</a></li><li><a href="#note">Note</a></li>
     </ul>
     <button class="master-btn" id="mbtn" onclick="openpw()">🔒 Master</button>
   </div>
@@ -666,6 +666,239 @@ strong{color:var(--gold2)}
 
   </div>
 </section>
+
+
+<section id="scheda" style="background:var(--bg2)">
+  <div class="si">
+    <div class="sh">
+      <div class="sl">Scheda Personaggio</div>
+      <h2 class="st">The Careless Journey</h2>
+      <div class="sline"></div>
+      <p class="sdesc">Tutti i campi sono editabili e salvati nel tuo browser.</p>
+    </div>
+
+<style>
+.sc-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;max-width:900px;margin:0 auto}
+.sc-full{grid-column:1/-1}
+.sc-card{background:var(--bg3);border:1px solid var(--border);padding:1.1rem}
+.sc-lbl{font-family:"Cinzel",serif;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold3);display:block;margin-bottom:.35rem}
+.sc-in{background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:"Crimson Pro",serif;font-size:.92rem;padding:.3rem .5rem;outline:none;width:100%;transition:border-color .2s;box-sizing:border-box}
+.sc-in:focus{border-color:var(--gold3)}
+.sc-stat-row{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.sc-stat-item{display:flex;align-items:center;gap:.4rem;padding:.3rem 0;border-bottom:1px solid rgba(200,168,75,.06)}
+.sc-stat-name{font-family:"Cinzel",serif;font-size:.65rem;letter-spacing:.1em;color:var(--text2);min-width:46px}
+.sc-stat-val{width:52px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:"Crimson Pro",serif;font-size:.9rem;padding:.2rem .3rem;outline:none;text-align:center;transition:border-color .2s}
+.sc-stat-val:focus{border-color:var(--gold3)}
+.sc-stat-mod{width:44px;background:var(--bg);border:1px solid var(--border);color:var(--gold2);font-family:"Cinzel Decorative",serif;font-size:.82rem;padding:.2rem .3rem;outline:none;text-align:center;transition:border-color .2s}
+.sc-stat-mod:focus{border-color:var(--gold3)}
+.sc-chbtn{width:38px;height:30px;border:1px solid var(--border);background:var(--bg);cursor:pointer;transition:all .2s;border-radius:2px}
+.sc-chbtn.on{background:#2a6eff;border-color:#1a50dd}
+.sc-ndisp{padding:.3rem .55rem;border:1px solid var(--border);font-family:"Cinzel",serif;font-size:.7rem;letter-spacing:.06em;margin-bottom:.3rem;min-height:28px;transition:all .2s}
+.sc-nsel{width:100%;padding:.28rem .4rem;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:"Cinzel",serif;font-size:.62rem;letter-spacing:.06em;outline:none;cursor:pointer}
+.sc-celle-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
+.sc-cella{background:var(--bg);border:1px solid var(--border);color:var(--gold2);font-family:"Cinzel",serif;font-size:.68rem;letter-spacing:.06em;padding:.35rem .5rem;outline:none;text-align:center;width:100%;transition:border-color .2s;box-sizing:border-box}
+.sc-cella:focus{border-color:var(--gold3)}
+.sc-pv-box{font-family:"Cinzel Decorative",serif;font-size:1.8rem;text-align:center;background:var(--bg);border:1px solid var(--border);color:var(--gold2);padding:.3rem;outline:none;width:100%;transition:border-color .2s}
+.sc-pv-box:focus{border-color:var(--gold3)}
+.sc-counter{display:flex;align-items:center;gap:.5rem;margin-top:.5rem}
+.sc-cnt-btn{width:28px;height:28px;background:var(--bg3);border:1px solid var(--border);color:var(--gold2);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:"Cinzel",serif}
+.sc-cnt-btn:hover{background:rgba(200,168,75,.1);border-color:var(--gold3)}
+.sc-cnt-val{width:52px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:"Cinzel Decorative",serif;font-size:1rem;padding:.2rem;outline:none;text-align:center}
+.sc-save{font-family:"Cinzel",serif;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;padding:.42rem 1.4rem;background:transparent;border:1px solid var(--gold3);color:var(--gold3);cursor:pointer;transition:all .2s;grid-column:1/-1;display:block;margin:0 auto}
+.sc-save:hover{background:rgba(200,168,75,.1)}
+.sc-save.ok{border-color:var(--ice);color:var(--ice)}
+</style>
+
+<div class="sc-wrap">
+
+  <!-- Livello + Rango -->
+  <div class="sc-card">
+    <span class="sc-lbl">Livello</span>
+    <input class="sc-in" id="sc-lvl" type="number" placeholder="1" style="text-align:center;font-size:1.1rem">
+  </div>
+  <div class="sc-card">
+    <span class="sc-lbl">Rango Slayer</span>
+    <input class="sc-in" id="sc-rango" placeholder="—" style="font-size:.95rem">
+  </div>
+
+  <!-- Punti Vita -->
+  <div class="sc-card sc-full">
+    <span class="sc-lbl">Punti Vita</span>
+    <input class="sc-pv-box" id="sc-pv" type="text" placeholder="—">
+  </div>
+
+  <!-- Statistiche -->
+  <div class="sc-card sc-full">
+    <span class="sc-lbl">Statistiche — Valore · Modificatore</span>
+    <div class="sc-stat-row">
+      <div id="sc-stats-left"></div>
+      <div id="sc-stats-right"></div>
+    </div>
+  </div>
+
+  <!-- Arma principale + cariche -->
+  <div class="sc-card sc-full">
+    <span class="sc-lbl">Arma Principale</span>
+    <input class="sc-in" id="sc-arma" placeholder="Nome arma..." style="margin-bottom:.75rem">
+    <span class="sc-lbl">Cariche</span>
+    <div style="display:flex;flex-direction:column;gap:.4rem">
+      <div style="display:flex;gap:.4rem" id="sc-ch-r1"></div>
+      <div style="display:flex;gap:.4rem" id="sc-ch-r2"></div>
+    </div>
+  </div>
+
+  <!-- Abilità arma -->
+  <div class="sc-card sc-full">
+    <span class="sc-lbl">Abilità Arma</span>
+    <textarea class="sc-in" id="sc-abil" rows="4" style="resize:vertical;font-size:.88rem" placeholder="Scrivi le abilità speciali dell'arma..."></textarea>
+  </div>
+
+  <!-- Arma secondaria + proiettili -->
+  <div class="sc-card">
+    <span class="sc-lbl">Arma Secondaria</span>
+    <input class="sc-in" id="sc-arma2" placeholder="Nome arma..." style="margin-bottom:.6rem">
+    <span class="sc-lbl">Proiettili</span>
+    <div class="sc-counter">
+      <button class="sc-cnt-btn" onclick="scCnt(-1)">−</button>
+      <input class="sc-cnt-val" id="sc-proiettili" type="number" value="0" min="0">
+      <button class="sc-cnt-btn" onclick="scCnt(1)">+</button>
+    </div>
+  </div>
+
+  <!-- Nuclei -->
+  <div class="sc-card" style="display:flex;flex-direction:column;gap:.75rem">
+    <div>
+      <span class="sc-lbl">Nucleo Attacco</span>
+      <div class="sc-ndisp" id="sc-natt-d"></div>
+      <select class="sc-nsel" id="sc-natt-s" onchange="scNucleo('att')">
+        <option value="">— nessuno</option>
+        <option value="glaciale">❄ Glaciale</option>
+        <option value="ardente">🔥 Ardente</option>
+        <option value="folgorante">⚡ Folgorante</option>
+        <option value="terrestre">🌍 Terrestre</option>
+        <option value="radiante">✨ Radiante</option>
+        <option value="oscuro">🌑 Oscuro</option>
+        <option value="neutro">◆ Neutro</option>
+      </select>
+    </div>
+    <div>
+      <span class="sc-lbl">Nucleo Difesa</span>
+      <div class="sc-ndisp" id="sc-ndef-d"></div>
+      <select class="sc-nsel" id="sc-ndef-s" onchange="scNucleo('def')">
+        <option value="">— nessuno</option>
+        <option value="glaciale">❄ Glaciale</option>
+        <option value="ardente">🔥 Ardente</option>
+        <option value="folgorante">⚡ Folgorante</option>
+        <option value="terrestre">🌍 Terrestre</option>
+        <option value="radiante">✨ Radiante</option>
+        <option value="oscuro">🌑 Oscuro</option>
+        <option value="neutro">◆ Neutro</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Equipaggiamento -->
+  <div class="sc-card sc-full">
+    <span class="sc-lbl">Equipaggiamento</span>
+    <textarea class="sc-in" id="sc-equip" rows="3" style="resize:vertical;font-size:.88rem" placeholder="Oggetti, pozioni, strumenti..."></textarea>
+  </div>
+
+  <!-- Celle -->
+  <div class="sc-card sc-full">
+    <span class="sc-lbl">Celle Equipaggiate</span>
+    <div class="sc-celle-grid" id="sc-celle"></div>
+  </div>
+
+  <button class="sc-save" id="sc-savebtn" onclick="scSave()">Salva Scheda</button>
+</div>
+  </div>
+</section>
+
+<script>
+const SC_STATS=[
+  {id:"FOR",nm:"Forza"},{id:"DES",nm:"Destrezza"},{id:"COST",nm:"Costituzione"},
+  {id:"INT",nm:"Intelligenza"},{id:"SAG",nm:"Saggezza"},{id:"CAR",nm:"Carisma"}
+];
+const SC_NC={
+  glaciale:{bg:"rgba(126,200,227,.18)",br:"#5aaac0",tx:"Glaciale"},
+  ardente:{bg:"rgba(224,90,32,.18)",br:"#c04010",tx:"Ardente"},
+  folgorante:{bg:"rgba(240,208,32,.2)",br:"#a09000",tx:"Folgorante"},
+  terrestre:{bg:"rgba(60,150,60,.18)",br:"#3a8030",tx:"Terrestre"},
+  radiante:{bg:"rgba(212,168,255,.2)",br:"#9070c0",tx:"Radiante"},
+  oscuro:{bg:"rgba(100,60,180,.2)",br:"#7050b0",tx:"Oscuro"},
+  neutro:{bg:"rgba(160,160,160,.18)",br:"#888",tx:"Neutro"}
+};
+
+function scLD(){try{const s=localStorage.getItem("tcj-sc4");return s?JSON.parse(s):{}}catch(e){return {}}}
+function scGv(id){const e=document.getElementById(id);return e?e.value:""}
+
+function scNucleo(w){
+  const v=document.getElementById("sc-n"+w+"-s").value;
+  const d=document.getElementById("sc-n"+w+"-d");
+  if(!v){d.textContent="";d.style.cssText="padding:.3rem .55rem;border:1px solid var(--border);font-family:'Cinzel',serif;font-size:.7rem;margin-bottom:.3rem;min-height:28px";return;}
+  const n=SC_NC[v];
+  d.textContent=n.tx;
+  d.style.cssText=`padding:.3rem .55rem;border:1px solid ${n.br};background:${n.bg};font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.08em;margin-bottom:.3rem;min-height:28px;color:var(--text)`;
+}
+
+function scCnt(delta){
+  const el=document.getElementById("sc-proiettili");
+  el.value=Math.max(0,(parseInt(el.value)||0)+delta);
+}
+
+function scTogCh(i){document.getElementById("sc-chb-"+i).classList.toggle("on");}
+
+function scBuild(){
+  const d=scLD();
+  // Stats — split in 2 columns
+  const left=SC_STATS.slice(0,3), right=SC_STATS.slice(3);
+  ["left","right"].forEach((side,si)=>{
+    const stats=si===0?left:right;
+    document.getElementById("sc-stats-"+side).innerHTML=stats.map(s=>`
+      <div class="sc-stat-item">
+        <span class="sc-stat-name">${s.nm}</span>
+        <input class="sc-stat-val" type="number" id="scv-${s.id}" value="${d.stats&&d.stats[s.id]?d.stats[s.id].v:""}" placeholder="10">
+        <input class="sc-stat-mod" type="text" id="scm-${s.id}" value="${d.stats&&d.stats[s.id]?d.stats[s.id].m:""}" placeholder="+0">
+      </div>`).join("");
+  });
+  // Cariche
+  const ch=d.charges||Array(6).fill(false);
+  ["sc-ch-r1","sc-ch-r2"].forEach((rid,ri)=>{
+    document.getElementById(rid).innerHTML=[0,1,2].map(ci=>{
+      const i=ri*3+ci;
+      return`<button class="sc-chbtn${ch[i]?" on":""}" id="sc-chb-${i}" onclick="scTogCh(${i})"></button>`;
+    }).join("");
+  });
+  // Celle
+  const celle=d.celle||Array(6).fill("");
+  document.getElementById("sc-celle").innerHTML=Array(6).fill(0).map((_,i)=>
+    `<input class="sc-cella" id="sc-cella-${i}" value="${celle[i]||""}" placeholder="Cella ${i+1}">`
+  ).join("");
+  // Campi semplici
+  [["lvl","sc-lvl"],["rango","sc-rango"],["pv","sc-pv"],["arma","sc-arma"],
+   ["abil","sc-abil"],["arma2","sc-arma2"],["proiettili","sc-proiettili"],
+   ["equip","sc-equip"]
+  ].forEach(([k,id])=>{const el=document.getElementById(id);if(el&&d[k]!==undefined)el.value=d[k];});
+  if(d.natt){document.getElementById("sc-natt-s").value=d.natt;scNucleo("att");}
+  if(d.ndef){document.getElementById("sc-ndef-s").value=d.ndef;scNucleo("def");}
+}
+
+function scSave(){
+  const d={};
+  ["lvl|sc-lvl","rango|sc-rango","pv|sc-pv","arma|sc-arma","abil|sc-abil",
+   "arma2|sc-arma2","proiettili|sc-proiettili","equip|sc-equip"
+  ].forEach(f=>{const[k,id]=f.split("|");d[k]=scGv(id);});
+  d.stats={};
+  SC_STATS.forEach(s=>{d.stats[s.id]={v:scGv("scv-"+s.id),m:scGv("scm-"+s.id)};});
+  d.charges=[0,1,2,3,4,5].map(i=>document.getElementById("sc-chb-"+i).classList.contains("on"));
+  d.celle=Array(6).fill(0).map((_,i)=>scGv("sc-cella-"+i));
+  d.natt=scGv("sc-natt-s");d.ndef=scGv("sc-ndef-s");
+  try{localStorage.setItem("tcj-sc4",JSON.stringify(d));}catch(e){}
+  const b=document.getElementById("sc-savebtn");
+  b.textContent="✓ Salvato";b.classList.add("ok");
+  setTimeout(()=>{b.textContent="Salva Scheda";b.classList.remove("ok");},2000);
+}
+</script>
 
 <section id="note">
   <div class="si">
@@ -1211,7 +1444,7 @@ const MND=[
   {nm:"Ozz l'Onesto",ae:"Corriere · Lv.10",rl:"Messaggero · Esploratore urbano",wp:"—",lv:10,hp:90,ac:"#d4b800",s:{FOR:12,DES:20,COST:18,INT:14,SAG:18,CAR:22},nt:"Il più umano del gruppo. Non ha la potenza marziale degli altri Maestri, ma conosce Ramsgate come le proprie tasche."}
 ];
 
-window.addEventListener("load",()=>{buildBeh();buildW();buildC();buildTR();loadN();loadMN();});
+window.addEventListener("load",()=>{buildBeh();buildW();buildC();buildTR();loadN();loadMN();scBuild();});
 window.addEventListener("scroll",updNav,{passive:true});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closepw();});
 </script>
