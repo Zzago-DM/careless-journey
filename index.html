@@ -704,6 +704,10 @@ strong{color:var(--gold2)}
 .sc-cnt-btn{width:28px;height:28px;background:var(--bg3);border:1px solid var(--border);color:var(--gold2);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:"Cinzel",serif}
 .sc-cnt-btn:hover{background:rgba(200,168,75,.1);border-color:var(--gold3)}
 .sc-cnt-val{width:52px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:"Cinzel Decorative",serif;font-size:1rem;padding:.2rem;outline:none;text-align:center}
+.sc-comp-row{display:flex;align-items:center;gap:.4rem;padding:.18rem 0;border-bottom:1px solid rgba(200,168,75,.04);cursor:pointer}
+.sc-dot{font-size:.95rem;flex-shrink:0;transition:color .15s}
+.sc-dot.on{color:var(--gold2)}
+.sc-dot.off{color:var(--text2)}
 .sc-save{font-family:"Cinzel",serif;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;padding:.42rem 1.4rem;background:transparent;border:1px solid var(--gold3);color:var(--gold3);cursor:pointer;transition:all .2s;grid-column:1/-1;display:block;margin:0 auto}
 .sc-save:hover{background:rgba(200,168,75,.1)}
 .sc-save.ok{border-color:var(--ice);color:var(--ice)}
@@ -721,10 +725,14 @@ strong{color:var(--gold2)}
     <input class="sc-in" id="sc-rango" placeholder="—" style="font-size:.95rem">
   </div>
 
-  <!-- Punti Vita -->
-  <div class="sc-card sc-full">
+  <!-- Punti Vita + Malus -->
+  <div class="sc-card">
     <span class="sc-lbl">Punti Vita</span>
     <input class="sc-pv-box" id="sc-pv" type="text" placeholder="—">
+  </div>
+  <div class="sc-card">
+    <span class="sc-lbl">Malus Attivi</span>
+    <textarea class="sc-in" id="sc-malus" rows="4" style="resize:none;font-size:.85rem" placeholder="Malus e stati alterati..."></textarea>
   </div>
 
   <!-- Statistiche -->
@@ -734,6 +742,12 @@ strong{color:var(--gold2)}
       <div id="sc-stats-left"></div>
       <div id="sc-stats-right"></div>
     </div>
+  </div>
+
+  <!-- Competenze -->
+  <div class="sc-card sc-full">
+    <span class="sc-lbl">Competenze</span>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.15rem .75rem;margin-top:.25rem" id="sc-comps-grid"></div>
   </div>
 
   <!-- Arma principale + cariche -->
@@ -797,9 +811,37 @@ strong{color:var(--gold2)}
     </div>
   </div>
 
-  <!-- Equipaggiamento -->
+  <!-- Equipaggiamento contatori -->
   <div class="sc-card sc-full">
     <span class="sc-lbl">Equipaggiamento</span>
+    <div style="display:flex;flex-direction:column;gap:.4rem" id="sc-eq-wrap">
+      <div style="display:flex;align-items:center;gap:.4rem">
+        <button class="sc-cnt-btn" onclick="scEqCnt(0,-1)">−</button>
+        <input class="sc-cnt-val" id="sc-eq-cnt-0" type="number" value="0" min="0" style="width:44px">
+        <button class="sc-cnt-btn" onclick="scEqCnt(0,1)">+</button>
+        <input class="sc-in" id="sc-eq-txt-0" placeholder="Tonico / Pilone..." style="flex:1;font-size:.85rem">
+      </div><div style="display:flex;align-items:center;gap:.4rem">
+        <button class="sc-cnt-btn" onclick="scEqCnt(1,-1)">−</button>
+        <input class="sc-cnt-val" id="sc-eq-cnt-1" type="number" value="0" min="0" style="width:44px">
+        <button class="sc-cnt-btn" onclick="scEqCnt(1,1)">+</button>
+        <input class="sc-in" id="sc-eq-txt-1" placeholder="Tonico / Pilone..." style="flex:1;font-size:.85rem">
+      </div><div style="display:flex;align-items:center;gap:.4rem">
+        <button class="sc-cnt-btn" onclick="scEqCnt(2,-1)">−</button>
+        <input class="sc-cnt-val" id="sc-eq-cnt-2" type="number" value="0" min="0" style="width:44px">
+        <button class="sc-cnt-btn" onclick="scEqCnt(2,1)">+</button>
+        <input class="sc-in" id="sc-eq-txt-2" placeholder="Tonico / Pilone..." style="flex:1;font-size:.85rem">
+      </div><div style="display:flex;align-items:center;gap:.4rem">
+        <button class="sc-cnt-btn" onclick="scEqCnt(3,-1)">−</button>
+        <input class="sc-cnt-val" id="sc-eq-cnt-3" type="number" value="0" min="0" style="width:44px">
+        <button class="sc-cnt-btn" onclick="scEqCnt(3,1)">+</button>
+        <input class="sc-in" id="sc-eq-txt-3" placeholder="Tonico / Pilone..." style="flex:1;font-size:.85rem">
+      </div>
+    </div>
+  </div>
+
+  <!-- Inventario -->
+  <div class="sc-card sc-full">
+    <span class="sc-lbl">Inventario</span>
     <textarea class="sc-in" id="sc-equip" rows="3" style="resize:vertical;font-size:.88rem" placeholder="Oggetti, pozioni, strumenti..."></textarea>
   </div>
 
@@ -828,6 +870,43 @@ const SC_NC={
   oscuro:{bg:"rgba(100,60,180,.2)",br:"#7050b0",tx:"Oscuro"},
   neutro:{bg:"rgba(160,160,160,.18)",br:"#888",tx:"Neutro"}
 };
+
+const SC_COMPS=[
+  {id:"acro",nm:"Acrobatica",st:"DES"},{id:"amm",nm:"Ammaestrare creature",st:"SAG"},
+  {id:"beh",nm:"Behemothologia",st:"INT"},{id:"atl",nm:"Atletica",st:"FOR"},
+  {id:"ing",nm:"Inganno",st:"CAR"},{id:"stor",nm:"Storia",st:"INT"},
+  {id:"intu",nm:"Intuizione",st:"SAG"},{id:"intim",nm:"Intimidire",st:"CAR"},
+  {id:"inv2",nm:"Investigare",st:"INT"},{id:"poz",nm:"Pozioni",st:"INT"},
+  {id:"nat",nm:"Natura",st:"SAG"},{id:"perc",nm:"Percezione",st:"SAG"},
+  {id:"intr",nm:"Intrattenere",st:"CAR"},{id:"pers",nm:"Persuasione",st:"CAR"},
+  {id:"trad",nm:"Tradizioni",st:"INT"},{id:"rap",nm:"Rapidità di mano",st:"DES"},
+  {id:"furt",nm:"Furtività",st:"DES"},{id:"soprav",nm:"Sopravvivenza",st:"SAG"}
+];
+
+function scTogDot(id){
+  const el=document.getElementById("scd-"+id);
+  const on=el.classList.contains("on");
+  el.classList.toggle("on",!on);el.classList.toggle("off",on);
+  el.textContent=on?"○":"●";
+}
+
+function scEqCnt(i,delta){
+  const el=document.getElementById("sc-eq-cnt-"+i);
+  el.value=Math.max(0,(parseInt(el.value)||0)+delta);
+}
+
+function scBuildComps(saved){
+  const grid=document.getElementById("sc-comps-grid");
+  if(!grid)return;
+  grid.innerHTML=SC_COMPS.map(c=>{
+    const on=saved&&saved[c.id];
+    return`<div class="sc-comp-row" onclick="scTogDot('${c.id}')">
+      <span class="sc-dot ${on?"on":"off"}" id="scd-${c.id}">${on?"●":"○"}</span>
+      <span style="font-size:.82rem;color:var(--text);flex:1">${c.nm}</span>
+      <span style="font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.06em;color:var(--text2);border:1px solid var(--border);padding:.04rem .22rem">${c.st}</span>
+    </div>`;
+  }).join("");
+}
 
 function scLD(){try{const s=localStorage.getItem("tcj-sc4");return s?JSON.parse(s):{}}catch(e){return {}}}
 function scGv(id){const e=document.getElementById(id);return e?e.value:""}
@@ -892,6 +971,10 @@ function scSave(){
   SC_STATS.forEach(s=>{d.stats[s.id]={v:scGv("scv-"+s.id),m:scGv("scm-"+s.id)};});
   d.charges=[0,1,2,3,4,5].map(i=>document.getElementById("sc-chb-"+i).classList.contains("on"));
   d.celle=Array(6).fill(0).map((_,i)=>scGv("sc-cella-"+i));
+  d.malus=scGv("sc-malus");
+  d.comps={};SC_COMPS.forEach(cp=>{const el=document.getElementById("scd-"+cp.id);if(el)d.comps[cp.id]=el.classList.contains("on");});
+  d.eq_cnt=[0,1,2,3].map(i=>scGv("sc-eq-cnt-"+i));
+  d.eq_txt=[0,1,2,3].map(i=>scGv("sc-eq-txt-"+i));
   d.natt=scGv("sc-natt-s");d.ndef=scGv("sc-ndef-s");
   try{localStorage.setItem("tcj-sc4",JSON.stringify(d));}catch(e){}
   const b=document.getElementById("sc-savebtn");
