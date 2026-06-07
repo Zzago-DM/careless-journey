@@ -895,15 +895,18 @@ function scEqCnt(i,delta){
   el.value=Math.max(0,(parseInt(el.value)||0)+delta);
 }
 
-function scBuildComps(saved){
+function scBuildComps(saved,mods){
   const grid=document.getElementById("sc-comps-grid");
   if(!grid)return;
-  grid.innerHTML=SC_COMPS.map(c=>{
-    const on=saved&&saved[c.id];
-    return`<div class="sc-comp-row" onclick="scTogDot('${c.id}')">
-      <span class="sc-dot ${on?"on":"off"}" id="scd-${c.id}">${on?"●":"○"}</span>
-      <span style="font-size:.82rem;color:var(--text);flex:1">${c.nm}</span>
-      <span style="font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.06em;color:var(--text2);border:1px solid var(--border);padding:.04rem .22rem">${c.st}</span>
+  grid.innerHTML=SC_COMPS.map(cp=>{
+    const on=saved&&saved[cp.id];
+    const mv=mods&&mods[cp.id]!==undefined?mods[cp.id]:"";
+    return`<div class="sc-comp-row">
+      <span class="sc-dot ${on?"on":"off"}" id="scd-${cp.id}" onclick="scTogDot('${cp.id}')" style="cursor:pointer">${on?"●":"○"}</span>
+      <span style="font-size:.82rem;color:var(--text);flex:1;cursor:pointer" onclick="scTogDot('${cp.id}')">${cp.nm}</span>
+      <span style="font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.06em;color:var(--text2);border:1px solid var(--border);padding:.04rem .22rem;margin-right:.3rem">${cp.st}</span>
+      <input type="text" id="scmod-${cp.id}" value="${mv}" placeholder="+0"
+        style="width:38px;background:var(--bg);border:1px solid var(--border);color:var(--gold2);font-family:'Cinzel',serif;font-size:.68rem;text-align:center;padding:.1rem;outline:none">
     </div>`;
   }).join("");
 }
@@ -929,6 +932,7 @@ function scTogCh(i){document.getElementById("sc-chb-"+i).classList.toggle("on");
 
 function scBuild(){
   const d=scLD();
+  scBuildComps(d.comps||{},d.comp_mods||{});
   // Stats — split in 2 columns
   const left=SC_STATS.slice(0,3), right=SC_STATS.slice(3);
   ["left","right"].forEach((side,si)=>{
@@ -972,7 +976,13 @@ function scSave(){
   d.charges=[0,1,2,3,4,5].map(i=>document.getElementById("sc-chb-"+i).classList.contains("on"));
   d.celle=Array(6).fill(0).map((_,i)=>scGv("sc-cella-"+i));
   d.malus=scGv("sc-malus");
-  d.comps={};SC_COMPS.forEach(cp=>{const el=document.getElementById("scd-"+cp.id);if(el)d.comps[cp.id]=el.classList.contains("on");});
+  d.comps={};d.comp_mods={};
+  SC_COMPS.forEach(cp=>{
+    const el=document.getElementById("scd-"+cp.id);
+    if(el)d.comps[cp.id]=el.classList.contains("on");
+    const mel=document.getElementById("scmod-"+cp.id);
+    if(mel)d.comp_mods[cp.id]=mel.value;
+  });
   d.eq_cnt=[0,1,2,3].map(i=>scGv("sc-eq-cnt-"+i));
   d.eq_txt=[0,1,2,3].map(i=>scGv("sc-eq-txt-"+i));
   d.natt=scGv("sc-natt-s");d.ndef=scGv("sc-ndef-s");
