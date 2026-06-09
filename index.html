@@ -190,7 +190,7 @@ strong{color:var(--gold2)}
   <div class="nav-inner">
     <a href="#hero" class="nav-logo">🜂 TCJ</a>
     <ul class="nav-links">
-      <li><a href="#mondo">Mondo</a></li><li><a href="#timeline">Timeline</a></li>
+      <li><a href="#mondo">Mondo</a></li><li><a href="#mappa">Mappa</a></li><li><a href="#timeline">Timeline</a></li>
       <li><a href="#personaggi">Personaggi</a></li><li><a href="#mael">Mael</a></li>
       <li><a href="#behemoth">Behemoth</a></li><li><a href="#manuale">Manuale</a></li>
       <li><a href="#calendario">Calendario</a></li><li><a href="#corone">Corone</a></li>
@@ -224,6 +224,368 @@ strong{color:var(--gold2)}
       <div class="card" data-a="oscuro"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="width:36px;height:36px;border-radius:50%;background:rgba(136,96,208,.1);color:var(--dark);display:flex;align-items:center;justify-content:center;font-size:1.1rem">🌑</div><div><div class="ct">Isole Oscure</div><div class="cs">Capitale: Zoa Shia</div></div></div><div class="cb"><p>Avvolte nell'oscurità, governate da un sistema feudale basato sul baratto. Il prestigio dipende dalle capacità dimostrabili. Famiglie principali: <strong>Zeraora, Grimstone, Batuk, Monkuiced</strong>. Gli <strong>Haunted Slayer</strong> — con uniformi a fiamme violacee — dominano le zone periferiche.</p><div class="qi">Ispirazione: Medioevo giapponese, cinese e mongolo.</div></div><span class="tag to">🌑 Oscuro</span></div>
     </div>
     <div style="max-width:900px;margin:2rem auto 0"><div class="card" data-a="neutro" style="padding:1.75rem"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="width:36px;height:36px;border-radius:50%;background:rgba(200,168,75,.1);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.1rem">🏰</div><div><div class="ct">Ramsgate — Baluardo degli Slayer</div><div class="cs">Governata da Estarossa, Mael dell'Aether Terrestre</div></div></div><div class="cb"><p>Città simbolo degli Slayer, distrutta durante il cataclisma del Tradimento e ricostruita sulle sue rovine. Cosmopolita per eccellenza. Ramsgate regola il rilascio del titolo ufficiale di Slayer. L'unica zona vietata è l'isola della <strong>Vecchia Ramsgate</strong>: le scariche di aether puro la rendono altamente instabile.</p></div><span class="tag tgo">Neutro</span></div></div>
+  </div>
+</section>
+
+<style>
+#mappa{background:var(--bg)}
+.map-wrap{position:relative;border:1px solid var(--border);overflow:hidden}
+#world-map{width:100%;height:auto;display:block;background:#080a0f}
+.isl-group{cursor:pointer}
+.isl-label{font-family:"Cinzel",serif;font-size:40px;letter-spacing:5px;text-transform:uppercase;opacity:.8;pointer-events:none}
+#isl-ardente path{fill:rgba(224,90,32,0.13);stroke:#e05a20;stroke-width:3;stroke-linejoin:round;filter:url(#glow-ardente);transition:fill .3s;}
+#isl-ardente:hover path{fill:rgba(224,90,32,0.3);}
+#isl-terrestre path{fill:rgba(139,104,64,0.13);stroke:#8b6840;stroke-width:3;stroke-linejoin:round;filter:url(#glow-terrestre);transition:fill .3s;}
+#isl-terrestre:hover path{fill:rgba(139,104,64,0.3);}
+#isl-folgorante path{fill:rgba(240,208,32,0.13);stroke:#f0d020;stroke-width:3;stroke-linejoin:round;filter:url(#glow-folgorante);transition:fill .3s;}
+#isl-folgorante:hover path{fill:rgba(240,208,32,0.3);}
+#isl-radiante path{fill:rgba(212,168,255,0.13);stroke:#d4a8ff;stroke-width:3;stroke-linejoin:round;filter:url(#glow-radiante);transition:fill .3s;}
+#isl-radiante:hover path{fill:rgba(212,168,255,0.3);}
+#isl-glaciale path{fill:rgba(126,200,227,0.13);stroke:#7ec8e3;stroke-width:3;stroke-linejoin:round;filter:url(#glow-glaciale);transition:fill .3s;}
+#isl-glaciale:hover path{fill:rgba(126,200,227,0.3);}
+#isl-oscuro path{fill:rgba(136,96,208,0.13);stroke:#8860d0;stroke-width:3;stroke-linejoin:round;filter:url(#glow-oscuro);transition:fill .3s;}
+#isl-oscuro:hover path{fill:rgba(136,96,208,0.3);}
+#isl-ramsgate path{fill:rgba(200,168,75,0.13);stroke:#c8a84b;stroke-width:3;stroke-linejoin:round;filter:url(#glow-ramsgate);transition:fill .3s;}
+#isl-ramsgate:hover path{fill:rgba(200,168,75,0.3);}
+
+</style>
+<section id="mappa">
+  <div class="si">
+    <div class="sh">
+      <div class="sl">Le Isole Frantumate</div>
+      <h2 class="st">Mappa del Mondo</h2>
+      <div class="sline"></div>
+      <p class="sdesc">Le isole fluttuanti del mondo, ognuna plasmata da un Aether dominante.</p>
+    </div>
+    <div class="map-wrap">
+      <svg id="world-map" viewBox="0 0 2048 1536" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+  <filter id="glow-ardente" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur"/><feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.878 0 0 0 0 0.353 0 0 0 0 0.125 0 0 0 0.65 0" result="cb"/><feMerge><feMergeNode in="cb"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="glow-terrestre" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur"/><feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.545 0 0 0 0 0.408 0 0 0 0 0.251 0 0 0 0.65 0" result="cb"/><feMerge><feMergeNode in="cb"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="glow-folgorante" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur"/><feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.941 0 0 0 0 0.816 0 0 0 0 0.125 0 0 0 0.65 0" result="cb"/><feMerge><feMergeNode in="cb"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="glow-radiante" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur"/><feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.831 0 0 0 0 0.659 0 0 0 0 1.000 0 0 0 0.65 0" result="cb"/><feMerge><feMergeNode in="cb"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="glow-glaciale" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur"/><feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.494 0 0 0 0 0.784 0 0 0 0 0.890 0 0 0 0.65 0" result="cb"/><feMerge><feMergeNode in="cb"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="glow-oscuro" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur"/><feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.533 0 0 0 0 0.376 0 0 0 0 0.816 0 0 0 0.65 0" result="cb"/><feMerge><feMergeNode in="cb"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="glow-ramsgate" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur"/><feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.784 0 0 0 0 0.659 0 0 0 0 0.294 0 0 0 0.65 0" result="cb"/><feMerge><feMergeNode in="cb"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <radialGradient id="mal-grad" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#000000"/>
+    <stop offset="55%" stop-color="#010408"/>
+    <stop offset="85%" stop-color="#05090f"/>
+    <stop offset="100%" stop-color="#080a0f"/>
+  </radialGradient>
+  <radialGradient id="mal-halo" cx="50%" cy="50%" r="50%">
+    <stop offset="60%" stop-color="#080a0f" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#0d2030" stop-opacity="0.5"/>
+  </radialGradient>
+</defs>
+
+        <g id="map-stars"><circle cx="456" cy="51" r="3.6" fill="#c8a84b" opacity="0.28"/>
+<circle cx="419" cy="1385" r="3.6" fill="#ffffff" opacity="0.45"/>
+<circle cx="130" cy="61" r="1.5" fill="#ffffff" opacity="0.28"/>
+<circle cx="814" cy="1466" r="3.3" fill="#c8a84b" opacity="0.45"/>
+<circle cx="1139" cy="13" r="3.7" fill="#ffffff" opacity="0.24"/>
+<circle cx="1138" cy="318" r="1.9" fill="#c8a84b" opacity="0.57"/>
+<circle cx="1556" cy="198" r="2.4" fill="#c8a84b" opacity="0.34"/>
+<circle cx="177" cy="1494" r="2.7" fill="#ffffff" opacity="0.22"/>
+<circle cx="322" cy="1130" r="2.2" fill="#ffffff" opacity="0.5"/>
+<circle cx="1481" cy="1182" r="1.8" fill="#ffffff" opacity="0.19"/>
+<circle cx="1185" cy="163" r="4.0" fill="#ffffff" opacity="0.63"/>
+<circle cx="1857" cy="1301" r="4.0" fill="#ffffff" opacity="0.24"/>
+<circle cx="1093" cy="1437" r="4.3" fill="#ffffff" opacity="0.51"/>
+<circle cx="700" cy="1093" r="3.6" fill="#ffffff" opacity="0.24"/>
+<circle cx="899" cy="1402" r="2.3" fill="#c8a84b" opacity="0.57"/>
+<circle cx="131" cy="646" r="2.5" fill="#ffffff" opacity="0.19"/>
+<circle cx="1288" cy="435" r="3.4" fill="#ffffff" opacity="0.37"/>
+<circle cx="1879" cy="292" r="2.1" fill="#ffffff" opacity="0.29"/>
+<circle cx="1076" cy="1529" r="3.1" fill="#ffffff" opacity="0.64"/>
+<circle cx="898" cy="283" r="2.9" fill="#c8a84b" opacity="0.2"/>
+<circle cx="449" cy="313" r="3.3" fill="#ffffff" opacity="0.59"/>
+<circle cx="260" cy="788" r="2.5" fill="#ffffff" opacity="0.7"/>
+<circle cx="47" cy="1393" r="3.6" fill="#ffffff" opacity="0.52"/>
+<circle cx="1092" cy="1312" r="2.3" fill="#c8a84b" opacity="0.31"/>
+<circle cx="13" cy="1478" r="4.1" fill="#ffffff" opacity="0.29"/>
+<circle cx="731" cy="1039" r="4.2" fill="#c8a84b" opacity="0.63"/>
+<circle cx="814" cy="313" r="2.4" fill="#ffffff" opacity="0.24"/>
+<circle cx="2" cy="1226" r="2.3" fill="#ffffff" opacity="0.16"/>
+<circle cx="1259" cy="490" r="1.4" fill="#ffffff" opacity="0.63"/>
+<circle cx="350" cy="1498" r="2.8" fill="#ffffff" opacity="0.19"/>
+<circle cx="515" cy="262" r="3.4" fill="#c8a84b" opacity="0.67"/>
+<circle cx="1733" cy="433" r="4.3" fill="#ffffff" opacity="0.57"/>
+<circle cx="1276" cy="817" r="4.5" fill="#ffffff" opacity="0.51"/>
+<circle cx="1849" cy="247" r="2.0" fill="#c8a84b" opacity="0.19"/>
+<circle cx="942" cy="1205" r="1.9" fill="#ffffff" opacity="0.19"/>
+<circle cx="937" cy="138" r="4.2" fill="#c8a84b" opacity="0.62"/>
+<circle cx="974" cy="570" r="3.4" fill="#c8a84b" opacity="0.27"/>
+<circle cx="1936" cy="497" r="3.8" fill="#c8a84b" opacity="0.59"/>
+<circle cx="397" cy="1349" r="2.6" fill="#ffffff" opacity="0.38"/>
+<circle cx="221" cy="1379" r="3.4" fill="#c8a84b" opacity="0.51"/>
+<circle cx="1389" cy="223" r="2.0" fill="#ffffff" opacity="0.25"/>
+<circle cx="1728" cy="375" r="2.1" fill="#ffffff" opacity="0.29"/>
+<circle cx="1815" cy="1127" r="1.5" fill="#ffffff" opacity="0.51"/>
+<circle cx="60" cy="191" r="4.3" fill="#c8a84b" opacity="0.62"/>
+<circle cx="1989" cy="985" r="1.9" fill="#c8a84b" opacity="0.37"/>
+<circle cx="1552" cy="4" r="4.5" fill="#ffffff" opacity="0.3"/>
+<circle cx="1863" cy="584" r="2.6" fill="#ffffff" opacity="0.68"/>
+<circle cx="1993" cy="317" r="1.8" fill="#c8a84b" opacity="0.27"/>
+<circle cx="249" cy="1531" r="2.2" fill="#ffffff" opacity="0.18"/>
+<circle cx="644" cy="116" r="4.4" fill="#c8a84b" opacity="0.19"/>
+<circle cx="278" cy="1382" r="4.0" fill="#ffffff" opacity="0.37"/>
+<circle cx="1008" cy="1185" r="3.2" fill="#ffffff" opacity="0.49"/>
+<circle cx="1295" cy="534" r="1.9" fill="#c8a84b" opacity="0.54"/>
+<circle cx="1621" cy="268" r="3.4" fill="#ffffff" opacity="0.31"/>
+<circle cx="297" cy="19" r="2.7" fill="#ffffff" opacity="0.7"/>
+<circle cx="300" cy="1101" r="1.9" fill="#ffffff" opacity="0.3"/>
+<circle cx="281" cy="500" r="2.4" fill="#ffffff" opacity="0.24"/>
+<circle cx="1239" cy="1252" r="4.4" fill="#ffffff" opacity="0.59"/>
+<circle cx="1226" cy="1358" r="1.5" fill="#c8a84b" opacity="0.63"/>
+<circle cx="438" cy="1520" r="3.0" fill="#ffffff" opacity="0.3"/>
+<circle cx="1404" cy="416" r="3.5" fill="#ffffff" opacity="0.62"/>
+<circle cx="1028" cy="104" r="1.5" fill="#c8a84b" opacity="0.38"/>
+<circle cx="14" cy="683" r="3.7" fill="#c8a84b" opacity="0.5"/>
+<circle cx="1809" cy="1129" r="3.5" fill="#c8a84b" opacity="0.46"/>
+<circle cx="610" cy="1117" r="1.3" fill="#ffffff" opacity="0.35"/>
+<circle cx="1760" cy="261" r="1.3" fill="#ffffff" opacity="0.35"/>
+<circle cx="163" cy="732" r="1.9" fill="#c8a84b" opacity="0.29"/>
+<circle cx="1664" cy="1271" r="3.7" fill="#c8a84b" opacity="0.66"/>
+<circle cx="665" cy="362" r="4.1" fill="#ffffff" opacity="0.16"/>
+<circle cx="1360" cy="843" r="3.8" fill="#ffffff" opacity="0.63"/>
+<circle cx="1092" cy="326" r="3.8" fill="#ffffff" opacity="0.21"/>
+<circle cx="1927" cy="455" r="1.9" fill="#ffffff" opacity="0.66"/>
+<circle cx="932" cy="456" r="1.3" fill="#ffffff" opacity="0.26"/>
+<circle cx="284" cy="571" r="2.4" fill="#ffffff" opacity="0.43"/>
+<circle cx="1356" cy="56" r="1.6" fill="#c8a84b" opacity="0.68"/>
+<circle cx="1087" cy="78" r="1.6" fill="#ffffff" opacity="0.39"/>
+<circle cx="1284" cy="893" r="3.2" fill="#ffffff" opacity="0.43"/>
+<circle cx="778" cy="521" r="1.3" fill="#ffffff" opacity="0.39"/>
+<circle cx="807" cy="745" r="2.6" fill="#ffffff" opacity="0.67"/>
+<circle cx="1285" cy="1358" r="4.0" fill="#ffffff" opacity="0.55"/>
+<circle cx="1266" cy="1365" r="2.5" fill="#c8a84b" opacity="0.37"/>
+<circle cx="521" cy="392" r="2.6" fill="#ffffff" opacity="0.67"/>
+<circle cx="712" cy="1260" r="3.1" fill="#ffffff" opacity="0.37"/>
+<circle cx="1244" cy="587" r="1.9" fill="#ffffff" opacity="0.58"/>
+<circle cx="1319" cy="952" r="2.7" fill="#ffffff" opacity="0.52"/>
+<circle cx="695" cy="1349" r="1.5" fill="#ffffff" opacity="0.43"/>
+<circle cx="1372" cy="191" r="3.9" fill="#ffffff" opacity="0.56"/>
+<circle cx="920" cy="407" r="1.7" fill="#ffffff" opacity="0.18"/>
+<circle cx="298" cy="932" r="2.6" fill="#c8a84b" opacity="0.5"/>
+<circle cx="1572" cy="1012" r="2.5" fill="#ffffff" opacity="0.23"/>
+<circle cx="436" cy="870" r="1.9" fill="#ffffff" opacity="0.59"/>
+<circle cx="1902" cy="102" r="3.0" fill="#c8a84b" opacity="0.65"/>
+<circle cx="546" cy="951" r="3.4" fill="#ffffff" opacity="0.69"/>
+<circle cx="1812" cy="1254" r="3.9" fill="#ffffff" opacity="0.64"/>
+<circle cx="1826" cy="325" r="3.7" fill="#c8a84b" opacity="0.41"/>
+<circle cx="1012" cy="1305" r="2.1" fill="#ffffff" opacity="0.58"/>
+<circle cx="979" cy="562" r="2.7" fill="#c8a84b" opacity="0.54"/>
+<circle cx="1375" cy="654" r="4.1" fill="#c8a84b" opacity="0.19"/>
+<circle cx="1568" cy="1421" r="1.7" fill="#ffffff" opacity="0.27"/>
+<circle cx="1355" cy="1111" r="2.7" fill="#ffffff" opacity="0.18"/>
+<circle cx="1595" cy="1196" r="4.3" fill="#ffffff" opacity="0.16"/>
+<circle cx="1558" cy="976" r="1.2" fill="#ffffff" opacity="0.34"/>
+<circle cx="1716" cy="1102" r="3.7" fill="#ffffff" opacity="0.45"/>
+<circle cx="903" cy="999" r="1.9" fill="#c8a84b" opacity="0.39"/>
+<circle cx="1376" cy="1369" r="3.4" fill="#c8a84b" opacity="0.37"/>
+<circle cx="1914" cy="261" r="4.4" fill="#ffffff" opacity="0.44"/>
+<circle cx="111" cy="171" r="3.3" fill="#ffffff" opacity="0.22"/>
+<circle cx="205" cy="532" r="2.5" fill="#ffffff" opacity="0.27"/>
+<circle cx="1552" cy="569" r="3.7" fill="#c8a84b" opacity="0.61"/>
+<circle cx="335" cy="963" r="1.3" fill="#ffffff" opacity="0.45"/>
+<circle cx="1433" cy="459" r="3.3" fill="#ffffff" opacity="0.58"/>
+<circle cx="127" cy="506" r="1.9" fill="#c8a84b" opacity="0.16"/>
+<circle cx="517" cy="969" r="3.4" fill="#c8a84b" opacity="0.46"/>
+<circle cx="1049" cy="755" r="1.8" fill="#ffffff" opacity="0.48"/>
+<circle cx="469" cy="335" r="4.4" fill="#c8a84b" opacity="0.21"/>
+<circle cx="1277" cy="1179" r="3.4" fill="#ffffff" opacity="0.68"/>
+<circle cx="812" cy="155" r="3.2" fill="#c8a84b" opacity="0.61"/>
+<circle cx="1235" cy="1401" r="3.2" fill="#ffffff" opacity="0.22"/>
+<circle cx="168" cy="711" r="3.0" fill="#c8a84b" opacity="0.51"/>
+<circle cx="1397" cy="25" r="4.0" fill="#c8a84b" opacity="0.6"/>
+<circle cx="1483" cy="1301" r="4.1" fill="#c8a84b" opacity="0.4"/>
+<circle cx="721" cy="1502" r="2.9" fill="#ffffff" opacity="0.51"/>
+<circle cx="1980" cy="952" r="2.6" fill="#c8a84b" opacity="0.55"/>
+<circle cx="1005" cy="177" r="2.1" fill="#ffffff" opacity="0.4"/>
+<circle cx="1552" cy="688" r="1.3" fill="#c8a84b" opacity="0.62"/>
+<circle cx="868" cy="726" r="3.8" fill="#ffffff" opacity="0.34"/>
+<circle cx="1131" cy="1138" r="1.2" fill="#c8a84b" opacity="0.67"/>
+<circle cx="1664" cy="1000" r="3.0" fill="#ffffff" opacity="0.28"/>
+<circle cx="2010" cy="917" r="3.8" fill="#c8a84b" opacity="0.2"/>
+<circle cx="996" cy="627" r="3.4" fill="#ffffff" opacity="0.35"/>
+<circle cx="1408" cy="871" r="4.5" fill="#ffffff" opacity="0.45"/>
+<circle cx="1858" cy="554" r="2.2" fill="#ffffff" opacity="0.28"/>
+<circle cx="1292" cy="244" r="3.7" fill="#ffffff" opacity="0.67"/>
+<circle cx="784" cy="443" r="3.6" fill="#ffffff" opacity="0.3"/>
+<circle cx="1159" cy="205" r="3.9" fill="#ffffff" opacity="0.31"/>
+<circle cx="1238" cy="28" r="3.5" fill="#c8a84b" opacity="0.22"/>
+<circle cx="223" cy="1133" r="2.2" fill="#ffffff" opacity="0.67"/>
+<circle cx="2010" cy="210" r="4.1" fill="#ffffff" opacity="0.47"/>
+<circle cx="1804" cy="697" r="1.8" fill="#ffffff" opacity="0.18"/>
+<circle cx="1956" cy="233" r="3.9" fill="#c8a84b" opacity="0.37"/>
+<circle cx="219" cy="310" r="1.7" fill="#ffffff" opacity="0.46"/>
+<circle cx="1016" cy="242" r="3.0" fill="#ffffff" opacity="0.38"/>
+<circle cx="924" cy="1070" r="2.5" fill="#c8a84b" opacity="0.65"/>
+<circle cx="1756" cy="625" r="3.1" fill="#ffffff" opacity="0.18"/>
+<circle cx="406" cy="425" r="3.3" fill="#c8a84b" opacity="0.3"/>
+<circle cx="982" cy="355" r="3.0" fill="#ffffff" opacity="0.24"/>
+<circle cx="1924" cy="596" r="1.3" fill="#c8a84b" opacity="0.31"/>
+<circle cx="1859" cy="145" r="3.5" fill="#ffffff" opacity="0.66"/>
+<circle cx="810" cy="870" r="1.6" fill="#c8a84b" opacity="0.27"/>
+<circle cx="1088" cy="291" r="1.4" fill="#ffffff" opacity="0.24"/>
+<circle cx="1182" cy="899" r="1.6" fill="#ffffff" opacity="0.53"/>
+<circle cx="1115" cy="1024" r="3.0" fill="#ffffff" opacity="0.39"/>
+<circle cx="1769" cy="1504" r="2.3" fill="#c8a84b" opacity="0.29"/>
+<circle cx="84" cy="1376" r="3.9" fill="#ffffff" opacity="0.47"/>
+<circle cx="717" cy="963" r="2.9" fill="#c8a84b" opacity="0.39"/>
+<circle cx="1785" cy="1300" r="3.9" fill="#ffffff" opacity="0.68"/>
+<circle cx="1672" cy="682" r="2.3" fill="#c8a84b" opacity="0.21"/>
+<circle cx="1686" cy="1420" r="2.8" fill="#ffffff" opacity="0.51"/>
+<circle cx="150" cy="931" r="1.5" fill="#c8a84b" opacity="0.29"/>
+<circle cx="1655" cy="1053" r="3.9" fill="#ffffff" opacity="0.15"/>
+<circle cx="1892" cy="846" r="1.4" fill="#ffffff" opacity="0.44"/>
+<circle cx="2041" cy="1280" r="2.7" fill="#c8a84b" opacity="0.18"/>
+<circle cx="536" cy="589" r="2.6" fill="#c8a84b" opacity="0.53"/>
+<circle cx="980" cy="1453" r="1.7" fill="#ffffff" opacity="0.45"/>
+<circle cx="381" cy="460" r="4.5" fill="#ffffff" opacity="0.65"/>
+<circle cx="481" cy="1326" r="3.9" fill="#ffffff" opacity="0.42"/>
+<circle cx="1119" cy="850" r="4.0" fill="#c8a84b" opacity="0.69"/>
+<circle cx="592" cy="785" r="1.8" fill="#ffffff" opacity="0.48"/>
+<circle cx="559" cy="142" r="2.1" fill="#ffffff" opacity="0.58"/>
+<circle cx="1094" cy="5" r="2.1" fill="#ffffff" opacity="0.31"/>
+<circle cx="2005" cy="304" r="2.7" fill="#ffffff" opacity="0.42"/>
+<circle cx="1545" cy="932" r="4.3" fill="#ffffff" opacity="0.63"/>
+<circle cx="978" cy="1171" r="2.5" fill="#ffffff" opacity="0.62"/>
+<circle cx="1303" cy="1525" r="2.8" fill="#ffffff" opacity="0.65"/>
+<circle cx="623" cy="1014" r="4.4" fill="#ffffff" opacity="0.22"/>
+<circle cx="1359" cy="205" r="4.1" fill="#ffffff" opacity="0.39"/>
+<circle cx="1871" cy="31" r="3.6" fill="#ffffff" opacity="0.38"/>
+<circle cx="632" cy="153" r="2.7" fill="#ffffff" opacity="0.68"/>
+<circle cx="1628" cy="1330" r="1.5" fill="#ffffff" opacity="0.33"/>
+<circle cx="1556" cy="648" r="3.3" fill="#ffffff" opacity="0.64"/>
+<circle cx="147" cy="1264" r="1.4" fill="#ffffff" opacity="0.5"/>
+<circle cx="931" cy="1529" r="1.5" fill="#ffffff" opacity="0.69"/>
+<circle cx="411" cy="908" r="1.7" fill="#c8a84b" opacity="0.31"/>
+<circle cx="1328" cy="114" r="2.2" fill="#c8a84b" opacity="0.36"/>
+<circle cx="1687" cy="1159" r="3.4" fill="#c8a84b" opacity="0.25"/>
+<circle cx="1566" cy="1269" r="3.5" fill="#ffffff" opacity="0.42"/>
+<circle cx="951" cy="944" r="3.3" fill="#ffffff" opacity="0.4"/>
+<circle cx="1905" cy="589" r="3.4" fill="#ffffff" opacity="0.24"/>
+<circle cx="1415" cy="1203" r="2.2" fill="#ffffff" opacity="0.68"/>
+<circle cx="1871" cy="618" r="1.9" fill="#ffffff" opacity="0.36"/>
+<circle cx="971" cy="781" r="3.1" fill="#ffffff" opacity="0.47"/>
+<circle cx="1209" cy="44" r="4.4" fill="#c8a84b" opacity="0.51"/>
+<circle cx="200" cy="1241" r="3.7" fill="#ffffff" opacity="0.61"/>
+<circle cx="942" cy="1243" r="3.8" fill="#c8a84b" opacity="0.27"/>
+<circle cx="1026" cy="1388" r="3.7" fill="#ffffff" opacity="0.57"/>
+<circle cx="560" cy="1286" r="1.5" fill="#c8a84b" opacity="0.5"/>
+<circle cx="1805" cy="68" r="3.1" fill="#c8a84b" opacity="0.55"/>
+<circle cx="1208" cy="669" r="3.7" fill="#c8a84b" opacity="0.25"/>
+<circle cx="1498" cy="1087" r="2.9" fill="#c8a84b" opacity="0.3"/>
+<circle cx="1973" cy="604" r="3.7" fill="#c8a84b" opacity="0.34"/>
+<circle cx="308" cy="288" r="3.7" fill="#ffffff" opacity="0.27"/>
+<circle cx="1627" cy="1141" r="2.4" fill="#c8a84b" opacity="0.58"/>
+<circle cx="506" cy="931" r="2.4" fill="#c8a84b" opacity="0.56"/>
+<circle cx="1560" cy="1307" r="4.3" fill="#c8a84b" opacity="0.21"/>
+<circle cx="102" cy="1268" r="4.1" fill="#ffffff" opacity="0.46"/>
+<circle cx="906" cy="1326" r="1.4" fill="#ffffff" opacity="0.6"/>
+<circle cx="1237" cy="1329" r="2.5" fill="#ffffff" opacity="0.23"/>
+<circle cx="1246" cy="1008" r="1.6" fill="#ffffff" opacity="0.28"/>
+<circle cx="1591" cy="929" r="2.4" fill="#ffffff" opacity="0.67"/>
+<circle cx="1716" cy="1202" r="3.6" fill="#ffffff" opacity="0.23"/>
+<circle cx="405" cy="1002" r="3.2" fill="#c8a84b" opacity="0.67"/>
+<circle cx="1517" cy="444" r="2.7" fill="#ffffff" opacity="0.67"/>
+<circle cx="406" cy="1404" r="2.4" fill="#ffffff" opacity="0.65"/>
+<circle cx="248" cy="815" r="2.1" fill="#ffffff" opacity="0.68"/>
+<circle cx="1862" cy="187" r="3.4" fill="#ffffff" opacity="0.5"/>
+<circle cx="87" cy="103" r="3.8" fill="#c8a84b" opacity="0.28"/>
+<circle cx="840" cy="140" r="3.9" fill="#ffffff" opacity="0.45"/>
+<circle cx="954" cy="672" r="3.8" fill="#ffffff" opacity="0.58"/>
+<circle cx="1135" cy="296" r="4.5" fill="#ffffff" opacity="0.45"/>
+<circle cx="450" cy="1353" r="4.1" fill="#ffffff" opacity="0.22"/>
+</g>
+        <g class="isl-group" id="isl-ardente">
+  <path d="M237,458L227,484L253,497L253,512L265,525L287,527L301,516L290,507L270,511L276,491L298,490L314,504L302,478L273,456L254,450Z"/>
+  <path d="M371,432L353,447L364,458L371,493L381,497L390,489L389,469L400,462L402,446Z"/>
+  <path d="M84,354L66,377L66,391L91,415L83,462L115,469L129,448L135,405L96,375Z"/>
+  <path d="M545,352L524,389L520,428L537,447L582,449L596,438L597,426L581,408L581,376L567,354Z"/>
+  <path d="M684,272L665,270L652,285L651,298L661,310L675,300Z"/>
+  <path d="M683,181L680,202L693,209L698,230L732,237L758,220L760,189L718,186L702,177Z"/>
+  <path d="M275,133L246,171L232,174L240,205L220,226L225,252L212,259L186,314L190,336L171,357L182,387L197,397L197,410L209,424L224,427L230,437L238,427L279,436L319,431L334,447L343,440L339,412L408,418L406,445L424,447L439,474L481,460L478,436L489,426L473,416L473,406L498,377L500,341L514,330L508,305L531,287L528,273L511,267L497,240L506,220L501,164L485,156L481,136L459,143L451,135L364,126L348,118L317,130Z"/>
+  <path d="M169,105L151,120L143,140L143,196L187,207L214,159L188,149L194,117Z"/>
+</g>
+<g class="isl-group" id="isl-terrestre">
+  <path d="M255,1305L226,1319L221,1376L262,1375L275,1367L274,1342L260,1331Z"/>
+  <path d="M679,915L665,934L684,963L682,1005L688,1011L727,1006L739,992L733,966L737,936L712,915Z"/>
+  <path d="M433,766L385,766L348,789L309,787L289,810L269,810L261,847L264,885L228,875L199,916L174,929L195,996L178,1006L184,1047L171,1067L187,1077L203,1104L247,1128L270,1121L297,1140L322,1132L373,1147L400,1119L415,1115L412,1080L435,1082L469,1055L526,1043L540,1031L542,1008L557,989L541,949L548,904L532,889L482,885L468,869L463,852L472,842L472,808L437,789Z"/>
+  <path d="M363,641L311,635L284,659L285,723L291,733L311,722L322,697L343,697L375,665L378,656Z"/>
+  <path d="M1679,587L1678,599L1698,592L1704,619L1730,628L1735,610L1714,606L1723,585Z"/>
+</g>
+<g class="isl-group" id="isl-folgorante">
+  <path d="M754,1293L739,1292L740,1314L730,1314L726,1302L700,1307L689,1323L693,1338L717,1344L730,1322L756,1320L747,1315Z"/>
+  <path d="M914,1288L925,1300L929,1321L968,1324L969,1317L979,1317L987,1327L996,1326L988,1321L988,1306L934,1310L923,1282Z"/>
+  <path d="M847,1144L835,1144L832,1137L821,1151L778,1162L770,1149L753,1158L752,1166L732,1168L783,1176Z"/>
+  <path d="M1915,628L1905,633L1901,651L1908,690L1923,689L1923,674L1934,673L1938,691L1926,693L1921,704L1883,715L1867,787L1889,830L1923,837L1939,826L1949,793L1959,789L1957,742L1948,729L1945,700L1962,662L1940,636Z"/>
+  <path d="M1573,613L1564,603L1515,586L1494,590L1486,600L1484,629L1460,647L1462,680L1489,687L1519,673L1570,672L1582,649Z"/>
+  <path d="M674,549L613,544L610,556L596,562L598,577L587,582L569,612L571,623L573,612L593,615L595,602L610,604L618,648L593,660L620,658L625,646L654,634L660,620L668,619L666,589L677,580Z"/>
+  <path d="M219,378L219,390L231,396L254,390L284,402L315,395L315,389L295,385L303,367L295,375L276,375L268,386L246,380L245,367Z"/>
+  <path d="M1703,367L1671,396L1658,462L1640,487L1629,490L1628,500L1615,506L1612,550L1636,583L1668,594L1696,622L1713,621L1715,642L1726,654L1805,664L1814,637L1835,609L1876,601L1882,583L1910,565L1912,534L1891,501L1853,491L1840,476L1806,462L1802,432L1819,407L1813,392L1789,379L1787,370Z"/>
+  <path d="M1560,227L1560,266L1607,287L1635,336L1662,335L1680,323L1657,315L1658,303L1686,310L1686,295L1658,281L1649,244L1625,219L1583,216Z"/>
+</g>
+<g class="isl-group" id="isl-radiante">
+  <path d="M1339,348L1317,375L1317,397L1324,401L1327,383L1339,382L1363,401L1367,384L1341,368Z"/>
+  <path d="M929,163L929,174L949,176L950,209L929,224L929,247L940,265L932,329L996,356L999,328L1018,326L1021,361L1011,370L1021,393L1042,383L1050,351L1065,338L1091,341L1113,360L1147,356L1174,339L1227,325L1251,295L1292,277L1300,266L1327,273L1328,296L1346,298L1361,264L1360,254L1341,258L1328,250L1328,239L1340,236L1336,231L1303,236L1283,215L1273,188L1229,179L1216,158L1198,169L1202,208L1183,211L1180,182L1133,204L1108,177L1064,160L1056,146L984,140L999,148L997,163L1021,155L1037,171L1036,185L1024,197L999,191L1001,215L987,224L963,223L954,215L956,149L965,141L946,145Z"/>
+</g>
+<g class="isl-group" id="isl-glaciale">
+  <path d="M1393,1399L1393,1419L1415,1420L1422,1409L1432,1409L1462,1444L1497,1450L1513,1444L1514,1429L1501,1409L1487,1409L1500,1424L1498,1438L1464,1437L1462,1417L1472,1409L1459,1403L1456,1372Z"/>
+  <path d="M1495,1137L1510,1159L1504,1220L1534,1238L1549,1238L1550,1254L1536,1274L1562,1351L1591,1373L1605,1361L1618,1362L1613,1389L1624,1393L1630,1408L1646,1407L1656,1418L1693,1415L1707,1426L1733,1402L1754,1407L1768,1363L1792,1370L1802,1358L1835,1351L1868,1364L1892,1343L1914,1347L1946,1285L1935,1270L1933,1231L1898,1212L1889,1193L1871,1184L1841,1199L1753,1183L1719,1166L1710,1152L1644,1153L1639,1168L1620,1172L1613,1168L1613,1154L1623,1135L1601,1132L1576,1106L1519,1121Z"/>
+  <path d="M1663,1083L1662,1115L1670,1124L1736,1124L1750,1138L1776,1143L1777,1151L1791,1145L1787,1134L1767,1122L1746,1082Z"/>
+  <path d="M1941,951L1914,954L1902,944L1893,961L1852,984L1855,1004L1829,1024L1825,1039L1830,1117L1859,1115L1865,1123L1893,1125L1907,1104L1906,1073L1895,1050L1919,1053L1925,1039L1954,1030L1959,1000L1970,990L1963,970L1945,970Z"/>
+  <path d="M1434,778L1420,781L1409,801L1413,835L1385,846L1376,859L1398,902L1407,892L1419,892L1428,906L1461,887L1483,846L1481,800L1451,792Z"/>
+  <path d="M1028,696L999,711L986,736L987,756L1005,781L1044,790L1066,782L1085,760L1087,726L1065,703Z"/>
+</g>
+<g class="isl-group" id="isl-oscuro">
+  <path d="M1483,1401L1467,1414L1465,1438L1500,1434L1493,1408Z"/>
+  <path d="M1294,1360L1260,1342L1233,1366L1180,1351L1162,1366L1158,1382L1177,1399L1195,1400L1226,1389L1280,1385L1294,1375Z"/>
+  <path d="M532,1262L538,1289L518,1316L519,1326L560,1344L568,1325L558,1308L556,1278L546,1264Z"/>
+  <path d="M484,1244L462,1239L426,1255L412,1283L412,1298L423,1312L448,1313L454,1300L480,1291Z"/>
+  <path d="M1119,1166L1118,1184L1146,1198L1157,1216L1155,1246L1177,1263L1204,1262L1246,1231L1244,1176L1206,1166L1182,1150L1136,1150Z"/>
+  <path d="M771,1117L621,1129L613,1135L609,1158L627,1163L647,1154L742,1145L763,1135Z"/>
+  <path d="M1053,1284L996,1253L990,1190L966,1160L876,1119L855,1130L849,1145L832,1145L831,1134L852,1115L822,1114L755,1158L753,1168L735,1166L627,1193L595,1212L595,1249L615,1276L615,1294L631,1301L630,1314L612,1309L607,1356L630,1366L826,1381L875,1363L921,1373L968,1373L1025,1357Z"/>
+  <path d="M224,979L214,987L213,1001L233,1011L244,991Z"/>
+  <path d="M440,958L439,968L449,969L448,981L438,981L435,972L441,991L498,991L500,977L481,976L479,960Z"/>
+  <path d="M303,657L299,670L306,681L333,684L340,678L340,664L324,648Z"/>
+  <path d="M555,648L572,654L586,649L592,659L622,653L616,631L600,635L594,614L587,614L592,645L569,636L568,648Z"/>
+  <path d="M298,479L277,484L271,511L309,511Z"/>
+  <path d="M565,382L546,388L539,401L546,419L578,415Z"/>
+  <path d="M218,374L218,390L229,397L251,389L288,404L290,397L310,401L316,395L300,358L278,365L274,376L262,376L253,354L243,352L241,359L227,359Z"/>
+  <path d="M438,352L417,356L409,381L417,388L449,383Z"/>
+  <path d="M1013,160L1000,167L1002,188L1021,192L1032,173Z"/>
+  <path d="M320,153L298,157L296,181L275,189L267,215L276,221L307,216L298,184L325,176Z"/>
+</g>
+<g class="isl-group" id="isl-ramsgate">
+  <path d="M547,672L546,691L655,690L655,681L559,680Z"/>
+</g>
+
+        <g id="maelstrom">
+  <circle cx="1037" cy="742" r="133" fill="url(#mal-halo)"/>
+  <circle cx="1037" cy="742" r="78" fill="url(#mal-grad)"/>
+  <g><circle cx="1037" cy="742" r="62" fill="none" stroke="#1a3a5a" stroke-width="3.5" stroke-dasharray="22,16"/>
+    <animateTransform attributeName="transform" type="rotate" from="0 1037 742" to="360 1037 742" dur="7s" repeatCount="indefinite"/></g>
+  <g><circle cx="1037" cy="742" r="47" fill="none" stroke="#102840" stroke-width="2.5" stroke-dasharray="15,24"/>
+    <animateTransform attributeName="transform" type="rotate" from="0 1037 742" to="-360 1037 742" dur="11s" repeatCount="indefinite"/></g>
+  <g><circle cx="1037" cy="742" r="31" fill="none" stroke="#0a1a28" stroke-width="2" stroke-dasharray="9,30"/>
+    <animateTransform attributeName="transform" type="rotate" from="0 1037 742" to="360 1037 742" dur="5s" repeatCount="indefinite"/></g>
+  <circle cx="1037" cy="742" r="78" fill="none" stroke="#20405a" stroke-width="1.5">
+    <animate attributeName="opacity" values="0.3;0.7;0.3" dur="3s" repeatCount="indefinite"/>
+  </circle>
+</g>
+        <g id="map-labels"><text x="310" y="570" class="isl-label" id="lbl-ardente" fill="#e05a20">Isole Ardenti</text>
+<text x="330" y="1200" class="isl-label" id="lbl-terrestre" fill="#8b6840">Isole Terrestri</text>
+<text x="1710" y="680" class="isl-label" id="lbl-folgorante" fill="#f0d020">Isole Folgoranti</text>
+<text x="1097" y="440" class="isl-label" id="lbl-radiante" fill="#d4a8ff">Isole Radianti</text>
+<text x="1690" y="1465" class="isl-label" id="lbl-glaciale" fill="#7ec8e3">Isole Glaciali</text>
+<text x="800" y="1440" class="isl-label" id="lbl-oscuro" fill="#8860d0">Isole Oscure</text>
+<text x="530" y="820" class="isl-label" id="lbl-ramsgate" fill="#c8a84b">Ramsgate</text>
+</g>
+      </svg>
+    </div>
   </div>
 </section>
 
@@ -313,8 +675,8 @@ strong{color:var(--gold2)}
       <button class="mtab" onclick="swTab('tipologie',this)">Tipologie Attacco</button>
       <button class="mtab" onclick="swTab('celle',this)">Celle di Aether</button>
       <button class="mtab" onclick="swTab('combattimento',this)">Combattimento</button>
-      <button class="mtab" onclick="swTab('elementi',this)">Nuclei & Elementi</button>
-      <button class="mtab" onclick="swTab('stati',this)">Stati & Effetti</button>
+      <button class="mtab" onclick="swTab('elementi',this)">Nuclei &amp; Elementi</button>
+      <button class="mtab" onclick="swTab('stati',this)">Stati &amp; Effetti</button>
       <button class="mtab" onclick="swTab('equipaggiamento',this)">Equipaggiamento</button>
       <button class="mtab" onclick="swTab('progressione',this)">Progressione</button>
     </div>
@@ -339,7 +701,7 @@ strong{color:var(--gold2)}
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.85rem;margin-top:1.25rem" id="cgrid"></div>
     </div>
     <div class="mpanel" id="p-combattimento">
-      <div class="qi">Combattimento strutturato in round alternati tra Slayer e Behemoth. Cooperazione, controllo dello spazio e gestione delle parti del mostro sono fondamentali.</div>
+      <div class="qi">Combattimento strutturato in round alternati tra Slayer e Behemoth.</div>
       <h3 style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold2);margin:1.25rem 0 .7rem">Tiri Fondamentali</h3>
       <table class="tcj-t"><thead><tr><th>Azione</th><th>Contro Behemoth</th><th>Contro Slayer / NPC</th></tr></thead><tbody>
         <tr><td><strong>Colpire</strong></td><td>CD = 5 + Bonus DES mostro → 1D20 puro</td><td>CD = 13 + Bonus COST NPC → 1D20 + Bonus DES</td></tr>
@@ -352,7 +714,7 @@ strong{color:var(--gold2)}
         <tr><td>3</td><td>Svantaggio ai tiri per colpire e tiri salvezza</td></tr><tr><td>4</td><td>PV massimi dimezzati</td></tr>
         <tr><td>5</td><td>Velocità ridotta a 0</td></tr><tr><td>6</td><td>Svenimento</td></tr>
       </tbody></table>
-      <p style="font-size:.86rem;color:var(--text2)">Riposo breve: −2 livelli. Riposo lungo: rimozione completa. A 0 PV si viene atterrati (non si muore): ci si può rialzare rinunciando all'azione principale tornando con 5 PV.</p>
+      <p style="font-size:.86rem;color:var(--text2)">Riposo breve: −2 livelli. Riposo lungo: rimozione completa.</p>
     </div>
     <div class="mpanel" id="p-elementi">
       <div class="qi">In difesa conviene adottare lo stesso elemento del Behemoth; in attacco, l'elemento opposto.</div>
@@ -485,110 +847,16 @@ strong{color:var(--gold2)}
 
 <section id="nave">
   <div class="si">
-    <div class="sh">
-      <div class="sl">La Nave degli Slayer</div>
-      <h2 class="st">Careless Journey</h2>
-      <div class="sline"></div>
-      <p class="sdesc">Battezzata dal gruppo al termine della prima giornata a Ramsgate. Aeronave da esplorazione potenziata, equipaggiata con tecnologie avanzate e personalizzata per le esigenze di un gruppo di Slayer.</p>
-    </div>
-
-    <!-- SCHEDE STANZE -->
+    <div class="sh"><div class="sl">La Nave degli Slayer</div><h2 class="st">Careless Journey</h2><div class="sline"></div><p class="sdesc">Battezzata dal gruppo al termine della prima giornata a Ramsgate.</p></div>
     <div class="g2">
-
-      <div class="card" data-a="glaciale">
-        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
-          <div style="font-size:1.6rem">🛏️</div>
-          <div><div class="ct">Alloggi Principali</div><div class="cs">1° Piano Poppa · 6 stanze</div></div>
-        </div>
-        <div class="cb">
-          <p>Sei stanze private disposte sul piano superiore verso poppa, di cui <strong>tre occupate dai player</strong>. Ogni alloggio è fornito di ogni comfort e può essere personalizzato e migliorato nel corso del tempo.</p>
-          <p>Le tre stanze rimanenti sono disponibili per ospiti, alleati o nuovi membri dell'equipaggio.</p>
-        </div>
-        <div style="margin-top:.75rem;display:flex;gap:.4rem;flex-wrap:wrap">
-          <span class="tag tg">Athena</span><span class="tag to">Pan Lan</span><span class="tag tr">Asonnes</span>
-          <span class="tag tn">+ 3 libere</span>
-        </div>
-      </div>
-
-      <div class="card" data-a="folgorante">
-        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
-          <div style="font-size:1.6rem">🎛️</div>
-          <div><div class="ct">Ponte di Comando</div><div class="cs">1° Piano Prua · rialzato sulla Sala Mappe</div></div>
-        </div>
-        <div class="cb">
-          <p>Zona rialzata rispetto alla Sala Mappe, accessibile tramite una rampa interna. Divisa in <strong>tre postazioni indipendenti</strong> per il controllo della nave: navigazione, sistemi di bordo e comunicazioni.</p>
-          <p>È possibile attivare il <strong>pilota automatico</strong> — con i rischi che i player già conoscono. Potenziabile in futuro con nuovi sistemi.</p>
-        </div>
-      </div>
-
-      <div class="card" data-a="ardente">
-        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
-          <div style="font-size:1.6rem">🍽️</div>
-          <div><div class="ct">Mensa</div><div class="cs">2° Piano Poppa · sotto gli alloggi</div></div>
-        </div>
-        <div class="cb">
-          <p>Zona di ristoro e convivialità posizionata direttamente sotto gli alloggi. Dotata di <strong>cucina attrezzata, sistemi di refrigerazione avanzati</strong>, svariate sedute e tavoli di diverse dimensioni.</p>
-          <p>Il luogo naturale per riunioni informali, pasti condivisi e conversazioni fuori missione.</p>
-        </div>
-      </div>
-
-      <div class="card" data-a="radiante">
-        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
-          <div style="font-size:1.6rem">🗺️</div>
-          <div><div class="ct">Sala Mappe</div><div class="cs">2° Piano Prua · cuore operativo</div></div>
-        </div>
-        <div class="cb">
-          <p>Ampia sala circondata per quasi tutta la sua estensione dal <strong>parabrezza panoramico</strong> della nave — la visuale è a 180° sull'esterno. Al centro si trova un <strong>tavolo olografico interattivo</strong> che permette di visualizzare la mappa completa di tutte le isole.</p>
-          <p>Integrato con un <strong>radar molto avanzato</strong> per il tracciamento di navi, behemoth e fenomeni aetherici nell'area.</p>
-        </div>
-      </div>
-
-      <div class="card" data-a="terrestre">
-        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
-          <div style="font-size:1.6rem">🌬️</div>
-          <div><div class="ct">Ponte Esterno</div><div class="cs">2° Piano Prua Esterna</div></div>
-        </div>
-        <div class="cb">
-          <p>Piattaforma esterna posizionata sulla prua della nave, accessibile dalla Sala Mappe. Esposta completamente all'esterno, offre una vista libera sul cielo aperto e sulle isole durante la navigazione.</p>
-          <p>Utile per osservazioni dirette, approdi rapidi e operazioni che richiedono accesso immediato all'esterno.</p>
-        </div>
-      </div>
-
-      <div class="card" data-a="neutro">
-        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
-          <div style="font-size:1.6rem">📦</div>
-          <div><div class="ct">Stiva Modulare</div><div class="cs">3° Piano Poppa · adattabile</div></div>
-        </div>
-        <div class="cb">
-          <p>Ampia stiva che può essere <strong>riconfigurabile su richiesta</strong>: alloggi aggiuntivi, studi scientifici, laboratori, sale di addestramento. Comunica con la Stiva Primaria tramite un ascensore centrale per lo spostamento merci.</p>
-          <p>Attualmente non ancora configurata — in attesa di una destinazione d'uso.</p>
-        </div>
-        <div style="margin-top:.75rem"><span class="tag tgo">Modulare</span><span class="tag tn">Espandibile</span></div>
-      </div>
-
-      <div class="card" data-a="neutro">
-        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
-          <div style="font-size:1.6rem">⚙️</div>
-          <div><div class="ct">Stiva Primaria</div><div class="cs">4° Piano Poppa · stiva principale</div></div>
-        </div>
-        <div class="cb">
-          <p>La stiva principale della nave — la più grande. Comunica con la Stiva Modulare tramite l'ascensore centrale e con l'esterno attraverso il <strong>portellone di carico</strong> sul lato di poppa.</p>
-          <p>Destinata al trasporto di materiali, pezzi di behemoth, equipaggiamenti pesanti e rifornimenti per le spedizioni lunghe.</p>
-        </div>
-      </div>
-
-      <div class="card" data-a="oscuro">
-        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
-          <div style="font-size:1.6rem">⚡</div>
-          <div><div class="ct">Sala Macchine</div><div class="cs">3° Piano Prua · cuore energetico</div></div>
-        </div>
-        <div class="cb">
-          <p>Il cuore pulsante della nave, protetto da <strong>ampi muri rinforzati</strong> che la rendono la zona più sicura e difesa dell'intera imbarcazione. Ospita i sistemi energetici principali della Careless Journey.</p>
-          <p>Nascosta dietro uno dei muri rinforzati si trova una <strong>zona segreta</strong> — accessibile solo a chi conosce l'accesso — dedicata alla conservazione di reliquie, artefatti e oggetti di valore che non devono essere visti da occhi indiscreti.</p>
-        </div>
-        <div style="margin-top:.75rem"><span class="tag to" style="border-style:dashed">🔒 Zona Segreta</span></div>
-      </div>
-
+      <div class="card" data-a="glaciale"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.6rem">🛏️</div><div><div class="ct">Alloggi Principali</div><div class="cs">1° Piano Poppa · 6 stanze</div></div></div><div class="cb"><p>Sei stanze private disposte sul piano superiore verso poppa, di cui <strong>tre occupate dai player</strong>.</p></div><div style="margin-top:.75rem;display:flex;gap:.4rem;flex-wrap:wrap"><span class="tag tg">Athena</span><span class="tag to">Pan Lan</span><span class="tag tr">Asonnes</span><span class="tag tn">+ 3 libere</span></div></div>
+      <div class="card" data-a="folgorante"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.6rem">🎛️</div><div><div class="ct">Ponte di Comando</div><div class="cs">1° Piano Prua · rialzato sulla Sala Mappe</div></div></div><div class="cb"><p>Divisa in <strong>tre postazioni indipendenti</strong>. È possibile attivare il <strong>pilota automatico</strong> — con i rischi che i player già conoscono.</p></div></div>
+      <div class="card" data-a="ardente"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.6rem">🍽️</div><div><div class="ct">Mensa</div><div class="cs">2° Piano Poppa · sotto gli alloggi</div></div></div><div class="cb"><p>Dotata di <strong>cucina attrezzata, sistemi di refrigerazione avanzati</strong>. Il luogo naturale per riunioni informali.</p></div></div>
+      <div class="card" data-a="radiante"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.6rem">🗺️</div><div><div class="ct">Sala Mappe</div><div class="cs">2° Piano Prua · cuore operativo</div></div></div><div class="cb"><p>Parabrezza panoramico a 180°. <strong>Tavolo olografico interattivo</strong> con mappa completa di tutte le isole. <strong>Radar avanzato</strong> per navi, behemoth e fenomeni aetherici.</p></div></div>
+      <div class="card" data-a="terrestre"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.6rem">🌬️</div><div><div class="ct">Ponte Esterno</div><div class="cs">2° Piano Prua Esterna</div></div></div><div class="cb"><p>Piattaforma esterna sulla prua, vista libera sul cielo aperto e sulle isole durante la navigazione.</p></div></div>
+      <div class="card" data-a="neutro"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.6rem">📦</div><div><div class="ct">Stiva Modulare</div><div class="cs">3° Piano Poppa · adattabile</div></div></div><div class="cb"><p>Riconfigurabile su richiesta: alloggi aggiuntivi, laboratori, sale di addestramento.</p></div><div style="margin-top:.75rem"><span class="tag tgo">Modulare</span><span class="tag tn">Espandibile</span></div></div>
+      <div class="card" data-a="neutro"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.6rem">⚙️</div><div><div class="ct">Stiva Primaria</div><div class="cs">4° Piano Poppa · stiva principale</div></div></div><div class="cb"><p>La stiva principale. Comunica con la Stiva Modulare tramite ascensore centrale e con l'esterno attraverso il <strong>portellone di carico</strong>.</p></div></div>
+      <div class="card" data-a="oscuro"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.6rem">⚡</div><div><div class="ct">Sala Macchine</div><div class="cs">3° Piano Prua · cuore energetico</div></div></div><div class="cb"><p>Protetta da <strong>ampi muri rinforzati</strong>. Nascosta dietro uno dei muri si trova una <strong>zona segreta</strong> per reliquie e artefatti.</p></div><div style="margin-top:.75rem"><span class="tag to" style="border-style:dashed">🔒 Zona Segreta</span></div></div>
     </div>
   </div>
 </section>
@@ -596,87 +864,68 @@ strong{color:var(--gold2)}
 <section id="diario">
   <div class="si">
     <div class="sh"><div class="sl">Cronaca delle Avventure</div><h2 class="st">Diario di Campagna</h2><div class="sline"></div><p class="sdesc">La storia dei tre Slayer, giornata per giornata — così come si è svolta.</p></div>
-
     <div class="dentry">
       <div class="ddate">🗓 Anno 1855 · 20° giorno · Triade Algente — Ramsgate</div>
       <div class="dbody">
         <p>I tre Slayer si trovano a Ramsgate per la cerimonia di convocazione alla Gilda. <strong>Pan Lan</strong> aveva già affrontato separatamente un Nayzaga con altri due Slayer, non senza difficoltà.</p>
-        <p>Durante la cerimonia parte un allarme d'assedio in città. <strong>Athena</strong> e <strong>Asonnes</strong> — ancora estranei — affrontano uno Shrike nella piazza e lo abbattono insieme. Come gesto di stima, Asonnes regala ad Athena una collana con un artiglio del Behemoth.</p>
-        <p>I due vengono convocati nelle stanze di <strong>Estarossa</strong>, che rivela le proprie origini divine, la storia dei Mael e la sorte dei loro artefatti. La missione è chiara: <em>recuperare gli artefatti perduti</em>. Prima di congedarsi, scoprono che qualcuno stava origliando — è <strong>Pan Lan</strong>, che decide di unirsi alla ricerca.</p>
-        <p>I tre visitano i rispettivi maestri d'armi — <strong>Xelya, Lady Luck, Katerin Sorrel</strong> — per raccogliere i materiali per la forgiatura. Un'esplosione in un laboratorio fa conoscere loro <strong>Arkan Drew</strong>, che dona i dispositivi per le celle aetheriche. Nella forgia, <strong>Wils Bormen</strong> e <strong>Moyra Heigsketter</strong> realizzano armi e armature su misura. Ogni Slayer battezza la propria arma e armatura.</p>
-        <p>Nel corso della giornata fermano dei mafiosi che minacciano <strong>Tressa</strong> al bar. Completato l'equipaggiamento — pozioni, pistola aetherica, celle Medico e Agilità — battezzano la nave: <strong>Careless Journey</strong>.</p>
+        <p>Durante la cerimonia parte un allarme d'assedio in città. <strong>Athena</strong> e <strong>Asonnes</strong> — ancora estranei — affrontano uno Shrike nella piazza e lo abbattono insieme. Asonnes regala ad Athena una collana con un artiglio del Behemoth.</p>
+        <p>I due vengono convocati nelle stanze di <strong>Estarossa</strong>, che rivela le proprie origini divine, la storia dei Mael e la sorte dei loro artefatti. La missione: <em>recuperare gli artefatti perduti</em>. Prima di congedarsi, scoprono che qualcuno stava origliando — è <strong>Pan Lan</strong>, che decide di unirsi alla ricerca.</p>
+        <p>I tre visitano i rispettivi maestri d'armi. Un'esplosione in un laboratorio fa conoscere loro <strong>Arkan Drew</strong>. Nella forgia, <strong>Wils Bormen</strong> e <strong>Moyra Heigsketter</strong> realizzano armi e armature su misura. Battezzano la nave: <strong>Careless Journey</strong>.</p>
       </div>
     </div>
-
     <div class="dentry">
       <div class="ddate">🗓 Anno 1855 · 21° giorno · Triade Algente — Nave → Isole Terrestri</div>
       <div class="dbody">
-        <p>Salpati verso le isole terrestri, i tre vengono attaccati nella notte da una nave Ostinguard. L'abbordaggio si trasforma in uno scontro contro due TecnoSlayer. Durante il combattimento il pilota automatico va in avaria: la nave si schianta.</p>
-        <p>Al risveglio si trovano in un accampamento degli Slayer di Frontiera, privati delle armi. <strong>Asonnes</strong> viene tenuto separato, trattato come estraneo — come spesso accade con lui. Il capo dell'accampamento, <strong>Revelor Baalz</strong>, affida loro una missione: liberare <strong>Greenshard</strong> dall'occupazione Ostinguard e salvare suo figlio.</p>
-        <p>Giunti a Greenshard, <strong>Athena</strong> e <strong>Pan Lan</strong> si travestono da guardie di Ostia. Nella zona più povera incontrano i ribelli locali e <strong>Paramir</strong>, il figlio di Revelor. Grazie alle informazioni di <strong>Volanz Soloy</strong> e <strong>Railen Krona</strong>, localizzano il deposito delle armi. Mentre Asonnes recupera l'equipaggiamento, gli altri distraggono il generale <strong>Cendrik Vollz</strong>. Tornano alla base per pianificare l'attacco.</p>
+        <p>Salpati verso le isole terrestri, i tre vengono attaccati nella notte da una nave Ostinguard. L'abbordaggio si trasforma in uno scontro contro due TecnoSlayer. Il pilota automatico va in avaria: la nave si schianta.</p>
+        <p>Al risveglio si trovano in un accampamento degli Slayer di Frontiera, privati delle armi. <strong>Asonnes</strong> viene tenuto separato. Il capo <strong>Revelor Baalz</strong> affida loro la missione: liberare <strong>Greenshard</strong> e salvare suo figlio.</p>
+        <p>Giunti a Greenshard, <strong>Athena</strong> e <strong>Pan Lan</strong> si travestono da guardie di Ostia. Incontrano i ribelli e <strong>Paramir</strong>. Localizzano il deposito delle armi e lo svuotano mentre distraggono il generale <strong>Cendrik Vollz</strong>.</p>
       </div>
     </div>
-
     <div class="dentry">
       <div class="ddate">🗓 Anno 1855 · 22° giorno · Triade Algente — Greenshard</div>
       <div class="dbody">
-        <p>Nel cuore della notte i tre si infiltrano nella base principale e raggiungono un'arena sotterranea. Vi trovano uno Slayer ferito e un <strong>Koshai</strong> anch'esso ferito. Li curano e liberano entrambi.</p>
-        <p>Attraverso un condotto di scarico entrano nel cuore della fabbrica, dove affrontano un <strong>Embermane</strong> e un <strong>Charrogg</strong> a guardia del computer principale. Lo hackerano causando un sovraccarico di Aether: le guardie perdono l'uso delle armi e gli Slayer di Frontiera riprendono il controllo della città.</p>
-        <p>Si tiene un funerale simbolico nell'arena per onorare i caduti. <strong>Asonnes</strong> viene finalmente accettato dalla comunità. Il gruppo trascorre una settimana di riposo mentre gli Slayer di Frontiera riparano la nave. Scoprono il motivo della presenza Ostinguard: un'anomalia di aether oscuro nella zona.</p>
+        <p>Nel cuore della notte si infiltrano nella base principale. Trovano uno Slayer ferito e un <strong>Koshai</strong> anch'esso ferito. Li curano e liberano entrambi.</p>
+        <p>Entrano nel cuore della fabbrica e affrontano un <strong>Embermane</strong> e un <strong>Charrogg</strong>. Hackerano il computer causando un sovraccarico di Aether: le guardie perdono le armi e gli Slayer di Frontiera riprendono la città.</p>
+        <p><strong>Asonnes</strong> viene finalmente accettato dalla comunità. Il gruppo trascorre una settimana di riposo. Scoprono il motivo della presenza Ostinguard: un'anomalia di aether oscuro nella zona.</p>
       </div>
     </div>
-
     <div class="dentry">
       <div class="ddate">🗓 Anno 1855 · 6° giorno · Triade Foscomanto — Foresta del Silenzio</div>
       <div class="dbody">
-        <p><strong>Revelor</strong> avvisa che <strong>Volanz Soloy</strong> ha rilevato una forte presenza di aether oscuro nella zona nota come <strong>Foresta del Silenzio</strong>. Nessuno di chi è entrato è mai uscito.</p>
-        <p>Un fuoco fatuo guida il gruppo all'interno, mutando forma nel corso del cammino. Una voce accompagna ogni tappa con frammenti di una storia antica su un principe e una foresta. Le prove affrontate:</p>
+        <p><strong>Revelor</strong> avvisa di una forte presenza di aether oscuro nella <strong>Foresta del Silenzio</strong>. Nessuno di chi è entrato è mai uscito.</p>
+        <p>Un fuoco fatuo guida il gruppo. Le prove affrontate:</p>
         <ul>
-          <li>Un <strong>fiume</strong> con cadaveri galleggianti — attraversato in equilibrio su un tronco. Asonnes lega il gruppo con una corda.</li>
-          <li>Una <strong>radura nella nebbia</strong> che trasforma ogni sentiero in vicolo cieco. Il gruppo impara a fermarsi e ascoltare.</li>
-          <li>Un <strong>albero antico</strong> le cui voci promettono gloria e potere — Asonnes suggerisce di tapparsi le orecchie.</li>
-          <li>Un <strong>lago nero</strong> con visioni del passato di ciascuno. Il gruppo sceglie di nuotare.</li>
-          <li>Un <strong>portale di ossa</strong> che richiede di lasciare qualcosa di caro — Asonnes lascia il suo pupazzo.</li>
+          <li>Un <strong>fiume</strong> con cadaveri galleggianti — attraversato su un tronco. Asonnes lega il gruppo con una corda.</li>
+          <li>Una <strong>radura nella nebbia</strong> — il gruppo impara a fermarsi e ascoltare.</li>
+          <li>Un <strong>albero antico</strong> le cui voci promettono gloria — Asonnes suggerisce di tapparsi le orecchie.</li>
+          <li>Un <strong>lago nero</strong> con visioni del passato di ciascuno.</li>
+          <li>Un <strong>portale di ossa</strong> — Asonnes lascia il suo pupazzo.</li>
         </ul>
-        <p>Al cuore della foresta: un palazzo in rovina, cadaveri e un liquido violaceo. La figura guida si trasforma in una creatura simile a un <strong>Koshai corrotto</strong> — sconfitta dopo un duro combattimento. Asonnes quasi muore dopo aver ingerito una delle sfere del mostro.</p>
-        <p>Il gruppo trova una porta grigia con un frammento di metallo. Al ritorno al campo: dall'esterno sono passati solo 10 minuti. Scoperta: toccando il frammento, <strong>Asonnes diventa viola</strong>.</p>
+        <p>Al cuore della foresta: un palazzo in rovina. La figura guida si trasforma in un <strong>Koshai corrotto</strong> — sconfitto dopo un duro combattimento. Il gruppo trova una porta grigia con un frammento di metallo. Al ritorno: dall'esterno sono passati solo 10 minuti. Toccando il frammento, <strong>Asonnes diventa viola</strong>.</p>
       </div>
     </div>
-
     <div class="dentry">
       <div class="ddate">🗓 Anno 1855 · 7°–17° giorno · Triade Foscomanto — Ramsgate</div>
       <div class="dbody">
-        <p>Rientrati a Ramsgate, accolti da <strong>Markus</strong> e <strong>Arkan</strong>. Al mercato <strong>Pan Lan</strong> nota di essere seguiti — è <strong>Ozz l'Onesto</strong>, che li indirizza alla biblioteca. Lì la <strong>Dottoressa Priyani</strong> acquista i pezzi di Behemoth per 13.000 monete. Il gruppo deposita 12.000 monete in banca.</p>
-        <p>Convocati sulla nave di Estarossa, nell'ufficio del Mael scoprono che l'artefatto trovato nella Foresta del Silenzio sembra legato al passato di <strong>Asonnes</strong> e ai Solcavuoto. La prossima missione è una <em>scorta diplomatica</em>.</p>
-        <p>Nel frattempo: Athena si perde cercando Ozz e finisce dalla <strong>Nonna Yaga</strong>, che la droga. Pan Lan e Asonnes la liberano e salvano un cagnolino che battezzano <strong>Pauly</strong>.</p>
-        <p>Nei giorni seguenti Athena conduce ricerche su Solcavuoto e alterazioni di Aether — trova solo leggende e miti. Scopre che <strong>Athena e Minerva Silver</strong> saranno presenti alla missione diplomatica. Nel cuore della notte la nave riceve un pacco misterioso: contiene un arco aetherico, che prende <strong>Pan Lan</strong>.</p>
+        <p>Rientrati a Ramsgate. Al mercato <strong>Pan Lan</strong> nota di essere seguiti — è <strong>Ozz l'Onesto</strong>, che li indirizza alla biblioteca. La <strong>Dottoressa Priyani</strong> acquista i pezzi di Behemoth per 13.000 monete.</p>
+        <p>Nell'ufficio di Estarossa scoprono che l'artefatto trovato sembra legato al passato di <strong>Asonnes</strong> e ai Solcavuoto. La prossima missione: una <em>scorta diplomatica</em>.</p>
+        <p>Athena finisce dalla <strong>Nonna Yaga</strong>, che la droga. Pan Lan e Asonnes la liberano e salvano un cagnolino: <strong>Pauly</strong>. Nel cuore della notte la nave riceve un pacco: contiene un arco aetherico, che prende <strong>Pan Lan</strong>.</p>
       </div>
     </div>
-
     <div class="dentry">
       <div class="ddate">🗓 Anno 1855 · 20°–22° giorno · Triade Foscomanto — Missione Diplomatica</div>
       <div class="dbody">
-        <p>Briefing sulle culture delle isole coinvolte. Il gruppo impara che nelle isole glaciali l'ultima figlia di ogni casata viene chiamata <strong>Athena</strong> — un nome che blocca il lignaggio. Si imbarcano con <strong>Arkan Drew</strong> come passeggero.</p>
-        <p>Una scaramuccia con degli scagnozzi mette in pericolo <strong>Ozz</strong> — il gruppo interviene e viene aiutato da una squadra di sconosciuti. Vengono poi presentati i rappresentanti diplomatici: <strong>Jsur Lume</strong> e <strong>Rebenek Wkor</strong> (ardenti), <strong>Atreo Silver</strong> (glaciali), <strong>Malevola Zeraora</strong> (oscure), <strong>Godrik Tasher</strong> (folgoranti) — arrivato in ritardo con un ingresso pittoresco.</p>
-        <p>Al banchetto <strong>Malevola Zeraora</strong> avvicina <strong>Pan Lan</strong> in privato: le chiede se siano stati trovati segni dei Solcavuoto. Pan Lan nega. <strong>Minerva Silver</strong> mantiene le distanze da Athena senza spiegazioni.</p>
-        <p>Il trattato proposto dai Silver è squilibrato. I rappresentanti ardenti sollevano obiezioni. La seduta viene interrotta da un attacco: diversi <strong>Skraev</strong> e uno ibrido, guidati dal <strong>Kaltuga</strong> — uno Skraev antico con cicatrici attorno agli occhi, noto per aver ucciso la madre della casata Silver. Il Kaltuga fugge dopo lo scontro.</p>
-        <p>I rappresentanti glaciali e oscuri decidono di riscrivere il trattato. <strong>Godrik Tasher</strong> se ne va bruscamente. Nella sua stanza, <strong>Pan Lan</strong> trova un cofanetto con lo stemma dei Batuk contenente una mano mozzata — un avvertimento.</p>
+        <p>Si imbarcano con <strong>Arkan Drew</strong>. Rappresentanti diplomatici: <strong>Jsur Lume</strong> e <strong>Rebenek Wkor</strong> (ardenti), <strong>Atreo Silver</strong> (glaciali), <strong>Malevola Zeraora</strong> (oscure), <strong>Godrik Tasher</strong> (folgoranti).</p>
+        <p>Al banchetto <strong>Malevola Zeraora</strong> avvicina <strong>Pan Lan</strong>: le chiede se siano stati trovati segni dei Solcavuoto. Pan Lan nega. <strong>Minerva Silver</strong> mantiene le distanze da Athena.</p>
+        <p>Il trattato Silver è squilibrato. La seduta viene interrotta da un attacco: diversi <strong>Skraev</strong> guidati dal <strong>Kaltuga</strong> — uno Skraev antico con cicatrici attorno agli occhi. Il Kaltuga fugge. I rappresentanti decidono di riscrivere il trattato. Godrik Tasher se ne va bruscamente. Nella sua stanza, <strong>Pan Lan</strong> trova un cofanetto con lo stemma dei Batuk contenente una mano mozzata.</p>
       </div>
     </div>
-
   </div>
 </section>
 
-
 <section id="scheda" style="background:var(--bg2)">
   <div class="si">
-    <div class="sh">
-      <div class="sl">Scheda Personaggio</div>
-      <h2 class="st">The Careless Journey</h2>
-      <div class="sline"></div>
-      <p class="sdesc">Tutti i campi sono editabili e salvati nel tuo browser.</p>
-    </div>
-
+    <div class="sh"><div class="sl">Scheda Personaggio</div><h2 class="st">The Careless Journey</h2><div class="sline"></div><p class="sdesc">Tutti i campi sono editabili e salvati nel tuo browser.</p></div>
 <style>
 .sc-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;max-width:900px;margin:0 auto}
 .sc-full{grid-column:1/-1}
@@ -712,285 +961,46 @@ strong{color:var(--gold2)}
 .sc-save:hover{background:rgba(200,168,75,.1)}
 .sc-save.ok{border-color:var(--ice);color:var(--ice)}
 </style>
-
 <div class="sc-wrap">
-
-  <!-- Livello + Rango -->
-  <div class="sc-card">
-    <span class="sc-lbl">Livello</span>
-    <input class="sc-in" id="sc-lvl" type="number" placeholder="1" style="text-align:center;font-size:1.1rem">
-  </div>
-  <div class="sc-card">
-    <span class="sc-lbl">Rango Slayer</span>
-    <input class="sc-in" id="sc-rango" placeholder="—" style="font-size:.95rem">
-  </div>
-
-  <!-- Punti Vita + Malus -->
-  <div class="sc-card">
-    <span class="sc-lbl">Punti Vita</span>
-    <input class="sc-pv-box" id="sc-pv" type="text" placeholder="—">
-  </div>
-  <div class="sc-card">
-    <span class="sc-lbl">Malus Attivi</span>
-    <textarea class="sc-in" id="sc-malus" rows="4" style="resize:none;font-size:.85rem" placeholder="Malus e stati alterati..."></textarea>
-  </div>
-
-  <!-- Statistiche -->
-  <div class="sc-card sc-full">
-    <span class="sc-lbl">Statistiche — Valore · Modificatore</span>
-    <div class="sc-stat-row">
-      <div id="sc-stats-left"></div>
-      <div id="sc-stats-right"></div>
-    </div>
-  </div>
-
-  <!-- Competenze -->
-  <div class="sc-card sc-full">
-    <span class="sc-lbl">Competenze</span>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.15rem .75rem;margin-top:.25rem" id="sc-comps-grid"></div>
-  </div>
-
-  <!-- Arma principale + cariche -->
-  <div class="sc-card sc-full">
-    <span class="sc-lbl">Arma Principale</span>
-    <input class="sc-in" id="sc-arma" placeholder="Nome arma..." style="margin-bottom:.75rem">
-    <span class="sc-lbl">Cariche</span>
-    <div style="display:flex;flex-direction:column;gap:.4rem">
-      <div style="display:flex;gap:.4rem" id="sc-ch-r1"></div>
-      <div style="display:flex;gap:.4rem" id="sc-ch-r2"></div>
-    </div>
-  </div>
-
-  <!-- Abilità arma -->
-  <div class="sc-card sc-full">
-    <span class="sc-lbl">Abilità Arma</span>
-    <textarea class="sc-in" id="sc-abil" rows="4" style="resize:vertical;font-size:.88rem" placeholder="Scrivi le abilità speciali dell'arma..."></textarea>
-  </div>
-
-  <!-- Arma secondaria + proiettili -->
-  <div class="sc-card">
-    <span class="sc-lbl">Arma Secondaria</span>
-    <input class="sc-in" id="sc-arma2" placeholder="Nome arma..." style="margin-bottom:.6rem">
-    <span class="sc-lbl">Proiettili</span>
-    <div class="sc-counter">
-      <button class="sc-cnt-btn" onclick="scCnt(-1)">−</button>
-      <input class="sc-cnt-val" id="sc-proiettili" type="number" value="0" min="0">
-      <button class="sc-cnt-btn" onclick="scCnt(1)">+</button>
-    </div>
-  </div>
-
-  <!-- Nuclei -->
+  <div class="sc-card"><span class="sc-lbl">Livello</span><input class="sc-in" id="sc-lvl" type="number" placeholder="1" style="text-align:center;font-size:1.1rem"></div>
+  <div class="sc-card"><span class="sc-lbl">Rango Slayer</span><input class="sc-in" id="sc-rango" placeholder="—" style="font-size:.95rem"></div>
+  <div class="sc-card"><span class="sc-lbl">Punti Vita</span><input class="sc-pv-box" id="sc-pv" type="text" placeholder="—"></div>
+  <div class="sc-card"><span class="sc-lbl">Malus Attivi</span><textarea class="sc-in" id="sc-malus" rows="4" style="resize:none;font-size:.85rem" placeholder="Malus e stati alterati..."></textarea></div>
+  <div class="sc-card sc-full"><span class="sc-lbl">Statistiche — Valore · Modificatore</span><div class="sc-stat-row"><div id="sc-stats-left"></div><div id="sc-stats-right"></div></div></div>
+  <div class="sc-card sc-full"><span class="sc-lbl">Competenze</span><div style="display:grid;grid-template-columns:1fr 1fr;gap:.15rem .75rem;margin-top:.25rem" id="sc-comps-grid"></div></div>
+  <div class="sc-card sc-full"><span class="sc-lbl">Arma Principale</span><input class="sc-in" id="sc-arma" placeholder="Nome arma..." style="margin-bottom:.75rem"><span class="sc-lbl">Cariche</span><div style="display:flex;flex-direction:column;gap:.4rem"><div style="display:flex;gap:.4rem" id="sc-ch-r1"></div><div style="display:flex;gap:.4rem" id="sc-ch-r2"></div></div></div>
+  <div class="sc-card sc-full"><span class="sc-lbl">Abilità Arma</span><textarea class="sc-in" id="sc-abil" rows="4" style="resize:vertical;font-size:.88rem" placeholder="Scrivi le abilità speciali dell'arma..."></textarea></div>
+  <div class="sc-card"><span class="sc-lbl">Arma Secondaria</span><input class="sc-in" id="sc-arma2" placeholder="Nome arma..." style="margin-bottom:.6rem"><span class="sc-lbl">Proiettili</span><div class="sc-counter"><button class="sc-cnt-btn" onclick="scCnt(-1)">−</button><input class="sc-cnt-val" id="sc-proiettili" type="number" value="0" min="0"><button class="sc-cnt-btn" onclick="scCnt(1)">+</button></div></div>
   <div class="sc-card" style="display:flex;flex-direction:column;gap:.75rem">
-    <div>
-      <span class="sc-lbl">Nucleo Attacco</span>
-      <div class="sc-ndisp" id="sc-natt-d"></div>
-      <select class="sc-nsel" id="sc-natt-s" onchange="scNucleo('att')">
-        <option value="">— nessuno</option>
-        <option value="glaciale">❄ Glaciale</option>
-        <option value="ardente">🔥 Ardente</option>
-        <option value="folgorante">⚡ Folgorante</option>
-        <option value="terrestre">🌍 Terrestre</option>
-        <option value="radiante">✨ Radiante</option>
-        <option value="oscuro">🌑 Oscuro</option>
-        <option value="neutro">◆ Neutro</option>
-      </select>
-    </div>
-    <div>
-      <span class="sc-lbl">Nucleo Difesa</span>
-      <div class="sc-ndisp" id="sc-ndef-d"></div>
-      <select class="sc-nsel" id="sc-ndef-s" onchange="scNucleo('def')">
-        <option value="">— nessuno</option>
-        <option value="glaciale">❄ Glaciale</option>
-        <option value="ardente">🔥 Ardente</option>
-        <option value="folgorante">⚡ Folgorante</option>
-        <option value="terrestre">🌍 Terrestre</option>
-        <option value="radiante">✨ Radiante</option>
-        <option value="oscuro">🌑 Oscuro</option>
-        <option value="neutro">◆ Neutro</option>
-      </select>
-    </div>
+    <div><span class="sc-lbl">Nucleo Attacco</span><div class="sc-ndisp" id="sc-natt-d"></div><select class="sc-nsel" id="sc-natt-s" onchange="scNucleo('att')"><option value="">— nessuno</option><option value="glaciale">❄ Glaciale</option><option value="ardente">🔥 Ardente</option><option value="folgorante">⚡ Folgorante</option><option value="terrestre">🌍 Terrestre</option><option value="radiante">✨ Radiante</option><option value="oscuro">🌑 Oscuro</option><option value="neutro">◆ Neutro</option></select></div>
+    <div><span class="sc-lbl">Nucleo Difesa</span><div class="sc-ndisp" id="sc-ndef-d"></div><select class="sc-nsel" id="sc-ndef-s" onchange="scNucleo('def')"><option value="">— nessuno</option><option value="glaciale">❄ Glaciale</option><option value="ardente">🔥 Ardente</option><option value="folgorante">⚡ Folgorante</option><option value="terrestre">🌍 Terrestre</option><option value="radiante">✨ Radiante</option><option value="oscuro">🌑 Oscuro</option><option value="neutro">◆ Neutro</option></select></div>
   </div>
-
-  <!-- Equipaggiamento contatori -->
-  <div class="sc-card sc-full">
-    <span class="sc-lbl">Equipaggiamento</span>
-    <div style="display:flex;flex-direction:column;gap:.4rem" id="sc-eq-wrap">
-      <div style="display:flex;align-items:center;gap:.4rem">
-        <button class="sc-cnt-btn" onclick="scEqCnt(0,-1)">−</button>
-        <input class="sc-cnt-val" id="sc-eq-cnt-0" type="number" value="0" min="0" style="width:44px">
-        <button class="sc-cnt-btn" onclick="scEqCnt(0,1)">+</button>
-        <input class="sc-in" id="sc-eq-txt-0" placeholder="Tonico / Pilone..." style="flex:1;font-size:.85rem">
-      </div><div style="display:flex;align-items:center;gap:.4rem">
-        <button class="sc-cnt-btn" onclick="scEqCnt(1,-1)">−</button>
-        <input class="sc-cnt-val" id="sc-eq-cnt-1" type="number" value="0" min="0" style="width:44px">
-        <button class="sc-cnt-btn" onclick="scEqCnt(1,1)">+</button>
-        <input class="sc-in" id="sc-eq-txt-1" placeholder="Tonico / Pilone..." style="flex:1;font-size:.85rem">
-      </div><div style="display:flex;align-items:center;gap:.4rem">
-        <button class="sc-cnt-btn" onclick="scEqCnt(2,-1)">−</button>
-        <input class="sc-cnt-val" id="sc-eq-cnt-2" type="number" value="0" min="0" style="width:44px">
-        <button class="sc-cnt-btn" onclick="scEqCnt(2,1)">+</button>
-        <input class="sc-in" id="sc-eq-txt-2" placeholder="Tonico / Pilone..." style="flex:1;font-size:.85rem">
-      </div><div style="display:flex;align-items:center;gap:.4rem">
-        <button class="sc-cnt-btn" onclick="scEqCnt(3,-1)">−</button>
-        <input class="sc-cnt-val" id="sc-eq-cnt-3" type="number" value="0" min="0" style="width:44px">
-        <button class="sc-cnt-btn" onclick="scEqCnt(3,1)">+</button>
-        <input class="sc-in" id="sc-eq-txt-3" placeholder="Tonico / Pilone..." style="flex:1;font-size:.85rem">
-      </div>
-    </div>
-  </div>
-
-  <!-- Inventario -->
-  <div class="sc-card sc-full">
-    <span class="sc-lbl">Inventario</span>
-    <textarea class="sc-in" id="sc-equip" rows="3" style="resize:vertical;font-size:.88rem" placeholder="Oggetti, pozioni, strumenti..."></textarea>
-  </div>
-
-  <!-- Celle -->
-  <div class="sc-card sc-full">
-    <span class="sc-lbl">Celle Equipaggiate</span>
-    <div class="sc-celle-grid" id="sc-celle"></div>
-  </div>
-
+  <div class="sc-card sc-full"><span class="sc-lbl">Equipaggiamento</span><div style="display:flex;flex-direction:column;gap:.4rem">
+    <div style="display:flex;align-items:center;gap:.4rem"><button class="sc-cnt-btn" onclick="scEqCnt(0,-1)">−</button><input class="sc-cnt-val" id="sc-eq-cnt-0" type="number" value="0" min="0" style="width:44px"><button class="sc-cnt-btn" onclick="scEqCnt(0,1)">+</button><input class="sc-in" id="sc-eq-txt-0" placeholder="Tonico / Pilone..." style="flex:1;font-size:.85rem"></div>
+    <div style="display:flex;align-items:center;gap:.4rem"><button class="sc-cnt-btn" onclick="scEqCnt(1,-1)">−</button><input class="sc-cnt-val" id="sc-eq-cnt-1" type="number" value="0" min="0" style="width:44px"><button class="sc-cnt-btn" onclick="scEqCnt(1,1)">+</button><input class="sc-in" id="sc-eq-txt-1" placeholder="Tonico / Pilone..." style="flex:1;font-size:.85rem"></div>
+    <div style="display:flex;align-items:center;gap:.4rem"><button class="sc-cnt-btn" onclick="scEqCnt(2,-1)">−</button><input class="sc-cnt-val" id="sc-eq-cnt-2" type="number" value="0" min="0" style="width:44px"><button class="sc-cnt-btn" onclick="scEqCnt(2,1)">+</button><input class="sc-in" id="sc-eq-txt-2" placeholder="Tonico / Pilone..." style="flex:1;font-size:.85rem"></div>
+    <div style="display:flex;align-items:center;gap:.4rem"><button class="sc-cnt-btn" onclick="scEqCnt(3,-1)">−</button><input class="sc-cnt-val" id="sc-eq-cnt-3" type="number" value="0" min="0" style="width:44px"><button class="sc-cnt-btn" onclick="scEqCnt(3,1)">+</button><input class="sc-in" id="sc-eq-txt-3" placeholder="Tonico / Pilone..." style="flex:1;font-size:.85rem"></div>
+  </div></div>
+  <div class="sc-card sc-full"><span class="sc-lbl">Inventario</span><textarea class="sc-in" id="sc-equip" rows="3" style="resize:vertical;font-size:.88rem" placeholder="Oggetti, pozioni, strumenti..."></textarea></div>
+  <div class="sc-card sc-full"><span class="sc-lbl">Celle Equipaggiate</span><div class="sc-celle-grid" id="sc-celle"></div></div>
   <button class="sc-save" id="sc-savebtn" onclick="scSave()">Salva Scheda</button>
 </div>
   </div>
 </section>
-
 <script>
-const SC_STATS=[
-  {id:"FOR",nm:"Forza"},{id:"DES",nm:"Destrezza"},{id:"COST",nm:"Costituzione"},
-  {id:"INT",nm:"Intelligenza"},{id:"SAG",nm:"Saggezza"},{id:"CAR",nm:"Carisma"}
-];
-const SC_NC={
-  glaciale:{bg:"rgba(126,200,227,.18)",br:"#5aaac0",tx:"Glaciale"},
-  ardente:{bg:"rgba(224,90,32,.18)",br:"#c04010",tx:"Ardente"},
-  folgorante:{bg:"rgba(240,208,32,.2)",br:"#a09000",tx:"Folgorante"},
-  terrestre:{bg:"rgba(60,150,60,.18)",br:"#3a8030",tx:"Terrestre"},
-  radiante:{bg:"rgba(212,168,255,.2)",br:"#9070c0",tx:"Radiante"},
-  oscuro:{bg:"rgba(100,60,180,.2)",br:"#7050b0",tx:"Oscuro"},
-  neutro:{bg:"rgba(160,160,160,.18)",br:"#888",tx:"Neutro"}
-};
-
-const SC_COMPS=[
-  {id:"acro",nm:"Acrobatica",st:"DES"},{id:"amm",nm:"Ammaestrare creature",st:"SAG"},
-  {id:"beh",nm:"Behemothologia",st:"INT"},{id:"atl",nm:"Atletica",st:"FOR"},
-  {id:"ing",nm:"Inganno",st:"CAR"},{id:"stor",nm:"Storia",st:"INT"},
-  {id:"intu",nm:"Intuizione",st:"SAG"},{id:"intim",nm:"Intimidire",st:"CAR"},
-  {id:"inv2",nm:"Investigare",st:"INT"},{id:"poz",nm:"Pozioni",st:"INT"},
-  {id:"nat",nm:"Natura",st:"SAG"},{id:"perc",nm:"Percezione",st:"SAG"},
-  {id:"intr",nm:"Intrattenere",st:"CAR"},{id:"pers",nm:"Persuasione",st:"CAR"},
-  {id:"trad",nm:"Tradizioni",st:"INT"},{id:"rap",nm:"Rapidità di mano",st:"DES"},
-  {id:"furt",nm:"Furtività",st:"DES"},{id:"soprav",nm:"Sopravvivenza",st:"SAG"}
-];
-
-function scTogDot(id){
-  const el=document.getElementById("scd-"+id);
-  const on=el.classList.contains("on");
-  el.classList.toggle("on",!on);el.classList.toggle("off",on);
-  el.textContent=on?"○":"●";
-}
-
-function scEqCnt(i,delta){
-  const el=document.getElementById("sc-eq-cnt-"+i);
-  el.value=Math.max(0,(parseInt(el.value)||0)+delta);
-}
-
-function scBuildComps(saved,mods){
-  const grid=document.getElementById("sc-comps-grid");
-  if(!grid)return;
-  grid.innerHTML=SC_COMPS.map(cp=>{
-    const on=saved&&saved[cp.id];
-    const mv=mods&&mods[cp.id]!==undefined?mods[cp.id]:"";
-    return`<div class="sc-comp-row">
-      <span class="sc-dot ${on?"on":"off"}" id="scd-${cp.id}" onclick="scTogDot('${cp.id}')" style="cursor:pointer">${on?"●":"○"}</span>
-      <span style="font-size:.82rem;color:var(--text);flex:1;cursor:pointer" onclick="scTogDot('${cp.id}')">${cp.nm}</span>
-      <span style="font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.06em;color:var(--text2);border:1px solid var(--border);padding:.04rem .22rem;margin-right:.3rem">${cp.st}</span>
-      <input type="text" id="scmod-${cp.id}" value="${mv}" placeholder="+0"
-        style="width:38px;background:var(--bg);border:1px solid var(--border);color:var(--gold2);font-family:'Cinzel',serif;font-size:.68rem;text-align:center;padding:.1rem;outline:none">
-    </div>`;
-  }).join("");
-}
-
-function scLD(){try{const s=localStorage.getItem("tcj-sc4");return s?JSON.parse(s):{}}catch(e){return {}}}
+const SC_STATS=[{id:"FOR",nm:"Forza"},{id:"DES",nm:"Destrezza"},{id:"COST",nm:"Costituzione"},{id:"INT",nm:"Intelligenza"},{id:"SAG",nm:"Saggezza"},{id:"CAR",nm:"Carisma"}];
+const SC_NC={glaciale:{bg:"rgba(126,200,227,.18)",br:"#5aaac0",tx:"Glaciale"},ardente:{bg:"rgba(224,90,32,.18)",br:"#c04010",tx:"Ardente"},folgorante:{bg:"rgba(240,208,32,.2)",br:"#a09000",tx:"Folgorante"},terrestre:{bg:"rgba(60,150,60,.18)",br:"#3a8030",tx:"Terrestre"},radiante:{bg:"rgba(212,168,255,.2)",br:"#9070c0",tx:"Radiante"},oscuro:{bg:"rgba(100,60,180,.2)",br:"#7050b0",tx:"Oscuro"},neutro:{bg:"rgba(160,160,160,.18)",br:"#888",tx:"Neutro"}};
+const SC_COMPS=[{id:"acro",nm:"Acrobatica",st:"DES"},{id:"amm",nm:"Ammaestrare creature",st:"SAG"},{id:"beh",nm:"Behemothologia",st:"INT"},{id:"atl",nm:"Atletica",st:"FOR"},{id:"ing",nm:"Inganno",st:"CAR"},{id:"stor",nm:"Storia",st:"INT"},{id:"intu",nm:"Intuizione",st:"SAG"},{id:"intim",nm:"Intimidire",st:"CAR"},{id:"inv2",nm:"Investigare",st:"INT"},{id:"poz",nm:"Pozioni",st:"INT"},{id:"nat",nm:"Natura",st:"SAG"},{id:"perc",nm:"Percezione",st:"SAG"},{id:"intr",nm:"Intrattenere",st:"CAR"},{id:"pers",nm:"Persuasione",st:"CAR"},{id:"trad",nm:"Tradizioni",st:"INT"},{id:"rap",nm:"Rapidità di mano",st:"DES"},{id:"furt",nm:"Furtività",st:"DES"},{id:"soprav",nm:"Sopravvivenza",st:"SAG"}];
+function scTogDot(id){const el=document.getElementById("scd-"+id);const on=el.classList.contains("on");el.classList.toggle("on",!on);el.classList.toggle("off",on);el.textContent=on?"○":"●";}
+function scEqCnt(i,delta){const el=document.getElementById("sc-eq-cnt-"+i);el.value=Math.max(0,(parseInt(el.value)||0)+delta);}
+function scBuildComps(saved,mods){const grid=document.getElementById("sc-comps-grid");if(!grid)return;grid.innerHTML=SC_COMPS.map(cp=>{const on=saved&&saved[cp.id];const mv=mods&&mods[cp.id]!==undefined?mods[cp.id]:"";return`<div class="sc-comp-row"><span class="sc-dot ${on?"on":"off"}" id="scd-${cp.id}" onclick="scTogDot('${cp.id}')" style="cursor:pointer">${on?"●":"○"}</span><span style="font-size:.82rem;color:var(--text);flex:1;cursor:pointer" onclick="scTogDot('${cp.id}')">${cp.nm}</span><span style="font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.06em;color:var(--text2);border:1px solid var(--border);padding:.04rem .22rem;margin-right:.3rem">${cp.st}</span><input type="text" id="scmod-${cp.id}" value="${mv}" placeholder="+0" style="width:38px;background:var(--bg);border:1px solid var(--border);color:var(--gold2);font-family:'Cinzel',serif;font-size:.68rem;text-align:center;padding:.1rem;outline:none"></div>`;}).join("");}
+function scLD(){try{const s=localStorage.getItem("tcj-sc4");return s?JSON.parse(s):{}}catch(e){return{}}}
 function scGv(id){const e=document.getElementById(id);return e?e.value:""}
-
-function scNucleo(w){
-  const v=document.getElementById("sc-n"+w+"-s").value;
-  const d=document.getElementById("sc-n"+w+"-d");
-  if(!v){d.textContent="";d.style.cssText="padding:.3rem .55rem;border:1px solid var(--border);font-family:'Cinzel',serif;font-size:.7rem;margin-bottom:.3rem;min-height:28px";return;}
-  const n=SC_NC[v];
-  d.textContent=n.tx;
-  d.style.cssText=`padding:.3rem .55rem;border:1px solid ${n.br};background:${n.bg};font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.08em;margin-bottom:.3rem;min-height:28px;color:var(--text)`;
-}
-
-function scCnt(delta){
-  const el=document.getElementById("sc-proiettili");
-  el.value=Math.max(0,(parseInt(el.value)||0)+delta);
-}
-
+function scNucleo(w){const v=document.getElementById("sc-n"+w+"-s").value;const d=document.getElementById("sc-n"+w+"-d");if(!v){d.textContent="";d.style.cssText="padding:.3rem .55rem;border:1px solid var(--border);font-family:'Cinzel',serif;font-size:.7rem;margin-bottom:.3rem;min-height:28px";return;}const n=SC_NC[v];d.textContent=n.tx;d.style.cssText=`padding:.3rem .55rem;border:1px solid ${n.br};background:${n.bg};font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.08em;margin-bottom:.3rem;min-height:28px;color:var(--text)`;}
+function scCnt(delta){const el=document.getElementById("sc-proiettili");el.value=Math.max(0,(parseInt(el.value)||0)+delta);}
 function scTogCh(i){document.getElementById("sc-chb-"+i).classList.toggle("on");}
-
-function scBuild(){
-  const d=scLD();
-  scBuildComps(d.comps||{},d.comp_mods||{});
-  // Stats — split in 2 columns
-  const left=SC_STATS.slice(0,3), right=SC_STATS.slice(3);
-  ["left","right"].forEach((side,si)=>{
-    const stats=si===0?left:right;
-    document.getElementById("sc-stats-"+side).innerHTML=stats.map(s=>`
-      <div class="sc-stat-item">
-        <span class="sc-stat-name">${s.nm}</span>
-        <input class="sc-stat-val" type="number" id="scv-${s.id}" value="${d.stats&&d.stats[s.id]?d.stats[s.id].v:""}" placeholder="10">
-        <input class="sc-stat-mod" type="text" id="scm-${s.id}" value="${d.stats&&d.stats[s.id]?d.stats[s.id].m:""}" placeholder="+0">
-      </div>`).join("");
-  });
-  // Cariche
-  const ch=d.charges||Array(6).fill(false);
-  ["sc-ch-r1","sc-ch-r2"].forEach((rid,ri)=>{
-    document.getElementById(rid).innerHTML=[0,1,2].map(ci=>{
-      const i=ri*3+ci;
-      return`<button class="sc-chbtn${ch[i]?" on":""}" id="sc-chb-${i}" onclick="scTogCh(${i})"></button>`;
-    }).join("");
-  });
-  // Celle
-  const celle=d.celle||Array(6).fill("");
-  document.getElementById("sc-celle").innerHTML=Array(6).fill(0).map((_,i)=>
-    `<input class="sc-cella" id="sc-cella-${i}" value="${celle[i]||""}" placeholder="Cella ${i+1}">`
-  ).join("");
-  // Campi semplici
-  [["lvl","sc-lvl"],["rango","sc-rango"],["pv","sc-pv"],["arma","sc-arma"],
-   ["abil","sc-abil"],["arma2","sc-arma2"],["proiettili","sc-proiettili"],
-   ["equip","sc-equip"]
-  ].forEach(([k,id])=>{const el=document.getElementById(id);if(el&&d[k]!==undefined)el.value=d[k];});
-  if(d.natt){document.getElementById("sc-natt-s").value=d.natt;scNucleo("att");}
-  if(d.ndef){document.getElementById("sc-ndef-s").value=d.ndef;scNucleo("def");}
-}
-
-function scSave(){
-  const d={};
-  ["lvl|sc-lvl","rango|sc-rango","pv|sc-pv","arma|sc-arma","abil|sc-abil",
-   "arma2|sc-arma2","proiettili|sc-proiettili","equip|sc-equip"
-  ].forEach(f=>{const[k,id]=f.split("|");d[k]=scGv(id);});
-  d.stats={};
-  SC_STATS.forEach(s=>{d.stats[s.id]={v:scGv("scv-"+s.id),m:scGv("scm-"+s.id)};});
-  d.charges=[0,1,2,3,4,5].map(i=>document.getElementById("sc-chb-"+i).classList.contains("on"));
-  d.celle=Array(6).fill(0).map((_,i)=>scGv("sc-cella-"+i));
-  d.malus=scGv("sc-malus");
-  d.comps={};d.comp_mods={};
-  SC_COMPS.forEach(cp=>{
-    const el=document.getElementById("scd-"+cp.id);
-    if(el)d.comps[cp.id]=el.classList.contains("on");
-    const mel=document.getElementById("scmod-"+cp.id);
-    if(mel)d.comp_mods[cp.id]=mel.value;
-  });
-  d.eq_cnt=[0,1,2,3].map(i=>scGv("sc-eq-cnt-"+i));
-  d.eq_txt=[0,1,2,3].map(i=>scGv("sc-eq-txt-"+i));
-  d.natt=scGv("sc-natt-s");d.ndef=scGv("sc-ndef-s");
-  try{localStorage.setItem("tcj-sc4",JSON.stringify(d));}catch(e){}
-  const b=document.getElementById("sc-savebtn");
-  b.textContent="✓ Salvato";b.classList.add("ok");
-  setTimeout(()=>{b.textContent="Salva Scheda";b.classList.remove("ok");},2000);
-}
+function scBuild(){const d=scLD();scBuildComps(d.comps||{},d.comp_mods||{});const left=SC_STATS.slice(0,3),right=SC_STATS.slice(3);["left","right"].forEach((side,si)=>{const stats=si===0?left:right;document.getElementById("sc-stats-"+side).innerHTML=stats.map(s=>`<div class="sc-stat-item"><span class="sc-stat-name">${s.nm}</span><input class="sc-stat-val" type="number" id="scv-${s.id}" value="${d.stats&&d.stats[s.id]?d.stats[s.id].v:""}" placeholder="10"><input class="sc-stat-mod" type="text" id="scm-${s.id}" value="${d.stats&&d.stats[s.id]?d.stats[s.id].m:""}" placeholder="+0"></div>`).join("");});const ch=d.charges||Array(6).fill(false);["sc-ch-r1","sc-ch-r2"].forEach((rid,ri)=>{document.getElementById(rid).innerHTML=[0,1,2].map(ci=>{const i=ri*3+ci;return`<button class="sc-chbtn${ch[i]?" on":""}" id="sc-chb-${i}" onclick="scTogCh(${i})"></button>`;}).join("");});const celle=d.celle||Array(6).fill("");document.getElementById("sc-celle").innerHTML=Array(6).fill(0).map((_,i)=>`<input class="sc-cella" id="sc-cella-${i}" value="${celle[i]||""}" placeholder="Cella ${i+1}">`).join("");[["lvl","sc-lvl"],["rango","sc-rango"],["pv","sc-pv"],["arma","sc-arma"],["abil","sc-abil"],["arma2","sc-arma2"],["proiettili","sc-proiettili"],["equip","sc-equip"]].forEach(([k,id])=>{const el=document.getElementById(id);if(el&&d[k]!==undefined)el.value=d[k];});if(d.natt){document.getElementById("sc-natt-s").value=d.natt;scNucleo("att");}if(d.ndef){document.getElementById("sc-ndef-s").value=d.ndef;scNucleo("def");}}
+function scSave(){const d={};["lvl|sc-lvl","rango|sc-rango","pv|sc-pv","arma|sc-arma","abil|sc-abil","arma2|sc-arma2","proiettili|sc-proiettili","equip|sc-equip"].forEach(f=>{const[k,id]=f.split("|");d[k]=scGv(id);});d.stats={};SC_STATS.forEach(s=>{d.stats[s.id]={v:scGv("scv-"+s.id),m:scGv("scm-"+s.id)};});d.charges=[0,1,2,3,4,5].map(i=>document.getElementById("sc-chb-"+i).classList.contains("on"));d.celle=Array(6).fill(0).map((_,i)=>scGv("sc-cella-"+i));d.malus=scGv("sc-malus");d.comps={};d.comp_mods={};SC_COMPS.forEach(cp=>{const el=document.getElementById("scd-"+cp.id);if(el)d.comps[cp.id]=el.classList.contains("on");const mel=document.getElementById("scmod-"+cp.id);if(mel)d.comp_mods[cp.id]=mel.value;});d.eq_cnt=[0,1,2,3].map(i=>scGv("sc-eq-cnt-"+i));d.eq_txt=[0,1,2,3].map(i=>scGv("sc-eq-txt-"+i));d.natt=scGv("sc-natt-s");d.ndef=scGv("sc-ndef-s");try{localStorage.setItem("tcj-sc4",JSON.stringify(d));}catch(e){}const b=document.getElementById("sc-savebtn");b.textContent="✓ Salvato";b.classList.add("ok");setTimeout(()=>{b.textContent="Salva Scheda";b.classList.remove("ok");},2000);}
 </script>
 
 <section id="note">
@@ -1004,17 +1014,17 @@ function scSave(){
     <div class="npanel active" id="np-athena">
       <div class="nhdr"><div class="nnm">Athena de la Roche</div><button class="nsave" id="sv-athena" onclick="svN('athena')">Salva</button></div>
       <textarea class="na" id="n-athena" placeholder="Scrivi qui i tuoi appunti, teorie, osservazioni..."></textarea>
-      <div class="nhint">Le note vengono salvate localmente in questo browser. Riapri il file dallo stesso browser per ritrovarle.</div>
+      <div class="nhint">Le note vengono salvate localmente in questo browser.</div>
     </div>
     <div class="npanel" id="np-panlan">
       <div class="nhdr"><div class="nnm">Pan Lan Batuk</div><button class="nsave" id="sv-panlan" onclick="svN('panlan')">Salva</button></div>
       <textarea class="na" id="n-panlan" placeholder="Scrivi qui i tuoi appunti, teorie, osservazioni..."></textarea>
-      <div class="nhint">Le note vengono salvate localmente in questo browser. Riapri il file dallo stesso browser per ritrovarle.</div>
+      <div class="nhint">Le note vengono salvate localmente in questo browser.</div>
     </div>
     <div class="npanel" id="np-asonnes">
       <div class="nhdr"><div class="nnm">Asonnes Eninbaal</div><button class="nsave" id="sv-asonnes" onclick="svN('asonnes')">Salva</button></div>
       <textarea class="na" id="n-asonnes" placeholder="Scrivi qui i tuoi appunti, teorie, osservazioni..."></textarea>
-      <div class="nhint">Le note vengono salvate localmente in questo browser. Riapri il file dallo stesso browser per ritrovarle.</div>
+      <div class="nhint">Le note vengono salvate localmente in questo browser.</div>
     </div>
   </div>
 </section>
@@ -1024,222 +1034,114 @@ function scSave(){
   <div style="font-size:.85rem;color:var(--text2);font-style:italic">Un viaggio che non è sicuro, non è giusto, e non è pensato per premiare l'imprudenza.</div>
 </footer>
 
-<!-- MASTER SECTION -->
 <div id="ms">
-  <div class="mshdr">
-    <div class="mstit">🔐 Sezione Master</div>
-    <div class="mssub">Informazioni riservate al Dungeon Master. Non condividere con i player.</div>
-  </div>
+  <div class="mshdr"><div class="mstit">🔐 Sezione Master</div><div class="mssub">Informazioni riservate al Dungeon Master. Non condividere con i player.</div></div>
   <div class="msnav">
-    <a href="#m-trad">Il Vero Tradimento</a>
-    <a href="#m-gab">Gabrael Oggi</a>
-    <a href="#m-mael">Mael Completi</a>
-    <a href="#m-seg">Segreti Personaggi</a>
-    <a href="#m-solc">I Solcavuoto</a>
-    <a href="#m-med">Il Mediatore</a>
-    <a href="#m-stat-mael">Stat Mael</a>
-    <a href="#m-stat-alti">Alti Maestri</a>
-    <a href="#m-stat-minori">Maestri Minori</a>
-    <a href="#m-stat">Stat Behemoth</a>
-    <a href="#m-note">Note Master</a>
+    <a href="#m-trad">Il Vero Tradimento</a><a href="#m-gab">Gabrael Oggi</a><a href="#m-mael">Mael Completi</a>
+    <a href="#m-seg">Segreti Personaggi</a><a href="#m-solc">I Solcavuoto</a><a href="#m-med">Il Mediatore</a>
+    <a href="#m-stat-mael">Stat Mael</a><a href="#m-stat-alti">Alti Maestri</a><a href="#m-stat-minori">Maestri Minori</a>
+    <a href="#m-stat">Stat Behemoth</a><a href="#m-note">Note Master</a>
   </div>
-
   <div class="msec" id="m-trad">
-    <div class="msecsub">Storia Reale</div>
-    <div class="msect">Il Vero Tradimento</div>
-    <div class="msecl"></div>
-    <div class="sc"><div class="scl">Quello che veramente è accaduto</div><div class="sct">
-      <p><strong>Gabrael</strong> — Mael dell'aether radiante — covava un profondo malcontento verso i fratelli. Voleva essere riconosciuto come entità superiore. Orchestrò un pentavirato (Ragnar Silver, Joseph D. Galvez, Rodovan Grimstone, Aldaril Gil-galad, Gregor E. Tasher) per sobillare gli umani contro i Mael e costringere un Concilio a Estarossa.</p>
-      <p>Al Concilio propose di unire gli artefatti per far ascendere uno di loro a Maelstrom. Il dissenso fu netto. Gabrael allora attaccò direttamente: dopo un lungo combattimento riuscì a impossessarsi della <strong>Corona di Gondor</strong> di Estarossa. Tentando di usare due artefatti insieme scatenò il cataclisma che distrusse la Vecchia Ramsgate.</p>
-      <p>Mentre gli altri Mael respingevano i traditori, Gabrael approfittò del caos: usando la Corona assunse le <strong>sembianze di Estarossa</strong>, imprigionò il vero fratello nella fortezza più sicura delle isole folgoranti ed eliminò ogni prova. I traditori divennero capri espiatori.</p>
-    </div></div>
-    <div class="mq">La versione pubblica — Gabrael ucciso dai fratelli, Estarossa salva tutti — è una bugia costruita da Gabrael stesso. Nessun testimone chiave è sopravvissuto o è libero di parlare.</div>
-    <div class="sc"><div class="scl">Dove si trovano i Mael oggi</div><div class="sct">
-      <p><strong>Estarossa (reale)</strong>: imprigionato nella fortezza più sicura delle isole folgoranti. Gabrael controlla l'accesso.</p>
-      <p><strong>Gabrael</strong>: governa Ramsgate fingendo di essere Estarossa. Usa il <strong>Manto di Rinmole</strong> per le sembianze e la <strong>Corona di Gondor</strong> per manipolare chi gli sta vicino.</p>
-      <p>Gli altri Mael — Symael, Azrael, Raphael, Mykael — sono dispersi. I loro artefatti sono perduti. Gabrael invia Slayer selezionati (tra cui i protagonisti) per recuperarli, con l'obiettivo finale di ascendere a Maelstrom.</p>
-    </div></div>
+    <div class="msecsub">Storia Reale</div><div class="msect">Il Vero Tradimento</div><div class="msecl"></div>
+    <div class="sc"><div class="scl">Quello che veramente è accaduto</div><div class="sct"><p><strong>Gabrael</strong> orchestrò un pentavirato (Ragnar Silver, Joseph D. Galvez, Rodovan Grimstone, Aldaril Gil-galad, Gregor E. Tasher) per sobillare gli umani contro i Mael. Al Concilio propose di unire gli artefatti per ascendere a Maelstrom. Gabrael attaccò direttamente, impossessandosi della <strong>Corona di Gondor</strong> di Estarossa. Tentando di usare due artefatti scatenò il cataclisma che distrusse la Vecchia Ramsgate.</p><p>Gabrael assunse le <strong>sembianze di Estarossa</strong>, imprigionò il vero fratello nella fortezza più sicura delle isole folgoranti ed eliminò ogni prova. I traditori divennero capri espiatori.</p></div></div>
+    <div class="mq">La versione pubblica è una bugia costruita da Gabrael stesso. Nessun testimone chiave è sopravvissuto o è libero di parlare.</div>
+    <div class="sc"><div class="scl">Dove si trovano i Mael oggi</div><div class="sct"><p><strong>Estarossa (reale)</strong>: imprigionato nella fortezza più sicura delle isole folgoranti.</p><p><strong>Gabrael</strong>: governa Ramsgate fingendo di essere Estarossa, usando il <strong>Manto di Rinmole</strong> e la <strong>Corona di Gondor</strong>.</p><p>Gli altri Mael — Symael, Azrael, Raphael, Mykael — sono dispersi. Gabrael invia Slayer selezionati per recuperare i loro artefatti.</p></div></div>
   </div>
-
   <div class="msec" id="m-gab" style="border-top:1px solid rgba(200,56,56,.1)">
-    <div class="msecsub">Antagonista Principale</div>
-    <div class="msect">Gabrael — Stato Attuale</div>
-    <div class="msecl"></div>
-    <div class="sc"><div class="scl">Identità attuale</div><div class="sct">Gabrael si presenta come <strong>Estarossa</strong>, governa Ramsgate e coordina la Gilda. I player credono di parlare con il vero Mael dell'Aether Terrestre. In realtà stanno eseguendo gli ordini dell'artefice del Tradimento.</div></div>
-    <div class="sc"><div class="scl">I suoi veri obiettivi</div><div class="sct"><p>Gabrael vuole ancora ascendere a Maelstrom. Ha adottato un approccio più paziente: invia Slayer con forte connessione all'aether per recuperare gli artefatti dei fratelli. Una volta in possesso di tutti, tenterà nuovamente l'ascensione.</p><p>I protagonisti sono pedine inconsapevoli di questo piano.</p></div></div>
-    <div class="sc"><div class="scl">Artefatti in suo possesso</div><div class="sct"><strong>Corona di Gondor</strong> (di Estarossa) — muta il volere altrui, mantiene il controllo su Ramsgate.<br><strong>Manto di Rinmole</strong> (suo) — mantiene le sembianze di Estarossa. Non distrutto, al contrario di quanto credono i player.</div></div>
+    <div class="msecsub">Antagonista Principale</div><div class="msect">Gabrael — Stato Attuale</div><div class="msecl"></div>
+    <div class="sc"><div class="scl">Identità attuale</div><div class="sct">Gabrael si presenta come <strong>Estarossa</strong>, governa Ramsgate e coordina la Gilda. I player stanno eseguendo gli ordini dell'artefice del Tradimento.</div></div>
+    <div class="sc"><div class="scl">I suoi veri obiettivi</div><div class="sct"><p>Vuole ancora ascendere a Maelstrom. Invia Slayer con forte connessione all'aether per recuperare gli artefatti dei fratelli. I protagonisti sono pedine inconsapevoli.</p></div></div>
+    <div class="sc"><div class="scl">Artefatti in suo possesso</div><div class="sct"><strong>Corona di Gondor</strong> — muta il volere altrui.<br><strong>Manto di Rinmole</strong> — mantiene le sembianze di Estarossa. Non distrutto, al contrario di quanto credono i player.</div></div>
     <div class="mq">Quando i player recuperano un artefatto e lo consegnano a "Estarossa", lo stanno consegnando a Gabrael.</div>
   </div>
-
   <div class="msec" id="m-mael" style="border-top:1px solid rgba(200,56,56,.1)">
-    <div class="msecsub">Meccaniche Complete</div>
-    <div class="msect">I Mael — Armi e Meccaniche</div>
-    <div class="msecl"></div>
+    <div class="msecsub">Meccaniche Complete</div><div class="msect">I Mael — Armi e Meccaniche</div><div class="msecl"></div>
     <div class="mmc"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="mmn">Estarossa (imprigionato)</div><span class="tag tt">Terrestre</span></div>
-      <div class="mms">Artefatto — Corona di Gondor</div><div style="font-size:.87rem;color:var(--text)">Muta il volere altrui. In possesso di Gabrael.</div>
       <div class="mms">Arma — Le Fondamenta di Ramsgate (Pugni Aetherici, Support)</div>
       <div class="mr"><span class="mk">Zona Aetherica</span><span class="mv">Proietta zona 5×5: chiunque dentro subisce 1D8/turno, convertiti in PV per un alleato a scelta.</span></div>
-      <div class="mr"><span class="mk">Divincolarsi</span><span class="mv">Il nemico può tentare un tiro per liberarsi. Successo → esce ma con velocità dimezzata.</span></div>
+      <div class="mr"><span class="mk">Divincolarsi</span><span class="mv">Tiro per liberarsi. Successo → esce ma con velocità dimezzata.</span></div>
       <div class="mr"><span class="mk">Limite</span><span class="mv">Una sola zona per volta. Può spostarla liberamente nel proprio turno.</span></div>
     </div>
     <div class="mmc"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="mmn">Symael</div><span class="tag tg">Glaciale</span></div>
-      <div class="mms">Artefatto — Collana del Desufiora</div><div style="font-size:.87rem;color:var(--text);margin-bottom:.5rem">Permette di comunicare con i Behemoth, stabilendo un canale di comprensione.</div>
-      <div class="mms">Arma — Alatreon (Lancia Pesante Uncinata, Ibrido Bilanciato/Pesante)</div>
+      <div class="mms">Artefatto — Collana del Desufiora</div><div style="font-size:.87rem;color:var(--text);margin-bottom:.5rem">Permette di comunicare con i Behemoth.</div>
+      <div class="mms">Arma — Alatreon (Lancia Pesante Uncinata)</div>
       <div class="mr"><span class="mk">Dado danno</span><span class="mv">1D8 base, progressione fino a 6D8.</span></div>
-      <div class="mr"><span class="mk">Meccanica</span><span class="mv">Regole lancia: attacchi ravvicinati o con allungo, flessibilità posizionale.</span></div>
     </div>
     <div class="mmc"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="mmn">Azrael</div><span class="tag to">Oscuro</span></div>
-      <div class="mms">Artefatto — Flauto di Elias Folfo</div><div style="font-size:.87rem;color:var(--text);margin-bottom:.5rem">Evoca ombre di guerrieri caduti per combattere al fianco del portatore.</div>
+      <div class="mms">Artefatto — Flauto di Elias Folfo</div><div style="font-size:.87rem;color:var(--text);margin-bottom:.5rem">Evoca ombre di guerrieri caduti.</div>
       <div class="mms">Arma — Vita Mortale (Falce, Guerra di Logoramento)</div>
-      <div class="mr"><span class="mk">Accumulo ferite</span><span class="mv">Ogni colpo aggiunge 1D4 di danno passivo/turno. Cumulativo e permanente per tutta la durata del combattimento.</span></div>
-      <div class="mr"><span class="mk">Effetto</span><span class="mv">Con molti stack, il bersaglio muore anche senza ulteriori attacchi di Azrael.</span></div>
+      <div class="mr"><span class="mk">Accumulo ferite</span><span class="mv">Ogni colpo aggiunge 1D4 di danno passivo/turno. Cumulativo e permanente.</span></div>
     </div>
     <div class="mmc"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="mmn">Raphael</div><span class="tag ta">Ardente</span></div>
       <div class="mms">Artefatto — Braccio del Mixitron</div><div style="font-size:.87rem;color:var(--text);margin-bottom:.5rem">Permette di assumere sembianze meccaniche di un Behemoth ardente.</div>
       <div class="mms">Arma — Carmilla (Bastone da Passeggio / Fucile Aetherico)</div>
-      <div class="mr"><span class="mk">Dado danno</span><span class="mv">Superiore alla pistola aetherica standard.</span></div>
-      <div class="mr"><span class="mk">Gittata</span><span class="mv">Significativamente maggiore delle pistole, vicina alla versatilità di un arco aetherico.</span></div>
-      <div class="mr"><span class="mk">Effetti</span><span class="mv">Proiettili aetherici con effetti elementali più intensi e duraturi.</span></div>
+      <div class="mr"><span class="mk">Dado danno</span><span class="mv">Superiore alla pistola aetherica standard. Gittata maggiore, effetti elementali più intensi.</span></div>
     </div>
     <div class="mmc" style="border-color:rgba(212,168,255,.2)"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="mmn">Gabrael <span style="font-size:.73rem;color:var(--fire)">(si spaccia per Estarossa)</span></div><span class="tag tr">Radiante</span></div>
-      <div class="mms">Artefatti in suo possesso</div><div style="font-size:.87rem;color:var(--text);margin-bottom:.5rem"><strong>Manto di Rinmole</strong>: nasconde vere sembianze e volontà. <strong>Corona di Gondor</strong>: muta il volere altrui.</div>
       <div class="mms">Arma — Tasca Dimensionale (Pugnale, Controllo della Luce)</div>
-      <div class="mr"><span class="mk">Attivazione</span><span class="mv">Tocca una superficie riflettente → diventa specchio aetherico. Più specchi = campo più ampio.</span></div>
-      <div class="mr"><span class="mk">Difesa</span><span class="mv">Il nemico crede di avanzare verso Gabrael ma colpisce chiunque Gabrael decida. Non teletrasporto — manipolazione della percezione.</span></div>
-      <div class="mr"><span class="mk">Attacco</span><span class="mv">Lancia l'attacco verso uno specchio: emerge da una direzione imprevedibile.</span></div>
-      <div class="mr"><span class="mk">Contromisure</span><span class="mv">1) Osservare i riflessi (mostrano la realtà) — richiede rinunciare al turno. 2) Distruggere fisicamente tutti gli specchi.</span></div>
-      <div class="mr"><span class="mk">Fallback</span><span class="mv">Senza specchi: il pugnale assume la forma di qualsiasi arma del manuale per un singolo attacco.</span></div>
-      <div class="mq">Gabrael è un enigma da risolvere prima di essere un avversario da sconfiggere. Chi non capisce il meccanismo colpisce i propri alleati.</div>
+      <div class="mr"><span class="mk">Attivazione</span><span class="mv">Tocca una superficie riflettente → specchio aetherico. Più specchi = campo più ampio.</span></div>
+      <div class="mr"><span class="mk">Difesa</span><span class="mv">Il nemico crede di avanzare verso Gabrael ma colpisce chiunque Gabrael decida.</span></div>
+      <div class="mr"><span class="mk">Attacco</span><span class="mv">Lancia l'attacco verso uno specchio: emerge da direzione imprevedibile.</span></div>
+      <div class="mr"><span class="mk">Contromisure</span><span class="mv">1) Osservare i riflessi — richiede rinunciare al turno. 2) Distruggere tutti gli specchi.</span></div>
+      <div class="mq">Gabrael è un enigma da risolvere prima di essere un avversario da sconfiggere.</div>
     </div>
     <div class="mmc"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="mmn">Mykael</div><span class="tag tf">Folgorante</span></div>
-      <div class="mms">Artefatto — Armatura del Ragnarok</div><div style="font-size:.87rem;color:var(--text);margin-bottom:.5rem">Dona immunità temporanea a qualsiasi danno — completamente impenetrabile per un breve periodo.</div>
+      <div class="mms">Artefatto — Armatura del Ragnarok</div><div style="font-size:.87rem;color:var(--text);margin-bottom:.5rem">Immunità temporanea a qualsiasi danno.</div>
       <div class="mms">Arma — Valstrax (Due Spade, Ibrido Bilanciato/Leggero)</div>
-      <div class="mr"><span class="mk">Dado danno</span><span class="mv">1D6 base per spada, progressione fino a 6D6.</span></div>
-      <div class="mr"><span class="mk">Doppio attacco</span><span class="mv">Il secondo attacco è quasi sempre disponibile — cadenza vicina alle armi leggere.</span></div>
+      <div class="mr"><span class="mk">Dado danno</span><span class="mv">1D6 base per spada, progressione fino a 6D6. Secondo attacco quasi sempre disponibile.</span></div>
     </div>
   </div>
-
-
   <div class="msec" id="m-stat-mael" style="border-top:1px solid rgba(200,56,56,.1)">
-    <div class="msecsub">Statistiche Complete</div>
-    <div class="msect">Schede Statistiche — I Mael</div>
-    <div class="msecl"></div>
-    <div class="mq">Formula HP: (FOR + COST) × 8. Soglia max player al Lv.20: ~40 in una stat primaria.</div>
+    <div class="msecsub">Statistiche Complete</div><div class="msect">Schede Statistiche — I Mael</div><div class="msecl"></div>
+    <div class="mq">Formula HP: (FOR + COST) × 8.</div>
     <div id="grid-mael" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;margin-top:1rem"></div>
   </div>
-
   <div class="msec" id="m-stat-alti" style="border-top:1px solid rgba(200,56,56,.1)">
-    <div class="msecsub">Livello 20 — Boss Finali Umani</div>
-    <div class="msect">Schede Statistiche — Alti Maestri</div>
-    <div class="msecl"></div>
-    <div class="mq">Formula HP: Livello × (5 + mod COST). Stat max teorico al Lv.20: 26. Ogni Maestro ha ottimizzato la propria crescita intorno alla sua arte.</div>
+    <div class="msecsub">Livello 20 — Boss Finali Umani</div><div class="msect">Schede Statistiche — Alti Maestri</div><div class="msecl"></div>
+    <div class="mq">Formula HP: Livello × (5 + mod COST).</div>
     <div id="grid-alti" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;margin-top:1rem"></div>
   </div>
-
   <div class="msec" id="m-stat-minori" style="border-top:1px solid rgba(200,56,56,.1)">
-    <div class="msecsub">Livelli Variabili</div>
-    <div class="msect">Schede Statistiche — Maestri Minori</div>
-    <div class="msecl"></div>
-    <div class="mq">Stessa formula HP dei Maestri. Profili più specializzati — spesso pericolosi per le loro conoscenze più che per la potenza marziale.</div>
+    <div class="msecsub">Livelli Variabili</div><div class="msect">Schede Statistiche — Maestri Minori</div><div class="msecl"></div>
     <div id="grid-minori" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;margin-top:1rem"></div>
   </div>
-
   <div class="msec" id="m-seg" style="border-top:1px solid rgba(200,56,56,.1)">
-    <div class="msecsub">Solo per il DM</div>
-    <div class="msect">Segreti dei Personaggi</div>
-    <div class="msecl"></div>
-    <div class="sc"><div class="scl">❄️ Athena de la Roche — vero nome: Athena Silver</div><div class="sct">
-      <p>Athena è la figlia di <strong>Ragnar Silver</strong>, il tiranno delle Isole Glaciali. "De la Roche" è un'identità falsa. Nelle isole glaciali, l'ultima figlia di ogni casata viene chiamata Athena — un nome che blocca il lignaggio.</p>
-      <p><strong>Linnea Silver</strong> (Maestra dell'ascia) e <strong>Markus Boher</strong> conoscono il segreto e lo custodiscono. La presenza di <strong>Atreo Silver</strong> e <strong>Minerva Silver</strong> alla missione diplomatica non è casuale — sono parenti.</p>
-    </div></div>
-    <div class="sc"><div class="scl">🌑 Pan Lan Batuk — passato negli Occulti</div><div class="sct">
-      <p>Prima di diventare Slayer, Pan Lan era membro degli <strong>Occulti</strong> — la rete di influenza fondata da Joseph D. Galvez, membro del pentavirato del Tradimento.</p>
-      <p>La taglia sulla sua testa è legata a questo passato. La famiglia Batuk ha perso ogni diritto politico dopo l'assassinio di Vestron Zeraora — commissionato dalla stessa casa Batuk. Il <strong>cofanetto con la mano mozzata</strong> ricevuto durante la missione è un avvertimento diretto. Godrik Tasher l'aveva avvisata prima di andarsene.</p>
-    </div></div>
-    <div class="sc"><div class="scl">✨ Asonnes Eninbaal — discendente dei Solcavuoto</div><div class="sct">
-      <p>Asonnes è un discendente diretto dei <strong>Solcavuoto</strong>. I suoi poteri latenti — il fatto che diventi viola toccando il frammento di metallo, la sua connessione con l'artefatto della Foresta — sono manifestazioni di questa discendenza.</p>
-      <p>I player sanno che esiste un legame tra Asonnes e i Solcavuoto, ma non conoscono la natura profonda di questa connessione. L'interesse di <strong>Malevola Zeraora</strong> per i Solcavuoto durante la missione non è casuale.</p>
-    </div></div>
+    <div class="msecsub">Solo per il DM</div><div class="msect">Segreti dei Personaggi</div><div class="msecl"></div>
+    <div class="sc"><div class="scl">❄️ Athena de la Roche — vero nome: Athena Silver</div><div class="sct"><p>Figlia di <strong>Ragnar Silver</strong>. "De la Roche" è un'identità falsa. <strong>Linnea Silver</strong> e <strong>Markus Boher</strong> conoscono il segreto. La presenza di <strong>Atreo Silver</strong> e <strong>Minerva Silver</strong> alla missione diplomatica non è casuale.</p></div></div>
+    <div class="sc"><div class="scl">🌑 Pan Lan Batuk — passato negli Occulti</div><div class="sct"><p>Prima di diventare Slayer, era membro degli <strong>Occulti</strong> fondati da Joseph D. Galvez. La taglia è legata a questo passato. Il <strong>cofanetto con la mano mozzata</strong> è un avvertimento diretto.</p></div></div>
+    <div class="sc"><div class="scl">✨ Asonnes Eninbaal — discendente dei Solcavuoto</div><div class="sct"><p>È un discendente diretto dei <strong>Solcavuoto</strong>. Diventare viola toccando il frammento di metallo è una manifestazione di questa discendenza. L'interesse di <strong>Malevola Zeraora</strong> non è casuale.</p></div></div>
   </div>
-
   <div class="msec" id="m-solc" style="border-top:1px solid rgba(200,56,56,.1)">
-    <div class="msecsub">Lore Completa — Non nota ai Player</div>
-    <div class="msect">I Solcavuoto — Custodi del Crepuscolo</div>
-    <div class="msecl"></div>
-    <div class="sc"><div class="scl">Origine e natura</div><div class="sct"><p>I Solcavuoto erano umani che ottennero una sintonia perfetta con l'aether <em>radiante</em> e quello <em>oscuro</em>, fondendoli nel proprio essere. Dalla pelle perlacea e scintillante. Maestri combattenti, esploratori del tempo e custodi dell'equilibrio aetherico. La convivenza di queste due forze era sostenibile solo nella <strong>Soglia Crepuscolare</strong> — un regno fluttuante tra tempo e spazio.</p></div></div>
-    <div class="sc"><div class="scl">La Forgia Temporale</div><div class="sct">Al cuore della Soglia si trovava la <strong>Forgia Temporale</strong>: una macchina vivente capace di plasmare eventi, correggere linee temporali deviate e forgiare reliquie capaci di alterare il destino. Il <strong>Thrax</strong> e il <strong>Cronovoro</strong> costituiscono una minaccia costante: se raggiungeranno la Forgia, le conseguenze saranno apocalittiche.</div></div>
-    <div class="sc"><div class="scl">Le Tre Categorie</div><div class="sct">
-      <p><strong>Solcavuoto</strong>: equilibrio perfetto tra aether radiante e oscuro.</p>
-      <p><strong>Tessiitempo</strong>: guidati dall'aether radiante. Filosofi-temporali e veggenti, custodi dei Segni degli Echi — iscrizioni contenenti eventi futuri codificati. Attraverso un rituale del Primo Tessitore evocarono il <strong>Sommo Vuoto</strong>: un sigillo vivente che separò la Soglia dal mondo reale.</p>
-      <p><strong>Forgiabattaglie</strong>: dediti all'aether oscuro. Guerrieri possenti, manipolatori delle ombre, capaci di fermare i Behemoth crepuscolari.</p>
-    </div></div>
-    <div class="sc"><div class="scl">Rupenigma e il Collegamento Perduto</div><div class="sct">Un tempo i Solcavuoto giungevano nel mondo attraverso <strong>Rupenigma</strong>, città-portale. Dopo la faida tra i Mael, questo collegamento fu reciso per sempre. Oggi Rupenigma è un deserto di rune. Certi segni inquietano: frammenti temporali che saltano, oggetti anacronistici nelle sabbie, <strong>bambini nati con occhi di galassia e visioni del futuro</strong>.</div></div>
+    <div class="msecsub">Lore Completa — Non nota ai Player</div><div class="msect">I Solcavuoto — Custodi del Crepuscolo</div><div class="msecl"></div>
+    <div class="sc"><div class="scl">Origine e natura</div><div class="sct"><p>Umani che ottennero sintonia perfetta con l'aether radiante e oscuro. Dalla pelle perlacea. Maestri combattenti, esploratori del tempo. La convivenza era sostenibile solo nella <strong>Soglia Crepuscolare</strong>.</p></div></div>
+    <div class="sc"><div class="scl">La Forgia Temporale</div><div class="sct">Al cuore della Soglia: una macchina vivente capace di plasmare eventi e correggere linee temporali. Il <strong>Thrax</strong> e il <strong>Cronovoro</strong> costituiscono una minaccia costante.</div></div>
+    <div class="sc"><div class="scl">Le Tre Categorie</div><div class="sct"><p><strong>Solcavuoto</strong>: equilibrio perfetto.<br><strong>Tessiitempo</strong>: aether radiante, filosofi-temporali, custodi dei Segni degli Echi.<br><strong>Forgiabattaglie</strong>: aether oscuro, guerrieri possenti.</p></div></div>
+    <div class="sc"><div class="scl">Rupenigma e il Collegamento Perduto</div><div class="sct">Un tempo i Solcavuoto giungevano nel mondo attraverso <strong>Rupenigma</strong>. Dopo la faida dei Mael, questo collegamento fu reciso. Certi segni inquietano: <strong>bambini nati con occhi di galassia e visioni del futuro</strong>.</div></div>
   </div>
-
   <div class="msec" id="m-med" style="border-top:1px solid rgba(200,56,56,.1)">
-    <div class="msecsub">Identità Nascosta</div>
-    <div class="msect">Il Mediatore — Edgar Solomon</div>
-    <div class="msecl"></div>
-    <div class="sc"><div class="scl">Vera identità</div><div class="sct">
-      <p>Il personaggio noto come <strong>Il Mediatore</strong> è in realtà <strong>Edgar Solomon</strong> — ex professore di Fisica Aetherica all'università di Ostia, esperto di potenziamento aetherico attraverso la risonanza nucleare microbiologica.</p>
-      <p>Assieme a Gregor E. Tasher e Arkan Drew fu allievo del Mael <strong>Raphael</strong> a Leeran Dax, prima del Tradimento. Venne espulso dall'accademia dopo il fallimento di un esperimento che causò la morte di 26 colleghi.</p>
-      <p>Oggi vive nei bassifondi di Ramsgate, continuando le ricerche sulle celle aetheriche. È l'artefice dell'idea che porterà alle <strong>Omnicelle</strong> — in un'alleanza futura con Arkan Drew.</p>
-    </div></div>
+    <div class="msecsub">Identità Nascosta</div><div class="msect">Il Mediatore — Edgar Solomon</div><div class="msecl"></div>
+    <div class="sc"><div class="scl">Vera identità</div><div class="sct"><p>Il personaggio noto come <strong>Il Mediatore</strong> è in realtà <strong>Edgar Solomon</strong> — ex professore di Fisica Aetherica. Allievo del Mael <strong>Raphael</strong>. Espulso dopo un esperimento che causò la morte di 26 colleghi. Oggi è l'artefice dell'idea che porterà alle <strong>Omnicelle</strong>.</p></div></div>
     <div class="mq">I player lo conoscono solo come "Il Mediatore". Non devono sapere il suo vero nome finché la storia non lo richieda.</div>
   </div>
-
   <div class="msec" id="m-stat" style="border-top:1px solid rgba(200,56,56,.1)">
-    <div class="msecsub">Dati Completi</div>
-    <div class="msect">Statistiche Behemoth</div>
-    <div class="msecl"></div>
+    <div class="msecsub">Dati Completi</div><div class="msect">Statistiche Behemoth</div><div class="msecl"></div>
     <input type="text" id="mss" placeholder="Cerca un Behemoth..." oninput="fmst(this.value)" style="width:100%;padding:.6rem 1rem;background:rgba(200,56,56,.06);border:1px solid rgba(200,56,56,.2);color:var(--text);font-family:'Crimson Pro',serif;font-size:1rem;outline:none;margin-bottom:1.25rem">
     <div id="msl"></div>
   </div>
-
   <div class="msec" id="m-note" style="border-top:1px solid rgba(200,56,56,.1)">
-    <div class="msecsub">Riservato al DM</div>
-    <div class="msect">Note del Master</div>
-    <div class="msecl"></div>
+    <div class="msecsub">Riservato al DM</div><div class="msect">Note del Master</div><div class="msecl"></div>
     <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.5rem">
       <button class="ntab active" style="border-color:rgba(200,56,56,.3);color:#c08080" onclick="swMN('generale',this)">📋 Generale</button>
       <button class="ntab" style="border-color:rgba(200,56,56,.2);color:#a08080" onclick="swMN('sessione',this)">🗓 Prossima Sessione</button>
       <button class="ntab" style="border-color:rgba(200,56,56,.2);color:#a08080" onclick="swMN('trame',this)">🕸 Trame in corso</button>
-      <button class="ntab" style="border-color:rgba(200,56,56,.2);color:#a08080" onclick="swMN('npc',this)">🎭 NPC & Fazioni</button>
+      <button class="ntab" style="border-color:rgba(200,56,56,.2);color:#a08080" onclick="swMN('npc',this)">🎭 NPC &amp; Fazioni</button>
     </div>
-    <div id="mnp-generale" style="display:block">
-      <div class="nhdr">
-        <div style="font-family:'Cinzel Decorative',serif;font-size:1rem;color:#c08080">Note Generali</div>
-        <button class="nsave" id="msv-generale" onclick="svMN('generale')" style="border-color:rgba(200,56,56,.4);color:#c08080">Salva</button>
-      </div>
-      <textarea class="na" id="mn-generale" placeholder="Appunti generali sulla campagna, idee, rimandi, cose da non dimenticare..." style="border-color:rgba(200,56,56,.2);min-height:300px"></textarea>
-      <div class="nhint" style="color:#806060">Le note vengono salvate localmente in questo browser.</div>
-    </div>
-    <div id="mnp-sessione" style="display:none">
-      <div class="nhdr">
-        <div style="font-family:'Cinzel Decorative',serif;font-size:1rem;color:#c08080">Prossima Sessione</div>
-        <button class="nsave" id="msv-sessione" onclick="svMN('sessione')" style="border-color:rgba(200,56,56,.4);color:#c08080">Salva</button>
-      </div>
-      <textarea class="na" id="mn-sessione" placeholder="Cosa succederà nella prossima sessione? Incontri pianificati, eventi, rivelazioni, NPC da introdurre..." style="border-color:rgba(200,56,56,.2);min-height:300px"></textarea>
-      <div class="nhint" style="color:#806060">Le note vengono salvate localmente in questo browser.</div>
-    </div>
-    <div id="mnp-trame" style="display:none">
-      <div class="nhdr">
-        <div style="font-family:'Cinzel Decorative',serif;font-size:1rem;color:#c08080">Trame in Corso</div>
-        <button class="nsave" id="msv-trame" onclick="svMN('trame')" style="border-color:rgba(200,56,56,.4);color:#c08080">Salva</button>
-      </div>
-      <textarea class="na" id="mn-trame" placeholder="Trame aperte, fili narrativi in corso, conseguenze di scelte passate, archi da completare..." style="border-color:rgba(200,56,56,.2);min-height:300px"></textarea>
-      <div class="nhint" style="color:#806060">Le note vengono salvate localmente in questo browser.</div>
-    </div>
-    <div id="mnp-npc" style="display:none">
-      <div class="nhdr">
-        <div style="font-family:'Cinzel Decorative',serif;font-size:1rem;color:#c08080">NPC & Fazioni</div>
-        <button class="nsave" id="msv-npc" onclick="svMN('npc')" style="border-color:rgba(200,56,56,.4);color:#c08080">Salva</button>
-      </div>
-      <textarea class="na" id="mn-npc" placeholder="Note su NPC specifici, motivazioni nascoste, stato delle fazioni, alleanze e rivalità..." style="border-color:rgba(200,56,56,.2);min-height:300px"></textarea>
-      <div class="nhint" style="color:#806060">Le note vengono salvate localmente in questo browser.</div>
-    </div>
+    <div id="mnp-generale" style="display:block"><div class="nhdr"><div style="font-family:'Cinzel Decorative',serif;font-size:1rem;color:#c08080">Note Generali</div><button class="nsave" id="msv-generale" onclick="svMN('generale')" style="border-color:rgba(200,56,56,.4);color:#c08080">Salva</button></div><textarea class="na" id="mn-generale" placeholder="Appunti generali..." style="border-color:rgba(200,56,56,.2);min-height:300px"></textarea><div class="nhint" style="color:#806060">Salvate localmente.</div></div>
+    <div id="mnp-sessione" style="display:none"><div class="nhdr"><div style="font-family:'Cinzel Decorative',serif;font-size:1rem;color:#c08080">Prossima Sessione</div><button class="nsave" id="msv-sessione" onclick="svMN('sessione')" style="border-color:rgba(200,56,56,.4);color:#c08080">Salva</button></div><textarea class="na" id="mn-sessione" placeholder="Cosa succederà..." style="border-color:rgba(200,56,56,.2);min-height:300px"></textarea><div class="nhint" style="color:#806060">Salvate localmente.</div></div>
+    <div id="mnp-trame" style="display:none"><div class="nhdr"><div style="font-family:'Cinzel Decorative',serif;font-size:1rem;color:#c08080">Trame in Corso</div><button class="nsave" id="msv-trame" onclick="svMN('trame')" style="border-color:rgba(200,56,56,.4);color:#c08080">Salva</button></div><textarea class="na" id="mn-trame" placeholder="Trame aperte..." style="border-color:rgba(200,56,56,.2);min-height:300px"></textarea><div class="nhint" style="color:#806060">Salvate localmente.</div></div>
+    <div id="mnp-npc" style="display:none"><div class="nhdr"><div style="font-family:'Cinzel Decorative',serif;font-size:1rem;color:#c08080">NPC &amp; Fazioni</div><button class="nsave" id="msv-npc" onclick="svMN('npc')" style="border-color:rgba(200,56,56,.4);color:#c08080">Salva</button></div><textarea class="na" id="mn-npc" placeholder="Note su NPC..." style="border-color:rgba(200,56,56,.2);min-height:300px"></textarea><div class="nhint" style="color:#806060">Salvate localmente.</div></div>
   </div>
-
 </div>
 
 <script>
@@ -1281,260 +1183,72 @@ const cL={classico:"Classico",variante:"Variante",anomalo:"Anomalo",leggendario:
 const cC={classico:"var(--text2)",variante:"var(--ice)",anomalo:"var(--fire)",leggendario:"var(--gold2)",evoluto:"var(--radiant)",nuovo:"var(--lightning)"};
 const aTC={glaciale:"tg",ardente:"ta",folgorante:"tf",terrestre:"tt",radiante:"tr",oscuro:"to",neutro:"tn"};
 
-function buildBeh(){
-  document.getElementById("bgrid").innerHTML=BD.map(b=>`<div class="bcard" data-cat="${b.c}" data-ae="${b.a}"><div class="bn">${b.n}</div><div style="display:flex;gap:.35rem;flex-wrap:wrap"><span class="tag ${aTC[b.a]}">${aI[b.a]} ${b.a}</span><span class="tag" style="color:${cC[b.c]};border-color:${cC[b.c]}33">${cL[b.c]}</span></div></div>`).join("");
-}
-
-function fbeh(t,btn){
-  document.querySelectorAll(".fb").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  document.querySelectorAll(".bcard").forEach(c=>{c.classList.toggle("hidden",t!=="all"&&c.dataset.cat!==t&&c.dataset.ae!==t)});
-}
-
-function buildMStats(){
-  const ws=BD.filter(b=>b.s&&b.s.FOR);
-  document.getElementById("msl").innerHTML=ws.map(b=>`<div class="bmc"><div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'"><div><span style="font-family:'Cinzel',serif;font-size:.86rem;color:var(--master2)">${b.n}</span><span class="tag ${aTC[b.a]}" style="margin-left:.5rem">${aI[b.a]} ${b.a}</span></div><span style="color:#a06060;font-size:.7rem">▼</span></div><div style="display:none;margin-top:.7rem"><div style="display:grid;grid-template-columns:repeat(6,1fr);gap:.35rem;margin-bottom:.65rem">${Object.entries(b.s).map(([k,v])=>{const bn=Math.floor((v-10)/2);const bs=bn>=0?"+"+bn:""+bn;return`<div style="background:rgba(200,56,56,.06);padding:.3rem .35rem;text-align:center"><div style="font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.08em;color:#a06060;text-transform:uppercase">${k}</div><div style="font-size:.88rem;color:var(--text)">${v}</div><div style="font-size:.72rem;color:${bn>=0?"var(--ice)":"var(--fire)"}">${bs}</div></div>`}).join("")}</div>${b.hp?`<div style="font-size:.58rem;font-family:'Cinzel',serif;letter-spacing:.1em;text-transform:uppercase;color:#a06060;margin-bottom:.3rem">PV</div><div style="display:flex;gap:.65rem;flex-wrap:wrap">${b.hp.map((v,i)=>`<span style="font-size:.8rem;color:var(--text2)">×${[1.2,1.3,1.4,1.5][i]}: <strong style="color:var(--text)">${v}</strong></span>`).join("")}</div>`:""}</div></div>`).join("");
-}
-
+function buildBeh(){document.getElementById("bgrid").innerHTML=BD.map(b=>`<div class="bcard" data-cat="${b.c}" data-ae="${b.a}"><div class="bn">${b.n}</div><div style="display:flex;gap:.35rem;flex-wrap:wrap"><span class="tag ${aTC[b.a]}">${aI[b.a]} ${b.a}</span><span class="tag" style="color:${cC[b.c]};border-color:${cC[b.c]}33">${cL[b.c]}</span></div></div>`).join("");}
+function fbeh(t,btn){document.querySelectorAll(".fb").forEach(b=>b.classList.remove("active"));btn.classList.add("active");document.querySelectorAll(".bcard").forEach(c=>{c.classList.toggle("hidden",t!=="all"&&c.dataset.cat!==t&&c.dataset.ae!==t)});}
+function buildMStats(){const ws=BD.filter(b=>b.s&&b.s.FOR);document.getElementById("msl").innerHTML=ws.map(b=>`<div class="bmc"><div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'"><div><span style="font-family:'Cinzel',serif;font-size:.86rem;color:var(--master2)">${b.n}</span><span class="tag ${aTC[b.a]}" style="margin-left:.5rem">${aI[b.a]} ${b.a}</span></div><span style="color:#a06060;font-size:.7rem">▼</span></div><div style="display:none;margin-top:.7rem"><div style="display:grid;grid-template-columns:repeat(6,1fr);gap:.35rem;margin-bottom:.65rem">${Object.entries(b.s).map(([k,v])=>{const bn=Math.floor((v-10)/2);const bs=bn>=0?"+"+bn:""+bn;return`<div style="background:rgba(200,56,56,.06);padding:.3rem .35rem;text-align:center"><div style="font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.08em;color:#a06060;text-transform:uppercase">${k}</div><div style="font-size:.88rem;color:var(--text)">${v}</div><div style="font-size:.72rem;color:${bn>=0?"var(--ice)":"var(--fire)"}">${bs}</div></div>`}).join("")}</div>${b.hp?`<div style="font-size:.58rem;font-family:'Cinzel',serif;letter-spacing:.1em;text-transform:uppercase;color:#a06060;margin-bottom:.3rem">PV</div><div style="display:flex;gap:.65rem;flex-wrap:wrap">${b.hp.map((v,i)=>`<span style="font-size:.8rem;color:var(--text2)">×${[1.2,1.3,1.4,1.5][i]}: <strong style="color:var(--text)">${v}</strong></span>`).join("")}</div>`:""}</div></div>`).join("");}
 function fmst(q){document.querySelectorAll(".bmc").forEach(c=>{c.style.display=c.querySelector("span").textContent.toLowerCase().includes(q.toLowerCase())?"":"none"});}
 
 const WD=[
   {n:"Spada",t:"Bilanciata · Mirato",tr:["1D6","2D6","3D6","4D6","6D6"],ch:"4-5 (1c) / 6 (2c)",sp:[{n:"Onda Lama",d:"Vicino: +dado extra +4. A distanza: attacco ignorando distanza +dado."},{n:"Parata",d:"Vicino: nega danno, poi attacca con dadi +1 +4. A distanza: ignora attacchi a distanza."},{n:"Eco della Forgia",d:"Zona 3×3: Behemoth entrando subisce dado danno +4."}]},
   {n:"Lancia",t:"Bilanciata · Lacerante",tr:["1D6","2D6","3D6","4D6","6D6"],ch:"4-5 (1c) / 6 (2c)",sp:[{n:"Proiettile Aetherico",d:"Vicino: +dado extra +4. A distanza: attacco ignorando distanza +dado."},{n:"Balzo Spericolato",d:"Vicino: nega danno, allontana 6 quadretti. A distanza: avvicina 2× spostamento, 2 dadi +4."},{n:"Carica Rivalsa",d:"Avvicini ignorando distanza: 1 dado +4 fisso +1 ogni 2 quadretti."}]},
-  {n:"Martello",t:"Pesante · Stordente",tr:["1D8","2D8","3D8","4D8","6D8"],ch:"6-7 (1c) / 8 (2c)",sp:[{n:"Squarciaterra Rovinoso",d:"Esplosione aetherica: danno base +1 dado +4 stordente, indipendentemente dalla distanza."},{n:"Cannone Aetherico",d:"Bonus FOR +8 danni stordenti senza consumare l'azione di attacco."}]},
+  {n:"Martello",t:"Pesante · Stordente",tr:["1D8","2D8","3D8","4D8","6D8"],ch:"6-7 (1c) / 8 (2c)",sp:[{n:"Squarciaterra Rovinoso",d:"Esplosione aetherica: danno base +1 dado +4 stordente."},{n:"Cannone Aetherico",d:"Bonus FOR +8 danni stordenti senza consumare l'azione di attacco."}]},
   {n:"Ascia",t:"Pesante · Stordente + Lacerante",tr:["1D8","2D8","3D8","4D8","6D8"],ch:"6-7 (1c) / 8 (2c)",sp:[{n:"Mietitura Aetherica",d:"Lanci l'ascia: +1 dado +2 stordente. TirSalv DES per riprenderla; successo → +4 att. successivo."},{n:"Lancio Rovinoso",d:"Lanci l'ascia: +1 dado +2 lacerante. TirSalv DES; successo → +4 lacerante turno successivo."}]},
   {n:"Pugni Aetherici",t:"Leggera · Mirato + Stordente",tr:["1D4","2D4","3D4","4D4","6D4"],ch:"3 (1c) / 4 (2c)",sp:[{n:"Schianto Titanico",d:"In prossimità: 2 dadi extra +4 danni stordenti."},{n:"Laser Aetherico",d:"1 dado extra +6 danno mirato. Maggiore la distanza, maggiore la CD."}]},
   {n:"Lame a Catena",t:"Leggera · Lacerante + Mirato",tr:["1D4","2D4","3D4","4D4","6D4"],ch:"3-4 (1c)",sp:[{n:"Schianto Rovinoso",d:"A distanza spostamento: 1 dado extra alla parte scelta, −4 alle altre vicine."},{n:"Slancio Rovinoso",d:"A distanza spostamento: 1 dado extra +4 lacerante, spostandoti dalla parte opposta."}]}
 ];
+function buildW(){document.getElementById("wgrid").innerHTML=WD.map(w=>`<div class="card" style="padding:1.2rem"><div style="font-family:'Cinzel',serif;font-size:.92rem;font-weight:700;color:var(--gold2);margin-bottom:.2rem">${w.n}</div><div style="display:inline-block;font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:.1rem .4rem;border:1px solid rgba(200,168,75,.3);color:var(--gold3);margin-bottom:.8rem">${w.t}</div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:.2rem;margin-bottom:.75rem">${["Lv1-5","Lv6-10","Lv11-15","Lv16-20","Lv21-30"].map((l,i)=>`<div style="background:rgba(200,168,75,.04);padding:.28rem .22rem;text-align:center"><div style="font-family:'Cinzel',serif;font-size:.44rem;color:var(--text2)">${l}</div><div style="font-size:.78rem;color:var(--text)">${w.tr[i]}</div></div>`).join("")}</div><div style="font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.1em;color:var(--gold3);text-transform:uppercase;margin-bottom:.5rem">Cariche: ${w.ch}</div>${w.sp.map(s=>`<div style="padding:.45rem 0;border-bottom:1px solid rgba(200,168,75,.05)"><div style="font-family:'Cinzel',serif;font-size:.7rem;color:var(--gold2);margin-bottom:.18rem">${s.n}</div><div style="font-size:.8rem;color:var(--text2);line-height:1.5">${s.d}</div></div>`).join("")}</div>`).join("");}
 
-function buildW(){
-  document.getElementById("wgrid").innerHTML=WD.map(w=>`<div class="card" style="padding:1.2rem"><div style="font-family:'Cinzel',serif;font-size:.92rem;font-weight:700;color:var(--gold2);margin-bottom:.2rem">${w.n}</div><div style="display:inline-block;font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:.1rem .4rem;border:1px solid rgba(200,168,75,.3);color:var(--gold3);margin-bottom:.8rem">${w.t}</div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:.2rem;margin-bottom:.75rem">${["Lv1-5","Lv6-10","Lv11-15","Lv16-20","Lv21-30"].map((l,i)=>`<div style="background:rgba(200,168,75,.04);padding:.28rem .22rem;text-align:center"><div style="font-family:'Cinzel',serif;font-size:.44rem;color:var(--text2)">${l}</div><div style="font-size:.78rem;color:var(--text)">${w.tr[i]}</div></div>`).join("")}</div><div style="font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.1em;color:var(--gold3);text-transform:uppercase;margin-bottom:.5rem">Cariche: ${w.ch}</div>${w.sp.map(s=>`<div style="padding:.45rem 0;border-bottom:1px solid rgba(200,168,75,.05)"><div style="font-family:'Cinzel',serif;font-size:.7rem;color:var(--gold2);margin-bottom:.18rem">${s.n}</div><div style="font-size:.8rem;color:var(--text2);line-height:1.5">${s.d}</div></div>`).join("")}</div>`).join("");
-}
+const CD={"Celle di Forza — Offensiva":[{n:"Re del Knockout",p3:"×1.5 danni vs storditi",p6:"×2 danni vs storditi"},{n:"Cacciatore di Aether",p3:"×1.5 danni vs aethercaricati",p6:"×2 danni vs aethercaricati"},{n:"Cacciatore Furioso",p3:"×1.5 danni vs infuriati",p6:"×2 danni vs infuriati"},{n:"Lavoro di Squadra",p3:"+2 danni; bonus agli alleati sullo stesso bersaglio",p6:"+4 danni; alleati ottengono vantaggio"},{n:"Incremento Aetherico",p3:"+1 token elementale",p6:"+2 token elementali"},{n:"Tempesta di Lame",p3:"Attacco mirato ×1.2",p6:"Attacco mirato ×1.5"},{n:"Sopraffazione",p3:"Attacco stordente ×1.2",p6:"Attacco stordente ×1.5"},{n:"Acido",p3:"Attacco lacerante ×1.2",p6:"Attacco lacerante ×1.5"}],"Celle di Vigore — Sopravvivenza":[{n:"Ignifuga",p3:"Immune a SCOTTATO",p6:"Immune a BRUCIATO"},{n:"Antigelo",p3:"Immune a CONGELATO",p6:"Immune a IBERNATO"},{n:"Isolante",p3:"Immune a ELETTRIFICATO",p6:"Immune a FULMINATO"},{n:"Ferreo",p3:"Immune a INTERRATO",p6:"Immune a DRENATO"},{n:"Benedetto",p3:"CORROTTO dimezzato",p6:"Immune a CORROTTO"},{n:"Marchiato",p3:"ABBAGLIATO dimezzato",p6:"Immune a ABBAGLIATO"},{n:"Coagulante",p3:"Immune a SANGUINATO",p6:"Immune a EMORRAGICO"},{n:"Corazzato",p3:"STORDITO dimezzato",p6:"Immune a STORDITO"}],"Celle di Tecnica — Stile di gioco":[{n:"Agilità",p3:"+2 caselle movimento",p6:"+4 caselle movimento"},{n:"Granpasso",p3:"Schivando: 2 danni al Behemoth",p6:"Schivando: 4 danni al Behemoth"},{n:"Medico",p3:"Alleato a terra → metà PV",p6:"Alleato a terra → tutti PV; prima caduta automatica a metà PV"},{n:"Rammendo",p3:"Oggetti curativi +4 PV extra",p6:"Oggetti curativi si attivano due volte; puoi ritirare gli 1"},{n:"Astuzia",p3:"5° attacco: critico automatico",p6:"I 2 valori più alti del dado valgono il massimo"},{n:"Riciclo",p3:"Stessa parte 3×: 3° colpo automatico",p6:"Stessa parte 2×: 2° colpo automatico"},{n:"Parassita",p3:"Sotto ¼ PV: prossimo attacco dimezzato",p6:"Sotto ¼ PV: prossimo attacco annullato"},{n:"Catalizzatore",p3:"Strumenti non curativi: durata +50%",p6:"Durata +50%, 50% di non consumare l'oggetto"}]};
+function buildC(){let h="";for(const[cat,items] of Object.entries(CD)){h+=`<div class="cct" style="grid-column:1/-1">${cat}</div>`;h+=items.map(c=>`<div class="ccrd"><div class="cn">${c.n}</div><div class="cr"><span class="clbl">+3</span><span style="color:var(--text)">${c.p3}</span></div><div class="cr"><span class="clbl">+6</span><span style="color:var(--gold2)">${c.p6}</span></div></div>`).join("");}document.getElementById("cgrid").innerHTML=h;}
 
-const CD={"Celle di Forza — Offensiva":[
-  {n:"Re del Knockout",p3:"×1.5 danni vs storditi",p6:"×2 danni vs storditi"},
-  {n:"Cacciatore di Aether",p3:"×1.5 danni vs aethercaricati",p6:"×2 danni vs aethercaricati"},
-  {n:"Cacciatore Furioso",p3:"×1.5 danni vs infuriati",p6:"×2 danni vs infuriati"},
-  {n:"Lavoro di Squadra",p3:"+2 danni; bonus agli alleati sullo stesso bersaglio",p6:"+4 danni; alleati ottengono vantaggio"},
-  {n:"Incremento Aetherico",p3:"+1 token elementale",p6:"+2 token elementali"},
-  {n:"Tempesta di Lame",p3:"Attacco mirato ×1.2",p6:"Attacco mirato ×1.5"},
-  {n:"Sopraffazione",p3:"Attacco stordente ×1.2",p6:"Attacco stordente ×1.5"},
-  {n:"Acido",p3:"Attacco lacerante ×1.2",p6:"Attacco lacerante ×1.5"}],
-"Celle di Vigore — Sopravvivenza":[
-  {n:"Ignifuga",p3:"Immune a SCOTTATO",p6:"Immune a BRUCIATO"},
-  {n:"Antigelo",p3:"Immune a CONGELATO",p6:"Immune a IBERNATO"},
-  {n:"Isolante",p3:"Immune a ELETTRIFICATO",p6:"Immune a FULMINATO"},
-  {n:"Ferreo",p3:"Immune a INTERRATO",p6:"Immune a DRENATO"},
-  {n:"Benedetto",p3:"CORROTTO dimezzato",p6:"Immune a CORROTTO"},
-  {n:"Marchiato",p3:"ABBAGLIATO dimezzato",p6:"Immune a ABBAGLIATO"},
-  {n:"Coagulante",p3:"Immune a SANGUINATO",p6:"Immune a EMORRAGICO"},
-  {n:"Corazzato",p3:"STORDITO dimezzato",p6:"Immune a STORDITO"}],
-"Celle di Tecnica — Stile di gioco":[
-  {n:"Agilità",p3:"+2 caselle movimento",p6:"+4 caselle movimento"},
-  {n:"Granpasso",p3:"Schivando: 2 danni al Behemoth",p6:"Schivando: 4 danni al Behemoth"},
-  {n:"Medico",p3:"Alleato a terra → metà PV",p6:"Alleato a terra → tutti PV; prima caduta automatica a metà PV"},
-  {n:"Rammendo",p3:"Oggetti curativi +4 PV extra",p6:"Oggetti curativi si attivano due volte; puoi ritirare gli 1"},
-  {n:"Astuzia",p3:"5° attacco: critico automatico",p6:"I 2 valori più alti del dado valgono il massimo"},
-  {n:"Riciclo",p3:"Stessa parte 3×: 3° colpo automatico",p6:"Stessa parte 2×: 2° colpo automatico"},
-  {n:"Parassita",p3:"Sotto ¼ PV: prossimo attacco dimezzato",p6:"Sotto ¼ PV: prossimo attacco annullato"},
-  {n:"Catalizzatore",p3:"Strumenti non curativi: durata +50%",p6:"Durata +50%, 50% di non consumare l'oggetto"}]};
+const TR=[{n:1,b:"ly",nm:"Triade Radiante",t:"Nascita, inizio, luce pura"},{n:2,b:"ly",nm:"Triade Folgorante",t:"Scoperta, energia, espansione"},{n:3,b:"ly",nm:"Triade Ardente",t:"Conflitto, coraggio, passione"},{n:4,b:"ly",nm:"Triade Terrestre",t:"Stabilità, costruzione, prosperità"},{n:5,b:"ly",nm:"Triade Congelante",t:"Silenzio, attesa, gelo"},{n:6,b:"ly",nm:"Triade Oscura",t:"Crepuscolo, introspezione"},{n:"p",txt:"✦ Passaggio da Lyra a Kornos ✦",sub:"Giorno 30 Triade Oscura → Giorno 1 Triade Alborea"},{n:7,b:"ko",nm:"Triade Alborea",t:"Rinascita, memoria, chiarore dopo l'ombra"},{n:8,b:"ko",nm:"Triade Tuonante",t:"Turbolenza, prova, voce interiore"},{n:9,b:"ko",nm:"Triade Fiammeggiante",t:"Purificazione, rivoluzione"},{n:10,b:"ko",nm:"Triade Sporizzata",t:"Decomposizione, metamorfosi"},{n:11,b:"ko",nm:"Triade Algente",t:"Morte apparente, immobilità"},{n:12,b:"ko",nm:"Triade Foscomanto",t:"Oscurità totale, fine del ciclo"},{n:"p2",txt:"✦ Passaggio da Kornos a Lyra ✦",sub:"Giorno 30 Triade Foscomanto → Giorno 1 Triade Radiante"}];
+function buildTR(){document.getElementById("trgrid").innerHTML=TR.map(t=>{if(t.n==="p"||t.n==="p2")return`<div class="tbanner" style="grid-column:1/-1">${t.txt}<br><span style="font-size:.8rem">${t.sub}</span></div>`;const badge=t.b==="ly"?`<div class="bly">🌕 Lyra</div>`:`<div class="bko">🌑 Kornos</div>`;return`<div class="trc"><div class="trn">${t.n}</div>${badge}<div class="trnm">${t.nm}</div><div class="trtm">${t.t}</div></div>`;}).join("");}
 
-function buildC(){
-  let h="";
-  for(const[cat,items] of Object.entries(CD)){
-    h+=`<div class="cct" style="grid-column:1/-1">${cat}</div>`;
-    h+=items.map(c=>`<div class="ccrd"><div class="cn">${c.n}</div><div class="cr"><span class="clbl">+3</span><span style="color:var(--text)">${c.p3}</span></div><div class="cr"><span class="clbl">+6</span><span style="color:var(--gold2)">${c.p6}</span></div></div>`).join("");
-  }
-  document.getElementById("cgrid").innerHTML=h;
-}
-
-const TR=[
-  {n:1,b:"ly",nm:"Triade Radiante",t:"Nascita, inizio, luce pura"},
-  {n:2,b:"ly",nm:"Triade Folgorante",t:"Scoperta, energia, espansione"},
-  {n:3,b:"ly",nm:"Triade Ardente",t:"Conflitto, coraggio, passione"},
-  {n:4,b:"ly",nm:"Triade Terrestre",t:"Stabilità, costruzione, prosperità"},
-  {n:5,b:"ly",nm:"Triade Congelante",t:"Silenzio, attesa, gelo"},
-  {n:6,b:"ly",nm:"Triade Oscura",t:"Crepuscolo, introspezione"},
-  {n:"p",txt:"✦ Passaggio da Lyra a Kornos ✦",sub:"Giorno 30 Triade Oscura → Giorno 1 Triade Alborea"},
-  {n:7,b:"ko",nm:"Triade Alborea",t:"Rinascita, memoria, chiarore dopo l'ombra"},
-  {n:8,b:"ko",nm:"Triade Tuonante",t:"Turbolenza, prova, voce interiore"},
-  {n:9,b:"ko",nm:"Triade Fiammeggiante",t:"Purificazione, rivoluzione"},
-  {n:10,b:"ko",nm:"Triade Sporizzata",t:"Decomposizione, metamorfosi"},
-  {n:11,b:"ko",nm:"Triade Algente",t:"Morte apparente, immobilità"},
-  {n:12,b:"ko",nm:"Triade Foscomanto",t:"Oscurità totale, fine del ciclo"},
-  {n:"p2",txt:"✦ Passaggio da Kornos a Lyra ✦",sub:"Giorno 30 Triade Foscomanto → Giorno 1 Triade Radiante"}
-];
-
-function buildTR(){
-  document.getElementById("trgrid").innerHTML=TR.map(t=>{
-    if(t.n==="p"||t.n==="p2") return`<div class="tbanner" style="grid-column:1/-1">${t.txt}<br><span style="font-size:.8rem">${t.sub}</span></div>`;
-    const badge=t.b==="ly"?`<div class="bly">🌕 Lyra</div>`:`<div class="bko">🌑 Kornos</div>`;
-    return`<div class="trc"><div class="trn">${t.n}</div>${badge}<div class="trnm">${t.nm}</div><div class="trtm">${t.t}</div></div>`;
-  }).join("");
-}
-
-function swTab(id,btn){
-  document.querySelectorAll(".mtab").forEach(t=>t.classList.remove("active"));
-  document.querySelectorAll(".mpanel").forEach(p=>p.classList.remove("active"));
-  btn.classList.add("active");
-  document.getElementById("p-"+id).classList.add("active");
-}
-
-function swN(id,btn){
-  document.querySelectorAll(".ntab").forEach(t=>t.classList.remove("active"));
-  document.querySelectorAll(".npanel").forEach(p=>p.classList.remove("active"));
-  btn.classList.add("active");
-  document.getElementById("np-"+id).classList.add("active");
-}
-
-function svN(ch){
-  localStorage.setItem("tcj-n-"+ch,document.getElementById("n-"+ch).value);
-  const b=document.getElementById("sv-"+ch);
-  b.textContent="✓ Salvato";b.classList.add("saved");
-  setTimeout(()=>{b.textContent="Salva";b.classList.remove("saved")},2000);
-}
-
-function loadN(){["athena","panlan","asonnes"].forEach(c=>{const s=localStorage.getItem("tcj-n-"+c);if(s)document.getElementById("n-"+c).value=s;})}
+function swTab(id,btn){document.querySelectorAll(".mtab").forEach(t=>t.classList.remove("active"));document.querySelectorAll(".mpanel").forEach(p=>p.classList.remove("active"));btn.classList.add("active");document.getElementById("p-"+id).classList.add("active");}
+function swN(id,btn){document.querySelectorAll(".ntab").forEach(t=>t.classList.remove("active"));document.querySelectorAll(".npanel").forEach(p=>p.classList.remove("active"));btn.classList.add("active");document.getElementById("np-"+id).classList.add("active");}
+function svN(ch){localStorage.setItem("tcj-n-"+ch,document.getElementById("n-"+ch).value);const b=document.getElementById("sv-"+ch);b.textContent="✓ Salvato";b.classList.add("saved");setTimeout(()=>{b.textContent="Salva";b.classList.remove("saved")},2000);}
+function loadN(){["athena","panlan","asonnes"].forEach(c=>{const s=localStorage.getItem("tcj-n-"+c);if(s)document.getElementById("n-"+c).value=s;});}
 
 const PW="Golden_Sun";
 let mOpen=false;
+function openpw(){if(mOpen){document.getElementById("ms").scrollIntoView({behavior:"smooth"});return;}document.getElementById("pwo").classList.add("open");setTimeout(()=>document.getElementById("pwi").focus(),100);}
+function closepw(){document.getElementById("pwo").classList.remove("open");document.getElementById("pwi").value="";document.getElementById("pwe").style.display="none";}
+function chkpw(){if(document.getElementById("pwi").value===PW){mOpen=true;closepw();document.getElementById("ms").style.display="block";const b=document.getElementById("mbtn");b.textContent="🔓 Master";b.classList.add("unlocked");buildMStats();renderStatCards(MD,50,"grid-mael");renderStatCards(AD,26,"grid-alti");renderStatCards(MND,26,"grid-minori");setTimeout(()=>document.getElementById("ms").scrollIntoView({behavior:"smooth"}),100);}else{document.getElementById("pwe").style.display="block";document.getElementById("pwi").value="";document.getElementById("pwi").focus();}}
+function updNav(){const ss=document.querySelectorAll("section[id]");const ls=document.querySelectorAll(".nav-links a");let cur="";ss.forEach(s=>{if(window.scrollY>=s.offsetTop-80)cur=s.id});ls.forEach(l=>l.classList.toggle("active",l.getAttribute("href")==="#"+cur));}
+function swMN(id,btn){document.querySelectorAll("[id^='mnp-']").forEach(p=>p.style.display="none");document.getElementById("mnp-"+id).style.display="block";btn.parentElement.querySelectorAll(".ntab").forEach(t=>{t.style.borderColor="rgba(200,56,56,.2)";t.style.color="#a08080";});btn.style.borderColor="rgba(200,56,56,.5)";btn.style.color="#c08080";}
+function svMN(tab){localStorage.setItem("tcj-mn-"+tab,document.getElementById("mn-"+tab).value);const b=document.getElementById("msv-"+tab);b.textContent="✓ Salvato";b.classList.add("saved");setTimeout(()=>{b.textContent="Salva";b.classList.remove("saved")},2000);}
+function loadMN(){["generale","sessione","trame","npc"].forEach(t=>{const s=localStorage.getItem("tcj-mn-"+t);if(s)document.getElementById("mn-"+t).value=s;});}
 
-function openpw(){
-  if(mOpen){document.getElementById("ms").scrollIntoView({behavior:"smooth"});return;}
-  document.getElementById("pwo").classList.add("open");
-  setTimeout(()=>document.getElementById("pwi").focus(),100);
-}
-
-function closepw(){
-  document.getElementById("pwo").classList.remove("open");
-  document.getElementById("pwi").value="";
-  document.getElementById("pwe").style.display="none";
-}
-
-function chkpw(){
-  if(document.getElementById("pwi").value===PW){
-    mOpen=true;closepw();
-    document.getElementById("ms").style.display="block";
-    const b=document.getElementById("mbtn");
-    b.textContent="🔓 Master";b.classList.add("unlocked");
-    buildMStats();
-    renderStatCards(MD,50,"grid-mael");
-    renderStatCards(AD,26,"grid-alti");
-    renderStatCards(MND,26,"grid-minori");
-    setTimeout(()=>document.getElementById("ms").scrollIntoView({behavior:"smooth"}),100);
-  } else {
-    document.getElementById("pwe").style.display="block";
-    document.getElementById("pwi").value="";
-    document.getElementById("pwi").focus();
-  }
-}
-
-function updNav(){
-  const ss=document.querySelectorAll("section[id]");
-  const ls=document.querySelectorAll(".nav-links a");
-  let cur="";
-  ss.forEach(s=>{if(window.scrollY>=s.offsetTop-80)cur=s.id});
-  ls.forEach(l=>l.classList.toggle("active",l.getAttribute("href")==="#"+cur));
-}
-
-function swMN(id,btn){
-  document.querySelectorAll("[id^='mnp-']").forEach(p=>p.style.display="none");
-  document.getElementById("mnp-"+id).style.display="block";
-  btn.parentElement.querySelectorAll(".ntab").forEach(t=>{t.style.borderColor="rgba(200,56,56,.2)";t.style.color="#a08080";});
-  btn.style.borderColor="rgba(200,56,56,.5)";btn.style.color="#c08080";
-}
-
-function svMN(tab){
-  localStorage.setItem("tcj-mn-"+tab,document.getElementById("mn-"+tab).value);
-  const b=document.getElementById("msv-"+tab);
-  b.textContent="✓ Salvato";b.classList.add("saved");
-  setTimeout(()=>{b.textContent="Salva";b.classList.remove("saved")},2000);
-}
-
-function loadMN(){
-  ["generale","sessione","trame","npc"].forEach(t=>{
-    const s=localStorage.getItem("tcj-mn-"+t);
-    if(s) document.getElementById("mn-"+t).value=s;
-  });
-}
-
-
-// ═══ STAT CARD RENDERER ═══
 function mod(v){const m=Math.floor((v-10)/2);return(m>=0?"+":"")+m;}
+function renderStatCards(data,maxStat,containerId){const el=document.getElementById(containerId);if(!el)return;el.innerHTML=data.map(d=>{const sHtml=Object.entries(d.s).map(([k,v])=>{const pct=Math.round(v/maxStat*100);return`<div><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;color:#a06060">${k}</span><span style="font-size:.78rem;color:var(--text)">${v} <span style="color:#906060;font-size:.68rem">(${mod(v)})</span></span></div><div style="height:2px;background:rgba(200,56,56,.1);border-radius:1px"><div style="height:100%;width:${pct}%;background:${d.ac};border-radius:1px;opacity:.75"></div></div></div>`;}).join("");const lvl=d.lv?`<div style="font-size:.58rem;color:#806060;margin-top:.15rem">Lv.${d.lv}</div>`:"";const wpn=d.wp?`<div style="font-size:.7rem;color:#907070;margin-top:.15rem">⚔ ${d.wp}</div>`:"";const art=d.ar?`<div style="font-size:.7rem;color:#907070">◈ ${d.ar}</div>`:"";const nt=d.nt?`<div style="font-size:.76rem;color:#907070;font-style:italic;border-top:1px solid rgba(200,56,56,.08);padding-top:.55rem;margin-top:.55rem">${d.nt}</div>`:"";return`<div style="background:rgba(200,56,56,.04);border:1px solid rgba(200,56,56,.12);border-top:3px solid ${d.ac};padding:1.1rem"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem"><div style="flex:1;min-width:0"><div style="font-size:.55rem;font-family:'Cinzel',serif;letter-spacing:.1em;text-transform:uppercase;color:${d.ac};margin-bottom:.15rem">${d.ae}</div><div style="font-family:'Cinzel',serif;font-size:.92rem;font-weight:700;color:var(--master2)">${d.nm}</div><div style="font-size:.72rem;color:#a08080;margin-top:.1rem">${d.rl}</div>${wpn}${art}${lvl}</div><div style="text-align:right;flex-shrink:0;margin-left:.75rem"><div style="font-size:.5rem;color:#a06060;font-family:'Cinzel',serif;letter-spacing:.08em;text-transform:uppercase">HP</div><div style="font-size:1.4rem;color:${d.ac};font-family:'Cinzel Decorative',serif;line-height:1;font-weight:700">${d.hp}</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem .75rem;border-top:1px solid rgba(200,56,56,.1);padding-top:.65rem">${sHtml}</div>${nt}</div>`;}).join("");}
 
-function renderStatCards(data,maxStat,containerId){
-  const el=document.getElementById(containerId);
-  if(!el)return;
-  el.innerHTML=data.map(d=>{
-    const sHtml=Object.entries(d.s).map(([k,v])=>{
-      const pct=Math.round(v/maxStat*100);
-      return `<div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:2px">
-          <span style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;color:#a06060">${k}</span>
-          <span style="font-size:.78rem;color:var(--text)">${v} <span style="color:#906060;font-size:.68rem">(${mod(v)})</span></span>
-        </div>
-        <div style="height:2px;background:rgba(200,56,56,.1);border-radius:1px">
-          <div style="height:100%;width:${pct}%;background:${d.ac};border-radius:1px;opacity:.75"></div>
-        </div>
-      </div>`;
-    }).join("");
-    const lvl=d.lv?`<div style="font-size:.58rem;color:#806060;margin-top:.15rem">Lv.${d.lv}</div>`:"";
-    const wpn=d.wp?`<div style="font-size:.7rem;color:#907070;margin-top:.15rem">⚔ ${d.wp}</div>`:"";
-    const art=d.ar?`<div style="font-size:.7rem;color:#907070">◈ ${d.ar}</div>`:"";
-    const nt=d.nt?`<div style="font-size:.76rem;color:#907070;font-style:italic;border-top:1px solid rgba(200,56,56,.08);padding-top:.55rem;margin-top:.55rem">${d.nt}</div>`:"";
-    return `<div style="background:rgba(200,56,56,.04);border:1px solid rgba(200,56,56,.12);border-top:3px solid ${d.ac};padding:1.1rem">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem">
-        <div style="flex:1;min-width:0">
-          <div style="font-size:.55rem;font-family:'Cinzel',serif;letter-spacing:.1em;text-transform:uppercase;color:${d.ac};margin-bottom:.15rem">${d.ae}</div>
-          <div style="font-family:'Cinzel',serif;font-size:.92rem;font-weight:700;color:var(--master2)">${d.nm}</div>
-          <div style="font-size:.72rem;color:#a08080;margin-top:.1rem">${d.rl}</div>
-          ${wpn}${art}${lvl}
-        </div>
-        <div style="text-align:right;flex-shrink:0;margin-left:.75rem">
-          <div style="font-size:.5rem;color:#a06060;font-family:'Cinzel',serif;letter-spacing:.08em;text-transform:uppercase">HP</div>
-          <div style="font-size:1.4rem;color:${d.ac};font-family:'Cinzel Decorative',serif;line-height:1;font-weight:700">${d.hp}</div>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem .75rem;border-top:1px solid rgba(200,56,56,.1);padding-top:.65rem">
-        ${sHtml}
-      </div>${nt}
-    </div>`;
-  }).join("");
-}
-
-// ═══ MAEL DATA ═══
 const MD=[
-  {nm:"Estarossa",ae:"Terrestre",rl:"Controllore · Supporto",wp:"Le Fondamenta di Ramsgate",ar:"Corona di Gondor",hp:530,ac:"#a07830",s:{FOR:20,DES:26,COST:46,INT:40,SAG:50,CAR:44},nt:"Non combatte direttamente. SAG al massimo: legge il campo con perfezione millenaria. FOR volutamente bassa — non è la sua strada."},
-  {nm:"Symael",ae:"Glaciale",rl:"Combattente Heavy · Bilanciato",wp:"Alatreon",ar:"Collana del Desufiora",hp:624,ac:"#7ec8e3",s:{FOR:40,DES:34,COST:38,INT:28,SAG:44,CAR:24},nt:"L'unico Mael con profilo davvero bilanciato. SAG elevatissima per la comunicazione con i Behemoth. CAR bassa: non è un leader, è un sopravvissuto selvaggio."},
-  {nm:"Azrael",ae:"Oscuro",rl:"Logoramento · Controllo Campo",wp:"Vita Mortale",ar:"Flauto di Elias Folfo",hp:512,ac:"#8860d0",s:{FOR:30,DES:36,COST:34,INT:46,SAG:40,CAR:22},nt:"Ogni colpo è un investimento. INT (46): calcola quando smettere perché il bersaglio è già morto. CAR quasi nulla — è il più silenzioso dei Mael."},
-  {nm:"Raphael",ae:"Ardente",rl:"Artigliere · Lunga Distanza",wp:"Carmilla",ar:"Braccio del Mixitron",hp:400,ac:"#e05a20",s:{FOR:22,DES:46,COST:28,INT:50,SAG:34,CAR:44},nt:"Glass cannon: INT e DES al massimo, COST e FOR al minimo. Se raggiunto in mischia è vulnerabile. CAR alta (44) riflette il gentleman raffinato."},
-  {nm:"Gabrael",ae:"Radiante",rl:"Inganno · Manipolazione della Luce",wp:"Tasca Dimensionale",ar:"Manto di Rinmole",hp:464,ac:"#b888ff",s:{FOR:22,DES:48,COST:36,INT:50,SAG:44,CAR:48},nt:"⚠ Il villain principale. INT e CAR rotte (50, 48): impossibile da ingannare. DES straordinaria per il controllo degli specchi. FOR quasi irrilevante."},
-  {nm:"Mykael",ae:"Folgorante",rl:"DPS Aggressivo · Doppie Spade",wp:"Valstrax",ar:"Armatura del Ragnarok",hp:704,ac:"#d4b800",s:{FOR:48,DES:46,COST:40,INT:22,SAG:26,CAR:28},nt:"Opposto speculare di Estarossa. FOR e DES massime, INT e SAG quasi trascurabili. Il combattente più puro. HP più elevate (704). Devastante, quasi inarrestabile."}
+  {nm:"Estarossa",ae:"Terrestre",rl:"Controllore · Supporto",wp:"Le Fondamenta di Ramsgate",ar:"Corona di Gondor",hp:530,ac:"#a07830",s:{FOR:20,DES:26,COST:46,INT:40,SAG:50,CAR:44},nt:"Non combatte direttamente. SAG al massimo: legge il campo con perfezione millenaria."},
+  {nm:"Symael",ae:"Glaciale",rl:"Combattente Heavy · Bilanciato",wp:"Alatreon",ar:"Collana del Desufiora",hp:624,ac:"#7ec8e3",s:{FOR:40,DES:34,COST:38,INT:28,SAG:44,CAR:24},nt:"L'unico Mael con profilo davvero bilanciato. SAG elevatissima per la comunicazione con i Behemoth."},
+  {nm:"Azrael",ae:"Oscuro",rl:"Logoramento · Controllo Campo",wp:"Vita Mortale",ar:"Flauto di Elias Folfo",hp:512,ac:"#8860d0",s:{FOR:30,DES:36,COST:34,INT:46,SAG:40,CAR:22},nt:"Ogni colpo è un investimento. INT (46): calcola quando smettere perché il bersaglio è già morto."},
+  {nm:"Raphael",ae:"Ardente",rl:"Artigliere · Lunga Distanza",wp:"Carmilla",ar:"Braccio del Mixitron",hp:400,ac:"#e05a20",s:{FOR:22,DES:46,COST:28,INT:50,SAG:34,CAR:44},nt:"Glass cannon: INT e DES al massimo, COST e FOR al minimo."},
+  {nm:"Gabrael",ae:"Radiante",rl:"Inganno · Manipolazione della Luce",wp:"Tasca Dimensionale",ar:"Manto di Rinmole",hp:464,ac:"#b888ff",s:{FOR:22,DES:48,COST:36,INT:50,SAG:44,CAR:48},nt:"⚠ Il villain principale. INT e CAR rotte (50, 48): impossibile da ingannare."},
+  {nm:"Mykael",ae:"Folgorante",rl:"DPS Aggressivo · Doppie Spade",wp:"Valstrax",ar:"Armatura del Ragnarok",hp:704,ac:"#d4b800",s:{FOR:48,DES:46,COST:40,INT:22,SAG:26,CAR:28},nt:"Opposto speculare di Estarossa. Il combattente più puro. Devastante, quasi inarrestabile."}
 ];
-
-
-// ═══ ALTI MAESTRI DATA ═══
 const AD=[
-  {nm:"Wils Bormen",ae:"Ascia · Lv.20",rl:"Maestro d'armi · Forgiatore",wp:"Ascia",lv:20,hp:240,ac:"#c8a84b",s:{FOR:21,DES:14,COST:24,INT:20,SAG:18,CAR:16},nt:"Non è in prima linea ma conosce ogni arma. COST alta (24) da anni di lavoro alla forgia. SAG e INT elevate per decenni di studio pratico."},
-  {nm:"Moyra Heigsketter",ae:"Martello · Lv.20",rl:"Maestra delle armature",wp:"Martello",lv:20,hp:240,ac:"#8b6840",s:{FOR:18,DES:14,COST:24,INT:22,SAG:20,CAR:16},nt:"Più analitica di Wils ma meno potente fisicamente. COST al massimo per la filosofia difensiva. INT alta per la progettazione di armature avanzate."},
-  {nm:"Katerin Sorrel",ae:"Spada · Lv.20",rl:"Maestra della spada",wp:"Spada",lv:20,hp:200,ac:"#7ec8e3",s:{FOR:22,DES:24,COST:20,INT:16,SAG:18,CAR:18},nt:"Probabilmente il miglior duellante puro di Ramsgate. Profilo bilanciato — riflette la spada. SAG alta per la guida dei discepoli."},
-  {nm:"Linnea Silver",ae:"Ascia · Lv.20",rl:"Maestra dell'ascia",wp:"Ascia",lv:20,hp:220,ac:"#e05a20",s:{FOR:26,DES:18,COST:22,INT:18,SAG:18,CAR:16},nt:"La più forte fisicamente degli Otto. FOR al massimo teorico. CAR bassa — ha abbandonato il privilegio della famiglia Silver."},
-  {nm:"Markus Boher",ae:"Martello · Lv.20",rl:"Maestro del martello · Porto",wp:"Martello",lv:20,hp:240,ac:"#a07830",s:{FOR:26,DES:14,COST:24,INT:16,SAG:18,CAR:18},nt:"Se Linnea è la forza pura, Markus è il muro. FOR e COST dominanti. Costruito per fronteggiare direttamente un Behemoth."},
-  {nm:"Lady Luck",ae:"Catena · Lv.20",rl:"Maestra della catena",wp:"Lame a Catena",lv:20,hp:180,ac:"#f0d020",s:{FOR:18,DES:26,COST:18,INT:20,SAG:18,CAR:22},nt:"Velocità, astuzia e presenza scenica. DES al massimo. COST bassa — non è costruita per assorbire colpi, ma per non essere mai colpita."},
-  {nm:"La Maestra Sfregiata",ae:"Pugni · Lv.20",rl:"Maestra dei pugni aetherici",wp:"Pugni Aetherici",lv:20,hp:220,ac:"#8860d0",s:{FOR:20,DES:22,COST:22,INT:16,SAG:26,CAR:14},nt:"Quasi un monaco. SAG al massimo (26): la forza nasce dalla disciplina interiore. CAR quasi nulla — non le importa di essere capita."},
-  {nm:"Xelya",ae:"Lancia · Lv.20",rl:"Maestra della lancia",wp:"Lancia",lv:20,hp:200,ac:"#d4a8ff",s:{FOR:20,DES:24,COST:20,INT:18,SAG:22,CAR:18},nt:"Probabilmente la miglior tattica del gruppo. DES dominante per il controllo dello spazio. SAG alta. Parla poco, osserva tutto."}
+  {nm:"Wils Bormen",ae:"Ascia · Lv.20",rl:"Maestro d'armi · Forgiatore",wp:"Ascia",lv:20,hp:240,ac:"#c8a84b",s:{FOR:21,DES:14,COST:24,INT:20,SAG:18,CAR:16},nt:"COST alta (24) da anni di lavoro alla forgia. SAG e INT elevate per decenni di studio pratico."},
+  {nm:"Moyra Heigsketter",ae:"Martello · Lv.20",rl:"Maestra delle armature",wp:"Martello",lv:20,hp:240,ac:"#8b6840",s:{FOR:18,DES:14,COST:24,INT:22,SAG:20,CAR:16},nt:"Più analitica di Wils. COST al massimo per la filosofia difensiva."},
+  {nm:"Katerin Sorrel",ae:"Spada · Lv.20",rl:"Maestra della spada",wp:"Spada",lv:20,hp:200,ac:"#7ec8e3",s:{FOR:22,DES:24,COST:20,INT:16,SAG:18,CAR:18},nt:"Probabilmente il miglior duellante puro di Ramsgate."},
+  {nm:"Linnea Silver",ae:"Ascia · Lv.20",rl:"Maestra dell'ascia",wp:"Ascia",lv:20,hp:220,ac:"#e05a20",s:{FOR:26,DES:18,COST:22,INT:18,SAG:18,CAR:16},nt:"La più forte fisicamente degli Otto. FOR al massimo teorico."},
+  {nm:"Markus Boher",ae:"Martello · Lv.20",rl:"Maestro del martello · Porto",wp:"Martello",lv:20,hp:240,ac:"#a07830",s:{FOR:26,DES:14,COST:24,INT:16,SAG:18,CAR:18},nt:"FOR e COST dominanti. Costruito per fronteggiare direttamente un Behemoth."},
+  {nm:"Lady Luck",ae:"Catena · Lv.20",rl:"Maestra della catena",wp:"Lame a Catena",lv:20,hp:180,ac:"#f0d020",s:{FOR:18,DES:26,COST:18,INT:20,SAG:18,CAR:22},nt:"DES al massimo. Non è costruita per assorbire colpi, ma per non essere mai colpita."},
+  {nm:"La Maestra Sfregiata",ae:"Pugni · Lv.20",rl:"Maestra dei pugni aetherici",wp:"Pugni Aetherici",lv:20,hp:220,ac:"#8860d0",s:{FOR:20,DES:22,COST:22,INT:16,SAG:26,CAR:14},nt:"SAG al massimo (26): la forza nasce dalla disciplina interiore."},
+  {nm:"Xelya",ae:"Lancia · Lv.20",rl:"Maestra della lancia",wp:"Lancia",lv:20,hp:200,ac:"#d4a8ff",s:{FOR:20,DES:24,COST:20,INT:18,SAG:22,CAR:18},nt:"DES dominante per il controllo dello spazio. Parla poco, osserva tutto."}
 ];
-
-// ═══ MAESTRI MINORI DATA ═══
 const MND=[
-  {nm:"Janek Zai",ae:"Armi da fuoco · Lv.20",rl:"Ammiraglio · Veterano di guerra",wp:"Pistola/Arco Aetherico",lv:20,hp:220,ac:"#f0d020",s:{FOR:18,DES:26,COST:22,INT:18,SAG:22,CAR:18},nt:"Il combattente più pericoloso tra i Minori. DES e SAG dominanti — precisione militare affinata in decenni di servizio."},
-  {nm:"Nonna Yaga",ae:"Botanica · Lv.20",rl:"Esperta di pozioni",wp:"—",lv:20,hp:180,ac:"#8b6840",s:{FOR:10,DES:12,COST:18,INT:26,SAG:26,CAR:18},nt:"In uno scontro fisico non impressiona. INT e SAG massime: è un'enciclopedia vivente di conoscenze rare."},
-  {nm:"Il Mediatore",ae:"Celle Aetheriche · Lv.18",rl:"Ricercatore · Padre delle Omnicelle",wp:"—",lv:18,hp:162,ac:"#a07830",s:{FOR:10,DES:14,COST:18,INT:26,SAG:22,CAR:14},nt:"⚠ Vera identità: Edgar Solomon. INT al massimo. Il suo vero potere non è il combattimento, ma ciò che riesce a creare."},
-  {nm:"Shaed Priyani",ae:"Behemothologia · Lv.18",rl:"Massima esperta dei Behemoth",wp:"—",lv:18,hp:162,ac:"#8860d0",s:{FOR:12,DES:18,COST:18,INT:24,SAG:26,CAR:16},nt:"Conosce punti deboli, anatomia e comportamento di quasi ogni creatura. SAG al massimo per la lettura comportamentale."},
-  {nm:"Gregorio Flynt",ae:"Risorse · Lv.16",rl:"Il Gregario · Veterano",wp:"Generico",lv:16,hp:160,ac:"#c8a84b",s:{FOR:20,DES:18,COST:20,INT:16,SAG:18,CAR:20},nt:"Non è il più tecnico, ma è estremamente equilibrato e carismatico. La sua forza è l'affidabilità e la rete di contatti."},
-  {nm:"Tressa",ae:"Sociale · Lv.16",rl:"Barista · Cuore di Ramsgate",wp:"—",lv:16,hp:128,ac:"#e05a20",s:{FOR:10,DES:14,COST:16,INT:18,SAG:22,CAR:24},nt:"Non nasce come combattente. La sua influenza deriva dalla capacità di comprendere e guidare le persone. CAR dominante."},
-  {nm:"Arkan Drew",ae:"Inventore · Lv.16",rl:"Ingegnere · Prototipista",wp:"Prototipi Meccanici",lv:16,hp:128,ac:"#7ec8e3",s:{FOR:10,DES:12,COST:16,INT:26,SAG:20,CAR:14},nt:"Da solo non è devastante, ma con i suoi prototipi può cambiare il corso di una battaglia. INT al massimo."},
-  {nm:"Ozz l'Onesto",ae:"Corriere · Lv.10",rl:"Messaggero · Esploratore urbano",wp:"—",lv:10,hp:90,ac:"#d4b800",s:{FOR:12,DES:20,COST:18,INT:14,SAG:18,CAR:22},nt:"Il più umano del gruppo. Non ha la potenza marziale degli altri Maestri, ma conosce Ramsgate come le proprie tasche."}
+  {nm:"Janek Zai",ae:"Armi da fuoco · Lv.20",rl:"Ammiraglio · Veterano di guerra",wp:"Pistola/Arco Aetherico",lv:20,hp:220,ac:"#f0d020",s:{FOR:18,DES:26,COST:22,INT:18,SAG:22,CAR:18},nt:"Il combattente più pericoloso tra i Minori. Precisione militare affinata in decenni."},
+  {nm:"Nonna Yaga",ae:"Botanica · Lv.20",rl:"Esperta di pozioni",wp:"—",lv:20,hp:180,ac:"#8b6840",s:{FOR:10,DES:12,COST:18,INT:26,SAG:26,CAR:18},nt:"INT e SAG massime: un'enciclopedia vivente di conoscenze rare."},
+  {nm:"Il Mediatore",ae:"Celle Aetheriche · Lv.18",rl:"Ricercatore · Padre delle Omnicelle",wp:"—",lv:18,hp:162,ac:"#a07830",s:{FOR:10,DES:14,COST:18,INT:26,SAG:22,CAR:14},nt:"⚠ Vera identità: Edgar Solomon. Il suo vero potere non è il combattimento."},
+  {nm:"Shaed Priyani",ae:"Behemothologia · Lv.18",rl:"Massima esperta dei Behemoth",wp:"—",lv:18,hp:162,ac:"#8860d0",s:{FOR:12,DES:18,COST:18,INT:24,SAG:26,CAR:16},nt:"SAG al massimo per la lettura comportamentale dei Behemoth."},
+  {nm:"Gregorio Flynt",ae:"Risorse · Lv.16",rl:"Il Gregario · Veterano",wp:"Generico",lv:16,hp:160,ac:"#c8a84b",s:{FOR:20,DES:18,COST:20,INT:16,SAG:18,CAR:20},nt:"Estremamente equilibrato e carismatico. La sua forza è l'affidabilità."},
+  {nm:"Tressa",ae:"Sociale · Lv.16",rl:"Barista · Cuore di Ramsgate",wp:"—",lv:16,hp:128,ac:"#e05a20",s:{FOR:10,DES:14,COST:16,INT:18,SAG:22,CAR:24},nt:"CAR dominante. La sua influenza deriva dalla capacità di comprendere le persone."},
+  {nm:"Arkan Drew",ae:"Inventore · Lv.16",rl:"Ingegnere · Prototipista",wp:"Prototipi Meccanici",lv:16,hp:128,ac:"#7ec8e3",s:{FOR:10,DES:12,COST:16,INT:26,SAG:20,CAR:14},nt:"INT al massimo. Con i suoi prototipi può cambiare il corso di una battaglia."},
+  {nm:"Ozz l'Onesto",ae:"Corriere · Lv.10",rl:"Messaggero · Esploratore urbano",wp:"—",lv:10,hp:90,ac:"#d4b800",s:{FOR:12,DES:20,COST:18,INT:14,SAG:18,CAR:22},nt:"Il più umano del gruppo. Conosce Ramsgate come le proprie tasche."}
 ];
 
 window.addEventListener("load",()=>{buildBeh();buildW();buildC();buildTR();loadN();loadMN();scBuild();});
