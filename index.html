@@ -1526,6 +1526,53 @@ l50 -64 0 -151 c0 -158 -11 -207 -54 -237 -25 -18 -53 -75 -49 -103 2 -14 -6
       <div class="card" data-a="neutro"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.6rem">⚙️</div><div><div class="ct">Stiva Primaria</div><div class="cs">4° Piano Poppa · stiva principale</div></div></div><div class="cb"><p>La stiva principale. Comunica con la Stiva Modulare tramite ascensore centrale e con l'esterno attraverso il <strong>portellone di carico</strong>.</p></div></div>
       <div class="card" data-a="oscuro"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.6rem">⚡</div><div><div class="ct">Sala Macchine</div><div class="cs">3° Piano Prua · cuore energetico</div></div></div><div class="cb"><p>Protetta da <strong>ampi muri rinforzati</strong>. Nascosta dietro uno dei muri si trova una <strong>zona segreta</strong> per reliquie e artefatti.</p></div><div style="margin-top:.75rem"><span class="tag to" style="border-style:dashed">🔒 Zona Segreta</span></div></div>
     </div>
+    <style>
+    .nv-extra{margin-top:1.75rem;display:flex;flex-direction:column;gap:1.25rem}
+    .nv-card{background:var(--bg3);border:1px solid var(--border);padding:1.25rem;position:relative}
+    .nv-lbl{font-family:"Cinzel",serif;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold3);display:block;margin-bottom:.6rem}
+    .nv-note{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:"Crimson Pro",serif;font-size:.92rem;line-height:1.6;padding:.6rem .7rem;outline:none;resize:vertical;min-height:90px;transition:border-color .2s;box-sizing:border-box}
+    .nv-note:focus{border-color:var(--gold3)}
+    .nv-note::placeholder{color:var(--text2);font-style:italic}
+    .nv-reserve-box{display:grid;grid-template-columns:1fr 1fr;background:var(--bg3);border:1px solid var(--border)}
+    .nv-reserve{padding:1.4rem 1.25rem;text-align:center}
+    .nv-reserve+.nv-reserve{border-left:1px solid var(--border)}
+    .nv-counter{display:flex;align-items:center;justify-content:center;gap:.6rem;margin-top:.3rem}
+    .nv-counter button{width:34px;height:34px;background:var(--bg);border:1px solid var(--border);color:var(--gold2);font-size:1.15rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:"Cinzel",serif}
+    .nv-counter button:hover{background:rgba(200,168,75,.12);border-color:var(--gold3)}
+    .nv-counter input{width:74px;background:var(--bg);border:1px solid var(--border);color:var(--gold2);font-family:"Cinzel Decorative",serif;font-size:1.4rem;padding:.3rem;outline:none;text-align:center;transition:border-color .2s}
+    .nv-counter input:focus{border-color:var(--gold3)}
+    @media(max-width:560px){.nv-reserve-box{grid-template-columns:1fr}.nv-reserve+.nv-reserve{border-left:none;border-top:1px solid var(--border)}}
+    </style>
+    <div class="nv-extra">
+      <div class="nv-card" data-a="neutro">
+        <span class="nv-lbl">📦 Equipaggiamento Grande Trasportato</span>
+        <textarea class="nv-note" id="nv-equip-grande" placeholder="Annota l'equipaggiamento ingombrante stivato a bordo: veicoli, macchinari, casse di rifornimenti, reliquie voluminose, prede di grossa taglia..." oninput="nvSave()"></textarea>
+      </div>
+      <div class="nv-reserve-box">
+        <div class="nv-reserve">
+          <span class="nv-lbl">🍞 Riserva Dispensa</span>
+          <div class="nv-counter">
+            <button type="button" onclick="nvReserve('disp',-1)">−</button>
+            <input type="number" id="nv-res-disp" value="0" min="0" oninput="nvSave()">
+            <button type="button" onclick="nvReserve('disp',1)">+</button>
+          </div>
+        </div>
+        <div class="nv-reserve">
+          <span class="nv-lbl">⚙️ Riserva Equipaggiamento</span>
+          <div class="nv-counter">
+            <button type="button" onclick="nvReserve('equip',-1)">−</button>
+            <input type="number" id="nv-res-equip" value="0" min="0" oninput="nvSave()">
+            <button type="button" onclick="nvReserve('equip',1)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+    function nvReserve(k,delta){var e=document.getElementById("nv-res-"+k);if(!e)return;e.value=Math.max(0,(parseInt(e.value)||0)+delta);nvSave();}
+    function nvSave(){try{var eq=document.getElementById("nv-equip-grande"),rd=document.getElementById("nv-res-disp"),re=document.getElementById("nv-res-equip");localStorage.setItem("tcj-nave",JSON.stringify({equip:eq?eq.value:"",disp:rd?rd.value:"0",resEquip:re?re.value:"0"}));}catch(e){}}
+    function nvLoad(){try{var s=localStorage.getItem("tcj-nave");if(!s)return;var d=JSON.parse(s);var eq=document.getElementById("nv-equip-grande"),rd=document.getElementById("nv-res-disp"),re=document.getElementById("nv-res-equip");if(eq&&d.equip!==undefined)eq.value=d.equip;if(rd&&d.disp!==undefined)rd.value=d.disp;if(re&&d.resEquip!==undefined)re.value=d.resEquip;}catch(e){}}
+    nvLoad();
+    </script>
   </div>
 </section>
 
@@ -1628,6 +1675,12 @@ l50 -64 0 -151 c0 -158 -11 -207 -54 -237 -25 -18 -53 -75 -49 -103 2 -14 -6
 .sc-save{font-family:"Cinzel",serif;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;padding:.42rem 1.4rem;background:transparent;border:1px solid var(--gold3);color:var(--gold3);cursor:pointer;transition:all .2s;grid-column:1/-1;display:block;margin:0 auto}
 .sc-save:hover{background:rgba(200,168,75,.1)}
 .sc-save.ok{border-color:var(--ice);color:var(--ice)}
+.sc-coin-sub{font-family:"Cinzel",serif;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);display:block;margin-bottom:.32rem}
+.sc-coin-row{display:flex;align-items:center;gap:.4rem}
+.sc-coin-add{font-family:"Cinzel",serif;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:.34rem .8rem;background:var(--bg);border:1px dashed var(--gold3);color:var(--gold3);cursor:pointer;transition:all .2s;margin-top:.55rem}
+.sc-coin-add:hover{background:rgba(200,168,75,.1);border-style:solid}
+.sc-coin-del{width:30px;height:30px;flex-shrink:0;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:1rem;cursor:pointer;transition:all .2s;border-radius:2px}
+.sc-coin-del:hover{color:var(--master2);border-color:rgba(200,56,56,.45)}
 </style>
 <div class="sc-wrap">
   <div class="sc-card sc-full"><div style="display:grid;grid-template-columns:1fr 2fr 1fr 1fr;gap:.85rem;align-items:end"><div><span class="sc-lbl">Livello</span><input class="sc-in" id="sc-lvl" type="number" placeholder="1" style="text-align:center;font-size:1.1rem"></div><div><span class="sc-lbl">Rango Slayer</span><select class="sc-in" id="sc-rango" style="font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:.06em;cursor:pointer;padding:.32rem .5rem"><option value="">— seleziona rango —</option><option value="novizio">⚪ Novizio (Lv. 1–5)</option><option value="cacciatore">🟤 Cacciatore (Lv. 6–10)</option><option value="discepolo">🔵 Discepolo (Lv. 11–15)</option><option value="maestro">🟡 Maestro (Lv. 16–20)</option><option value="fenice">🔴 Fenice (Lv. 21–30)</option></select></div><div><span class="sc-lbl">Benny</span><div class="sc-counter" style="margin-top:.45rem"><button class="sc-cnt-btn" onclick="scBennyCnt(-1)">−</button><input class="sc-cnt-val" id="sc-benny" type="number" value="0" min="0"><button class="sc-cnt-btn" onclick="scBennyCnt(1)">+</button></div></div><div><span class="sc-lbl">Ispirazioni</span><div class="sc-counter" style="margin-top:.45rem"><button class="sc-cnt-btn" onclick="scInspCnt(-1)">−</button><input class="sc-cnt-val" id="sc-ispirazione" type="number" value="0" min="0"><button class="sc-cnt-btn" onclick="scInspCnt(1)">+</button></div></div></div></div>
@@ -1649,6 +1702,23 @@ l50 -64 0 -151 c0 -158 -11 -207 -54 -237 -25 -18 -53 -75 -49 -103 2 -14 -6
     <div style="display:flex;align-items:center;gap:.4rem"><button class="sc-cnt-btn" onclick="scEqCnt(3,-1)">−</button><input class="sc-cnt-val" id="sc-eq-cnt-3" type="number" value="0" min="0" style="width:44px"><button class="sc-cnt-btn" onclick="scEqCnt(3,1)">+</button><input class="sc-in" id="sc-eq-txt-3" placeholder="Tonico / Pilone..." style="flex:1;font-size:.85rem"></div>
   </div></div>
   <div class="sc-card sc-full"><span class="sc-lbl">Inventario</span><textarea class="sc-in" id="sc-equip" rows="3" style="resize:vertical;font-size:.88rem" placeholder="Oggetti, pozioni, strumenti..."></textarea></div>
+  <div class="sc-card sc-full"><span class="sc-lbl">💰 Monete</span>
+    <div style="display:flex;flex-direction:column;gap:1rem;margin-top:.2rem">
+      <div>
+        <span class="sc-coin-sub">Monete di Squadra · Totale</span>
+        <input class="sc-in" id="sc-coin-team" type="text" inputmode="numeric" placeholder="0" style="text-align:center;font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--gold2)">
+      </div>
+      <div>
+        <span class="sc-coin-sub">Valute</span>
+        <div id="sc-coin-rows" style="display:flex;flex-direction:column;gap:.4rem"></div>
+        <button class="sc-coin-add" type="button" onclick="scCoinAdd()">+ Aggiungi valuta</button>
+      </div>
+      <div>
+        <span class="sc-coin-sub">Quota Personale del Personaggio</span>
+        <input class="sc-in" id="sc-coin-personal" type="text" inputmode="numeric" placeholder="0" style="text-align:center;font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--gold2)">
+      </div>
+    </div>
+  </div>
   <div class="sc-card sc-full"><span class="sc-lbl">Celle Equipaggiate</span><div class="sc-celle-grid" id="sc-celle"></div></div>
   <button class="sc-save" id="sc-savebtn" onclick="scSave()">Salva Scheda</button>
 </div>
@@ -1663,14 +1733,17 @@ function scBennyCnt(d){const e=document.getElementById("sc-benny");e.value=Math.
 function scInspCnt(d){const e=document.getElementById("sc-ispirazione");e.value=Math.max(0,(parseInt(e.value)||0)+d);}
 function scTogDot(id){const el=document.getElementById("scd-"+id);const on=el.classList.contains("on");el.classList.toggle("on",!on);el.classList.toggle("off",on);el.textContent=on?"○":"●";}
 function scEqCnt(i,delta){const el=document.getElementById("sc-eq-cnt-"+i);el.value=Math.max(0,(parseInt(el.value)||0)+delta);}
+function scCoinRow(amount,currency){const div=document.createElement("div");div.className="sc-coin-row";div.innerHTML='<input class="sc-in sc-coin-amt" type="text" inputmode="numeric" placeholder="Somma..." style="flex:1"><input class="sc-in sc-coin-cur" type="text" placeholder="Valuta" style="width:96px"><button class="sc-coin-del" type="button" title="Rimuovi valuta" onclick="scCoinDel(this)">×</button>';div.querySelector(".sc-coin-amt").value=amount||"";div.querySelector(".sc-coin-cur").value=currency||"";return div;}
+function scCoinAdd(amount,currency){const c=document.getElementById("sc-coin-rows");if(c)c.appendChild(scCoinRow(amount,currency));}
+function scCoinDel(btn){const r=btn.closest(".sc-coin-row");if(r)r.remove();}
 function scBuildComps(saved,mods){const grid=document.getElementById("sc-comps-grid");if(!grid)return;grid.innerHTML=SC_COMPS.map(cp=>{const on=saved&&saved[cp.id];const mv=mods&&mods[cp.id]!==undefined?mods[cp.id]:"";return`<div class="sc-comp-row"><span class="sc-dot ${on?"on":"off"}" id="scd-${cp.id}" onclick="scTogDot('${cp.id}')" style="cursor:pointer">${on?"●":"○"}</span><span style="font-size:.82rem;color:var(--text);flex:1;cursor:pointer" onclick="scTogDot('${cp.id}')">${cp.nm}</span><span style="font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.06em;color:var(--text2);border:1px solid var(--border);padding:.04rem .22rem;margin-right:.3rem">${cp.st}</span><input type="text" id="scmod-${cp.id}" value="${mv}" placeholder="+0" style="width:38px;background:var(--bg);border:1px solid var(--border);color:var(--gold2);font-family:'Cinzel',serif;font-size:.68rem;text-align:center;padding:.1rem;outline:none"></div>`;}).join("");}
 function scLD(){try{const s=localStorage.getItem("tcj-sc4");return s?JSON.parse(s):{}}catch(e){return{}}}
 function scGv(id){const e=document.getElementById(id);return e?e.value:""}
 function scNucleo(w){const v=document.getElementById("sc-n"+w+"-s").value;const d=document.getElementById("sc-n"+w+"-d");if(!v){d.textContent="";d.style.cssText="padding:.3rem .55rem;border:1px solid var(--border);font-family:'Cinzel',serif;font-size:.7rem;margin-bottom:.3rem;min-height:28px";return;}const n=SC_NC[v];d.textContent=n.tx;d.style.cssText=`padding:.3rem .55rem;border:1px solid ${n.br};background:${n.bg};font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.08em;margin-bottom:.3rem;min-height:28px;color:var(--text)`;}
 function scCnt(delta){const el=document.getElementById("sc-proiettili");el.value=Math.max(0,(parseInt(el.value)||0)+delta);}
 function scTogCh(i){document.getElementById("sc-chb-"+i).classList.toggle("on");}
-function scBuild(){const d=scLD();scBuildComps(d.comps||{},d.comp_mods||{});const left=SC_STATS.slice(0,3),right=SC_STATS.slice(3);["left","right"].forEach((side,si)=>{const stats=si===0?left:right;document.getElementById("sc-stats-"+side).innerHTML=stats.map(s=>`<div class="sc-stat-item"><span class="sc-stat-name">${s.nm}</span><input class="sc-stat-val" type="number" id="scv-${s.id}" value="${d.stats&&d.stats[s.id]?d.stats[s.id].v:""}" placeholder="10"><input class="sc-stat-mod" type="text" id="scm-${s.id}" value="${d.stats&&d.stats[s.id]?d.stats[s.id].m:""}" placeholder="+0"></div>`).join("");});const ch=d.charges||Array(6).fill(false);["sc-ch-r1","sc-ch-r2"].forEach((rid,ri)=>{document.getElementById(rid).innerHTML=[0,1,2].map(ci=>{const i=ri*3+ci;return`<button class="sc-chbtn${ch[i]?" on":""}" id="sc-chb-${i}" onclick="scTogCh(${i})"></button>`;}).join("");});const celle=d.celle||Array(6).fill("");document.getElementById("sc-celle").innerHTML=Array(6).fill(0).map((_,i)=>`<input class="sc-cella" id="sc-cella-${i}" value="${celle[i]||""}" placeholder="Cella ${i+1}">`).join("");[["lvl","sc-lvl"],["rango","sc-rango"],["pv","sc-pv"],["arma","sc-arma"],["abil","sc-abil"],["arma2","sc-arma2"],["proiettili","sc-proiettili"],["equip","sc-equip"]].forEach(([k,id])=>{const el=document.getElementById(id);if(el&&d[k]!==undefined)el.value=d[k];});if(d.natt){document.getElementById("sc-natt-s").value=d.natt;scNucleo("att");}if(d.ndef){document.getElementById("sc-ndef-s").value=d.ndef;scNucleo("def");}if(d.benny!==undefined){document.getElementById("sc-benny").value=d.benny;}if(d.ispirazione!==undefined){document.getElementById("sc-ispirazione").value=d.ispirazione;}}
-function scSave(){const d={};["lvl|sc-lvl","rango|sc-rango","pv|sc-pv","arma|sc-arma","abil|sc-abil","arma2|sc-arma2","proiettili|sc-proiettili","equip|sc-equip"].forEach(f=>{const[k,id]=f.split("|");d[k]=scGv(id);});d.stats={};SC_STATS.forEach(s=>{d.stats[s.id]={v:scGv("scv-"+s.id),m:scGv("scm-"+s.id)};});d.charges=[0,1,2,3,4,5].map(i=>document.getElementById("sc-chb-"+i).classList.contains("on"));d.celle=Array(6).fill(0).map((_,i)=>scGv("sc-cella-"+i));d.malus=scGv("sc-malus");d.comps={};d.comp_mods={};SC_COMPS.forEach(cp=>{const el=document.getElementById("scd-"+cp.id);if(el)d.comps[cp.id]=el.classList.contains("on");const mel=document.getElementById("scmod-"+cp.id);if(mel)d.comp_mods[cp.id]=mel.value;});d.eq_cnt=[0,1,2,3].map(i=>scGv("sc-eq-cnt-"+i));d.eq_txt=[0,1,2,3].map(i=>scGv("sc-eq-txt-"+i));d.natt=scGv("sc-natt-s");d.ndef=scGv("sc-ndef-s");d.benny=scGv("sc-benny");d.ispirazione=scGv("sc-ispirazione");try{localStorage.setItem("tcj-sc4",JSON.stringify(d));}catch(e){}const b=document.getElementById("sc-savebtn");b.textContent="✓ Salvato";b.classList.add("ok");setTimeout(()=>{b.textContent="Salva Scheda";b.classList.remove("ok");},2000);}
+function scBuild(){const d=scLD();scBuildComps(d.comps||{},d.comp_mods||{});const left=SC_STATS.slice(0,3),right=SC_STATS.slice(3);["left","right"].forEach((side,si)=>{const stats=si===0?left:right;document.getElementById("sc-stats-"+side).innerHTML=stats.map(s=>`<div class="sc-stat-item"><span class="sc-stat-name">${s.nm}</span><input class="sc-stat-val" type="number" id="scv-${s.id}" value="${d.stats&&d.stats[s.id]?d.stats[s.id].v:""}" placeholder="10"><input class="sc-stat-mod" type="text" id="scm-${s.id}" value="${d.stats&&d.stats[s.id]?d.stats[s.id].m:""}" placeholder="+0"></div>`).join("");});const ch=d.charges||Array(6).fill(false);["sc-ch-r1","sc-ch-r2"].forEach((rid,ri)=>{document.getElementById(rid).innerHTML=[0,1,2].map(ci=>{const i=ri*3+ci;return`<button class="sc-chbtn${ch[i]?" on":""}" id="sc-chb-${i}" onclick="scTogCh(${i})"></button>`;}).join("");});const celle=d.celle||Array(6).fill("");document.getElementById("sc-celle").innerHTML=Array(6).fill(0).map((_,i)=>`<input class="sc-cella" id="sc-cella-${i}" value="${celle[i]||""}" placeholder="Cella ${i+1}">`).join("");[["lvl","sc-lvl"],["rango","sc-rango"],["pv","sc-pv"],["arma","sc-arma"],["abil","sc-abil"],["arma2","sc-arma2"],["proiettili","sc-proiettili"],["equip","sc-equip"]].forEach(([k,id])=>{const el=document.getElementById(id);if(el&&d[k]!==undefined)el.value=d[k];});if(d.natt){document.getElementById("sc-natt-s").value=d.natt;scNucleo("att");}if(d.ndef){document.getElementById("sc-ndef-s").value=d.ndef;scNucleo("def");}if(d.benny!==undefined){document.getElementById("sc-benny").value=d.benny;}if(d.ispirazione!==undefined){document.getElementById("sc-ispirazione").value=d.ispirazione;}var _cr=document.getElementById("sc-coin-rows");if(_cr){_cr.innerHTML="";if(d.coins){d.coins.forEach(c=>scCoinAdd(c.a,c.c));}else{scCoinAdd();}}if(d.coin_team!==undefined){const _ct=document.getElementById("sc-coin-team");if(_ct)_ct.value=d.coin_team;}if(d.coin_personal!==undefined){const _cp=document.getElementById("sc-coin-personal");if(_cp)_cp.value=d.coin_personal;}}
+function scSave(){const d={};["lvl|sc-lvl","rango|sc-rango","pv|sc-pv","arma|sc-arma","abil|sc-abil","arma2|sc-arma2","proiettili|sc-proiettili","equip|sc-equip"].forEach(f=>{const[k,id]=f.split("|");d[k]=scGv(id);});d.stats={};SC_STATS.forEach(s=>{d.stats[s.id]={v:scGv("scv-"+s.id),m:scGv("scm-"+s.id)};});d.charges=[0,1,2,3,4,5].map(i=>document.getElementById("sc-chb-"+i).classList.contains("on"));d.celle=Array(6).fill(0).map((_,i)=>scGv("sc-cella-"+i));d.malus=scGv("sc-malus");d.comps={};d.comp_mods={};SC_COMPS.forEach(cp=>{const el=document.getElementById("scd-"+cp.id);if(el)d.comps[cp.id]=el.classList.contains("on");const mel=document.getElementById("scmod-"+cp.id);if(mel)d.comp_mods[cp.id]=mel.value;});d.eq_cnt=[0,1,2,3].map(i=>scGv("sc-eq-cnt-"+i));d.eq_txt=[0,1,2,3].map(i=>scGv("sc-eq-txt-"+i));d.natt=scGv("sc-natt-s");d.ndef=scGv("sc-ndef-s");d.benny=scGv("sc-benny");d.ispirazione=scGv("sc-ispirazione");d.coin_team=scGv("sc-coin-team");d.coin_personal=scGv("sc-coin-personal");d.coins=[].slice.call(document.querySelectorAll("#sc-coin-rows .sc-coin-row")).map(function(r){return{a:r.querySelector(".sc-coin-amt").value,c:r.querySelector(".sc-coin-cur").value};});try{localStorage.setItem("tcj-sc4",JSON.stringify(d));}catch(e){}const b=document.getElementById("sc-savebtn");b.textContent="✓ Salvato";b.classList.add("ok");setTimeout(()=>{b.textContent="Salva Scheda";b.classList.remove("ok");},2000);}
 </script>
 
 <section id="note">
