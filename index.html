@@ -31,8 +31,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(8,10,15,.94
 .hero-sub{font-style:italic;font-size:1.3rem;color:var(--text2);margin-bottom:2.5rem;opacity:0;animation:fadeUp 1s .7s forwards}
 .hero-div{width:120px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 2.5rem;opacity:0;animation:fadeUp 1s .9s forwards}
 .hero-tag{font-size:1.05rem;color:var(--text2);max-width:500px;margin:0 auto;opacity:0;animation:fadeUp 1s 1.1s forwards}
-.hero-cta{display:inline-block;margin-top:2.2rem;font-family:"Cinzel",serif;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);text-decoration:none;border:1px solid rgba(200,168,75,.5);padding:.78rem 1.7rem;border-radius:2px;transition:background .3s,color .3s,border-color .3s,box-shadow .3s;opacity:0;animation:fadeUp 1s 1.3s forwards}
-.hero-cta:hover{background:var(--gold);color:var(--bg);border-color:var(--gold);box-shadow:0 0 30px rgba(200,168,75,.35)}
+.hero-cta{display:inline-block;margin-top:2.2rem;font-family:"Cinzel",serif;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--radiant);text-decoration:none;border:1px solid rgba(136,96,208,.5);padding:.78rem 1.7rem;border-radius:2px;transition:background .3s,color .3s,border-color .3s,box-shadow .3s;opacity:0;animation:fadeUp 1s 1.3s forwards}
+.hero-cta:hover{background:var(--dark);color:#fff;border-color:var(--dark);box-shadow:0 0 30px rgba(136,96,208,.4)}
+.hero-cta-row{display:flex;flex-direction:column;align-items:center;gap:.9rem;margin-top:2.2rem}
+.hero-cta-row .hero-cta{margin-top:0}
+.hero-cta-gold{color:var(--gold);border-color:rgba(200,168,75,.5)}
+.hero-cta-gold:hover{background:var(--gold);color:var(--bg);border-color:var(--gold);box-shadow:0 0 30px rgba(200,168,75,.35)}
+.cta-row{display:flex;flex-direction:column;align-items:flex-start;gap:.8rem;margin:1.4rem 0 .3rem}
+.tcj-cta{display:inline-flex;align-items:center;gap:.5rem;font-family:"Cinzel",serif;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;padding:.8rem 1.6rem;border-radius:2px;border:1px solid;transition:background .3s,color .3s,border-color .3s,box-shadow .3s;cursor:pointer}
+.tcj-cta-gold{color:var(--gold);border-color:rgba(200,168,75,.55)}
+.tcj-cta-gold:hover{background:var(--gold);color:var(--bg);border-color:var(--gold);box-shadow:0 0 28px rgba(200,168,75,.4)}
+.tcj-cta-purple{color:var(--radiant);border-color:rgba(136,96,208,.55)}
+.tcj-cta-purple:hover{background:var(--dark);color:#fff;border-color:var(--dark);box-shadow:0 0 28px rgba(136,96,208,.45)}
 .hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);font-family:"Cinzel",serif;font-size:.6rem;letter-spacing:.3em;color:var(--gold3);text-transform:uppercase;opacity:0;animation:fadeUp 1s 1.5s forwards;display:flex;flex-direction:column;align-items:center;gap:.5rem}
 .hero-scroll::after{content:"";width:1px;height:40px;background:linear-gradient(to bottom,var(--gold3),transparent);animation:pulse 2s infinite}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
@@ -893,7 +903,7 @@ l50 -64 0 -151 c0 -158 -11 -207 -54 -237 -25 -18 -53 -75 -49 -103 2 -14 -6
     <div class="hero-sub">Un gioco di ruolo cooperativo</div>
     <div class="hero-div"></div>
     <p class="hero-tag">Isole Frantumate. Behemoth senza fine. Slayer che scelgono di affrontare l'ignoto — non per gloria, ma perché non esiste un'altra strada.</p>
-    <a href="https://zzago-dm.github.io/Manuale-Cacciatore/Manuale_dello_Slayer.pdf" target="_blank" rel="noopener" class="hero-cta">📖 Apri il Manuale completo</a>
+    <div class="hero-cta-row"><a href="https://zzago-dm.github.io/Manuale-Cacciatore/Manuale_dello_Slayer.pdf" target="_blank" rel="noopener" class="hero-cta">📖 Apri il Manuale completo</a><a href="https://www.owlbear.rodeo/room/jrCXLMk2u9Yz/The%20Faint%20Maker" target="_blank" rel="noopener noreferrer" class="hero-cta hero-cta-gold">⚔ Entra al tavolo · Owlbear Rodeo</a></div>
   </div>
   <div class="hero-scroll">Scorri</div>
 </section>
@@ -1368,6 +1378,7 @@ l50 -64 0 -151 c0 -158 -11 -207 -54 -237 -25 -18 -53 -75 -49 -103 2 -14 -6
 <section id="manuale">
   <div class="si">
     <div class="sh"><div class="sl">Regole</div><h2 class="st">Manuale dello Slayer</h2><div class="sline"></div><p class="sdesc">Tutto ciò che serve per giocare: armi, celle, combattimento, nuclei elementali e progressione.</p></div>
+    <div class="cta-row"><a href="https://zzago-dm.github.io/Manuale-Cacciatore/Manuale_dello_Slayer.pdf" target="_blank" rel="noopener noreferrer" class="tcj-cta tcj-cta-purple">📖 Apri il Manuale completo</a><a href="https://www.owlbear.rodeo/room/jrCXLMk2u9Yz/The%20Faint%20Maker" target="_blank" rel="noopener noreferrer" class="tcj-cta tcj-cta-gold">⚔ Entra al tavolo · Owlbear Rodeo</a></div>
     <div class="mtabs">
       <button class="mtab active" onclick="swTab('armi',this)">Armi</button>
       <button class="mtab" onclick="swTab('tipologie',this)">Tipologie Attacco</button>
