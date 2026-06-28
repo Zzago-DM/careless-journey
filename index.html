@@ -285,23 +285,8 @@ strong{color:var(--gold2)}
 @media(prefers-reduced-motion:reduce){.cj-overlay *{animation:none!important}}
 .cj-overlay .hit{fill:transparent;pointer-events:all;cursor:pointer}
 .cj-overlay .pin{pointer-events:none}
-.cj-overlay .marker .tip{display:none}            /* sorgente testo: nascosto, sostituito da tooltip HTML adattivo */
-.cj-htip{position:absolute;left:0;top:0;z-index:6;max-width:min(272px,84vw);
-    padding:11px 15px 12px;border-radius:11px;
-    background:rgba(11,7,6,.97);border:1px solid var(--cj-accent,#cba85a);
-    box-shadow:0 14px 34px -8px rgba(0,0,0,.72);
-    font-family:'EB Garamond',Georgia,serif;
-    opacity:0;visibility:hidden;transform:translateY(5px);
-    transition:opacity .17s ease,transform .17s ease;pointer-events:none}
-.cj-htip.show{opacity:1;visibility:visible;transform:translateY(0)}
-.cj-htip .ht{font-family:'Cinzel',serif;font-weight:600;font-size:.97rem;
-    line-height:1.18;letter-spacing:.01em;color:var(--cj-title,#eccd84)}
-.cj-htip .hs{font-size:.86rem;line-height:1.34;color:#cbb99c;margin-top:3px}
-.cj-htip .hs:empty{display:none;margin-top:0}
-.cj-htip .car{position:absolute;width:11px;height:11px;margin-left:-5.5px;
-    background:rgba(11,7,6,.97);border:0 solid var(--cj-accent,#cba85a);transform:rotate(45deg)}
-.cj-htip:not(.below) .car{bottom:-6px;border-right-width:1px;border-bottom-width:1px}
-.cj-htip.below .car{top:-6px;border-left-width:1px;border-top-width:1px}
+.cj-overlay .marker .tip{opacity:0;pointer-events:none;transition:opacity .18s ease}
+.cj-overlay .marker.open .tip{opacity:1}
 .cj-overlay .ember{animation:cj-em 7s linear infinite}
 @keyframes cj-em{0%{transform:translateY(0);opacity:0}12%{opacity:.8}90%{opacity:.4}100%{transform:translateY(-46px);opacity:0}}
 /* mappa: affordance di click */
@@ -352,7 +337,7 @@ strong{color:var(--gold2)}
   function hsl2rgb(h,s,l){var c=(1-Math.abs(2*l-1))*s,x=c*(1-Math.abs((h/60)%2-1)),m=l-c/2,r=0,g=0,b=0;if(h<60){r=c;g=x;}else if(h<120){r=x;g=c;}else if(h<180){g=c;b=x;}else if(h<240){g=x;b=c;}else if(h<300){r=x;b=c;}else{r=c;b=x;}return [Math.round((r+m)*255),Math.round((g+m)*255),Math.round((b+m)*255)];}
   function angDist(la1,lo1,la2,lo2){return Math.acos(Math.max(-1,Math.min(1,Math.sin(la1)*Math.sin(la2)+Math.cos(la1)*Math.cos(la2)*Math.cos(lo1-lo2))));}
   var CONT=reduce?0:6;
-  var N=reduce?0:240,F=[];
+  var N=reduce?0:480,F=[];
   for(var i=0;i<N;i++){
     var cont=i<CONT;
     var x0,y0,z0,lat,lon;
@@ -382,21 +367,6 @@ strong{color:var(--gold2)}
     F.push({x0:x0,y0:y0,z0:z0,cont:cont,ec:ec,tc:tc,er:er,br:br,a0:a0,spd:spd,sz:sz,shape:shape,vy:(Math.random()*2-1)*18,
       u0x:ux,u0y:uy,u0z:uz,v0x:vx,v0y:vy,v0z:vz,tby:(Math.random()*2-1)*0.4,tbx:(Math.random()*2-1)*0.3});
   }
-  // === Le tue isole orbitano il Maelstrom: carico le sagome reali dalla mappa ===
-  var ISL_KEYS=['glaciale','ardente','folgorante','terrestre','radiante','oscuro'];
-  var ISL_COL=[[126,200,227],[224,90,32],[240,208,32],[74,152,66],[212,168,255],[136,96,208]];
-  for(var ci=0;ci<CONT;ci++){
-    var key=ISL_KEYS[ci],host=document.getElementById('isl-'+key),pe=host&&host.querySelector('path');
-    if(pe){try{
-      var bb=pe.getBBox();
-      F[ci].island={p:new Path2D(pe.getAttribute('d')),ix:bb.x+bb.width/2,iy:bb.y+bb.height/2,norm:1/Math.max(bb.width,bb.height)};
-      F[ci].icol=ISL_COL[ci];
-    }catch(e){}}
-    // disco coerente: stesso ritmo angolare, anello unico con lieve variazione di profondità
-    F[ci].br=Math.min(W,H)*0.44*(0.92+0.16*(ci/CONT));
-    F[ci].spd=0.2;
-    F[ci].a0=ci/CONT*Math.PI*2;
-  }
   var order=[];
   function clamp01(t){return t<0?0:t>1?1:t;}
   function ease(t){t=clamp01(t);return t*t*(3-2*t);}
@@ -421,13 +391,13 @@ strong{color:var(--gold2)}
     var a=bhAlpha(te);if(a<=0){return;}
     var S=GLOBE/120,pulse=0.55+0.45*Math.pow(0.5+0.5*Math.sin(te*4.2),3),spin=te*1.9;
     ctx.globalCompositeOperation='lighter';
-    var jet=(54+22*pulse)*a*S,nS=5,steps=22;
+    var jet=(82+30*pulse)*a*S,nS=5,steps=22;
     for(var d=0;d<2;d++){
       var dir=d===0?-1:1;
       for(var k=0;k<nS;k++){
         for(var st=1;st<=steps;st++){
           var s=st/steps;
-          var phi=k*(6.2832/nS)+s*9.2+spin*dir;
+          var phi=k*(6.2832/nS)+s*7.6+spin*dir;
           var fw=(1.1+s*12)*S;
           var px=cx+Math.cos(phi)*fw;
           var py=cy+dir*s*jet-dir*Math.sin(s*Math.PI)*3*S;
@@ -465,30 +435,6 @@ strong{color:var(--gold2)}
     ctx.fillStyle=ag;ctx.beginPath();ctx.arc(cx,cy,GLOBE*1.2,0,6.2832);ctx.fill();
     ctx.globalCompositeOperation='source-over';
   }
-  function drawIsland(ff,te,dep){
-    var isl=ff.island;
-    var rev=0.45+0.55*ease(clamp01((te-tExpEnd)/(T.settle*0.8))); // i frammenti si "aprono" nelle isole
-    var pp=0.62+0.5*dep;                       // prospettiva: davanti più grandi, dietro più piccole
-    var base=Math.min(W,H)*0.26;               // dimensione isola
-    var sc=isl.norm*base*pp*rev;
-    var al=0.5+0.5*dep, rot=(ff._ang||0)+Math.PI/2;
-    // bagliore aetherico dietro l'isola
-    ctx.globalCompositeOperation='lighter';
-    var gr=base*pp*0.55*rev,c=ff.icol;
-    var rg=ctx.createRadialGradient(ff._X,ff._Y,0,ff._X,ff._Y,gr*1.8);
-    rg.addColorStop(0,'rgba('+c[0]+','+c[1]+','+c[2]+','+(0.22*al*rev)+')');
-    rg.addColorStop(1,'rgba('+c[0]+','+c[1]+','+c[2]+',0)');
-    ctx.fillStyle=rg;ctx.beginPath();ctx.arc(ff._X,ff._Y,gr*1.8,0,6.2832);ctx.fill();
-    ctx.globalCompositeOperation='source-over';
-    // sagoma dell'isola (ruota col disco attorno al Maelstrom)
-    ctx.save();
-    ctx.translate(ff._X,ff._Y);ctx.rotate(rot);ctx.scale(sc,sc);ctx.translate(-isl.ix,-isl.iy);
-    var dim=0.46+0.54*dep;
-    ctx.fillStyle='rgba('+((c[0]*dim)|0)+','+((c[1]*dim)|0)+','+((c[2]*dim)|0)+','+al+')';
-    ctx.fill(isl.p);
-    ctx.lineWidth=1.5/sc;ctx.strokeStyle='rgba(255,248,235,'+(0.18*al)+')';ctx.stroke(isl.p);
-    ctx.restore();
-  }
   function frame(ts){
     if(start===null){start=ts;}
     var t=(ts-start)/1000;
@@ -516,7 +462,7 @@ strong{color:var(--gold2)}
       else{
         var to=te-tExpEnd;
         var rr=f.br;
-        var ang2=f.a0+f.spd*to;f._ang=ang2;
+        var ang2=f.a0+f.spd*to;
         var ox=cx+Math.cos(ang2)*rr,oy=cy+Math.sin(ang2)*rr*VFLAT+f.vy*0.3,od=(Math.sin(ang2)+1)/2;
         if(te<tSetEnd){var q=ease((te-tExpEnd)/T.settle);var ex2=cx+rx*f.er,ey2=cy+ry*f.er*0.7;X=lerp(ex2,ox,q);Y=lerp(ey2,oy,q);depth=od;al=0.9;scale=0.7+0.5*od;}
         else{X=ox;Y=oy;depth=od;al=0.6+0.4*od;scale=0.55+0.6*od;}
@@ -535,7 +481,6 @@ strong{color:var(--gold2)}
     order.sort(function(a,b){return F[a]._d-F[b]._d;});
     for(var oi=0;oi<on;oi++){
       var ff=F[order[oi]],dep=ff._d;
-      if(ff.cont&&ff.island&&triggered&&te>=tExpEnd){drawIsland(ff,te,dep);continue;}
       var dsh=(ff.cont?(0.66+0.34*dep):(0.45+0.55*dep))*(0.74+0.26*ff._f);
       ctx.fillStyle='rgba('+((ff._r*dsh)|0)+','+((ff._g*dsh)|0)+','+((ff._b*dsh)|0)+','+ff._a+')';
       var ssz=ff.sz*ff._s*1.7;
@@ -1407,10 +1352,6 @@ l50 -64 0 -151 c0 -158 -11 -207 -54 -237 -25 -18 -53 -75 -49 -103 2 -14 -6
       <div class="tle"><div class="tlet">🏰 Ricostruzione (1805–1820)</div>
         <div class="tlev"><div class="tld">Anno 1805 — Triade Alborea</div><div class="tlt">Ricostruzione di Ramsgate sopra le rovine della città antica. Estarossa governa la città e la Gilda degli Slayer. Avvio delle ricerche sull'Aether: nasce la via dei MechaSlayer.</div></div>
         <div class="tlev"><div class="tld">Anno 1810 — Triade Sporizzata</div><div class="tlt">Morte di Gregor E. Tasher. Il figlio <strong>Godrik E. Tasher</strong> porta i TecnoSlayer alla produzione di massa, avviando l'era industriale di Ostia.</div></div>
-      </div>
-      <div class="tle"><div class="tlet">🎭 Età Presente (1825–1855)</div>
-        <div class="tlev"><div class="tld">Anno 1825–1827</div><div class="tlt">Nascono i tre Slayer protagonisti: <strong>Athena de la Roche</strong> (1825), <strong>Pan Lan Batuk</strong> (1826), <strong>Asonnes Eninbaal</strong> (1827).</div></div>
-        <div class="tlev"><div class="tld">Anno 1855 — Triade Congelante</div><div class="tlt">Gli Ostinguard occupano Greenshard. Scoperta della Foresta del Silenzio nelle isole terrestri. I tre Slayer si incontrano a Ramsgate e intraprendono la loro prima missione congiunta.</div></div>
       </div>
     </div>
   </div>
@@ -5145,7 +5086,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closepw();});
 </g>
 <text x="312" y="74" text-anchor="middle" fill="#cbabf2" font-family="Cinzel,serif" font-size="13" font-weight="600" opacity="0.82" letter-spacing="1.5">Terre del Nord</text>
 <text x="312" y="91" text-anchor="middle" fill="#b3a0d4" font-family="Georgia,serif" font-size="10.5" font-style="italic" opacity="0.72">qui si cela il portale del Thrax</text>
-<text x="227" y="125" text-anchor="middle" fill="#a99cc4" font-family="Cinzel,serif" font-size="11" opacity="0.6" letter-spacing="1.2">Zeraora</text><text x="395" y="135" text-anchor="middle" fill="#a99cc4" font-family="Cinzel,serif" font-size="11" opacity="0.6" letter-spacing="1.2">Grimstone</text><text x="308" y="183" text-anchor="middle" fill="#a99cc4" font-family="Cinzel,serif" font-size="11" opacity="0.6" letter-spacing="1.2">Monkuiced</text>
+<text x="325" y="97" text-anchor="middle" fill="#a99cc4" font-family="Cinzel,serif" font-size="11" opacity="0.6" letter-spacing="1.2">Batuk</text><text x="227" y="125" text-anchor="middle" fill="#a99cc4" font-family="Cinzel,serif" font-size="11" opacity="0.6" letter-spacing="1.2">Zeraora</text><text x="395" y="135" text-anchor="middle" fill="#a99cc4" font-family="Cinzel,serif" font-size="11" opacity="0.6" letter-spacing="1.2">Grimstone</text><text x="308" y="183" text-anchor="middle" fill="#a99cc4" font-family="Cinzel,serif" font-size="11" opacity="0.6" letter-spacing="1.2">Monkuiced</text>
 <g transform="translate(626,40)" opacity="0.5">
   <circle r="16" fill="none" stroke="#9a7ad0" stroke-width="1"/>
   <text x="0" y="-7" text-anchor="middle" fill="#c4a8f0" font-family="Cinzel,serif" font-size="10" font-weight="700">N</text>
@@ -5591,66 +5532,11 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closepw();});
 <script>
 (function(){
   var KEYS=['ardente','terrestre','radiante','folgorante','glaciale','oscuro','ramsgate'];
-
   function openOv(k){var ov=document.getElementById('cj-'+k);if(!ov)return;
     ov.classList.add('open');ov.setAttribute('aria-hidden','false');ov.scrollTop=0;document.body.style.overflow='hidden';}
-
-  // crea (una sola volta) il riquadro HTML del tooltip dentro lo stage
-  function ensureHtip(ov){
-    var stage=ov.querySelector('.stage');if(!stage)return null;
-    if(stage._htip)return stage._htip;
-    var el=document.createElement('div');
-    el.className='cj-htip';
-    el.innerHTML='<div class="ht"></div><div class="hs"></div><span class="car"></span>';
-    stage.appendChild(el);stage._htip=el;return el;
-  }
-  function hideHtip(ov){
-    var stage=ov.querySelector('.stage');
-    if(stage&&stage._htip)stage._htip.classList.remove('show');
-    ov._openMarker=null;
-  }
-  // mostra il tooltip per un marker, leggendo testo/colore dal vecchio tip SVG (nascosto)
-  function showHtip(ov,marker){
-    var stage=ov.querySelector('.stage');if(!stage)return;
-    var el=ensureHtip(ov);if(!el)return;
-    var hit=marker.querySelector('.hit'),tip=marker.querySelector('.tip');
-    if(!hit||!tip)return;
-    var texts=tip.getElementsByTagName('text');
-    var title=texts[0]?(texts[0].textContent||'').trim():'';
-    var sub=texts[1]?(texts[1].textContent||'').trim():'';
-    var rect=tip.getElementsByTagName('rect')[0];
-    var accent=(rect&&rect.getAttribute('stroke'))||'#cba85a';
-    var titleCol=(texts[0]&&texts[0].getAttribute('fill'))||accent;
-    el.getElementsByClassName('ht')[0].textContent=title;
-    el.getElementsByClassName('hs')[0].textContent=sub;
-    el.style.setProperty('--cj-accent',accent);
-    el.style.setProperty('--cj-title',titleCol);
-
-    el.classList.add('show'); // visibile (e misurabile)
-    var sRect=stage.getBoundingClientRect(),pRect=hit.getBoundingClientRect();
-    var cs=getComputedStyle(stage);
-    var bL=parseFloat(cs.borderLeftWidth)||0,bT=parseFloat(cs.borderTopWidth)||0;
-    var pinCx=(pRect.left+pRect.width/2)-sRect.left-bL;
-    var pinTop=pRect.top-sRect.top-bT,pinBot=pRect.bottom-sRect.top-bT;
-    var innerW=stage.clientWidth,innerH=stage.clientHeight;
-    var tw=el.offsetWidth,th=el.offsetHeight;
-    var m=8,gap=11;
-    var left=pinCx-tw/2;
-    left=Math.max(m,Math.min(left,innerW-tw-m));
-    var top=pinTop-gap-th,below=false;
-    if(top<m){top=pinBot+gap;below=true;}
-    if(below&&top+th>innerH-m)top=Math.max(m,innerH-th-m);
-    el.classList.toggle('below',below);
-    el.style.left=left+'px';el.style.top=top+'px';
-    var caretX=Math.max(13,Math.min(pinCx-left,tw-13));
-    el.getElementsByClassName('car')[0].style.left=caretX+'px';
-    ov._openMarker=marker;
-  }
-
   function closeOv(ov){ov.classList.remove('open');ov.setAttribute('aria-hidden','true');
-    hideHtip(ov);
+    ov.querySelectorAll('.marker.open').forEach(function(x){x.classList.remove('open')});
     if(!document.querySelector('.cj-overlay.open'))document.body.style.overflow='';}
-
   KEYS.forEach(function(k){
     var g=document.getElementById('isl-'+k),l=document.getElementById('lbl-'+k);
     function go(e){e.preventDefault();e.stopPropagation();openOv(k);}
@@ -5664,23 +5550,15 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closepw();});
   });
   document.addEventListener('keydown',function(e){
     if(e.key==='Escape'){var o=document.querySelector('.cj-overlay.open');if(o)closeOv(o);}});
-
-  // tap su un punto: apre/chiude il tooltip (uno solo alla volta)
+  // tap sui marker (solo dentro gli overlay)
   document.addEventListener('click',function(e){
     var hit=e.target.closest?e.target.closest('.cj-overlay .hit'):null;
-    if(hit){e.stopPropagation();
-      var marker=hit.closest('.marker'),ov=hit.closest('.cj-overlay');
-      if(ov._openMarker===marker)hideHtip(ov);else showHtip(ov,marker);
-      return;}
-    // tap altrove dentro un overlay aperto: chiude il tooltip
-    document.querySelectorAll('.cj-overlay.open').forEach(function(ov){
-      if(ov._openMarker)hideHtip(ov);});
+    if(hit){e.stopPropagation();var m=hit.closest('.marker'),ov=hit.closest('.cj-overlay');
+      var was=m.classList.contains('open');
+      ov.querySelectorAll('.marker').forEach(function(x){x.classList.remove('open')});
+      if(!was)m.classList.add('open');return;}
+    document.querySelectorAll('.cj-overlay.open .marker.open').forEach(function(x){x.classList.remove('open')});
   });
-
-  // se la finestra cambia dimensione la mappa SVG si ridimensiona: chiudo i tooltip (posizioni non più valide)
-  var rT;window.addEventListener('resize',function(){clearTimeout(rT);
-    rT=setTimeout(function(){
-      document.querySelectorAll('.cj-overlay.open').forEach(hideHtip);},120);});
 })();
 </script>
 
