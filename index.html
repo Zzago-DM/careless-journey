@@ -46,6 +46,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(8,10,15,.94
 .hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);font-family:"Cinzel",serif;font-size:.6rem;letter-spacing:.3em;color:var(--gold3);text-transform:uppercase;opacity:0;animation:fadeUp 1s 1.5s forwards;display:flex;flex-direction:column;align-items:center;gap:.5rem}
 .hero-scroll::after{content:"";width:1px;height:40px;background:linear-gradient(to bottom,var(--gold3),transparent);animation:pulse 2s infinite}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes npcStamp{0%{opacity:0;transform:scale(1.5) rotate(-6deg)}60%{opacity:1;transform:scale(.95) rotate(-6deg)}100%{opacity:1;transform:scale(1) rotate(-6deg)}}
 @keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
 section{position:relative;z-index:1;padding:5rem 2rem}
 .si{max-width:1200px;margin:0 auto}
@@ -973,7 +974,7 @@ l50 -64 0 -151 c0 -158 -11 -207 -54 -237 -25 -18 -53 -75 -49 -103 2 -14 -6
       <li><a href="#personaggi">Personaggi</a></li><li><a href="#mael">Mael</a></li>
       <li><a href="#behemoth">Behemoth</a></li><li><a href="#manuale">Manuale</a></li>
       <li><a href="#calendario">Calendario</a></li><li><a href="#corone">Corone</a></li>
-      <li><a href="#npc">NPC</a></li><li><a href="#nave">Nave</a></li><li><a href="#diario">Diario</a></li>
+      <li><a href="#npc">NPC</a></li><li><a href="#nave">Nave</a></li>
       <li><a href="#scheda">Scheda</a></li><li><a href="#note">Note</a></li>
     </ul>
     <button class="master-btn" id="mbtn" onclick="openpw()">🔒 Master</button>
@@ -1600,6 +1601,17 @@ l50 -64 0 -151 c0 -158 -11 -207 -54 -237 -25 -18 -53 -75 -49 -103 2 -14 -6
     <div style="background:rgba(200,168,75,.04);border:1px solid var(--border);padding:1.75rem;margin-bottom:2rem">
       <p>Le <strong>Corone Aetheriche</strong> garantiscono un introito passivo riscuotibile ad ogni triade a Ramsgate o in un centro affiliato alla Gilda. Il sistema si basa interamente sui <strong>D6</strong>: conta quante facce uguali si ottengono in un singolo tiro. Ogni giocatore esegue 3 tiri, con possibilità di ritirare una sola volta per tiro.</p>
     </div>
+    <div style="background:rgba(200,168,75,.04);border:1px solid var(--border);padding:1.75rem;margin-bottom:2rem">
+      <h3 style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold2);margin-bottom:.9rem">Calcolo dell'Introito</h3>
+      <p>Si tira <strong>1D20</strong>, moltiplicato per un valore che dipende dal numero di Corone possedute: il moltiplicatore parte da <strong>×2</strong> con la prima Corona, e aumenta di <strong>+2</strong> per ogni Corona aggiuntiva.</p>
+      <table class="tcj-t" style="margin-top:1rem"><thead><tr><th>Corone possedute</th><th>Moltiplicatore</th></tr></thead><tbody>
+        <tr><td>1</td><td>×2</td></tr>
+        <tr><td>2</td><td>×4</td></tr>
+        <tr><td>3</td><td>×6</td></tr>
+        <tr><td>4</td><td>×8</td></tr>
+      </tbody></table>
+      <div class="qi" style="margin-top:1rem">Esempio: con 2 Corone, un tiro di 14 rende 14 × 4 = <strong>56 monete d'oro</strong>.</div>
+    </div>
     <div class="ctb">
       <div>
         <h3 style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold2);margin-bottom:.9rem">Livelli di Successo</h3>
@@ -1720,67 +1732,6 @@ l50 -64 0 -151 c0 -158 -11 -207 -54 -237 -25 -18 -53 -75 -49 -103 2 -14 -6
   </div>
 </section>
 
-<section id="diario">
-  <div class="si">
-    <div class="sh"><div class="sl">Cronaca delle Avventure</div><h2 class="st">Diario di Campagna</h2><div class="sline"></div><p class="sdesc">La storia dei tre Slayer, giornata per giornata — così come si è svolta.</p></div>
-    <div class="dentry">
-      <div class="ddate">🗓 Anno 1855 · 20° giorno · Triade Algente — Ramsgate</div>
-      <div class="dbody">
-        <p>I tre Slayer si trovano a Ramsgate per la cerimonia di convocazione alla Gilda. <strong>Pan Lan</strong> aveva già affrontato separatamente un Nayzaga con altri due Slayer, non senza difficoltà.</p>
-        <p>Durante la cerimonia parte un allarme d'assedio in città. <strong>Athena</strong> e <strong>Asonnes</strong> — ancora estranei — affrontano uno Shrike nella piazza e lo abbattono insieme. Asonnes regala ad Athena una collana con un artiglio del Behemoth.</p>
-        <p>I due vengono convocati nelle stanze di <strong>Estarossa</strong>, che rivela le proprie origini divine, la storia dei Mael e la sorte dei loro artefatti. La missione: <em>recuperare gli artefatti perduti</em>. Prima di congedarsi, scoprono che qualcuno stava origliando — è <strong>Pan Lan</strong>, che decide di unirsi alla ricerca.</p>
-        <p>I tre visitano i rispettivi maestri d'armi. Un'esplosione in un laboratorio fa conoscere loro <strong>Arkan Drew</strong>. Nella forgia, <strong>Wils Bormen</strong> e <strong>Moyra Heigsketter</strong> realizzano armi e armature su misura. Battezzano la nave: <strong>Careless Journey</strong>.</p>
-      </div>
-    </div>
-    <div class="dentry">
-      <div class="ddate">🗓 Anno 1855 · 21° giorno · Triade Algente — Nave → Isole Terrestri</div>
-      <div class="dbody">
-        <p>Salpati verso le isole terrestri, i tre vengono attaccati nella notte da una nave Ostinguard. L'abbordaggio si trasforma in uno scontro contro due TecnoSlayer. Il pilota automatico va in avaria: la nave si schianta.</p>
-        <p>Al risveglio si trovano in un accampamento degli Slayer di Frontiera, privati delle armi. <strong>Asonnes</strong> viene tenuto separato. Il capo <strong>Revelor Baalz</strong> affida loro la missione: liberare <strong>Greenshard</strong> e salvare suo figlio.</p>
-        <p>Giunti a Greenshard, <strong>Athena</strong> e <strong>Pan Lan</strong> si travestono da guardie di Ostia. Incontrano i ribelli e <strong>Paramir</strong>. Localizzano il deposito delle armi e lo svuotano mentre distraggono il generale <strong>Cendrik Vollz</strong>.</p>
-      </div>
-    </div>
-    <div class="dentry">
-      <div class="ddate">🗓 Anno 1855 · 22° giorno · Triade Algente — Greenshard</div>
-      <div class="dbody">
-        <p>Nel cuore della notte si infiltrano nella base principale. Trovano uno Slayer ferito e un <strong>Koshai</strong> anch'esso ferito. Li curano e liberano entrambi.</p>
-        <p>Entrano nel cuore della fabbrica e affrontano un <strong>Embermane</strong> e un <strong>Charrogg</strong>. Hackerano il computer causando un sovraccarico di Aether: le guardie perdono le armi e gli Slayer di Frontiera riprendono la città.</p>
-        <p><strong>Asonnes</strong> viene finalmente accettato dalla comunità. Il gruppo trascorre una settimana di riposo. Scoprono il motivo della presenza Ostinguard: un'anomalia di aether oscuro nella zona.</p>
-      </div>
-    </div>
-    <div class="dentry">
-      <div class="ddate">🗓 Anno 1855 · 6° giorno · Triade Foscomanto — Foresta del Silenzio</div>
-      <div class="dbody">
-        <p><strong>Revelor</strong> avvisa di una forte presenza di aether oscuro nella <strong>Foresta del Silenzio</strong>. Nessuno di chi è entrato è mai uscito.</p>
-        <p>Un fuoco fatuo guida il gruppo. Le prove affrontate:</p>
-        <ul>
-          <li>Un <strong>fiume</strong> con cadaveri galleggianti — attraversato su un tronco. Asonnes lega il gruppo con una corda.</li>
-          <li>Una <strong>radura nella nebbia</strong> — il gruppo impara a fermarsi e ascoltare.</li>
-          <li>Un <strong>albero antico</strong> le cui voci promettono gloria — Asonnes suggerisce di tapparsi le orecchie.</li>
-          <li>Un <strong>lago nero</strong> con visioni del passato di ciascuno.</li>
-          <li>Un <strong>portale di ossa</strong> — Asonnes lascia il suo pupazzo.</li>
-        </ul>
-        <p>Al cuore della foresta: un palazzo in rovina. La figura guida si trasforma in un <strong>Koshai corrotto</strong> — sconfitto dopo un duro combattimento. Il gruppo trova una porta grigia con un frammento di metallo. Al ritorno: dall'esterno sono passati solo 10 minuti. Toccando il frammento, <strong>Asonnes diventa viola</strong>.</p>
-      </div>
-    </div>
-    <div class="dentry">
-      <div class="ddate">🗓 Anno 1855 · 7°–17° giorno · Triade Foscomanto — Ramsgate</div>
-      <div class="dbody">
-        <p>Rientrati a Ramsgate. Al mercato <strong>Pan Lan</strong> nota di essere seguiti — è <strong>Ozz l'Onesto</strong>, che li indirizza alla biblioteca. La <strong>Dottoressa Priyani</strong> acquista i pezzi di Behemoth per 13.000 monete.</p>
-        <p>Nell'ufficio di Estarossa scoprono che l'artefatto trovato sembra legato al passato di <strong>Asonnes</strong> e ai Solcavuoto. La prossima missione: una <em>scorta diplomatica</em>.</p>
-        <p>Athena finisce dalla <strong>Nonna Yaga</strong>, che la droga. Pan Lan e Asonnes la liberano e salvano un cagnolino: <strong>Pauly</strong>. Nel cuore della notte la nave riceve un pacco: contiene un arco aetherico, che prende <strong>Pan Lan</strong>.</p>
-      </div>
-    </div>
-    <div class="dentry">
-      <div class="ddate">🗓 Anno 1855 · 20°–22° giorno · Triade Foscomanto — Missione Diplomatica</div>
-      <div class="dbody">
-        <p>Si imbarcano con <strong>Arkan Drew</strong>. Rappresentanti diplomatici: <strong>Jsur Lume</strong> e <strong>Rebenek Wkor</strong> (ardenti), <strong>Atreo Silver</strong> (glaciali), <strong>Malevola Zeraora</strong> (oscure), <strong>Godrik Tasher</strong> (folgoranti).</p>
-        <p>Al banchetto <strong>Malevola Zeraora</strong> avvicina <strong>Pan Lan</strong>: le chiede se siano stati trovati segni dei Solcavuoto. Pan Lan nega. <strong>Minerva Silver</strong> mantiene le distanze da Athena.</p>
-        <p>Il trattato Silver è squilibrato. La seduta viene interrotta da un attacco: diversi <strong>Skraev</strong> guidati dal <strong>Kaltuga</strong> — uno Skraev antico con cicatrici attorno agli occhi. Il Kaltuga fugge. I rappresentanti decidono di riscrivere il trattato. Godrik Tasher se ne va bruscamente. Nella sua stanza, <strong>Pan Lan</strong> trova un cofanetto con lo stemma dei Batuk contenente una mano mozzata.</p>
-      </div>
-    </div>
-  </div>
-</section>
 
 <section id="scheda" style="background:var(--bg2)">
   <div class="si">
@@ -1926,9 +1877,9 @@ function scSave(){const d={};["lvl|sc-lvl","rango|sc-rango","pv|sc-pv","arma|sc-
   <div class="msnav">
     <a href="#m-trad">Il Vero Tradimento</a><a href="#m-gab">Gabrael Oggi</a>
     <a href="#m-mael-pos">Posizioni Mael</a><a href="#m-omni-unlock">Sblocco Omnicelle</a>
-    <a href="#m-seg">Segreti Personaggi</a><a href="#m-solc">I Solcavuoto</a><a href="#m-med">Il Mediatore</a>
+    <a href="#m-seg">Segreti Personaggi</a><a href="#m-solc">I Solcavuoto</a><a href="#m-voidstar">Voidstar Blade</a><a href="#m-med">Il Mediatore</a>
     <a href="#m-stat-mael">I Mael</a><a href="#m-stat-alti">Alti Maestri</a><a href="#m-stat-minori">Maestri Minori</a>
-    <a href="#m-stat">Stat Behemoth</a><a href="#m-note">Note Master</a>
+    <a href="#m-stat">Stat Behemoth</a><a href="#m-note">Note Master</a><a href="#m-npcgen">Generatore NPC</a>
   </div>
   <div class="msec" id="m-trad">
     <div class="msecsub">Storia Reale</div><div class="msect">Il Vero Tradimento</div><div class="msecl"></div>
@@ -1953,7 +1904,7 @@ function scSave(){const d={};["lvl|sc-lvl","rango|sc-rango","pv|sc-pv","arma|sc-
   <div class="msec" id="m-omni-unlock" style="border-top:1px solid rgba(200,56,56,.1)">
     <div class="msecsub">Solo per il DM</div><div class="msect">Sblocco delle Omnicelle</div><div class="msecl"></div>
     <div class="mq">Questa tabella non va mai mostrata ai player. Nella sezione pubblica del Manuale, le Omnicelle sono presentate senza indicare come si ottengono.</div>
-    <div class="sc"><div class="scl">Collegamento Omnicella → Behemoth Leggendario</div><div class="sct"><p>Ogni Omnicella si sblocca (per l'intero gruppo, permanentemente) quando il party sconfigge il Behemoth Leggendario corrispondente:</p><p><strong>Rammendo</strong> (Terrestre) ← Agarus<br><strong>Controllo</strong> (Glaciale) ← Urska<br><strong>Disciplina</strong> (Ardente) ← Torgadoro<br><strong>Tempesta</strong> (Folgorante) ← Malkarion<br><strong>Legame</strong> (Oscuro) ← Thrax<br><strong>Paradosso</strong> (Radiante) ← Cronovoro</p></div></div>
+    <div class="sc"><div class="scl">Collegamento Omnicella → Behemoth Leggendario</div><div class="sct"><p>Ogni Omnicella si sblocca (per l'intero gruppo, permanentemente) quando il party sconfigge il Behemoth Leggendario corrispondente:</p><p><strong>Risorgimento</strong> (Terrestre) ← Agarus<br><strong>Controllo</strong> (Glaciale) ← Urska<br><strong>Disciplina</strong> (Ardente) ← Torgadoro<br><strong>Tempesta</strong> (Folgorante) ← Malkarion<br><strong>Legame</strong> (Oscuro) ← Thrax<br><strong>Paradosso</strong> (Radiante) ← Cronovoro</p></div></div>
     <div class="sc"><div class="scl">Origine del concetto</div><div class="sct">Il sistema delle Omnicelle nasce dalle ricerche de <strong>Il Mediatore</strong> — vedi sezione dedicata più sotto per la sua vera identità.</div></div>
   </div>
   <div class="msec" id="m-stat-mael" style="border-top:1px solid rgba(200,56,56,.1)">
@@ -1972,9 +1923,9 @@ function scSave(){const d={};["lvl|sc-lvl","rango|sc-rango","pv|sc-pv","arma|sc-
   </div>
   <div class="msec" id="m-seg" style="border-top:1px solid rgba(200,56,56,.1)">
     <div class="msecsub">Solo per il DM</div><div class="msect">Segreti dei Personaggi</div><div class="msecl"></div>
-    <div class="sc"><div class="scl">❄️ Athena de la Roche — vero nome: Athena Silver</div><div class="sct"><p>Figlia di <strong>Ragnar Silver</strong>. "De la Roche" è un'identità falsa. <strong>Linnea Silver</strong> e <strong>Markus Boher</strong> conoscono il segreto. La presenza di <strong>Atreo Silver</strong> e <strong>Minerva Silver</strong> alla missione diplomatica non è casuale.</p></div></div>
+    <div class="sc"><div class="scl">❄️ Athena de la Roche — vero nome: Athena Silver</div><div class="sct"><p>Figlia di <strong>Ragnar Silver</strong>. "De la Roche" è un'identità falsa presa in prestito da una famiglia nobile realmente esistita: un tempo di rilievo, ora decaduta e succube dell'influenza dei Silver. Proprio perché i pochi de la Roche rimasti non hanno più peso né voce, il nome attira poca attenzione — la copertura perfetta, ironicamente costruita sui domini dello stesso Ragnar. <strong>Linnea Silver</strong> e <strong>Markus Boher</strong> conoscono il segreto. La presenza di <strong>Atreo Silver</strong> e <strong>Minerva Silver</strong> alla missione diplomatica non è casuale.</p></div></div>
     <div class="sc"><div class="scl">🌑 Pan Lan Batuk — passato negli Occulti</div><div class="sct"><p>Prima di diventare Slayer, era membro degli <strong>Occulti</strong> fondati da Joseph D. Galvez. La taglia è legata a questo passato. Il <strong>cofanetto con la mano mozzata</strong> è un avvertimento diretto.</p></div></div>
-    <div class="sc"><div class="scl">✨ Asonnes Eninbaal — discendente dei Solcavuoto</div><div class="sct"><p>È un discendente diretto dei <strong>Solcavuoto</strong>. Diventare viola toccando il frammento di metallo è una manifestazione di questa discendenza. L'interesse di <strong>Malevola Zeraora</strong> non è casuale.</p></div></div>
+    <div class="sc"><div class="scl">✨ Asonnes Eninbaal — discendente dei Solcavuoto</div><div class="sct"><p>Anagraficamente è originario delle <strong>Isole Terrestri</strong> — questa è l'unica origine che conosce e che chiunque può verificare. In realtà è un discendente diretto dei <strong>Solcavuoto</strong>: una stirpe che nemmeno lui conosce o sospetta. Diventare viola toccando un frammento Solcavuoto è una manifestazione involontaria di questa discendenza nascosta. L'interesse di <strong>Malevola Zeraora</strong> non è casuale.</p></div></div>
   </div>
   <div class="msec" id="m-solc" style="border-top:1px solid rgba(200,56,56,.1)">
     <div class="msecsub">Lore Completa — Non nota ai Player</div><div class="msect">I Solcavuoto — Custodi del Crepuscolo</div><div class="msecl"></div>
@@ -1982,6 +1933,13 @@ function scSave(){const d={};["lvl|sc-lvl","rango|sc-rango","pv|sc-pv","arma|sc-
     <div class="sc"><div class="scl">La Forgia Temporale</div><div class="sct">Al cuore della Soglia: una macchina vivente capace di plasmare eventi e correggere linee temporali. Il <strong>Thrax</strong> e il <strong>Cronovoro</strong> costituiscono una minaccia costante.</div></div>
     <div class="sc"><div class="scl">Le Tre Categorie</div><div class="sct"><p><strong>Solcavuoto</strong>: equilibrio perfetto.<br><strong>Tessiitempo</strong>: aether radiante, filosofi-temporali, custodi dei Segni degli Echi.<br><strong>Forgiabattaglie</strong>: aether oscuro, guerrieri possenti.</p></div></div>
     <div class="sc"><div class="scl">Rupenigma e il Collegamento Perduto</div><div class="sct">Un tempo i Solcavuoto giungevano nel mondo attraverso <strong>Rupenigma</strong>. Dopo la faida dei Mael, questo collegamento fu reciso. Certi segni inquietano: <strong>bambini nati con occhi di galassia e visioni del futuro</strong>.</div></div>
+  </div>
+  <div class="msec" id="m-voidstar" style="border-top:1px solid rgba(200,56,56,.1)">
+    <div class="msecsub">Solo per il DM — Obiettivo Nascosto della Campagna</div><div class="msect">La Voidstar Blade</div><div class="msecl"></div>
+    <div class="mq">Il vero scopo della raccolta artefatti: non una "chiave" in senso letterale, ma una spada che va inserita in un oggetto ancora sconosciuto ai player per accedere al regno dei Solcavuoto. I player non sanno nulla di questo — credono di recuperare semplicemente gli artefatti dei Mael dispersi.</div>
+    <div class="sc"><div class="scl">Stato attuale</div><div class="sct"><p>La Voidstar Blade è composta da <strong>8 pezzi</strong> in totale. Il party ne ha recuperati <strong>2</strong>. Non hanno idea di cosa sia realmente l'oggetto completo, né di cosa serva — sanno solo che si tratta di artefatti Solcavuoto da recuperare.</p></div></div>
+    <div class="sc"><div class="scl">La reazione di Asonnes</div><div class="sct"><p>Ogni volta che Asonnes tocca uno dei frammenti, sente una strana poesia e la zona di contatto diventa temporaneamente fluorescente — manifestazione della sua discendenza Solcavuoto nascosta (vedi Segreti Personaggi).</p></div></div>
+    <div class="sc"><div class="scl">Collegamento con Gabrael</div><div class="sct"><p>Nei panni di "Estarossa", Gabrael ha rivelato ai player di possedere un frammento simile a quello che rende fluorescente Asonnes. Il legame tra Gabrael e la Voidstar Blade — se la sta cercando anche lui, se ne possiede altri pezzi, se sa cosa sia davvero — è da definire prima che i player scoprano la sua vera identità.</p></div></div>
   </div>
   <div class="msec" id="m-med" style="border-top:1px solid rgba(200,56,56,.1)">
     <div class="msecsub">Identità Nascosta</div><div class="msect">Il Mediatore — Edgar Solomon</div><div class="msecl"></div>
@@ -2014,6 +1972,29 @@ function scSave(){const d={};["lvl|sc-lvl","rango|sc-rango","pv|sc-pv","arma|sc-
     <div id="mnp-sessione" style="display:none"><div class="nhdr"><div style="font-family:'Cinzel Decorative',serif;font-size:1rem;color:#c08080">Prossima Sessione</div><button class="nsave" id="msv-sessione" onclick="svMN('sessione')" style="border-color:rgba(200,56,56,.4);color:#c08080">Salva</button></div><textarea class="na" id="mn-sessione" placeholder="Cosa succederà..." style="border-color:rgba(200,56,56,.2);min-height:300px"></textarea><div class="nhint" style="color:#806060">Salvate localmente.</div></div>
     <div id="mnp-trame" style="display:none"><div class="nhdr"><div style="font-family:'Cinzel Decorative',serif;font-size:1rem;color:#c08080">Trame in Corso</div><button class="nsave" id="msv-trame" onclick="svMN('trame')" style="border-color:rgba(200,56,56,.4);color:#c08080">Salva</button></div><textarea class="na" id="mn-trame" placeholder="Trame aperte..." style="border-color:rgba(200,56,56,.2);min-height:300px"></textarea><div class="nhint" style="color:#806060">Salvate localmente.</div></div>
     <div id="mnp-npc" style="display:none"><div class="nhdr"><div style="font-family:'Cinzel Decorative',serif;font-size:1rem;color:#c08080">NPC &amp; Fazioni</div><button class="nsave" id="msv-npc" onclick="svMN('npc')" style="border-color:rgba(200,56,56,.4);color:#c08080">Salva</button></div><textarea class="na" id="mn-npc" placeholder="Note su NPC..." style="border-color:rgba(200,56,56,.2);min-height:300px"></textarea><div class="nhint" style="color:#806060">Salvate localmente.</div></div>
+  </div>
+  <div class="msec" id="m-npcgen" style="border-top:1px solid rgba(200,56,56,.1)">
+    <div class="msecsub">Strumento del DM</div><div class="msect">Generatore Statistiche Umanoidi</div><div class="msecl"></div>
+    <div class="mq">Base 8 in ogni caratteristica. A Livello 1, 30 punti liberi vengono distribuiti a caso tra le sei. Ogni 2 livelli, +2 su una caratteristica scelta a caso. Utile per TecnoSlayer, Guardie di Ostia, Occulti e qualsiasi umanoide senza scheda dedicata.</div>
+
+    <div class="sc-card" style="background:rgba(200,56,56,.05);border-color:rgba(200,56,56,.15);margin-bottom:1.25rem">
+      <span class="sc-lbl" style="color:#c08080">Ruolo (opzionale)</span>
+      <input class="sc-in" id="npc-role" placeholder="TecnoSlayer, Guardia di Ostia..." style="border-color:rgba(200,56,56,.25);margin-bottom:1rem">
+
+      <span class="sc-lbl" style="color:#c08080">Livello — <span id="npc-lvl-val">5</span></span>
+      <div style="display:flex;align-items:center;gap:.65rem;margin-bottom:1rem">
+        <button class="sc-cnt-btn" style="border-color:rgba(200,56,56,.25);color:var(--master2)" onclick="npcStep(-1)">−</button>
+        <input type="range" id="npc-lvl" min="1" max="30" value="5" style="flex:1;accent-color:var(--master)" oninput="npcSyncLvl()">
+        <button class="sc-cnt-btn" style="border-color:rgba(200,56,56,.25);color:var(--master2)" onclick="npcStep(1)">+</button>
+      </div>
+
+      <span class="sc-lbl" style="color:#c08080">Quantità</span>
+      <div id="npc-qty-btns" style="display:flex;gap:.4rem;margin-bottom:1.25rem"></div>
+
+      <button onclick="npcGenerate()" style="width:100%;padding:.75rem;font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;background:rgba(200,56,56,.15);border:1px solid var(--master);color:var(--master2);cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(200,56,56,.25)'" onmouseout="this.style.background='rgba(200,56,56,.15)'">⌗ Genera Dossier</button>
+    </div>
+
+    <div id="npc-results"></div>
   </div>
 </div>
 
@@ -2074,7 +2055,7 @@ function buildW(){document.getElementById("wgrid").innerHTML=WD.map(w=>`<div cla
 const CD={"Celle di Forza — Offensiva":[{n:"Re del Knockout",p3:"×1.5 danni vs storditi",p6:"×2 danni vs storditi"},{n:"Cacciatore di Aether",p3:"×1.5 danni vs aethercaricati",p6:"×2 danni vs aethercaricati"},{n:"Cacciatore Furioso",p3:"×1.5 danni vs infuriati",p6:"×2 danni vs infuriati"},{n:"Lavoro di Squadra",p3:"+2 danni; bonus agli alleati sullo stesso bersaglio",p6:"+4 danni; alleati ottengono vantaggio"},{n:"Incremento Aetherico",p3:"+1 token elementale",p6:"+2 token elementali"},{n:"Tempesta di Lame",p3:"Attacco mirato ×1.2",p6:"Attacco mirato ×1.5"},{n:"Sopraffazione",p3:"Attacco stordente ×1.2",p6:"Attacco stordente ×1.5"},{n:"Acido",p3:"Attacco lacerante ×1.2",p6:"Attacco lacerante ×1.5"}],"Celle di Vigore — Sopravvivenza":[{n:"Ignifuga",p3:"Immune a SCOTTATO",p6:"Immune a BRUCIATO"},{n:"Antigelo",p3:"Immune a CONGELATO",p6:"Immune a IBERNATO"},{n:"Isolante",p3:"Immune a ELETTRIFICATO",p6:"Immune a FULMINATO"},{n:"Ferreo",p3:"Immune a INTERRATO",p6:"Immune a DRENATO"},{n:"Benedetto",p3:"CORROTTO dimezzato",p6:"Immune a CORROTTO"},{n:"Marchiato",p3:"ABBAGLIATO dimezzato",p6:"Immune a ABBAGLIATO"},{n:"Coagulante",p3:"Immune a SANGUINATO",p6:"Immune a EMORRAGICO"},{n:"Corazzato",p3:"STORDITO dimezzato",p6:"Immune a STORDITO"}],"Celle di Tecnica — Stile di gioco":[{n:"Agilità",p3:"+2 caselle movimento",p6:"+4 caselle movimento"},{n:"Granpasso",p3:"Schivando: 2 danni al Behemoth",p6:"Schivando: 4 danni al Behemoth"},{n:"Medico",p3:"Alleato a terra → metà PV",p6:"Alleato a terra → tutti PV; prima caduta automatica a metà PV"},{n:"Rammendo",p3:"Oggetti curativi +4 PV extra",p6:"Oggetti curativi si attivano due volte; puoi ritirare gli 1"},{n:"Astuzia",p3:"5° attacco: critico automatico",p6:"I 2 valori più alti del dado valgono il massimo"},{n:"Riciclo",p3:"Stessa parte 3×: 3° colpo automatico",p6:"Stessa parte 2×: 2° colpo automatico"},{n:"Parassita",p3:"Sotto ¼ PV: prossimo attacco dimezzato",p6:"Sotto ¼ PV: prossimo attacco annullato"},{n:"Catalizzatore",p3:"Strumenti non curativi: durata +50%",p6:"Durata +50%, 50% di non consumare l'oggetto"}]};
 function buildC(){let h="";for(const[cat,items] of Object.entries(CD)){h+=`<div class="cct" style="grid-column:1/-1">${cat}</div>`;h+=items.map(c=>`<div class="ccrd"><div class="cn">${c.n}</div><div class="cr"><span class="clbl">+3</span><span style="color:var(--text)">${c.p3}</span></div><div class="cr"><span class="clbl">+6</span><span style="color:var(--gold2)">${c.p6}</span></div></div>`).join("");}document.getElementById("cgrid").innerHTML=h;}
 const OD=[
-  {n:"Rammendo",ae:"Terrestre",tag:"tt",col:"var(--earth)",eff:["Tutti gli alleati presenti sul campo recuperano interamente i propri Punti Vita.","Riassetto completo: ogni stato alterato viene rimosso (i consumabili già usati restano consumati).","Gli alleati caduti vengono rimessi in piedi con metà dei PV massimi.","Immunità allo Stordimento per il turno in corso."]},
+  {n:"Risorgimento",ae:"Terrestre",tag:"tt",col:"var(--earth)",eff:["Tutti gli alleati presenti sul campo recuperano interamente i propri Punti Vita.","Riassetto completo: ogni stato alterato viene rimosso (i consumabili già usati restano consumati).","Gli alleati caduti vengono rimessi in piedi con metà dei PV massimi.","Immunità allo Stordimento per il turno in corso."]},
   {n:"Controllo",ae:"Glaciale",tag:"tg",col:"var(--ice)",eff:["Scegli un bersaglio (te stesso o un alleato, anche a grande distanza).","Per 2 turni il bersaglio è completamente immune a qualsiasi danno o effetto negativo.","Se il bersaglio sei tu e continui ad attaccare, il danno delle tue armi diventa Radiante per la durata.","Utilizzabile anche fuori combattimento come controllo completo sullo stato di un alleato."]},
   {n:"Disciplina",ae:"Ardente",tag:"ta",col:"var(--fire)",eff:["Si attiva come reazione nel momento in cui subisci un attacco.","Non subisci alcun danno da quell'attacco.","Il danno viene riflesso al Behemoth come danno Ardente, applicando Bruciato.","Il turno del Behemoth viene interrotto: Stordimento garantito, senza tiro salvezza."]},
   {n:"Tempesta",ae:"Folgorante",tag:"tf",col:"var(--lightning)",eff:["Ti avvicini al Behemoth fino a distanza doppia del tuo spostamento (conta come movimento).","Tiri 20D6 di danno Folgorante totale.","Il danno si divide equamente tra tutte le parti ancora integre del Behemoth.","Le parti già rotte non vengono conteggiate nella divisione."]},
@@ -2106,6 +2087,58 @@ const AMPD=[
   ["Eco del Fiore","Gli effetti dei proiettili sono raddoppiati nel danno e nella durata."]
 ];
 function buildAMP(){document.getElementById("ampbody").innerHTML=AMPD.map(a=>`<tr><td><strong>${a[0]}</strong></td><td>${a[1]}</td></tr>`).join("");}
+
+// ─── GENERATORE STATISTICHE UMANOIDI (Zona Master) ─────────────────────────
+const NPC_STATS=[{k:"FOR",l:"Forza"},{k:"DES",l:"Destrezza"},{k:"COST",l:"Costituzione"},{k:"INT",l:"Intelligenza"},{k:"SAG",l:"Saggezza"},{k:"CAR",l:"Carisma"}];
+let npcQty=1;
+function npcMod(v){const m=Math.floor((v-10)/2);return m>=0?`+${m}`:`${m}`;}
+function npcRollStats(level){
+  const s={FOR:8,DES:8,COST:8,INT:8,SAG:8,CAR:8};
+  const keys=Object.keys(s);
+  for(let i=0;i<30;i++){const k=keys[Math.floor(Math.random()*keys.length)];s[k]+=1;}
+  for(let lvl=2;lvl<=level;lvl+=2){const k=keys[Math.floor(Math.random()*keys.length)];s[k]+=2;}
+  return s;
+}
+function npcStep(d){
+  const inp=document.getElementById("npc-lvl");
+  let v=parseInt(inp.value)+d;
+  v=Math.max(1,Math.min(30,v));
+  inp.value=v;
+  npcSyncLvl();
+}
+function npcSyncLvl(){
+  document.getElementById("npc-lvl-val").textContent=document.getElementById("npc-lvl").value;
+}
+function npcSetQty(q){
+  npcQty=q;
+  buildNpcQtyBtns();
+}
+function buildNpcQtyBtns(){
+  const el=document.getElementById("npc-qty-btns");
+  if(!el)return;
+  el.innerHTML=[1,2,3,4,5,6].map(q=>`<button onclick="npcSetQty(${q})" style="flex:1;padding:.45rem;font-family:'Cinzel',serif;font-size:.7rem;border:1px solid ${q===npcQty?'var(--master)':'rgba(200,56,56,.2)'};background:${q===npcQty?'rgba(200,56,56,.15)':'transparent'};color:${q===npcQty?'var(--master2)':'#a08080'};cursor:pointer;transition:all .2s">${q}</button>`).join("");
+}
+function npcGenerate(){
+  const level=parseInt(document.getElementById("npc-lvl").value);
+  const role=document.getElementById("npc-role").value.trim()||"Umanoide";
+  let html="";
+  for(let i=0;i<npcQty;i++){
+    const stats=npcRollStats(level);
+    html+=`<div class="sc" style="animation:npcStamp .4s ease-out both;animation-delay:${i*70}ms">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+        <span class="scl" style="margin-bottom:0">${role}</span>
+        <span style="font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.08em;border:1px solid var(--master);color:var(--master2);padding:.15rem .55rem">LV. ${level}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+        ${NPC_STATS.map(s=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:.45rem .65rem;background:rgba(255,255,255,.02);border:1px solid rgba(200,56,56,.1)">
+          <span style="color:#a08080;font-size:.76rem">${s.l}</span>
+          <span style="font-family:'Cinzel',serif;font-size:.85rem;color:var(--text)">${stats[s.k]} <b style="color:var(--master2)">${npcMod(stats[s.k])}</b></span>
+        </div>`).join("")}
+      </div>
+    </div>`;
+  }
+  document.getElementById("npc-results").innerHTML=html;
+}
 
 const TR=[{n:1,b:"ly",nm:"Triade Radiante",t:"Nascita, inizio, luce pura"},{n:2,b:"ly",nm:"Triade Folgorante",t:"Scoperta, energia, espansione"},{n:3,b:"ly",nm:"Triade Ardente",t:"Conflitto, coraggio, passione"},{n:4,b:"ly",nm:"Triade Terrestre",t:"Stabilità, costruzione, prosperità"},{n:5,b:"ly",nm:"Triade Congelante",t:"Silenzio, attesa, gelo"},{n:6,b:"ly",nm:"Triade Oscura",t:"Crepuscolo, introspezione"},{n:"p",txt:"✦ Passaggio da Lyra a Kornos ✦",sub:"Giorno 30 Triade Oscura → Giorno 1 Triade Alborea"},{n:7,b:"ko",nm:"Triade Alborea",t:"Rinascita, memoria, chiarore dopo l'ombra"},{n:8,b:"ko",nm:"Triade Tuonante",t:"Turbolenza, prova, voce interiore"},{n:9,b:"ko",nm:"Triade Fiammeggiante",t:"Purificazione, rivoluzione"},{n:10,b:"ko",nm:"Triade Sporizzata",t:"Decomposizione, metamorfosi"},{n:11,b:"ko",nm:"Triade Algente",t:"Morte apparente, immobilità"},{n:12,b:"ko",nm:"Triade Foscomanto",t:"Oscurità totale, fine del ciclo"},{n:"p2",txt:"✦ Passaggio da Kornos a Lyra ✦",sub:"Giorno 30 Triade Foscomanto → Giorno 1 Triade Radiante"}];
 function buildTR(){document.getElementById("trgrid").innerHTML=TR.map(t=>{if(t.n==="p"||t.n==="p2")return`<div class="tbanner" style="grid-column:1/-1">${t.txt}<br><span style="font-size:.8rem">${t.sub}</span></div>`;const badge=t.b==="ly"?`<div class="bly">🌕 Lyra</div>`:`<div class="bko">🌑 Kornos</div>`;return`<div class="trc"><div class="trn">${t.n}</div>${badge}<div class="trnm">${t.nm}</div><div class="trtm">${t.t}</div></div>`;}).join("");}
@@ -2209,7 +2242,7 @@ function initMapClicks(){
   });
 }
 
-window.addEventListener("load",()=>{buildBeh();buildW();buildC();buildO();buildAMP();buildTR();loadN();loadMN();scBuild();initMapClicks();});
+window.addEventListener("load",()=>{buildBeh();buildW();buildC();buildO();buildAMP();buildTR();loadN();loadMN();scBuild();initMapClicks();buildNpcQtyBtns();});
 window.addEventListener("scroll",updNav,{passive:true});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closepw();});
 </script>
