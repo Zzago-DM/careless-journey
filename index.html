@@ -18,6 +18,24 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(8,10,15,.94
 .nav-links{display:flex;list-style:none;overflow-x:auto}
 .nav-links li a{display:block;padding:0 .65rem;font-family:"Cinzel",serif;font-size:.56rem;letter-spacing:.1em;color:var(--text2);text-decoration:none;text-transform:uppercase;line-height:56px;transition:color .2s;white-space:nowrap}
 .nav-links li a:hover,.nav-links li a.active{color:var(--gold)}
+
+.sk-btn{font-family:"Cinzel",serif;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;padding:.3rem .7rem;background:transparent;border:1px solid var(--border);color:var(--text2);cursor:pointer;transition:all .2s;white-space:nowrap;margin-left:.5rem}
+.sk-btn:hover{border-color:var(--gold3);color:var(--gold2)}
+.sk-ov{position:fixed;inset:0;background:rgba(4,6,10,.86);backdrop-filter:blur(6px);z-index:4000;display:none;align-items:flex-start;justify-content:center;padding:12vh 1rem 1rem}
+.sk-ov.open{display:flex}
+.sk-panel{background:var(--bg2);border:1px solid var(--border);width:100%;max-width:560px;box-shadow:0 24px 70px rgba(0,0,0,.6)}
+.sk-inp{width:100%;background:var(--bg);border:none;border-bottom:1px solid var(--border);color:var(--text);font-family:"Crimson Pro",Georgia,serif;font-size:1.05rem;padding:.9rem 1.1rem;outline:none}
+.sk-inp::placeholder{color:var(--text2)}
+.sk-list{max-height:52vh;overflow-y:auto}
+.sk-it{display:flex;align-items:baseline;gap:.7rem;padding:.55rem 1.1rem;cursor:pointer;border-bottom:1px solid rgba(200,168,75,.05)}
+.sk-it:hover,.sk-it.on{background:rgba(200,168,75,.08)}
+.sk-it .nm{color:var(--text);font-size:.95rem;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sk-it .cat{font-family:"Cinzel",serif;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold3);border:1px solid var(--border);padding:.06rem .3rem;flex-shrink:0}
+.sk-it mark{background:none;color:var(--gold2);font-weight:600}
+.sk-none{padding:1rem 1.1rem;color:var(--text2);font-style:italic;font-size:.9rem}
+.sk-hint{padding:.5rem 1.1rem;border-top:1px solid rgba(200,168,75,.06);font-family:"Cinzel",serif;font-size:.5rem;letter-spacing:.08em;color:var(--text2);text-transform:uppercase}
+@keyframes skFlash{0%,100%{box-shadow:0 0 0 0 rgba(200,168,75,0)}18%{box-shadow:0 0 0 3px rgba(200,168,75,.55)}}
+.sk-hit{animation:skFlash 2.4s ease-out}
 .master-btn{font-family:"Cinzel",serif;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;padding:.3rem .7rem;background:rgba(200,56,56,.1);border:1px solid rgba(200,56,56,.35);color:#e88;cursor:pointer;transition:all .2s;white-space:nowrap;margin-left:.5rem}
 .master-btn:hover{background:rgba(200,56,56,.2);color:var(--master2)}
 .master-btn.unlocked{border-color:rgba(200,56,56,.6);color:var(--master2)}
@@ -1016,9 +1034,11 @@ l50 -64 0 -151 c0 -158 -11 -207 -54 -237 -25 -18 -53 -75 -49 -103 2 -14 -6
       <li><a href="#npc">NPC</a></li><li><a href="#nave">Nave</a></li>
       <li><a href="#scheda">Scheda</a></li><li><a href="#note">Note</a></li>
     </ul>
-    <button class="master-btn" id="mbtn" onclick="openpw()">🔒 Master</button>
+    <button class="sk-btn" type="button" onclick="skOpen()" title="Cerca nel compendio (Ctrl+K)">⌕ Cerca</button><button class="master-btn" id="mbtn" onclick="openpw()">🔒 Master</button>
   </div>
 </nav>
+<div class="sk-ov" id="sk-ov" onclick="if(event.target===this)skClose()"><div class="sk-panel"><input class="sk-inp" id="sk-inp" type="text" autocomplete="off" spellcheck="false" placeholder="Cerca un Behemoth, un'arma, una cella…" oninput="skRender(this.value)"><div class="sk-list" id="sk-list"></div><div class="sk-hint">↑↓ per scorrere · Invio per aprire · Esc per chiudere</div></div></div>
+
 <section id="hero">
   <div class="hero-bg"></div><div class="hero-orn"></div>
   <div class="hero-content">
@@ -1815,6 +1835,20 @@ l50 -64 0 -151 c0 -158 -11 -207 -54 -237 -25 -18 -53 -75 -49 -103 2 -14 -6
 .sc-coin-add:hover{background:rgba(200,168,75,.1);border-style:solid}
 .sc-coin-del{width:30px;height:30px;flex-shrink:0;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:1rem;cursor:pointer;transition:all .2s;border-radius:2px}
 .sc-coin-del:hover{color:var(--master2);border-color:rgba(200,56,56,.45)}
+.bk-row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.bk-btn{font-family:"Cinzel",serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;padding:.45rem 1.1rem;background:transparent;border:1px solid var(--border);color:var(--text2);cursor:pointer;transition:all .2s}
+.bk-btn:hover{border-color:var(--gold3);color:var(--gold2);background:rgba(200,168,75,.06)}
+.bk-btn.go{border-color:var(--gold3);color:var(--gold2)}
+.bk-btn.go:hover{background:var(--gold3);color:#080a0f}
+.bk-btn.no{border-color:rgba(200,56,56,.4);color:#c88}
+.bk-msg{font-size:.8rem;color:var(--text2);margin-top:.7rem;font-style:italic;line-height:1.5}
+.bk-msg b{color:var(--gold2);font-style:normal}
+.sc-tabs{display:flex;gap:.5rem;margin:0 auto 1.1rem;max-width:900px;flex-wrap:wrap}
+.sc-tab{font-family:"Cinzel",serif;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:.45rem 1.1rem;background:transparent;border:1px solid var(--border);color:var(--text2);cursor:pointer;transition:all .2s}
+.sc-tab:hover{color:var(--gold2)}
+.sc-tab.active{border-color:var(--gold3);color:var(--gold2);background:rgba(200,168,75,.06)}
+.sc-tab .scdot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--gold3);margin-left:.45rem;vertical-align:middle;opacity:0}
+.sc-tab.filled .scdot{opacity:.85}
 .cr-head{display:flex;align-items:baseline;justify-content:space-between;gap:.6rem;flex-wrap:wrap;margin-bottom:.6rem}
 .cr-meta{font-family:"Cinzel",serif;font-size:.58rem;letter-spacing:.1em;color:var(--text2);text-transform:uppercase}
 .cr-meta b{color:var(--gold2);font-weight:600}
@@ -1846,6 +1880,7 @@ l50 -64 0 -151 c0 -158 -11 -207 -54 -237 -25 -18 -53 -75 -49 -103 2 -14 -6
 @media(max-width:560px){.cr-grid{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:380px){.cr-grid{grid-template-columns:repeat(3,1fr)}}
 </style>
+<div class="sc-tabs" id="sc-tabs"></div>
 <div class="sc-wrap">
   <div class="sc-card sc-full"><div style="display:grid;grid-template-columns:1fr 2fr 1fr 1fr;gap:.85rem;align-items:end"><div><span class="sc-lbl">Livello</span><input class="sc-in" id="sc-lvl" type="number" placeholder="1" style="text-align:center;font-size:1.1rem"></div><div><span class="sc-lbl">Rango Slayer</span><select class="sc-in" id="sc-rango" style="font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:.06em;cursor:pointer;padding:.32rem .5rem"><option value="">— seleziona rango —</option><option value="novizio">⚪ Novizio (Lv. 1–5)</option><option value="cacciatore">🟤 Cacciatore (Lv. 6–10)</option><option value="discepolo">🔵 Discepolo (Lv. 11–15)</option><option value="maestro">🟡 Maestro (Lv. 16–20)</option><option value="fenice">🔴 Fenice (Lv. 21–30)</option></select></div><div><span class="sc-lbl">Benny</span><div class="sc-counter" style="margin-top:.45rem"><button class="sc-cnt-btn" onclick="scBennyCnt(-1)">−</button><input class="sc-cnt-val" id="sc-benny" type="number" value="0" min="0"><button class="sc-cnt-btn" onclick="scBennyCnt(1)">+</button></div></div><div><span class="sc-lbl">Ispirazioni</span><div class="sc-counter" style="margin-top:.45rem"><button class="sc-cnt-btn" onclick="scInspCnt(-1)">−</button><input class="sc-cnt-val" id="sc-ispirazione" type="number" value="0" min="0"><button class="sc-cnt-btn" onclick="scInspCnt(1)">+</button></div></div></div></div>
   <div class="sc-card"><span class="sc-lbl">Punti Vita</span><input class="sc-pv-box" id="sc-pv" type="text" placeholder="—"></div>
@@ -1885,6 +1920,14 @@ l50 -64 0 -151 c0 -158 -11 -207 -54 -237 -25 -18 -53 -75 -49 -103 2 -14 -6
   </div>
   <div class="sc-card sc-full"><span class="sc-lbl">Celle Equipaggiate</span><div class="sc-celle-grid" id="sc-celle"></div></div>
   <div class="sc-card sc-full"><div class="cr-head"><span class="sc-lbl" style="margin:0">Corone Aetheriche</span><span class="cr-meta">Possedute <b id="cr-count">0</b> / 12 &middot; Introito <b id="cr-mult">&mdash;</b></span></div><div class="cr-grid" id="cr-grid"></div><div style="font-size:.74rem;color:var(--text2);margin-top:.6rem;font-style:italic">Clicca una Corona per aprirne la scheda; il quadratino in alto a destra segna il possesso.</div></div>
+  <div class="sc-card sc-full"><span class="sc-lbl">Backup dei dati</span>
+    <div class="bk-row">
+      <button class="bk-btn" type="button" onclick="bkExport()">⬇ Scarica backup</button>
+      <button class="bk-btn" type="button" onclick="document.getElementById('bk-file').click()">⬆ Ripristina da file</button>
+      <input type="file" id="bk-file" accept=".json,application/json" style="display:none" onchange="bkPick(this)">
+    </div>
+    <div class="bk-msg" id="bk-msg">Salva in un file tutto ciò che il sito tiene in questo browser: le schede dei tre Slayer, le Corone, le note personali e del Master, la nave. Tienilo da parte: se svuoti i dati del browser o cambi computer, è l’unico modo per recuperare tutto.</div>
+  </div>
   <button class="sc-save" id="sc-savebtn" onclick="scSave()">Salva Scheda</button>
 </div>
   </div>
@@ -1928,13 +1971,172 @@ function crClose(){const o=document.getElementById("cr-ov");if(o)o.classList.rem
 function crTogCur(){if(crCur>=0)crTog(crCur);}
 document.addEventListener("keydown",e=>{if(e.key==="Escape")crClose();});
 
-function scLD(){try{const s=localStorage.getItem("tcj-sc4");return s?JSON.parse(s):{}}catch(e){return{}}}
+
+
+let skIdx=null, skRes=[], skSel=0;
+function skNorm(t){return (t||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();}
+function skBuild(){
+  const seen=new Set(), idx=[];
+  const add=(el,cat)=>{if(!el||seen.has(el))return;const t=(el.textContent||"").replace(/\s+/g," ").trim();
+    if(!t||t.length>72)return;seen.add(el);idx.push({e:el,t:t,l:skNorm(t),c:cat});};
+  document.querySelectorAll("#bgrid .bn").forEach(e=>add(e,"Behemoth"));
+  document.querySelectorAll("#wgrid .card > div:first-child").forEach(e=>add(e,"Arma"));
+  document.querySelectorAll("#cgrid .cn").forEach(e=>add(e,"Cella"));
+  document.querySelectorAll("#ogrid .ct").forEach(e=>add(e,"Omnicella"));
+  document.querySelectorAll("#ampbody tr td:first-child").forEach(e=>add(e,"AMP"));
+  document.querySelectorAll("#trgrid .trn").forEach(e=>add(e,"Timeline"));
+  document.querySelectorAll("section .ct").forEach(e=>{const sec=e.closest("section"),st=sec&&sec.querySelector(".st");add(e,st?st.textContent.trim():"Voce");});
+  document.querySelectorAll("section .st").forEach(e=>add(e,"Sezione"));
+  skIdx=idx;
+}
+function skOpen(){
+  if(!skIdx)skBuild();
+  const o=document.getElementById("sk-ov");if(!o)return;
+  o.classList.add("open");
+  const i=document.getElementById("sk-inp");i.value="";i.focus();
+  skRes=[];skSel=0;skRender("");
+}
+function skClose(){const o=document.getElementById("sk-ov");if(o)o.classList.remove("open");}
+function skEsc(t){return t.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function skMark(t,words){
+  let h=skEsc(t);
+  words.forEach(w=>{if(!w)return;
+    const n=skNorm(h);const at=n.indexOf(w);
+    if(at<0)return;
+    h=h.slice(0,at)+"<mark>"+h.slice(at,at+w.length)+"</mark>"+h.slice(at+w.length);
+  });
+  return h;
+}
+function skHits(words){
+  const out=[];
+  for(const it of skIdx){
+    const inName=words.every(w=>it.l.indexOf(w)>=0);
+    const cl=skNorm(it.c);
+    const inCat=!inName&&words.every(w=>cl.indexOf(w)>=0);
+    if(!inName&&!inCat)continue;
+    let sc=inCat?3:2;
+    if(inName){
+      if(it.l.indexOf(words[0])===0)sc=0;
+      else if(new RegExp("(^|[ '\u2019(\\-])"+words[0].replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).test(it.l))sc=1;
+    }
+    out.push({it:it,sc:sc});
+  }
+  return out;
+}
+function skRender(q){
+  const list=document.getElementById("sk-list");if(!list)return;
+  const nq=skNorm(q).trim();
+  if(!nq){skRes=[];list.innerHTML='<div class="sk-none">Scrivi per cercare tra Behemoth, armi, celle, omnicelle, AMP, NPC e sezioni.</div>';return;}
+  const words0=nq.split(/\s+/).filter(Boolean);
+  // in italiano singolare/plurale cambiano la coda: se non trovo nulla, accorcio le parole
+  let words=words0, hits=[];
+  for(let cut=0;cut<=2;cut++){
+    words=words0.map(w=>w.length-cut>=3?w.slice(0,w.length-cut):w);
+    hits=skHits(words);
+    if(hits.length)break;
+  }
+  hits.sort((a,b)=>a.sc-b.sc||a.it.t.length-b.it.t.length||a.it.t.localeCompare(b.it.t));
+  skRes=hits.slice(0,14).map(h=>h.it);skSel=0;
+  if(!skRes.length){list.innerHTML='<div class="sk-none">Nessun risultato per \u201c'+skEsc(q)+'\u201d.</div>';return;}
+  list.innerHTML=skRes.map((r,i)=>'<div class="sk-it'+(i===0?" on":"")+'" onclick="skGo('+i+')" onmouseenter="skHover('+i+')"><span class="nm">'+skMark(r.t,words)+'</span><span class="cat">'+skEsc(r.c)+'</span></div>').join("");
+}
+function skHover(i){skSel=i;[...document.querySelectorAll(".sk-it")].forEach((e,j)=>e.classList.toggle("on",j===i));}
+function skMove(d){
+  if(!skRes.length)return;
+  skSel=(skSel+d+skRes.length)%skRes.length;
+  const els=[...document.querySelectorAll(".sk-it")];
+  els.forEach((e,j)=>e.classList.toggle("on",j===skSel));
+  if(els[skSel])els[skSel].scrollIntoView({block:"nearest"});
+}
+function skGo(i){
+  const it=skRes[(i===undefined?skSel:i)];if(!it)return;
+  skClose();
+  const card=it.e.closest(".bcard,.ccrd,.card,tr")||it.e;
+  if(card.classList.contains("hidden"))card.classList.remove("hidden");
+  const sec=it.e.closest("section");
+  if(sec&&sec.style.display==="none")sec.style.display="";
+  setTimeout(()=>{
+    card.scrollIntoView({behavior:"smooth",block:"center"});
+    card.classList.remove("sk-hit");void card.offsetWidth;card.classList.add("sk-hit");
+    setTimeout(()=>card.classList.remove("sk-hit"),2600);
+  },60);
+}
+document.addEventListener("keydown",function(e){
+  const o=document.getElementById("sk-ov");const open=o&&o.classList.contains("open");
+  if(!open){
+    const tag=(e.target.tagName||"").toLowerCase();
+    const typing=tag==="input"||tag==="textarea"||tag==="select"||e.target.isContentEditable;
+    if((e.key==="k"||e.key==="K")&&(e.ctrlKey||e.metaKey)){e.preventDefault();skOpen();return;}
+    if(e.key==="/"&&!typing&&!e.ctrlKey&&!e.metaKey){e.preventDefault();skOpen();return;}
+    return;
+  }
+  if(e.key==="Escape"){e.preventDefault();skClose();}
+  else if(e.key==="ArrowDown"){e.preventDefault();skMove(1);}
+  else if(e.key==="ArrowUp"){e.preventDefault();skMove(-1);}
+  else if(e.key==="Enter"){e.preventDefault();skGo();}
+});
+
+function bkKeys(){const o=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.indexOf("tcj-")===0)o.push(k);}}catch(e){}return o.sort();}
+function bkMsg(h){const m=document.getElementById("bk-msg");if(m)m.innerHTML=h;}
+function bkExport(){
+  const ks=bkKeys();
+  if(!ks.length){bkMsg("Non c'\u00e8 ancora nulla da salvare: compila la scheda e premi <b>Salva Scheda</b>, poi riprova.");return;}
+  const data={};ks.forEach(k=>{data[k]=localStorage.getItem(k)});
+  const now=new Date();
+  const pad=n=>String(n).padStart(2,"0");
+  const stamp=now.getFullYear()+"-"+pad(now.getMonth()+1)+"-"+pad(now.getDate());
+  const blob=new Blob([JSON.stringify({app:"the-careless-journey",v:1,salvato:now.toISOString(),data:data},null,1)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="tcj-backup-"+stamp+".json";
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  bkMsg("Backup scaricato: <b>"+ks.length+"</b> voci salvate in <b>tcj-backup-"+stamp+".json</b>. Conservalo fuori dal browser \u2014 in una cartella, su una chiavetta o allegato a te stesso.");
+}
+let bkPending=null;
+function bkPick(inp){
+  const f=inp.files&&inp.files[0];inp.value="";if(!f)return;
+  const r=new FileReader();
+  r.onload=function(){
+    let j;
+    try{j=JSON.parse(r.result)}catch(e){bkMsg("Questo file non \u00e8 un backup valido: non riesco a leggerlo.");return;}
+    if(!j||!j.data||typeof j.data!=="object"){bkMsg("Questo file non sembra un backup del sito.");return;}
+    const n=Object.keys(j.data).filter(k=>k.indexOf("tcj-")===0).length;
+    if(!n){bkMsg("Il file \u00e8 leggibile ma non contiene dati del sito.");return;}
+    bkPending=j.data;
+    const q=j.salvato?new Date(j.salvato):null;
+    const quando=q&&!isNaN(q)?q.toLocaleDateString("it-IT",{day:"numeric",month:"long",year:"numeric"}):"data sconosciuta";
+    bkMsg("Trovato un backup del <b>"+quando+"</b> con <b>"+n+"</b> voci. Ripristinarlo <b>sostituisce</b> quello che c'\u00e8 adesso in questo browser."+
+      "<div class='bk-row' style='margin-top:.7rem'><button class='bk-btn go' type='button' onclick='bkApply()'>S\u00ec, ripristina</button>"+
+      "<button class='bk-btn no' type='button' onclick='bkCancel()'>Annulla</button></div>");
+  };
+  r.onerror=function(){bkMsg("Non sono riuscito a leggere il file.")};
+  r.readAsText(f);
+}
+function bkCancel(){bkPending=null;bkMsg("Ripristino annullato: non ho toccato nulla.");}
+function bkApply(){
+  if(!bkPending)return;
+  try{
+    bkKeys().forEach(k=>localStorage.removeItem(k));
+    Object.keys(bkPending).forEach(k=>{if(k.indexOf("tcj-")===0)localStorage.setItem(k,bkPending[k])});
+  }catch(e){bkMsg("Ripristino non riuscito: il browser ha rifiutato la scrittura.");return;}
+  bkPending=null;
+  bkMsg("Ripristinato. Ricarico la pagina\u2026");
+  setTimeout(()=>location.reload(),700);
+}
+
+const SC_CHARS=[{k:"athena",n:"Athena",e:"\u2744\ufe0f"},{k:"panlan",n:"Pan Lan",e:"\ud83c\udf11"},{k:"asonnes",n:"Asonnes",e:"\u2728"}];
+let scCur=(function(){try{const c=localStorage.getItem("tcj-sc-cur");return SC_CHARS.some(x=>x.k===c)?c:SC_CHARS[0].k}catch(e){return SC_CHARS[0].k}})();
+function scKey(k){return "tcj-sc4-"+(k||scCur);}
+function scRaw(k){try{let s=localStorage.getItem(scKey(k));if(s===null&&(k||scCur)===SC_CHARS[0].k)s=localStorage.getItem("tcj-sc4");return s;}catch(e){return null}}
+function scLD(){try{const s=scRaw();return s?JSON.parse(s):{}}catch(e){return{}}}
+function scTabs(){const t=document.getElementById("sc-tabs");if(!t)return;
+ t.innerHTML=SC_CHARS.map(c=>`<button type="button" class="sc-tab${c.k===scCur?" active":""}${scRaw(c.k)?" filled":""}" data-k="${c.k}" onclick="scSwitch('${c.k}')">${c.e} ${c.n}<span class="scdot"></span></button>`).join("");}
+function scSwitch(k){if(k===scCur)return;scSave(true);scCur=k;try{localStorage.setItem("tcj-sc-cur",k)}catch(e){}scBuild();}
 function scGv(id){const e=document.getElementById(id);return e?e.value:""}
 function scNucleo(w){const v=document.getElementById("sc-n"+w+"-s").value;const d=document.getElementById("sc-n"+w+"-d");if(!v){d.textContent="";d.style.cssText="padding:.3rem .55rem;border:1px solid var(--border);font-family:'Cinzel',serif;font-size:.7rem;margin-bottom:.3rem;min-height:28px";return;}const n=SC_NC[v];d.textContent=n.tx;d.style.cssText=`padding:.3rem .55rem;border:1px solid ${n.br};background:${n.bg};font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.08em;margin-bottom:.3rem;min-height:28px;color:var(--text)`;}
 function scCnt(delta){const el=document.getElementById("sc-proiettili");el.value=Math.max(0,(parseInt(el.value)||0)+delta);}
 function scTogCh(i){document.getElementById("sc-chb-"+i).classList.toggle("on");}
-function scBuild(){const d=scLD();scBuildComps(d.comps||{},d.comp_mods||{});const left=SC_STATS.slice(0,3),right=SC_STATS.slice(3);["left","right"].forEach((side,si)=>{const stats=si===0?left:right;document.getElementById("sc-stats-"+side).innerHTML=stats.map(s=>`<div class="sc-stat-item"><span class="sc-stat-name">${s.nm}</span><input class="sc-stat-val" type="number" id="scv-${s.id}" value="${d.stats&&d.stats[s.id]?d.stats[s.id].v:""}" placeholder="10"><input class="sc-stat-mod" type="text" id="scm-${s.id}" value="${d.stats&&d.stats[s.id]?d.stats[s.id].m:""}" placeholder="+0"></div>`).join("");});const ch=d.charges||Array(6).fill(false);["sc-ch-r1","sc-ch-r2"].forEach((rid,ri)=>{document.getElementById(rid).innerHTML=[0,1,2].map(ci=>{const i=ri*3+ci;return`<button class="sc-chbtn${ch[i]?" on":""}" id="sc-chb-${i}" onclick="scTogCh(${i})"></button>`;}).join("");});const celle=d.celle||Array(6).fill("");document.getElementById("sc-celle").innerHTML=Array(6).fill(0).map((_,i)=>`<input class="sc-cella" id="sc-cella-${i}" value="${celle[i]||""}" placeholder="Cella ${i+1}">`).join("");[["lvl","sc-lvl"],["rango","sc-rango"],["pv","sc-pv"],["arma","sc-arma"],["abil","sc-abil"],["arma2","sc-arma2"],["proiettili","sc-proiettili"],["equip","sc-equip"]].forEach(([k,id])=>{const el=document.getElementById(id);if(el&&d[k]!==undefined)el.value=d[k];});if(d.malus!==undefined){const _ml=document.getElementById("sc-malus");if(_ml)_ml.value=d.malus;}[0,1,2,3].forEach(i=>{const _ec=document.getElementById("sc-eq-cnt-"+i);if(_ec)_ec.value=(d.eq_cnt&&d.eq_cnt[i]!==undefined&&d.eq_cnt[i]!=="")?d.eq_cnt[i]:0;const _et=document.getElementById("sc-eq-txt-"+i);if(_et&&d.eq_txt&&d.eq_txt[i]!==undefined)_et.value=d.eq_txt[i];});if(d.natt){document.getElementById("sc-natt-s").value=d.natt;scNucleo("att");}if(d.ndef){document.getElementById("sc-ndef-s").value=d.ndef;scNucleo("def");}if(d.benny!==undefined){document.getElementById("sc-benny").value=d.benny;}if(d.ispirazione!==undefined){document.getElementById("sc-ispirazione").value=d.ispirazione;}var _cr=document.getElementById("sc-coin-rows");if(_cr){_cr.innerHTML="";if(d.coins){d.coins.forEach(c=>scCoinAdd(c.a,c.c));}else{scCoinAdd();}}if(d.coin_team!==undefined){const _ct=document.getElementById("sc-coin-team");if(_ct)_ct.value=d.coin_team;}if(d.coin_personal!==undefined){const _cp=document.getElementById("sc-coin-personal");if(_cp)_cp.value=d.coin_personal;}crBuild(d.crowns||[]);}
-function scSave(){const d={};["lvl|sc-lvl","rango|sc-rango","pv|sc-pv","arma|sc-arma","abil|sc-abil","arma2|sc-arma2","proiettili|sc-proiettili","equip|sc-equip"].forEach(f=>{const[k,id]=f.split("|");d[k]=scGv(id);});d.stats={};SC_STATS.forEach(s=>{d.stats[s.id]={v:scGv("scv-"+s.id),m:scGv("scm-"+s.id)};});d.charges=[0,1,2,3,4,5].map(i=>document.getElementById("sc-chb-"+i).classList.contains("on"));d.celle=Array(6).fill(0).map((_,i)=>scGv("sc-cella-"+i));d.malus=scGv("sc-malus");d.comps={};d.comp_mods={};SC_COMPS.forEach(cp=>{const el=document.getElementById("scd-"+cp.id);if(el)d.comps[cp.id]=el.classList.contains("on");const mel=document.getElementById("scmod-"+cp.id);if(mel)d.comp_mods[cp.id]=mel.value;});d.eq_cnt=[0,1,2,3].map(i=>scGv("sc-eq-cnt-"+i));d.eq_txt=[0,1,2,3].map(i=>scGv("sc-eq-txt-"+i));d.natt=scGv("sc-natt-s");d.ndef=scGv("sc-ndef-s");d.benny=scGv("sc-benny");d.ispirazione=scGv("sc-ispirazione");d.coin_team=scGv("sc-coin-team");d.coin_personal=scGv("sc-coin-personal");d.coins=[].slice.call(document.querySelectorAll("#sc-coin-rows .sc-coin-row")).map(function(r){return{a:r.querySelector(".sc-coin-amt").value,c:r.querySelector(".sc-coin-cur").value};});d.crowns=CROWNS.map((_,i)=>{const b=document.getElementById("cr-box-"+i);return!!(b&&b.classList.contains("has"));});try{localStorage.setItem("tcj-sc4",JSON.stringify(d));}catch(e){}const b=document.getElementById("sc-savebtn");b.textContent="✓ Salvato";b.classList.add("ok");setTimeout(()=>{b.textContent="Salva Scheda";b.classList.remove("ok");},2000);}
+function scBuild(){const d=scLD();scBuildComps(d.comps||{},d.comp_mods||{});const left=SC_STATS.slice(0,3),right=SC_STATS.slice(3);["left","right"].forEach((side,si)=>{const stats=si===0?left:right;document.getElementById("sc-stats-"+side).innerHTML=stats.map(s=>`<div class="sc-stat-item"><span class="sc-stat-name">${s.nm}</span><input class="sc-stat-val" type="number" id="scv-${s.id}" value="${d.stats&&d.stats[s.id]?d.stats[s.id].v:""}" placeholder="10"><input class="sc-stat-mod" type="text" id="scm-${s.id}" value="${d.stats&&d.stats[s.id]?d.stats[s.id].m:""}" placeholder="+0"></div>`).join("");});const ch=d.charges||Array(6).fill(false);["sc-ch-r1","sc-ch-r2"].forEach((rid,ri)=>{document.getElementById(rid).innerHTML=[0,1,2].map(ci=>{const i=ri*3+ci;return`<button class="sc-chbtn${ch[i]?" on":""}" id="sc-chb-${i}" onclick="scTogCh(${i})"></button>`;}).join("");});const celle=d.celle||Array(6).fill("");document.getElementById("sc-celle").innerHTML=Array(6).fill(0).map((_,i)=>`<input class="sc-cella" id="sc-cella-${i}" value="${celle[i]||""}" placeholder="Cella ${i+1}">`).join("");[["lvl","sc-lvl"],["rango","sc-rango"],["pv","sc-pv"],["arma","sc-arma"],["abil","sc-abil"],["arma2","sc-arma2"],["proiettili","sc-proiettili"],["equip","sc-equip"]].forEach(([k,id])=>{const el=document.getElementById(id);if(el)el.value=d[k]!==undefined?d[k]:"";});const _ml=document.getElementById("sc-malus");if(_ml)_ml.value=d.malus!==undefined?d.malus:"";[0,1,2,3].forEach(i=>{const _ec=document.getElementById("sc-eq-cnt-"+i);if(_ec)_ec.value=(d.eq_cnt&&d.eq_cnt[i]!==undefined&&d.eq_cnt[i]!=="")?d.eq_cnt[i]:0;const _et=document.getElementById("sc-eq-txt-"+i);if(_et)_et.value=(d.eq_txt&&d.eq_txt[i]!==undefined)?d.eq_txt[i]:"";});document.getElementById("sc-natt-s").value=d.natt||"";scNucleo("att");document.getElementById("sc-ndef-s").value=d.ndef||"";scNucleo("def");document.getElementById("sc-benny").value=d.benny!==undefined?d.benny:0;document.getElementById("sc-ispirazione").value=d.ispirazione!==undefined?d.ispirazione:0;var _cr=document.getElementById("sc-coin-rows");if(_cr){_cr.innerHTML="";if(d.coins){d.coins.forEach(c=>scCoinAdd(c.a,c.c));}else{scCoinAdd();}}const _ct=document.getElementById("sc-coin-team");if(_ct)_ct.value=d.coin_team!==undefined?d.coin_team:"";const _cp=document.getElementById("sc-coin-personal");if(_cp)_cp.value=d.coin_personal!==undefined?d.coin_personal:"";crBuild(d.crowns||[]);scTabs();}
+function scSave(quiet){const d={};["lvl|sc-lvl","rango|sc-rango","pv|sc-pv","arma|sc-arma","abil|sc-abil","arma2|sc-arma2","proiettili|sc-proiettili","equip|sc-equip"].forEach(f=>{const[k,id]=f.split("|");d[k]=scGv(id);});d.stats={};SC_STATS.forEach(s=>{d.stats[s.id]={v:scGv("scv-"+s.id),m:scGv("scm-"+s.id)};});d.charges=[0,1,2,3,4,5].map(i=>document.getElementById("sc-chb-"+i).classList.contains("on"));d.celle=Array(6).fill(0).map((_,i)=>scGv("sc-cella-"+i));d.malus=scGv("sc-malus");d.comps={};d.comp_mods={};SC_COMPS.forEach(cp=>{const el=document.getElementById("scd-"+cp.id);if(el)d.comps[cp.id]=el.classList.contains("on");const mel=document.getElementById("scmod-"+cp.id);if(mel)d.comp_mods[cp.id]=mel.value;});d.eq_cnt=[0,1,2,3].map(i=>scGv("sc-eq-cnt-"+i));d.eq_txt=[0,1,2,3].map(i=>scGv("sc-eq-txt-"+i));d.natt=scGv("sc-natt-s");d.ndef=scGv("sc-ndef-s");d.benny=scGv("sc-benny");d.ispirazione=scGv("sc-ispirazione");d.coin_team=scGv("sc-coin-team");d.coin_personal=scGv("sc-coin-personal");d.coins=[].slice.call(document.querySelectorAll("#sc-coin-rows .sc-coin-row")).map(function(r){return{a:r.querySelector(".sc-coin-amt").value,c:r.querySelector(".sc-coin-cur").value};});d.crowns=CROWNS.map((_,i)=>{const b=document.getElementById("cr-box-"+i);return!!(b&&b.classList.contains("has"));});try{localStorage.setItem(scKey(),JSON.stringify(d));}catch(e){}scTabs();if(quiet)return;const b=document.getElementById("sc-savebtn");b.textContent="✓ Salvato";b.classList.add("ok");setTimeout(()=>{b.textContent="Salva Scheda";b.classList.remove("ok");},2000);}
 </script>
 
 <section id="note">
