@@ -200,6 +200,14 @@ textarea.na::placeholder{color:var(--text2)}
 p{margin-bottom:.7rem}p:last-child{margin-bottom:0}
 .gold{color:var(--gold2)}.sdiv{width:36px;height:1px;background:var(--gold3);margin:.7rem 0}
 strong{color:var(--gold2)}
+
+.ml-hyp{margin-top:.7rem;padding:.55rem;background:rgba(200,168,75,.04);border:1px solid var(--border)}
+.ml-hlbl{font-family:"Cinzel",serif;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold3);margin-bottom:.35rem;display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.ml-hsv{font-family:"Cinzel",serif;font-size:.5rem;letter-spacing:.1em;color:var(--ice);opacity:0;transition:opacity .3s;white-space:nowrap}
+.ml-hsv.on{opacity:.9}
+.ml-hin{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:"Crimson Pro",Georgia,serif;font-size:.83rem;line-height:1.5;padding:.35rem .5rem;outline:none;resize:vertical;min-height:56px;box-sizing:border-box;transition:border-color .2s}
+.ml-hin:focus{border-color:var(--gold3)}
+.ml-hin::placeholder{color:var(--text2);font-style:italic}
 .qi{border-left:2px solid var(--gold3);padding:.6rem 1.2rem;margin:1.2rem 0;font-style:italic;color:var(--text2);font-size:.91rem;background:rgba(200,168,75,.03)}
 .ctb{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
 @media(max-width:768px){section{padding:3rem 1rem}.g2,.g3{grid-template-columns:1fr}.timeline{padding-left:1.75rem}.tlet{margin-left:-1.75rem;padding-left:1.75rem}.ctb{grid-template-columns:1fr!important}}
@@ -1440,14 +1448,14 @@ l50 -64 0 -151 c0 -158 -11 -207 -54 -237 -25 -18 -53 -75 -49 -103 2 -14 -6
 <section id="mael">
   <div class="si">
     <div class="sh"><div class="sl">Figure Leggendarie</div><h2 class="st">I Mael</h2><div class="sline"></div><p class="sdesc">Slayer che hanno stretto un patto con il Maelstrom e forgiato artefatti personali. La missione: recuperare gli artefatti perduti.</p></div>
-    <div class="qi" style="max-width:800px;margin:0 auto 2.5rem">Estarossa ha rivelato l'esistenza dei Mael e dei loro artefatti. La missione è recuperare questi oggetti di potere, dispersi dopo il Tradimento.</div>
+    <div class="qi" style="max-width:800px;margin:0 auto 2.5rem">Estarossa ha rivelato l'esistenza dei Mael e dei loro artefatti. La missione è recuperare questi oggetti di potere, dispersi dopo il Tradimento.<br><span style="font-size:.85rem">Sotto ogni artefatto ancora disperso trovate un riquadro libero: annotate lì dove sospettate si trovi. Resta salvato in questo browser.</span></div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem">
       <div class="card" data-a="terrestre"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem"><div class="ct">Estarossa</div><span class="tag tt">Terrestre</span></div><div style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;color:var(--gold3);text-transform:uppercase;margin-bottom:.25rem">Artefatto</div><div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold2);margin-bottom:.25rem">Corona del Capricus</div><div style="font-size:.85rem;color:var(--text2);font-style:italic">Posizione attuale sconosciuta.</div><div style="margin-top:.7rem;padding:.55rem;background:rgba(200,168,75,.04);border:1px solid var(--border);font-size:.8rem;color:var(--text2)">📍 Governa Ramsgate</div></div>
-      <div class="card" data-a="glaciale"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem"><div class="ct">Symael</div><span class="tag tg">Glaciale</span></div><div style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;color:var(--gold3);text-transform:uppercase;margin-bottom:.25rem">Artefatto</div><div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold2);margin-bottom:.25rem">Collana del Desufiora</div><div style="font-size:.85rem;color:var(--text2);font-style:italic">Da recuperare.</div></div>
-      <div class="card" data-a="oscuro"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem"><div class="ct">Azrael</div><span class="tag to">Oscuro</span></div><div style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;color:var(--gold3);text-transform:uppercase;margin-bottom:.25rem">Artefatto</div><div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold2);margin-bottom:.25rem">Flauto di Elias Folfo</div><div style="font-size:.85rem;color:var(--text2);font-style:italic">Da recuperare.</div></div>
-      <div class="card" data-a="ardente"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem"><div class="ct">Raphael</div><span class="tag ta">Ardente</span></div><div style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;color:var(--gold3);text-transform:uppercase;margin-bottom:.25rem">Artefatto</div><div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold2);margin-bottom:.25rem">Braccio del Mixitron</div><div style="font-size:.85rem;color:var(--text2);font-style:italic">Da recuperare.</div></div>
+      <div class="card" data-a="glaciale"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem"><div class="ct">Symael</div><span class="tag tg">Glaciale</span></div><div style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;color:var(--gold3);text-transform:uppercase;margin-bottom:.25rem">Artefatto</div><div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold2);margin-bottom:.25rem">Collana del Desufiora</div><div style="font-size:.85rem;color:var(--text2);font-style:italic">Da recuperare.</div><div class="ml-hyp"><div class="ml-hlbl"><span>🔍 Ipotesi del gruppo</span><span class="ml-hsv" id="ml-sv-symael"></span></div><textarea class="ml-hin" id="ml-symael" rows="2" placeholder="Dove pensate si trovi la Collana…" oninput="mlSave('symael')"></textarea></div></div>
+      <div class="card" data-a="oscuro"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem"><div class="ct">Azrael</div><span class="tag to">Oscuro</span></div><div style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;color:var(--gold3);text-transform:uppercase;margin-bottom:.25rem">Artefatto</div><div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold2);margin-bottom:.25rem">Flauto di Elias Folfo</div><div style="font-size:.85rem;color:var(--text2);font-style:italic">Da recuperare.</div><div class="ml-hyp"><div class="ml-hlbl"><span>🔍 Ipotesi del gruppo</span><span class="ml-hsv" id="ml-sv-azrael"></span></div><textarea class="ml-hin" id="ml-azrael" rows="2" placeholder="Dove pensate si trovi il Flauto…" oninput="mlSave('azrael')"></textarea></div></div>
+      <div class="card" data-a="ardente"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem"><div class="ct">Raphael</div><span class="tag ta">Ardente</span></div><div style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;color:var(--gold3);text-transform:uppercase;margin-bottom:.25rem">Artefatto</div><div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold2);margin-bottom:.25rem">Braccio del Mixitron</div><div style="font-size:.85rem;color:var(--text2);font-style:italic">Da recuperare.</div><div class="ml-hyp"><div class="ml-hlbl"><span>🔍 Ipotesi del gruppo</span><span class="ml-hsv" id="ml-sv-raphael"></span></div><textarea class="ml-hin" id="ml-raphael" rows="2" placeholder="Dove pensate si trovi il Braccio…" oninput="mlSave('raphael')"></textarea></div></div>
       <div class="card" data-a="radiante" style="opacity:.75"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem"><div class="ct">Gabrael</div><span class="tag tr">Radiante</span></div><div style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;color:var(--gold3);text-transform:uppercase;margin-bottom:.25rem">Artefatto</div><div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--text2);margin-bottom:.25rem">Manto di Rinmole</div><div style="font-size:.85rem;color:var(--fire);font-style:italic">⚠ Distrutto durante il Tradimento.</div></div>
-      <div class="card" data-a="folgorante"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem"><div class="ct">Mykael</div><span class="tag tf">Folgorante</span></div><div style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;color:var(--gold3);text-transform:uppercase;margin-bottom:.25rem">Artefatto</div><div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold2);margin-bottom:.25rem">Armatura del Ragnarok</div><div style="font-size:.85rem;color:var(--text2);font-style:italic">Da recuperare.</div></div>
+      <div class="card" data-a="folgorante"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem"><div class="ct">Mykael</div><span class="tag tf">Folgorante</span></div><div style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;color:var(--gold3);text-transform:uppercase;margin-bottom:.25rem">Artefatto</div><div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold2);margin-bottom:.25rem">Armatura del Ragnarok</div><div style="font-size:.85rem;color:var(--text2);font-style:italic">Da recuperare.</div><div class="ml-hyp"><div class="ml-hlbl"><span>🔍 Ipotesi del gruppo</span><span class="ml-hsv" id="ml-sv-mykael"></span></div><textarea class="ml-hin" id="ml-mykael" rows="2" placeholder="Dove pensate si trovi l’Armatura…" oninput="mlSave('mykael')"></textarea></div></div>
     </div>
   </div>
 </section>
@@ -1656,45 +1664,101 @@ l50 -64 0 -151 c0 -158 -11 -207 -54 -237 -25 -18 -53 -75 -49 -103 2 -14 -6
 
 <section id="corone">
   <div class="si">
-    <div class="sh"><div class="sl">Riconoscimenti</div><h2 class="st">Corone Aetheriche</h2><div class="sline"></div><p class="sdesc">Conquistate attraverso le Sfide Indomabili — cacce di difficoltà eccezionale durante i periodi di timeout.</p></div>
-    <div style="background:rgba(200,168,75,.04);border:1px solid var(--border);padding:1.75rem;margin-bottom:2rem">
-      <p>Le <strong>Corone Aetheriche</strong> garantiscono un introito passivo riscuotibile ad ogni triade a Ramsgate o in un centro affiliato alla Gilda. Il sistema si basa interamente sui <strong>D6</strong>: conta quante facce uguali si ottengono in un singolo tiro. Ogni giocatore esegue 3 tiri, con possibilità di ritirare una sola volta per tiro.</p>
+    <div class="sh"><div class="sl">Riconoscimenti</div><h2 class="st">Corone Aetheriche</h2><div class="sline"></div><p class="sdesc">Oggetti antichi, tramandati solo ai più forti Slayer della Gilda. Non si comprano e non si assegnano per meriti ufficiali: si conquistano nelle Sfide Indomabili.</p></div>
+    <style>
+    .co-step{display:flex;gap:1rem;align-items:flex-start;padding:.85rem 0;border-bottom:1px solid rgba(200,168,75,.07)}
+    .co-step:last-child{border-bottom:none}
+    .co-num{flex-shrink:0;width:26px;height:26px;border:1px solid var(--gold3);color:var(--gold2);font-family:"Cinzel",serif;font-size:.72rem;display:flex;align-items:center;justify-content:center;margin-top:.15rem}
+    .co-stt{font-family:"Cinzel",serif;font-size:.8rem;color:var(--gold2);margin-bottom:.2rem}
+    .co-el{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-top:1rem}
+    @media(max-width:700px){.co-el{grid-template-columns:1fr}}
+    .co-elc{background:rgba(200,168,75,.04);border:1px solid var(--border);padding:.8rem}
+    .co-elt{font-family:"Cinzel",serif;font-size:.74rem;color:var(--gold2);margin-bottom:.25rem}
+    .co-warn{border-left:2px solid var(--fire);padding:.6rem 1.2rem;margin:1.2rem 0;font-style:italic;color:var(--text2);font-size:.91rem;background:rgba(224,90,32,.04)}
+    </style>
+
+    <div class="card" style="margin-bottom:2rem">
+      <div class="ct">Cosa sono</div>
+      <p>Nel mondo degli Slayer esistono riconoscimenti che vanno ben oltre i titoli ufficiali della Gilda, e le <strong>Corone Aetheriche</strong> sono tra questi. Il loro valore non risiede nella rarità del materiale, ma nel significato che portano con sé: chi possiede una Corona non ha semplicemente vinto una sfida — ha dimostrato di essere qualcuno a cui il mondo Slayer riconosce una <strong>presenza stabile, continuativa, degna di sostentamento</strong>.</p>
+      <div class="qi">Come si ottenga una Corona, in verità, non lo sa più nessuno con certezza: le regole per conquistarne una nuova sembrano essersi perse nel tempo. Quel che resta sono le Sfide Indomabili — e chi le supera ottiene qualcosa che nessuna missione ordinaria può dare.</div>
     </div>
-    <div style="background:rgba(200,168,75,.04);border:1px solid var(--border);padding:1.75rem;margin-bottom:2rem">
-      <h3 style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold2);margin-bottom:.9rem">Calcolo dell'Introito</h3>
-      <p>Si tira <strong>1D20</strong>, moltiplicato per un valore che dipende dal numero di Corone possedute: il moltiplicatore parte da <strong>×2</strong> con la prima Corona, e aumenta di <strong>+2</strong> per ogni Corona aggiuntiva.</p>
-      <table class="tcj-t" style="margin-top:1rem"><thead><tr><th>Corone possedute</th><th>Moltiplicatore</th></tr></thead><tbody>
-        <tr><td>1</td><td>×2</td></tr>
-        <tr><td>2</td><td>×4</td></tr>
-        <tr><td>3</td><td>×6</td></tr>
-        <tr><td>4</td><td>×8</td></tr>
-      </tbody></table>
-      <div class="qi" style="margin-top:1rem">Esempio: con 2 Corone, un tiro di 14 rende 14 × 4 = <strong>56 monete d'oro</strong>.</div>
+
+    <div class="card" style="margin-bottom:2rem">
+      <div class="ct">L’introito</div>
+      <p>Ogni Corona garantisce al suo portatore un <strong>introito passivo in monete d’oro</strong>, riscuotibile ad ogni triade quando il gruppo fa ritorno a Ramsgate o in un centro affiliato alla Gilda. Non si tratta di una cifra enorme, ma è sufficiente a garantire l’indipendenza minima a uno Slayer che voglia sopravvivere senza dipendere esclusivamente dalle cacce.</p>
+      <p style="margin-top:.9rem">Si tira <strong>1D20</strong> e si moltiplica per un valore che dipende da quante Corone si possiedono: il moltiplicatore parte da <strong>&times;2</strong> con la prima Corona e cresce di <strong>+2</strong> per ognuna in più. In altre parole è sempre <strong>il doppio delle Corone possedute</strong>.</p>
+      <div class="ctb" style="margin-top:1.2rem">
+        <table class="tcj-t" style="margin:0"><thead><tr><th>Corone</th><th>Moltiplicatore</th></tr></thead><tbody>
+          <tr><td>1</td><td>&times;2</td></tr><tr><td>2</td><td>&times;4</td></tr><tr><td>3</td><td>&times;6</td></tr>
+          <tr><td>4</td><td>&times;8</td></tr><tr><td>5</td><td>&times;10</td></tr><tr><td>6</td><td>&times;12</td></tr>
+        </tbody></table>
+        <table class="tcj-t" style="margin:0"><thead><tr><th>Corone</th><th>Moltiplicatore</th></tr></thead><tbody>
+          <tr><td>7</td><td>&times;14</td></tr><tr><td>8</td><td>&times;16</td></tr><tr><td>9</td><td>&times;18</td></tr>
+          <tr><td>10</td><td>&times;20</td></tr><tr><td>11</td><td>&times;22</td></tr><tr><td>12</td><td>&times;24</td></tr>
+        </tbody></table>
+      </div>
+      <div class="qi">Esempio: con 2 Corone, un tiro di 14 rende 14 &times; 4 = <strong>56 monete d’oro</strong>.</div>
+      <p style="font-size:.85rem;color:var(--text2);font-style:italic">Nella <a href="#scheda" style="color:var(--gold2)">scheda dello Slayer</a> il moltiplicatore viene calcolato da solo in base alle Corone segnate.</p>
     </div>
-    <div class="ctb">
+
+    <div class="card" style="margin-bottom:2rem">
+      <div class="ct">Le Sfide Indomabili</div>
+      <p>Sono <strong>cacce di difficoltà eccezionale</strong>: non solo per la potenza del Behemoth coinvolto, ma per i vincoli e le condizioni che le governano. Si affrontano durante i periodi di <strong>timeout</strong>, quando qualcuno del gruppo decide liberamente di cimentarsi.</p>
+      <p style="margin-top:.9rem">Non vengono imposte dalla Gilda né ricompensate con riconoscimenti ufficiali: <strong>affrontarle non è obbligatorio</strong>. Sono una scelta, e come tale vanno trattate. Possono essere risolte in modo puramente meccanico oppure narrate in roleplay — la decisione spetta interamente ai Player che vogliono partecipare.</p>
+    </div>
+
+    <div class="card" style="margin-bottom:2rem">
+      <div class="ct">Come si risolve una Sfida</div>
+      <p>Il sistema si basa interamente sui <strong>D6</strong>. Non conta quanti danni si infliggono, né quanto velocemente si abbatte il Behemoth: conta quante <strong>facce uguali</strong> si ottengono in un singolo tiro.</p>
+      <div style="margin-top:1.1rem">
+        <div class="co-step"><div class="co-num">1</div><div><div class="co-stt">Ci si prepara</div>Pozioni, nucleo difensivo e nucleo offensivo scelti in funzione del Behemoth. Da quanti di questi tre elementi si portano dipende il numero di dadi a disposizione.</div></div>
+        <div class="co-step"><div class="co-num">2</div><div><div class="co-stt">Si tira tre volte a testa</div>Ogni giocatore che partecipa esegue <strong>tre tiri</strong> in tutto nel corso della sfida, con la possibilità di <strong>ritirare una sola volta per tiro</strong>.</div></div>
+        <div class="co-step"><div class="co-num">3</div><div><div class="co-stt">Si contano le facce uguali</div>Ogni tiro vale un risultato secondo la tabella dei Livelli di Successo, da &minus;1 fino a +7.</div></div>
+        <div class="co-step"><div class="co-num">4</div><div><div class="co-stt">Si sommano i successi del gruppo</div>I risultati di tutti i partecipanti confluiscono in un unico totale. La soglia da raggiungere è di <strong>15 successi</strong>.</div></div>
+      </div>
+    </div>
+
+    <div class="ctb" style="margin-bottom:2rem">
       <div>
         <h3 style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold2);margin-bottom:.9rem">Livelli di Successo</h3>
         <table class="tcj-t"><thead><tr><th>Risultato</th><th>Condizione</th><th>Effetto</th></tr></thead><tbody>
-          <tr><td>Nullo</td><td>0 facce uguali</td><td style="color:var(--fire)">−1</td></tr>
-          <tr><td>Base</td><td>2 facce uguali</td><td>±0</td></tr>
+          <tr><td>Nullo</td><td>0 facce uguali</td><td style="color:var(--fire)">&minus;1</td></tr>
+          <tr><td>Base</td><td>2 facce uguali</td><td>&plusmn;0</td></tr>
           <tr><td>Critico</td><td>3 facce uguali</td><td style="color:var(--earth)">+1</td></tr>
           <tr><td>Extreme</td><td>4 facce uguali</td><td style="color:var(--gold2)">+3</td></tr>
           <tr><td>Impossible</td><td>5 facce uguali</td><td style="color:var(--radiant)">+5</td></tr>
           <tr><td><strong>Jackpot</strong></td><td>6 facce uguali</td><td style="color:var(--gold2);font-weight:bold">+7</td></tr>
         </tbody></table>
-        <div class="qi">Soglia: <strong>15 successi totali</strong>. Chi contribuisce di più ottiene la Corona.</div>
+        <div class="qi">Le facce uguali vanno contate <strong>all’interno di un singolo tiro</strong>: sei dadi che mostrano tutti lo stesso numero valgono +7, sei dadi tutti diversi costano &minus;1 al totale del gruppo.</div>
       </div>
       <div>
-        <h3 style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold2);margin-bottom:.9rem">Preparazione</h3>
+        <h3 style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold2);margin-bottom:.9rem">La Preparazione</h3>
         <table class="tcj-t"><thead><tr><th>Livello</th><th>Requisito</th><th>Dadi</th></tr></thead><tbody>
-          <tr><td>Nessuna</td><td>—</td><td>3</td></tr><tr><td>Livello 1</td><td>1 elemento su 3</td><td>4</td></tr>
-          <tr><td>Livello 2</td><td>2 elementi su 3</td><td>5</td></tr><tr><td><strong>Massima</strong></td><td>Tutti e 3</td><td><strong>6</strong></td></tr>
+          <tr><td>Nessuna</td><td>&mdash;</td><td>3</td></tr>
+          <tr><td>Livello 1</td><td>1 elemento su 3</td><td>4</td></tr>
+          <tr><td>Livello 2</td><td>2 elementi su 3</td><td>5</td></tr>
+          <tr><td><strong>Massima</strong></td><td>Tutti e 3</td><td><strong>6</strong></td></tr>
         </tbody></table>
-        <div style="display:flex;flex-direction:column;gap:.45rem;margin-top:.75rem">
-          <div class="card" style="padding:.65rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--gold2);margin-bottom:.1rem">Pozioni</div><div style="font-size:.8rem;color:var(--text2)">Pozioni adeguate alla tipologia di caccia</div></div>
-          <div class="card" style="padding:.65rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--gold2);margin-bottom:.1rem">Nucleo Difensivo</div><div style="font-size:.8rem;color:var(--text2)">Nucleo difensivo coerente con il Behemoth</div></div>
-          <div class="card" style="padding:.65rem"><div style="font-family:'Cinzel',serif;font-size:.76rem;color:var(--gold2);margin-bottom:.1rem">Nucleo Offensivo</div><div style="font-size:.8rem;color:var(--text2)">Nucleo offensivo efficace contro il Behemoth</div></div>
-        </div>
+        <div class="co-warn">Una caccia affrontata senza alcuna preparazione è una caccia in svantaggio: non impossibile, ma decisamente più rischiosa.</div>
+      </div>
+    </div>
+
+    <div class="co-el" style="margin-bottom:2rem">
+      <div class="co-elc"><div class="co-elt">Pozioni</div><div style="font-size:.85rem;color:var(--text2)">Portare con sé pozioni adeguate alla tipologia di caccia.</div></div>
+      <div class="co-elc"><div class="co-elt">Nucleo Difensivo</div><div style="font-size:.85rem;color:var(--text2)">Equipaggiare un nucleo elementale difensivo coerente con il Behemoth bersaglio.</div></div>
+      <div class="co-elc"><div class="co-elt">Nucleo Offensivo</div><div style="font-size:.85rem;color:var(--text2)">Equipaggiare un nucleo elementale offensivo efficace contro il Behemoth bersaglio.</div></div>
+    </div>
+
+    <div class="ctb">
+      <div class="card">
+        <div class="ct">Chi ottiene la Corona</div>
+        <p>Raggiunta la soglia, <strong>chi ha contribuito al maggior numero di successi individuali</strong> si aggiudica la Corona. Se quel personaggio ne possiede già una, la Corona passa al <strong>secondo classificato</strong>.</p>
+        <div class="qi">I 15 successi sono la soglia <em>iniziale</em>: man mano che le Sfide vengono superate, il valore richiesto può aumentare progressivamente.</div>
+      </div>
+      <div class="card">
+        <div class="ct">Se la Sfida fallisce</div>
+        <p>Non è tutto perduto. Una parte dei successi ottenuti <strong>abbassa la soglia richiesta per la volta seguente</strong>, come dei checkpoint che permettono di arrivare più preparati al tentativo successivo.</p>
+        <div class="qi">Lo scaglione da superare è di <strong>5 successi per volta</strong>.</div>
       </div>
     </div>
   </div>
@@ -2075,6 +2139,17 @@ document.addEventListener("keydown",function(e){
   else if(e.key==="ArrowUp"){e.preventDefault();skMove(-1);}
   else if(e.key==="Enter"){e.preventDefault();skGo();}
 });
+
+
+const ML_HYP=["symael","azrael","raphael","mykael"];
+let mlTmr={};
+function mlSave(k){
+  try{localStorage.setItem("tcj-mael-"+k,document.getElementById("ml-"+k).value);}catch(e){}
+  const s=document.getElementById("ml-sv-"+k);if(!s)return;
+  s.textContent="\u2713 salvato";s.classList.add("on");
+  clearTimeout(mlTmr[k]);mlTmr[k]=setTimeout(function(){s.classList.remove("on")},1800);
+}
+function mlLoad(){ML_HYP.forEach(function(k){try{const v=localStorage.getItem("tcj-mael-"+k),e=document.getElementById("ml-"+k);if(e&&v!==null)e.value=v;}catch(e){}});}
 
 function bkKeys(){const o=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.indexOf("tcj-")===0)o.push(k);}}catch(e){}return o.sort();}
 function bkMsg(h){const m=document.getElementById("bk-msg");if(m)m.innerHTML=h;}
@@ -2659,7 +2734,7 @@ function initMapClicks(){
   });
 }
 
-window.addEventListener("load",()=>{buildBeh();buildW();buildC();buildO();buildAMP();buildTR();loadN();loadMN();scBuild();initMapClicks();buildNpcQtyBtns();plAdd();});
+window.addEventListener("load",()=>{buildBeh();buildW();buildC();buildO();buildAMP();buildTR();loadN();loadMN();mlLoad();scBuild();initMapClicks();buildNpcQtyBtns();plAdd();});
 window.addEventListener("scroll",updNav,{passive:true});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closepw();});
 </script>
