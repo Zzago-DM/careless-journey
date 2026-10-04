@@ -8290,8 +8290,9 @@ box.innerHTML=h;})();
 .mae-ov.on .mae-box{transform:none}
 .mae-x{position:absolute;top:.6rem;right:.6rem;background:transparent;border:1px solid var(--border);color:var(--gold2);border-radius:999px;width:2.2rem;height:2.2rem;cursor:pointer;font-size:.95rem;z-index:2}
 .mae-x:hover,.mae-x:focus-visible{border-color:var(--gold3);color:var(--gold)}
-.mae-ph{position:relative;aspect-ratio:3/4;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:radial-gradient(circle at 50% 40%,rgba(var(--gold-rgb),.12),transparent 70%),#0d0b08;align-self:start}
-.mae-ph img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .35s}
+.mae-ph{position:relative;aspect-ratio:4/5;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:radial-gradient(circle at 50% 40%,rgba(var(--gold-rgb),.12),transparent 70%),#0d0b08;align-self:start}
+.mae-ph img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;object-position:center;display:block;opacity:0;transition:opacity .35s;filter:drop-shadow(0 10px 18px rgba(0,0,0,.55))}
+.mae-ph::after{content:"";position:absolute;left:12%;right:12%;bottom:4%;height:14%;border-radius:50%;background:radial-gradient(ellipse,rgba(var(--gold-rgb),.22),transparent 70%);pointer-events:none}
 .mae-ph img.ok{opacity:1}
 .mae-fb{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;color:var(--gold)}
 .mae-fb svg{height:46%;width:auto;fill:currentColor;opacity:.22}
@@ -8316,10 +8317,11 @@ var M=[{"n": "Wils Bormen", "s": "wils-bormen", "r": "Maestro d'armi — forgiat
 var ov=document.getElementById("mae-ov"),img=document.getElementById("mae-img"),ph=document.getElementById("mae-ph"),cur=0,back=null;
 if(!ov)return;
 function esc(t){var d=document.createElement("div");d.textContent=t;return d.innerHTML;}
-function photo(m){var ext=["webp","jpg","png"],k=0;ph.classList.remove("has");img.classList.remove("ok");img.removeAttribute("src");img.alt="Ritratto di "+m.n;
+function photo(m){var c=[],k=0;["webp","jpg","png"].forEach(function(e){c.push("img/"+m.s+"."+e,"img/maestri/"+m.s+"."+e);});
+  ph.classList.remove("has");img.classList.remove("ok");img.removeAttribute("src");img.alt="Ritratto di "+m.n;
   img.onload=function(){ph.classList.add("has");img.classList.add("ok");};
-  img.onerror=function(){k++;if(k<ext.length)img.src="img/maestri/"+m.s+"."+ext[k];else img.removeAttribute("src");};
-  img.src="img/maestri/"+m.s+"."+ext[0];}
+  img.onerror=function(){k++;if(k<c.length)img.src=c[k];else img.removeAttribute("src");};
+  img.src=c[0];}
 function fill(i){cur=(i+M.length)%M.length;var m=M[cur];
   document.getElementById("mae-r").textContent=m.r;document.getElementById("mae-n").textContent=m.n;
   document.getElementById("mae-a").textContent=m.a?(m.f?"detta anche ":"detto anche ")+m.a:"";
