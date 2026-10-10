@@ -1,0 +1,83 @@
+/* Mappe ingrandite dei continenti (finestre a tutto schermo) */
+
+/* ===== Viste continenti (overlay) ===== */
+.cj-overlay{
+  --bg:#08060a;--panel:#120b08;--ink:#e9dfca;--muted:#a4937a;--faint:#6f6354;
+  --gold:#cba85a;--gold-bright:#eccd84;--fire:#e05a20;--fire-bright:#ff7a33;
+  --line:rgba(203,168,90,.20);--line-soft:rgba(203,168,90,.10);
+  position:fixed;inset:0;z-index:10000;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;background:radial-gradient(120% 80% at 50% -10%, #1a0d08 0%, var(--bg) 60%);
+  color:var(--ink);font-family:'EB Garamond',Georgia,serif;-webkit-font-smoothing:antialiased}
+.cj-overlay.open{display:block;animation:cj-fade .3s ease}
+@keyframes cj-fade{from{opacity:0}to{opacity:1}}
+.cj-overlay .back{background:none}
+#cj-terrestre{--fire:#3f9a55;--fire-bright:#6fc28f}
+#cj-radiante{--fire:#9a7fd0;--fire-bright:#c89fff}
+#cj-folgorante{--fire:#c0a818;--fire-bright:#f0d020}
+#cj-glaciale{--fire:#5aa8c8;--fire-bright:#7ec8e3}
+#cj-oscuro{--fire:#7a52c0;--fire-bright:#a070e8}
+#cj-ramsgate{--fire:#b07a30;--fire-bright:#e0a850}
+.cj-overlay *{box-sizing:border-box}
+.cj-overlay .wrap{max-width:1040px;margin:0 auto;padding:18px 18px 64px}
+.cj-overlay .bar{display:flex;align-items:center;gap:14px;margin:6px 2px 14px}
+.cj-overlay .back{display:inline-flex;align-items:center;gap:7px;color:var(--muted);text-decoration:none;
+    font-family:'Cinzel',serif;font-weight:600;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+    padding:7px 12px;border:1px solid var(--line);border-radius:999px;transition:.25s;cursor:pointer}
+.cj-overlay .back:hover,.cj-overlay .back:focus-visible{color:var(--gold-bright);background:rgba(203,168,90,.06);outline:none}
+.cj-overlay .back svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2}
+.cj-overlay .crumb{color:var(--faint);font-size:.78rem}
+.cj-overlay .crumb b{color:var(--muted);font-weight:500}
+.cj-overlay .stage{position:relative;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#0b0705;
+    box-shadow:0 30px 80px -40px rgba(0,0,0,.9), inset 0 0 120px rgba(0,0,0,.5)}
+.cj-overlay .stage svg{display:block;width:100%;height:auto}
+.cj-overlay .titleplate{position:absolute;top:18px;left:20px;pointer-events:none}
+.cj-overlay .titleplate .ele{font-family:'Cinzel',serif;font-size:.62rem;font-weight:600;letter-spacing:.3em;
+    text-transform:uppercase;color:var(--fire-bright);display:flex;align-items:center;gap:8px}
+.cj-overlay .titleplate .ele::before{content:"";width:18px;height:1px;background:var(--fire)}
+.cj-overlay .titleplate h1{font-family:'Cinzel',serif;font-weight:700;margin:.18em 0 0;
+    font-size:clamp(1.5rem,4.6vw,2.5rem);letter-spacing:.02em;text-shadow:0 2px 20px rgba(0,0,0,.7)}
+.cj-overlay .hint{position:absolute;right:14px;bottom:12px;color:var(--faint);font-size:.7rem;
+    display:flex;align-items:center;gap:7px;pointer-events:none}
+.cj-overlay .hint .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);animation:cj-bk 2.4s infinite}
+@keyframes cj-bk{50%{opacity:.25}}
+.cj-overlay .info{margin-top:18px;border:1px solid var(--line);border-radius:16px;
+    background:linear-gradient(180deg,var(--panel),#0c0706);padding:26px 26px 22px;position:relative;overflow:hidden}
+.cj-overlay .info::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;
+    background:linear-gradient(90deg,transparent,var(--fire),transparent);opacity:.5}
+.cj-overlay .lede{font-size:1.12rem;line-height:1.55;color:#d8cdb6;max-width:62ch;margin:.2rem 0 1.4rem;font-style:italic}
+.cj-overlay .lede b{font-style:normal;color:var(--gold-bright);font-weight:500}
+.cj-overlay .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-soft);
+    border:1px solid var(--line-soft);border-radius:10px;overflow:hidden}
+.cj-overlay .cell{background:var(--panel);padding:15px 17px}
+.cj-overlay .cell .k{font-family:'Cinzel',serif;font-size:.62rem;font-weight:600;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--gold);margin-bottom:5px}
+.cj-overlay .cell .k.danger{color:var(--fire-bright)}
+.cj-overlay .cell .v{font-size:1rem;line-height:1.45}
+.cj-overlay .cell .v small{color:var(--muted);display:block;font-size:.86rem;margin-top:2px}
+.cj-overlay .cell.wide{grid-column:1 / -1}
+.cj-overlay .legend{display:flex;flex-wrap:wrap;gap:18px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line-soft)}
+.cj-overlay .legend .it{display:flex;align-items:center;gap:9px;font-size:.86rem;color:var(--muted)}
+.cj-overlay .legend .sw{width:15px;height:15px;border-radius:4px;flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.cj-overlay .legend .it b{color:var(--ink);font-weight:500}
+@media(max-width:640px){.cj-overlay .grid{grid-template-columns:1fr}.cj-overlay .titleplate{top:14px;left:15px}.cj-overlay .info{padding:20px 17px}}
+@media(prefers-reduced-motion:reduce){.cj-overlay *{animation:none!important}}
+.cj-overlay .hit{fill:transparent;pointer-events:all;cursor:pointer}
+.cj-overlay .pin{pointer-events:none}
+.cj-overlay .marker .tip{opacity:0;pointer-events:none;transition:opacity .18s ease}
+.cj-overlay .marker.open .tip{opacity:1}
+.cj-overlay .ember{animation:cj-em 7s linear infinite}
+@keyframes cj-em{0%{transform:translateY(0);opacity:0}12%{opacity:.8}90%{opacity:.4}100%{transform:translateY(-46px);opacity:0}}
+/* mappa: affordance di click */
+#world-map .isl-group{transition:filter .2s ease}
+#world-map .isl-group:hover{filter:brightness(1.18)}
+#world-map .isl-label{transition:opacity .2s ease}
+#world-map .isl-label:hover{opacity:.78}
+
+/* ===== Maelstrom (overlay) ===== */
+#cj-maelstrom{background:#04132a;padding:0;overflow:hidden}
+#cj-maelstrom iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+#cj-maelstrom .bar{position:absolute;top:16px;left:18px;z-index:6}
+#cj-maelstrom .back{color:#a9c6cc;border-color:rgba(95,240,232,.28);background:rgba(8,20,28,.5)}
+#cj-maelstrom .back:hover{color:#eafffd;background:rgba(95,240,232,.12)}
+#maelstrom,#pulsar-vortices{cursor:pointer;transition:filter .2s ease}
+#maelstrom:hover,#pulsar-vortices:hover{filter:brightness(1.25)}

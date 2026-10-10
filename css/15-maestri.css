@@ -1,0 +1,34 @@
+/* Schede dei Maestri di Ramsgate con foto */
+
+.mae-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:.6rem;margin:.6rem 0 1.4rem}
+.mae-it.card{display:flex;flex-direction:column;align-items:flex-start;gap:.25rem;text-align:left;cursor:pointer;padding:.85rem 1rem;font:inherit;color:inherit;width:100%;transition:border-color .2s,background .2s,transform .2s}
+.mae-it .ct{margin:0;font-size:1.02rem}
+.mae-it .mae-r{font-family:"Cinzel",serif;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold3);line-height:1.5}
+.mae-it:hover,.mae-it:focus-visible{border-color:var(--gold3);background:rgba(var(--gold-rgb),.06);transform:translateY(-1px)}
+.mae-it:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.mae-ov{position:fixed;inset:0;z-index:3100;display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) 16px max(16px,env(safe-area-inset-bottom,0px));background:rgba(4,3,2,.78);backdrop-filter:blur(4px);opacity:0;transition:opacity .25s}
+.mae-ov[hidden]{display:none}
+.mae-ov.on{opacity:1}
+.mae-box{position:relative;display:grid;grid-template-columns:minmax(200px,280px) 1fr;gap:1.6rem;width:min(880px,100%);max-height:100%;overflow:auto;background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:1.6rem;box-shadow:0 30px 80px rgba(0,0,0,.6);transform:translateY(10px);transition:transform .25s}
+.mae-ov.on .mae-box{transform:none}
+.mae-x{position:absolute;top:.6rem;right:.6rem;background:transparent;border:1px solid var(--border);color:var(--gold2);border-radius:999px;width:2.2rem;height:2.2rem;cursor:pointer;font-size:.95rem;z-index:2}
+.mae-x:hover,.mae-x:focus-visible{border-color:var(--gold3);color:var(--gold)}
+.mae-ph{position:relative;aspect-ratio:4/5;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:radial-gradient(circle at 50% 40%,rgba(var(--gold-rgb),.12),transparent 70%),#0d0b08;align-self:start}
+.mae-ph img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;object-position:center;display:block;opacity:0;transition:opacity .35s;filter:drop-shadow(0 10px 18px rgba(0,0,0,.55))}
+.mae-ph::after{content:"";position:absolute;left:12%;right:12%;bottom:4%;height:14%;border-radius:50%;background:radial-gradient(ellipse,rgba(var(--gold-rgb),.22),transparent 70%);pointer-events:none}
+.mae-ph img.ok{opacity:1}
+.mae-fb{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;color:var(--gold)}
+.mae-fb svg{height:46%;width:auto;fill:currentColor;opacity:.22}
+.mae-fb span{font-family:"Cinzel Decorative","Cinzel",serif;font-size:1.6rem;letter-spacing:.1em;color:var(--gold2)}
+.mae-ph.has .mae-fb{display:none}
+.mae-role{font-family:"Cinzel",serif;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold3);padding-right:2.4rem}
+.mae-name{font-family:"Cinzel",serif;font-size:clamp(1.5rem,3vw,2rem);color:var(--gold);margin:.3rem 0 .1rem;line-height:1.15}
+.mae-aka{font-style:italic;color:var(--text2);margin-bottom:.6rem;min-height:.2rem}
+.mae-sec{margin:.9rem 0 0}
+.mae-sec h4{font-family:"Cinzel",serif;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold3);margin:0 0 .25rem}
+.mae-sec p{margin:0;color:var(--text);line-height:1.65;max-width:62ch}
+.mae-nav{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-top:1.4rem;padding-top:1rem;border-top:1px solid var(--border);color:var(--text2);font-size:.8rem}
+.mae-nav button{background:transparent;border:1px solid var(--border);color:var(--gold2);font-family:"Cinzel",serif;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;padding:.55rem .8rem;border-radius:999px;cursor:pointer}
+.mae-nav button:hover,.mae-nav button:focus-visible{border-color:var(--gold3);color:var(--gold)}
+@media (max-width:640px){.mae-box{grid-template-columns:1fr;padding:1.2rem;gap:1rem}.mae-ph{width:min(220px,62%);justify-self:center}}
+@media (prefers-reduced-motion:reduce){.mae-ov,.mae-box,.mae-it,.mae-ph img{transition:none}}

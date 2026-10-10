@@ -1,0 +1,12 @@
+/* Sezione Corone Aetheriche */
+
+    .co-step{display:flex;gap:1rem;align-items:flex-start;padding:.85rem 0;border-bottom:1px solid rgba(var(--gold-rgb),.07)}
+    .co-step:last-child{border-bottom:none}
+    .co-num{flex-shrink:0;width:26px;height:26px;border:1px solid var(--gold3);color:var(--gold2);font-family:"Cinzel",serif;font-size:.72rem;display:flex;align-items:center;justify-content:center;margin-top:.15rem}
+    .co-stt{font-family:"Cinzel",serif;font-size:.8rem;color:var(--gold2);margin-bottom:.2rem}
+    .co-el{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-top:1rem}
+    @media(max-width:700px){.co-el{grid-template-columns:1fr}}
+    .co-elc{background:rgba(var(--gold-rgb),.04);border:1px solid var(--border);padding:.8rem}
+    .co-elt{font-family:"Cinzel",serif;font-size:.74rem;color:var(--gold2);margin-bottom:.25rem}
+    .co-warn{border-left:2px solid var(--fire);padding:.6rem 1.2rem;margin:1.2rem 0;font-style:italic;color:var(--text2);font-size:.91rem;background:rgba(224,90,32,.04)}
+    

@@ -1,0 +1,42 @@
+/* Sezione Mappa del mondo */
+
+#mappa{background:var(--bg)}
+
+.cont-panel{display:none;margin-top:1.5rem;background:var(--bg3);border:1px solid var(--border);padding:1.5rem 1.75rem;position:relative;transition:all .3s;}
+.cont-panel.visible{display:block;animation:fadeUp .35s ease forwards;}
+.cont-panel-close{position:absolute;top:.75rem;right:.75rem;background:none;border:none;color:var(--text2);font-size:1.1rem;cursor:pointer;opacity:.6;transition:opacity .2s;font-family:"Cinzel",serif;}
+.cont-panel-close:hover{opacity:1;}
+.cont-panel-header{display:flex;align-items:flex-start;gap:1.1rem;margin-bottom:1rem;border-bottom:1px solid var(--border);padding-bottom:1rem;}
+.cont-panel-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+.cont-panel-title{font-family:"Cinzel Decorative",serif;font-size:1.25rem;font-weight:700;margin-bottom:.2rem;}
+.cont-panel-cap{font-family:"Cinzel",serif;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold3);}
+.cont-panel-ruler{font-family:"Cinzel",serif;font-size:.72rem;margin-top:.25rem;}
+.cont-panel-ruler strong{color:var(--gold2);}
+.cont-panel-body{font-size:.92rem;color:var(--text);line-height:1.7;}
+.cont-panel-detail{font-family:"Cinzel",serif;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text2);margin-top:.65rem;opacity:.7;}
+
+.map-wrap{position:relative;border:1px solid var(--border);overflow:hidden}
+#world-map{width:100%;height:auto;display:block;background:#080a0f}
+.isl-group{cursor:pointer}
+.capital-marker{pointer-events:none}
+#isl-ardente path{fill:rgba(224,90,32,0.13);stroke:#e05a20;stroke-width:3;stroke-linejoin:round;filter:url(#glow-ardente);transition:fill .3s;}
+#isl-ardente:hover path{fill:rgba(224,90,32,0.3);}
+#lbl-ardente{font-family:"Cinzel",serif;font-size:26px;letter-spacing:5px;text-transform:uppercase;opacity:0;transition:opacity .4s;pointer-events:none;}
+#isl-terrestre path{fill:rgba(74,150,64,0.13);stroke:#4a9640;stroke-width:3;stroke-linejoin:round;filter:url(#glow-terrestre);transition:fill .3s;}
+#isl-terrestre:hover path{fill:rgba(74,150,64,0.3);}
+#lbl-terrestre{font-family:"Cinzel",serif;font-size:26px;letter-spacing:5px;text-transform:uppercase;opacity:0;transition:opacity .4s;pointer-events:none;}
+#isl-folgorante path{fill:rgba(240,208,32,0.13);stroke:#f0d020;stroke-width:3;stroke-linejoin:round;filter:url(#glow-folgorante);transition:fill .3s;}
+#isl-folgorante:hover path{fill:rgba(240,208,32,0.3);}
+#lbl-folgorante{font-family:"Cinzel",serif;font-size:26px;letter-spacing:5px;text-transform:uppercase;opacity:0;transition:opacity .4s;pointer-events:none;}
+#isl-radiante path{fill:rgba(212,168,255,0.13);stroke:#d4a8ff;stroke-width:3;stroke-linejoin:round;filter:url(#glow-radiante);transition:fill .3s;}
+#isl-radiante:hover path{fill:rgba(212,168,255,0.3);}
+#lbl-radiante{font-family:"Cinzel",serif;font-size:26px;letter-spacing:5px;text-transform:uppercase;opacity:0;transition:opacity .4s;pointer-events:none;}
+#isl-glaciale path{fill:rgba(126,200,227,0.13);stroke:#7ec8e3;stroke-width:3;stroke-linejoin:round;filter:url(#glow-glaciale);transition:fill .3s;}
+#isl-glaciale:hover path{fill:rgba(126,200,227,0.3);}
+#lbl-glaciale{font-family:"Cinzel",serif;font-size:26px;letter-spacing:5px;text-transform:uppercase;opacity:0;transition:opacity .4s;pointer-events:none;}
+#isl-oscuro path{fill:rgba(136,96,208,0.13);stroke:#8860d0;stroke-width:3;stroke-linejoin:round;filter:url(#glow-oscuro);transition:fill .3s;}
+#isl-oscuro:hover path{fill:rgba(136,96,208,0.3);}
+#lbl-oscuro{font-family:"Cinzel",serif;font-size:26px;letter-spacing:5px;text-transform:uppercase;opacity:0;transition:opacity .4s;pointer-events:none;}
+#isl-ramsgate path{fill:rgba(139,90,43,0.13);stroke:#8b5a2b;stroke-width:3;stroke-linejoin:round;filter:url(#glow-ramsgate);transition:fill .3s;}
+#isl-ramsgate:hover path{fill:rgba(139,90,43,0.3);}
+#lbl-ramsgate{font-family:"Cinzel",serif;font-size:26px;letter-spacing:5px;text-transform:uppercase;opacity:0;transition:opacity .4s;pointer-events:none;}

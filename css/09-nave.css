@@ -1,0 +1,18 @@
+/* Sezione Nave (Careless Journey) */
+
+    .nv-extra{margin-top:1.75rem;display:flex;flex-direction:column;gap:1.25rem}
+    .nv-card{background:var(--bg3);border:1px solid var(--border);padding:1.25rem;position:relative}
+    .nv-lbl{font-family:"Cinzel",serif;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold3);display:block;margin-bottom:.6rem}
+    .nv-note{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:"Crimson Pro",serif;font-size:.92rem;line-height:1.6;padding:.6rem .7rem;outline:none;resize:vertical;min-height:90px;transition:border-color .2s;box-sizing:border-box}
+    .nv-note:focus{border-color:var(--gold3)}
+    .nv-note::placeholder{color:var(--text2);font-style:italic}
+    .nv-reserve-box{display:grid;grid-template-columns:1fr 1fr;background:var(--bg3);border:1px solid var(--border)}
+    .nv-reserve{padding:1.4rem 1.25rem;text-align:center}
+    .nv-reserve+.nv-reserve{border-left:1px solid var(--border)}
+    .nv-counter{display:flex;align-items:center;justify-content:center;gap:.6rem;margin-top:.3rem}
+    .nv-counter button{width:34px;height:34px;background:var(--bg);border:1px solid var(--border);color:var(--gold2);font-size:1.15rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:"Cinzel",serif}
+    .nv-counter button:hover{background:rgba(var(--gold-rgb),.12);border-color:var(--gold3)}
+    .nv-counter input{width:74px;background:var(--bg);border:1px solid var(--border);color:var(--gold2);font-family:"Cinzel Decorative",serif;font-size:1.4rem;padding:.3rem;outline:none;text-align:center;transition:border-color .2s}
+    .nv-counter input:focus{border-color:var(--gold3)}
+    @media(max-width:560px){.nv-reserve-box{grid-template-columns:1fr}.nv-reserve+.nv-reserve{border-left:none;border-top:1px solid var(--border)}}
+    
