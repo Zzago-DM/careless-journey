@@ -499,7 +499,25 @@ html.fx-on .fx-side{display:block}
 .hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);font-family:"Cinzel",serif;font-size:.6rem;letter-spacing:.3em;color:var(--gold3);text-transform:uppercase;opacity:0;animation:fadeUp 1s 1.5s forwards;display:flex;flex-direction:column;align-items:center;gap:.5rem}
 .hero-scroll::after{content:"";width:1px;height:40px;background:linear-gradient(to bottom,var(--gold3),transparent);animation:pulse 2s infinite}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes npcStamp{0%{opacity:0;transform:scale(1.5) rotate(-6deg)}60%{opacity:1;transform:scale(.95) rotate(-6deg)}100%{opacity:1;transform:scale(1) rotate(-6deg)}}
+@keyframes npcStamp{0%{opacity:0;transform:scale(1.5) rotate(-6deg)}60%{opacity:1;transform:scale(.95) rotate(0)}100%{opacity:1;transform:scale(1) rotate(0)}}
+/* Dossier umanoidi: PV attuali e riquadro per togliere vita */
+.npc-pv{text-align:right}
+.npc-pv-l{font-size:.5rem;color:#a06060;font-family:"Cinzel",serif;letter-spacing:.08em;text-transform:uppercase}
+.npc-pv-n{font-family:"Cinzel Decorative",serif;line-height:1;font-weight:700;white-space:nowrap}
+.npc-cur{font-size:1.3rem;color:var(--master2);transition:color .2s}
+.npc-max{font-size:.7rem;color:#806060;margin-left:.1rem}
+.npc-dmg{display:flex;align-items:stretch;border:1px solid rgba(200,56,56,.35);background:rgba(0,0,0,.25)}
+.npc-dmg input{width:2.9rem;padding:.25rem .3rem;background:transparent;border:0;color:var(--text);font-family:"Cinzel",serif;font-size:.8rem;text-align:center;outline:none;-moz-appearance:textfield;appearance:textfield}
+.npc-dmg input::-webkit-outer-spin-button,.npc-dmg input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.npc-dmg input::placeholder{color:#805050}
+.npc-dmg button{padding:0 .5rem;background:rgba(200,56,56,.15);border:0;border-left:1px solid rgba(200,56,56,.35);color:var(--master2);font-family:"Cinzel",serif;font-size:.85rem;cursor:pointer;transition:background .2s}
+.npc-dmg button:hover,.npc-dmg button:focus-visible{background:rgba(200,56,56,.3)}
+.npc-dmg:focus-within{border-color:var(--master)}
+.sc.npc-low .npc-cur{color:#ff8a3a}
+.sc.npc-down{opacity:.45}
+.sc.npc-down .npc-cur{color:#806060}
+.sc.npc-hit{animation:npcHit .35s ease-out}
+@keyframes npcHit{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 @keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
 section{position:relative;z-index:1;padding:5rem 2rem}
 .si{max-width:1200px;margin:0 auto}

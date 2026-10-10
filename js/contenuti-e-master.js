@@ -134,11 +134,12 @@ function npcGenerate(){
     const stats=npcRollStats(level);
     const costMod=Math.floor((stats.COST-10)/2);
     const hp=(5+costMod)*level;
-    html+=`<div class="sc" style="animation:npcStamp .4s ease-out both;animation-delay:${i*70}ms">
+    html+=`<div class="sc" data-max="${hp}" data-cur="${hp}" style="animation:npcStamp .4s ease-out both;animation-delay:${i*70}ms">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
         <div style="flex:1;min-width:0"><span class="scl" style="margin-bottom:0">${role}</span></div>
         <div style="text-align:right;flex-shrink:0;margin-left:.6rem;display:flex;align-items:center;gap:.6rem">
-          <div><div style="font-size:.5rem;color:#a06060;font-family:'Cinzel',serif;letter-spacing:.08em;text-transform:uppercase">HP</div><div style="font-size:1.3rem;color:var(--master2);font-family:'Cinzel Decorative',serif;line-height:1;font-weight:700">${hp}</div></div>
+          <div class="npc-pv"><div class="npc-pv-l">PV</div><div class="npc-pv-n"><span class="npc-cur">${hp}</span><span class="npc-max">/${hp}</span></div></div>
+          <div class="npc-dmg"><input type="number" inputmode="numeric" placeholder="0" aria-label="PV da togliere" title="Scrivi i danni e premi Invio (un numero negativo cura)" onkeydown="if(event.key==='Enter'){event.preventDefault();npcDmg(this)}"><button type="button" onclick="npcDmg(this.previousElementSibling)" title="Togli PV">−</button></div>
           <span style="font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.08em;border:1px solid var(--master);color:var(--master2);padding:.15rem .55rem">LV. ${level}</span>
         </div>
       </div>
@@ -152,6 +153,20 @@ function npcGenerate(){
     </div>`;
   }
   document.getElementById("npc-results").innerHTML=html;
+}
+/* Toglie al dossier i PV scritti nel riquadro (un numero negativo li restituisce, senza superare il massimo) */
+function npcDmg(inp){
+  const v=parseInt(inp.value,10);inp.value="";
+  if(!v)return;
+  const card=inp.closest(".sc"),max=+card.dataset.max;
+  const cur=Math.max(0,Math.min(max,(+card.dataset.cur)-v));
+  card.dataset.cur=cur;
+  card.querySelector(".npc-cur").textContent=cur;
+  card.classList.toggle("npc-down",cur===0);
+  card.classList.toggle("npc-low",cur>0&&cur<=max/4);
+  if(v>0){card.style.animation="";card.classList.remove("npc-hit");void card.offsetWidth;card.classList.add("npc-hit");}
+  sfxPlay(v>0?"tick":"mend");
+  inp.focus();
 }
 
 const TR=[{n:1,b:"ly",nm:"Triade Radiante",t:"Nascita, inizio, luce pura"},{n:2,b:"ly",nm:"Triade Folgorante",t:"Scoperta, energia, espansione"},{n:3,b:"ly",nm:"Triade Ardente",t:"Conflitto, coraggio, passione"},{n:4,b:"ly",nm:"Triade Terrestre",t:"Stabilità, costruzione, prosperità"},{n:5,b:"ly",nm:"Triade Congelante",t:"Silenzio, attesa, gelo"},{n:6,b:"ly",nm:"Triade Oscura",t:"Crepuscolo, introspezione"},{n:"p",txt:"✦ Passaggio da Lyra a Kornos ✦",sub:"Giorno 30 Triade Oscura → Giorno 1 Triade Alborea"},{n:7,b:"ko",nm:"Triade Alborea",t:"Rinascita, memoria, chiarore dopo l'ombra"},{n:8,b:"ko",nm:"Triade Tuonante",t:"Turbolenza, prova, voce interiore"},{n:9,b:"ko",nm:"Triade Fiammeggiante",t:"Purificazione, rivoluzione"},{n:10,b:"ko",nm:"Triade Sporizzata",t:"Decomposizione, metamorfosi"},{n:11,b:"ko",nm:"Triade Algente",t:"Morte apparente, immobilità"},{n:12,b:"ko",nm:"Triade Foscomanto",t:"Oscurità totale, fine del ciclo"},{n:"p2",txt:"✦ Passaggio da Kornos a Lyra ✦",sub:"Giorno 30 Triade Foscomanto → Giorno 1 Triade Radiante"}];
