@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Il Maelstrom — The Careless Journey</title>
+<style>
+  *{box-sizing:border-box;margin:0}
+  html,body{height:100%;background:#02060b;overflow:hidden}
+  canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<canvas id="c" aria-label="Il Maelstrom: un vortice a clessidra con due bocche che risucchiano rocce e nubi"></canvas>
+<script>
+/* Vista del Maelstrom: vortice a clessidra con due grandi bocche, nubi di tempesta, rocce risucchiate e lampi.
+   Si apre dalla Mappa cliccando sul Maelstrom. I numeri qui sotto regolano l'aspetto. */
+(function(){
+var CFG={
+  WAIST:24,          // raggio della strozzatura centrale (px su schermo da 800)
+  MOUTH:0.46,        // larghezza delle bocche (frazione della larghezza dello schermo)
+  RIM:0.42,          // distanza delle bocche dal centro (frazione dell'altezza)
+  TILT:0.2,          // quanto si vedono "di sbieco" gli anelli
+  PART:1500,          // particelle che girano sulle pareti
+  ROCKS:28,          // rocce risucchiate
+  CLOUDS:22,         // nubi di tempesta
+  BOLT:[2.5,7]       // ogni quanti secondi (min, max) cade un lampo
+};
+var cv=document.getElementById('c'),ctx=cv.getContext('2d');
+var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+var W=0,H=0,cx=0,cy=0,S=1,DPR=1,HH=0,RM=0,R0=0;
+function resize(){DPR=Math.min(window.devicePixelRatio||1,1.5);W=innerWidth;H=innerHeight;cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0);
+  cx=W/2;cy=H/2;S=Math.min(W,H)/800;HH=H*CFG.RIM;RM=Math.max(W*CFG.MOUTH,170*S);R0=CFG.WAIST*S;buildBg();}
+function rand(a,b){return a+Math.random()*(b-a);}
+/* profilo della clessidra: v da -1 (bocca alta) a 0 (strozzatura) a +1 (bocca bassa) */
+function rad(v){var u=Math.abs(v);return R0+(RM-R0)*Math.pow(u,2.3);}
+function yc(v){return cy+v*HH;}
+function proj(v,th){var r=rad(v);return [cx+r*Math.cos(th),yc(v)+r*CFG.TILT*Math.sin(th)];}
+
+/* ---------- sfondo fisso: cielo cupo, stelle velate, anello lontano ---------- */
+var BG=null;
+function buildBg(){
+  BG=document.createElement('canvas');BG.width=Math.round(W*DPR);BG.height=Math.round(H*DPR);var b=BG.getContext('2d');b.setTransform(DPR,0,0,DPR,0,0);
+  var g=b.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H)*0.75);g.addColorStop(0,'#0a2230');g.addColorStop(0.45,'#06131d');g.addColorStop(1,'#010307');
+  b.fillStyle=g;b.fillRect(0,0,W,H);
+  for(var i=0;i<160;i++){b.fillStyle='rgba(190,215,230,'+rand(0.05,0.3).toFixed(2)+')';var s=Math.random()<0.1?1.6:1;b.fillRect(Math.random()*W,Math.random()*H,s,s);}
+  b.save();b.translate(W*0.84,H*0.3);b.rotate(-0.42);b.globalAlpha=0.1;b.strokeStyle='#5d8aa3';
+  [[250,64,6],[282,74,3],[222,56,2]].forEach(function(e){b.lineWidth=e[2]*S;b.beginPath();b.ellipse(0,0,e[0]*S,e[1]*S,0,0,6.283);b.stroke();});b.restore();
+}
+
+/* ---------- nubi di tempesta: sprite morbidi disegnati una volta ---------- */
+var CLOUDS=[],SPR=[];
+function cloudSprite(){var n=document.createElement('canvas'),z=160;n.width=n.height=z;var c=n.getContext('2d');
+  for(var i=0;i<14;i++){var x=rand(40,120),y=rand(55,105),r=rand(18,46),g=c.createRadialGradient(x,y,0,x,y,r);
+    g.addColorStop(0,'rgba(70,95,110,0.5)');g.addColorStop(1,'rgba(70,95,110,0)');c.fillStyle=g;c.fillRect(0,0,z,z);}return n;}
+for(var i=0;i<4;i++){SPR.push(cloudSprite());}
+for(var i=0;i<CFG.CLOUDS;i++){CLOUDS.push({v:(Math.random()<0.5?-1:1)*rand(0.75,1.25),th:rand(0,6.283),k:rand(1.05,1.6),s:rand(1.4,3.2),spr:(Math.random()*4)|0,om:rand(0.03,0.07),a:rand(0.35,0.75)});}
+
+/* ---------- particelle sulle pareti del vortice ---------- */
+var P=[];
+function spawn(p,anyV){var sgn=Math.random()<0.5?-1:1;p.v=anyV?sgn*Math.pow(Math.random(),0.6):sgn*rand(0.92,1.05);p.th=rand(0,6.283);p.sp=rand(0.6,1.4);p.w=rand(0.6,1.8);p.lime=Math.random()<0.06;p.pth=p.th;p.pv=p.v;return p;}
+for(var i=0;i<CFG.PART;i++){P.push(spawn({},true));}
+
+/* ---------- rocce ---------- */
+var ROCKS=[];
+function rock(r,any){var n=6+((Math.random()*3)|0),sh=[];for(var j=0;j<n;j++){var a=j/n*6.283+rand(-0.2,0.2),q=rand(0.7,1.2);sh.push([Math.cos(a)*q,Math.sin(a)*q]);}
+  r.v=(Math.random()<0.5?-1:1)*(any?rand(0.35,1.15):rand(1.05,1.25));r.th=rand(0,6.283);r.k=rand(1.0,1.35);r.sz=rand(4,13);r.sh=sh;r.rot=rand(0,6.283);r.vr=rand(-1,1);return r;}
+for(var i=0;i<CFG.ROCKS;i++){ROCKS.push(rock({},true));}
+
+/* ---------- lampi ---------- */
+var BOLTS=[],nextBolt=rand(1.2,3),flash=0;
+function makeBolt(){
+  var pts=[],side=Math.random()<0.5?-1:1;
+  if(Math.random()<0.6){ /* lungo la parete, dalla bocca verso la strozzatura */
+    var th=rand(0,6.283),v=side*rand(0.85,1);
+    while(Math.abs(v)>0.05){var p=proj(v,th);pts.push([p[0]+rand(-6,6)*S,p[1]+rand(-6,6)*S]);v-=side*rand(0.06,0.12);th+=rand(0.15,0.4);}
+    pts.push([cx,cy]);
+  }else{ /* tra le nubi */
+    var x=rand(0.1,0.9)*W,y=side<0?rand(0.02,0.2)*H:rand(0.8,0.98)*H,len=rand(120,300)*S,dir=Math.random()<0.5?-1:1;
+    for(var k=0;k<=10;k++){pts.push([x+dir*len*k/10+rand(-10,10)*S,y+rand(-14,14)*S]);}
+  }
+  BOLTS.push({pts:pts,age:0,life:0.32});flash=1;
+}
+
+/* ---------- disegno ---------- */
+var t0=performance.now(),last=t0,T=0;
+function bucketPath(B,key,x0,y0,x1,y1){(B[key]||(B[key]=[])).push(x0,y0,x1,y1);}
+function strokeBuckets(B,style){for(var k in B){var L=B[k],s=style(k);ctx.strokeStyle=s[0];ctx.lineWidth=s[1];ctx.beginPath();for(var j=0;j<L.length;j+=4){ctx.moveTo(L[j],L[j+1]);ctx.lineTo(L[j+2],L[j+3]);}ctx.stroke();}}
+function wallColor(av){ /* av = |v|: vicino alla strozzatura più chiaro */
+  if(av<0.18)return '170,245,240';if(av<0.45)return '70,200,205';if(av<0.75)return '40,130,145';return '55,90,105';}
+
+function drawBody(front){ /* le pareti del vortice: una "pelle" traslucida a forma di clessidra */
+  var g=ctx.createLinearGradient(0,yc(-1),0,yc(1));
+  if(front){g.addColorStop(0,'rgba(40,110,125,0.10)');g.addColorStop(0.42,'rgba(60,190,195,0.16)');g.addColorStop(0.5,'rgba(120,235,230,0.22)');g.addColorStop(0.58,'rgba(60,190,195,0.16)');g.addColorStop(1,'rgba(40,110,125,0.10)');}
+  else{g.addColorStop(0,'rgba(8,30,40,0.55)');g.addColorStop(0.5,'rgba(15,70,80,0.55)');g.addColorStop(1,'rgba(8,30,40,0.55)');}
+  ctx.fillStyle=g;ctx.beginPath();   /* contorno: fianco sinistro, bordo davanti della bocca bassa, fianco destro, bordo dietro della bocca alta */
+  for(var i=0;i<=60;i++){var v=-1+i/30;var r=rad(v);i?ctx.lineTo(cx-r,yc(v)):ctx.moveTo(cx-r,yc(v));}
+  ctx.ellipse(cx,yc(1),rad(1),rad(1)*CFG.TILT,0,Math.PI,0,true);
+  for(var i=60;i>=0;i--){var v=-1+i/30;ctx.lineTo(cx+rad(v),yc(v));}
+  ctx.ellipse(cx,yc(-1),rad(-1),rad(-1)*CFG.TILT,0,0,-Math.PI,true);
+  ctx.closePath();ctx.fill();
+  if(front){ /* chiusura delle bocche: ovali scuri dentro i bordi */
+    [-1,1].forEach(function(sg){var r=rad(sg),y=yc(sg),gg=ctx.createRadialGradient(cx,y,0,cx,y,r);gg.addColorStop(0,'rgba(2,8,12,0.0)');gg.addColorStop(0.7,'rgba(10,40,50,0.25)');gg.addColorStop(1,'rgba(30,90,100,0.35)');
+      ctx.fillStyle=gg;ctx.beginPath();ctx.ellipse(cx,y,r,r*CFG.TILT,0,0,6.283);ctx.fill();});}
+}
+function drawSpirals(t){ /* bracci a spirale che girano dentro le due bocche */
+  ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
+  [-1,1].forEach(function(sg){var y=yc(sg),r1=rad(sg)*1.18,r0=rad(sg*0.55);
+    for(var k=0;k<6;k++){ctx.beginPath();for(var s=0;s<=40;s++){var q=s/40,r=r1+(r0-r1)*q,th=k*1.047+t*0.55*sg+q*4.2*sg,x=cx+r*Math.cos(th),yy=y+r*CFG.TILT*Math.sin(th)+(yc(sg*0.55)-y)*q*q;s?ctx.lineTo(x,yy):ctx.moveTo(x,yy);}
+      ctx.strokeStyle='rgba(70,170,180,'+(0.10+0.04*Math.sin(t+k))+')';ctx.lineWidth=(5-k%3)*S;ctx.stroke();}});
+  ctx.globalCompositeOperation='source-over';
+}
+function drawRings(front){
+  ctx.lineWidth=1.1;
+  for(var i=-14;i<=14;i++){if(i===0)continue;var v=i/14,r=rad(v),y=yc(v),a=(0.05+0.09*(1-Math.abs(v)))*(front?1:0.55);
+    ctx.strokeStyle='rgba('+wallColor(Math.abs(v))+','+a.toFixed(3)+')';
+    ctx.beginPath();ctx.ellipse(cx,y,r,r*CFG.TILT,0,front?0:Math.PI,front?Math.PI:6.283);ctx.stroke();}
+}
+function drawMouths(front){ /* bordi delle bocche: anelli spessi di nube che girano */
+  [-1,1].forEach(function(sg){var y=yc(sg),r=rad(sg);
+    for(var k=0;k<4;k++){var rr=r*(1+k*0.06),a=(front?0.28:0.14)/(k+1);
+      ctx.strokeStyle='rgba(110,175,185,'+a+')';ctx.lineWidth=(14-k*3)*S;
+      ctx.beginPath();ctx.ellipse(cx,y,rr,rr*CFG.TILT,0,front?0:Math.PI,front?Math.PI:6.283);ctx.stroke();}});
+}
+function drawClouds(dt,front){
+  for(var i=0;i<CLOUDS.length;i++){var c=CLOUDS[i];if(front!==(Math.sin(c.th)>0))continue;
+    var r=rad(Math.max(-1,Math.min(1,c.v)))*c.k,x=cx+r*Math.cos(c.th),y=yc(c.v)+r*CFG.TILT*Math.sin(c.th),s=160*c.s*S;
+    ctx.globalAlpha=Math.min(1,c.a*(0.55+0.45*Math.sin(c.th)*0.5+0.25)+flash*0.35);ctx.drawImage(SPR[c.spr],x-s/2,y-s/2,s,s*0.62);}
+  ctx.globalAlpha=1;
+}
+function drawRocks(front){
+  for(var i=0;i<ROCKS.length;i++){var R=ROCKS[i],d=Math.sin(R.th);if(front!==(d>0))continue;
+    var v=Math.max(-1.3,Math.min(1.3,R.v)),r=rad(Math.min(1,Math.abs(v))*Math.sign(v))*R.k,x=cx+r*Math.cos(R.th),y=yc(v)+r*CFG.TILT*d,s=R.sz*S*(0.8+0.3*d)*(0.5+0.5*Math.min(1,Math.abs(v)));
+    ctx.save();ctx.translate(x,y);ctx.rotate(R.rot);ctx.beginPath();for(var j=0;j<R.sh.length;j++){var q=R.sh[j];j?ctx.lineTo(q[0]*s,q[1]*s):ctx.moveTo(q[0]*s,q[1]*s);}ctx.closePath();
+    var lit=0.75+0.25*d;ctx.fillStyle='rgb('+((44*lit+flash*40)|0)+','+((38*lit+flash*40)|0)+','+((32*lit+flash*45)|0)+')';ctx.fill();
+    ctx.strokeStyle='rgba(84,224,220,'+(0.18+0.2*d)+')';ctx.lineWidth=0.9;ctx.stroke();ctx.restore();}
+}
+function drawParticles(dt,front){
+  var B={};
+  for(var i=0;i<P.length;i++){var p=P[i],av=Math.abs(p.v),r=rad(p.v);
+    if(front){ /* il movimento si aggiorna una sola volta per fotogramma */
+      var om=(0.35+18*S/(r+8*S))*p.sp;p.pth=p.th;p.pv=p.v;p.th+=om*dt;p.v-=Math.sign(p.v)*(0.05+0.25*(1-av))*p.sp*dt;
+      if(Math.abs(p.v)<0.02){spawn(p,false);p.pth=p.th;p.pv=p.v;}}
+    var d=Math.sin(p.th);if(front!==(d>0))continue;
+    var tr=Math.max(0.05,(p.th-p.pth)*5),a=proj(p.v,p.th-tr),m=proj(p.v,p.th-tr/2),b=proj(p.v,p.th);
+    var al=(0.25+0.6*(1-av))*(front?1:0.45)*(av>0.95?(1.05-av)*20:1);
+    var key=(p.lime?'150,210,90':wallColor(av))+'|'+Math.ceil(al*4)+'|'+(p.w>1.3?1:0);bucketPath(B,key,a[0],a[1],m[0],m[1]);bucketPath(B,key,m[0],m[1],b[0],b[1]);}
+  ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
+  strokeBuckets(B,function(k){var s=k.split('|');return ['rgba('+s[0]+','+(s[1]/4*0.75).toFixed(2)+')',(s[2]==='1'?2.2:1.2)*Math.max(0.8,S)];});
+  ctx.globalCompositeOperation='source-over';
+}
+function drawStrands(t){ /* trecce di energia attorno alla strozzatura */
+  ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
+  for(var k=0;k<5;k++){ctx.beginPath();var first=true;
+    for(var s=-30;s<=30;s++){var v=s/30*0.3,th=k*1.2566+t*2.6+v*12,p=proj(v,th);first?ctx.moveTo(p[0],p[1]):ctx.lineTo(p[0],p[1]);first=false;}
+    ctx.strokeStyle=k===2?'rgba(170,220,90,0.16)':'rgba(80,225,215,0.2)';ctx.lineWidth=(k===2?1.4:2)*S;ctx.stroke();}
+  ctx.globalCompositeOperation='source-over';
+}
+function drawCore(t){
+  var pulse=0.6+0.4*Math.pow(0.5+0.5*Math.sin(t*2.6),3);
+  ctx.globalCompositeOperation='lighter';
+  var g=ctx.createRadialGradient(cx,cy,0,cx,cy,90*S);g.addColorStop(0,'rgba(200,255,250,'+(0.55*pulse)+')');g.addColorStop(0.25,'rgba(80,220,215,'+(0.22*pulse)+')');g.addColorStop(1,'rgba(30,120,140,0)');
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,90*S,0,6.283);ctx.fill();
+  var cg=ctx.createRadialGradient(cx,cy,0,cx,cy,HH*1.05);cg.addColorStop(0,'rgba(40,150,160,0.10)');cg.addColorStop(1,'rgba(40,150,160,0)');
+  ctx.fillStyle=cg;ctx.save();ctx.translate(cx,cy);ctx.scale(0.35,1);ctx.beginPath();ctx.arc(0,0,HH*1.05,0,6.283);ctx.fill();ctx.restore();
+  ctx.globalCompositeOperation='source-over';
+  ctx.fillStyle='#010406';ctx.beginPath();ctx.arc(cx,cy,(5+2*pulse)*S,0,6.283);ctx.fill();
+  ctx.strokeStyle='rgba(210,255,250,'+(0.5*pulse)+')';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(cx,cy,(7+2*pulse)*S,0,6.283);ctx.stroke();
+}
+function drawBolts(dt){
+  ctx.globalCompositeOperation='lighter';ctx.lineCap='round';ctx.lineJoin='round';
+  for(var i=BOLTS.length-1;i>=0;i--){var b=BOLTS[i];b.age+=dt;if(b.age>b.life){BOLTS.splice(i,1);continue;}
+    var on=(b.age<0.07||(b.age>0.12&&b.age<0.2))?1:0.35,al=on*(1-b.age/b.life);
+    [[7*S,'150,220,255',0.18],[2.2*S,'220,245,255',0.9]].forEach(function(st){ctx.strokeStyle='rgba('+st[1]+','+(st[2]*al)+')';ctx.lineWidth=st[0];ctx.beginPath();
+      b.pts.forEach(function(q,j){j?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]);});ctx.stroke();});}
+  ctx.globalCompositeOperation='source-over';
+  if(flash>0.01){ctx.fillStyle='rgba(140,190,230,'+(0.13*flash)+')';ctx.fillRect(0,0,W,H);}
+}
+function vignette(){var g=ctx.createRadialGradient(cx,cy,Math.min(W,H)*0.35,cx,cy,Math.max(W,H)*0.75);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,2,5,0.82)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}
+
+function visible(){
+  if(document.hidden)return false;
+  try{var f=window.frameElement,ov=f&&f.closest('.cj-overlay');if(ov&&!ov.classList.contains('open'))return false;}catch(e){}
+  return true;
+}
+var vis=true,frameN=0;
+function frame(now,once){
+  if(!once)requestAnimationFrame(frame);
+  if((frameN++%20)===0)vis=visible();
+  var dt=Math.min(0.05,(now-last)/1000);last=now;if(!vis)return;T+=dt;
+  for(var i=0;i<CLOUDS.length;i++){CLOUDS[i].th+=CLOUDS[i].om*dt;}
+  for(var i=0;i<ROCKS.length;i++){var R=ROCKS[i],av=Math.abs(R.v);R.th+=(0.12+0.5*(1-Math.min(1,av)))*dt;R.rot+=R.vr*dt;R.v-=Math.sign(R.v)*0.025*dt;R.k+=(1-R.k)*0.08*dt;if(av<0.3){rock(R,false);}}
+  if(!reduce&&T>nextBolt){makeBolt();nextBolt=T+rand(CFG.BOLT[0],CFG.BOLT[1]);if(Math.random()<0.3){setTimeout(makeBolt,140);}}
+  flash*=Math.pow(0.02,dt);
+  ctx.drawImage(BG,0,0,W,H);
+  drawClouds(dt,false);drawRocks(false);drawBody(false);drawSpirals(T);drawMouths(false);drawRings(false);drawParticles(dt,false);
+  drawCore(T);drawStrands(T);
+  drawParticles(dt,true);drawBody(true);drawRings(true);drawMouths(true);drawRocks(true);drawClouds(dt,true);
+  drawBolts(dt);vignette();
+}
+resize();window.addEventListener('resize',resize);
+if(reduce){ /* niente movimento: un'unica immagine ferma */
+  T=4;last=performance.now();for(var k=0;k<60;k++){frame(last+16*(k+1),true);}
+}else{requestAnimationFrame(function(n){last=n;frame(n);});}
+})();
+</script>
+</body>
+</html>
