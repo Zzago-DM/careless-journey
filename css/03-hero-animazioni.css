@@ -27,3 +27,7 @@
   .hero-sigil{animation:none;stroke-dashoffset:0;fill-opacity:.07}
   .hero-orn::before,.hero-orn::after,.hero-motes{animation:none;display:none}
   .hero-title .ch,.hero-title .ch.j{animation:none;opacity:1;transform:none;filter:none}}
+
+/* Sole dorato nel titolo dell'intro e a fondo pagina */
+#introTitle .ie .gsun-i{height:2.2em;width:1.15em;vertical-align:-.8em;margin-right:.3em}
+footer .gsun-i{height:1.6em;width:.85em;vertical-align:-.45em;margin-right:.35em}
