@@ -101,7 +101,9 @@
     if(!list.length){return null;}
     return {c:c,list:list,sc:0,ox:0,oy:0};
   }
-  function mapXform(){if(!MAP){return;}var sc=Math.min(W*0.94/2048,H*0.9/1536);if(sc!==MAP.sc){MAP.sc=sc;MAP.list.forEach(function(m){m.img=null;});}MAP.ox=cx-MAP.c.x*sc;MAP.oy=cy-MAP.c.y*sc;}
+  function mapXform(){if(!MAP){return;}
+    if(!MAP.R){var R=0;MAP.list.forEach(function(m){[[m.bb.x,m.bb.y],[m.bb.x+m.bb.width,m.bb.y],[m.bb.x,m.bb.y+m.bb.height],[m.bb.x+m.bb.width,m.bb.y+m.bb.height]].forEach(function(q){var d=Math.hypot(q[0]-MAP.c.x,q[1]-MAP.c.y)*0.9;if(d>R){R=d;}});});MAP.R=R||1000;}
+    var sc=Math.min(W*0.48/MAP.R,H*0.47/(MAP.R*TILT));if(sc!==MAP.sc){MAP.sc=sc;MAP.list.forEach(function(m){m.img=null;});}}
   function islandImage(m){
     var sc=MAP.sc,pad=26,w=Math.ceil(m.bb.width*sc+pad*2),h=Math.ceil(m.bb.height*sc+pad*2),q=Math.min(DPR,1.5);
     var c=document.createElement('canvas');c.width=Math.ceil(w*q);c.height=Math.ceil(h*q);var x=c.getContext('2d');
@@ -112,14 +114,18 @@
     x.shadowBlur=0;x.strokeStyle='rgba(255,255,255,0.35)';x.lineWidth=0.7/sc;x.stroke(m.path);
     m.img=c;m.pad=pad;m.w=w;m.h=h;
   }
-  function islandBob(m,t){return Math.sin(t*0.55+m.ph)*3;}
+  /* Orbita: tutto l'arcipelago gira attorno al Maelstrom come un disco visto di sbieco, così la mappa resta riconoscibile */
+  var ORBT=0,TH=0,TILT=0.62,OMEGA=0.07;
+  function bob(m,t){return Math.sin(t*0.55+m.ph)*3;}
+  function mapPt(x,y,m,t){var dx=(x-MAP.c.x)*MAP.sc,dy=(y-MAP.c.y)*MAP.sc,c=Math.cos(TH),s=Math.sin(TH);return [cx+dx*c-dy*s,cy+(dx*s+dy*c)*TILT+bob(m,t)];}
   function drawIslands(t,a){
     if(!MAP||a<=0.01){return;}
     for(var i=0;i<MAP.list.length;i++){var m=MAP.list[i];if(!m.img){islandImage(m);}
-      ctx.globalAlpha=a;ctx.drawImage(m.img,MAP.ox+m.bb.x*MAP.sc-m.pad,MAP.oy+m.bb.y*MAP.sc-m.pad+islandBob(m,t),m.w,m.h);}
+      ctx.save();ctx.globalAlpha=a;ctx.translate(cx,cy+bob(m,t));ctx.scale(1,TILT);ctx.rotate(TH);
+      ctx.drawImage(m.img,(m.bb.x-MAP.c.x)*MAP.sc-m.pad,(m.bb.y-MAP.c.y)*MAP.sc-m.pad,m.w,m.h);ctx.restore();}
     ctx.globalAlpha=1;
   }
-  function islandCenter(m,t){return [MAP.ox+(m.bb.x+m.bb.width/2)*MAP.sc,MAP.oy+(m.bb.y+m.bb.height/2)*MAP.sc+islandBob(m,t)];}
+  function islandCenter(m,t){return mapPt(m.bb.x+m.bb.width/2,m.bb.y+m.bb.height/2,m,t);}
   function assignTargets(){
     MAP=buildMap();if(!MAP){return;}
     var tot=0;MAP.list.forEach(function(m){m.w8=m.k==='ramsgate'?0:Math.sqrt(m.area);tot+=m.w8;});
@@ -248,7 +254,7 @@
       ARCS.push({a:L[i],b:j<0?null:L[j],bt:t,pa:L[i].pts[(Math.random()*L[i].pts.length)|0]});nextArc=t+0.9+Math.random()*1.8;}
     ctx.globalCompositeOperation='lighter';ctx.lineCap='round';ctx.lineJoin='round';
     for(var k=ARCS.length-1;k>=0;k--){var A=ARCS[k],age=t-A.bt;if(age>0.32){ARCS.splice(k,1);continue;}
-      var x1=MAP.ox+A.pa[0]*MAP.sc,y1=MAP.oy+A.pa[1]*MAP.sc+islandBob(A.a,t),p2=A.b?islandCenter(A.b,t):[cx,cy];
+      var pa=mapPt(A.pa[0],A.pa[1],A.a,t),x1=pa[0],y1=pa[1],p2=A.b?islandCenter(A.b,t):[cx,cy];
       var c=A.a.rgb.join(','),al=(1-age/0.32);
       bolt(x1,y1,p2[0],p2[1],c,4,0.18*al);bolt(x1,y1,p2[0],p2[1],'235,245,255',1.2,0.75*al);}
     ctx.globalCompositeOperation='source-over';
@@ -333,6 +339,7 @@
     var planetA=!triggered?1:(te<tExpEnd?1-easeOut(te/T.exp):0);
     if(!triggered){drawInvite(t);}
     if(planetA>0.02){drawGlobe(ang,planetA,t);}
+    ORBT=triggered?Math.max(0,te-tExpEnd):0;TH=OMEGA*ORBT;
     if(triggered){mapXform();infall(te,dt);drawIslands(t,ease((te-tExpEnd-0.6)/(T.settle*0.75)));}
     var morph=triggered?ease((te-T.exp*0.25)/(T.exp*0.75+T.settle*0.7)):0;
     var pY0=triggered?aFreeze:ang;
@@ -349,7 +356,7 @@
         var rr=f.br;
         var ang2=f.a0+f.spd*to;
         var ox=cx+Math.cos(ang2)*rr,oy=cy+Math.sin(ang2)*rr*VFLAT+f.vy*0.3,od=(Math.sin(ang2)+1)/2;
-        if(f.mi&&MAP){var bob=islandBob(f.mi,t);ox=MAP.ox+f.mx*MAP.sc;oy=MAP.oy+f.my*MAP.sc+bob;od=0.5;}
+        if(f.mi&&MAP){var mp=mapPt(f.mx,f.my,f.mi,t);ox=mp[0];oy=mp[1];od=0.5;}
         var fade=f.mi?(1-0.62*ease((te-tSetEnd+1.2)/2.2)):1,tw2=f.mi?(0.75+0.25*Math.sin(t*2.6+i)):1;
         if(te<tSetEnd){var q=ease((te-tExpEnd)/T.settle);var ex2=cx+rx*f.er,ey2=cy+ry*f.er*0.7;X=lerp(ex2,ox,q);Y=lerp(ey2,oy,q);depth=od;al=0.9*fade;scale=(0.7+0.5*od)*(f.mi?1-0.3*q:1);}
         else{X=ox;Y=oy;depth=od;al=(f.mi?0.9*fade*tw2:0.6+0.4*od);scale=f.mi?0.7:0.55+0.6*od;}
