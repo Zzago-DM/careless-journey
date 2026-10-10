@@ -102,10 +102,10 @@
     return {c:c,list:list,sc:0,ox:0,oy:0};
   }
   function mapXform(){if(!MAP){return;}
-    if(!MAP.R){var R=0;MAP.list.forEach(function(m){[[m.bb.x,m.bb.y],[m.bb.x+m.bb.width,m.bb.y],[m.bb.x,m.bb.y+m.bb.height],[m.bb.x+m.bb.width,m.bb.y+m.bb.height]].forEach(function(q){var d=Math.hypot(q[0]-MAP.c.x,q[1]-MAP.c.y)*0.9;if(d>R){R=d;}});});MAP.R=R||1000;}
+    if(!MAP.R){var R=0;MAP.list.forEach(function(m){var d=Math.hypot(m.bb.x+m.bb.width/2-MAP.c.x,m.bb.y+m.bb.height/2-MAP.c.y)+Math.hypot(m.bb.width,m.bb.height)/2*SHR*0.85;if(d>R){R=d;}});MAP.R=R||1000;}
     var sc=Math.min(W*0.48/MAP.R,H*0.47/(MAP.R*TILT));if(sc!==MAP.sc){MAP.sc=sc;MAP.list.forEach(function(m){m.img=null;});}}
   function islandImage(m){
-    var sc=MAP.sc,pad=26,w=Math.ceil(m.bb.width*sc+pad*2),h=Math.ceil(m.bb.height*sc+pad*2),q=Math.min(DPR,1.5);
+    var sc=MAP.sc*SHR,pad=26,w=Math.ceil(m.bb.width*sc+pad*2),h=Math.ceil(m.bb.height*sc+pad*2),q=Math.min(DPR,1.5);
     var c=document.createElement('canvas');c.width=Math.ceil(w*q);c.height=Math.ceil(h*q);var x=c.getContext('2d');
     x.setTransform(sc*q,0,0,sc*q,(pad-m.bb.x*sc)*q,(pad-m.bb.y*sc)*q);
     var rgb=m.rgb.join(',');
@@ -115,14 +115,14 @@
     m.img=c;m.pad=pad;m.w=w;m.h=h;
   }
   /* Orbita: tutto l'arcipelago gira attorno al Maelstrom come un disco visto di sbieco, così la mappa resta riconoscibile */
-  var ORBT=0,TH=0,TILT=0.62,OMEGA=0.07;
+  var ORBT=0,TH=0,TILT=0.62,OMEGA=0.07,SHR=0.6;   /* SHR: grandezza dei continenti rispetto alla Mappa (0.6 = 40% più piccoli), restano al loro posto */
   function bob(m,t){return Math.sin(t*0.55+m.ph)*3;}
-  function mapPt(x,y,m,t){var dx=(x-MAP.c.x)*MAP.sc,dy=(y-MAP.c.y)*MAP.sc,c=Math.cos(TH),s=Math.sin(TH);return [cx+dx*c-dy*s,cy+(dx*s+dy*c)*TILT+bob(m,t)];}
+  function mapPt(x,y,m,t){var mx=m.bb.x+m.bb.width/2,my=m.bb.y+m.bb.height/2;x=mx+(x-mx)*SHR;y=my+(y-my)*SHR;var dx=(x-MAP.c.x)*MAP.sc,dy=(y-MAP.c.y)*MAP.sc,c=Math.cos(TH),s=Math.sin(TH);return [cx+dx*c-dy*s,cy+(dx*s+dy*c)*TILT+bob(m,t)];}
   function drawIslands(t,a){
     if(!MAP||a<=0.01){return;}
     for(var i=0;i<MAP.list.length;i++){var m=MAP.list[i];if(!m.img){islandImage(m);}
       ctx.save();ctx.globalAlpha=a;ctx.translate(cx,cy+bob(m,t));ctx.scale(1,TILT);ctx.rotate(TH);
-      ctx.drawImage(m.img,(m.bb.x-MAP.c.x)*MAP.sc-m.pad,(m.bb.y-MAP.c.y)*MAP.sc-m.pad,m.w,m.h);ctx.restore();}
+      ctx.drawImage(m.img,(m.bb.x+m.bb.width/2-MAP.c.x)*MAP.sc-m.w/2,(m.bb.y+m.bb.height/2-MAP.c.y)*MAP.sc-m.h/2,m.w,m.h);ctx.restore();}
     ctx.globalAlpha=1;
   }
   function islandCenter(m,t){return mapPt(m.bb.x+m.bb.width/2,m.bb.y+m.bb.height/2,m,t);}
