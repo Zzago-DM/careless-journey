@@ -74,7 +74,7 @@
   }
   function drawGlobe(ang,a,t){
     if(!GC||GG!==GLOBE){buildGlobe();}
-    var d=GI.data,su=ang/6.2832*EW,cu=su*1.12+t*0.9,step=EW/12;
+    var d=GI.data,su=ang/6.2832*EW,cu=su*1.12+t*0.9;
     for(var k=0;k<PN;k++){
       var row=P_y[k]*EW,u=(P_u[k]+su)%EW;if(u<0){u+=EW;}var ti=row+(u|0),uc=(P_u[k]+cu)%EW;if(uc<0){uc+=EW;}var ci=row+(uc|0);
       var lt=P_l[k],sh=lt>0.38?1:lt>0.05?0.8:lt>-0.22?0.6:0.42,night=lt<-0.22;   /* luce a gradini, come un disegno */
@@ -83,7 +83,6 @@
       if(night){r=r*0.55+18;g=g*0.55+22;b=b*0.62+48;}   /* il lato notte vira al blu, non al nero */
       r*=sh;g*=sh;b*=sh;
       if(night&&CITY[ti]&&c<1){var cl0=0.7+0.3*Math.sin(t*3+ti);r=255*cl0;g=205*cl0;b=110*cl0;}
-      var la=P_y[k]%(EH/6),fu=u%step;if(la<0.9||fu<0.9){r+=(232-r)*0.32;g+=(200-g)*0.32;b+=(112-b)*0.32;}   /* griglia dorata ogni 30° */
       var o=P_i[k];d[o]=r>255?255:r;d[o+1]=g>255?255:g;d[o+2]=b>255?255:b;d[o+3]=255;
     }
     GX.putImageData(GI,0,0);
