@@ -135,12 +135,13 @@ Object.keys(POL).forEach(function(key){
     ov.classList.toggle("pol",pol);clearOn();
     tg.querySelectorAll("button").forEach(function(x){var on=x===b;x.classList.toggle("on",on);x.setAttribute("aria-pressed",on?"true":"false");});
     if(pol)upd(ov);
-    try{sfxPlay("paper")}catch(_){}
+    try{sfxPlay("flip")}catch(_){}
+    ov.classList.remove("swap");void ov.offsetWidth;ov.classList.add("swap");setTimeout(function(){ov.classList.remove("swap");},700);
   });
 });
 document.addEventListener("click",function(e){
   var pc=e.target.closest?e.target.closest(".cj-overlay .pc"):null;
-  if(pc){var was=pc.classList.contains("on");clearOn();if(!was)pc.classList.add("on");return;}
+  if(pc){var was=pc.classList.contains("on");clearOn();if(!was){pc.classList.add("on");try{sfxPlay("ping")}catch(_){}}return;}
   clearOn();
 });
 document.addEventListener("keydown",function(e){

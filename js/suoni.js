@@ -43,7 +43,24 @@
     else if(el==="folgorante"){tn(ac,t,1900,"square",.2,.02,260);nz(ac,t,.16,.05,"highpass",2600,.6,1);tn(ac,t+.12,1400,"square",.1,.012,300);}
     else if(el==="terrestre"){tn(ac,t,140,"sine",.45,.09,85);tf(ac,t,300,"triangle",.42,.095,160,1400);tf(ac,t+.02,450,"sawtooth",.28,.05,240,1100);nz(ac,t,.3,.12,"bandpass",900,.9,1.6);for(i=0;i<6;i++)nz(ac,t+.03+Math.random()*.32,.035,.07,"bandpass",1600+Math.random()*1800,2,1);}
     else if(el==="radiante"){[784,988,1175,1568].forEach(function(f,i){tn(ac,t+i*.035,f,"sine",1.1,.016)});}
-    else if(el==="oscuro"){tn(ac,t,110,"sine",1.1,.05,55);tf(ac,t,330,"sawtooth",1.2,.05,165,800);tf(ac,t,349,"sawtooth",1.1,.04,175,760);tn(ac,t+.05,466,"triangle",.8,.022,233);sw(ac,t,.95,.09,"bandpass",900,240,1.4,.5);}}
+    else if(el==="oscuro"){tn(ac,t,110,"sine",1.1,.05,55);tf(ac,t,330,"sawtooth",1.2,.05,165,800);tf(ac,t,349,"sawtooth",1.1,.04,175,760);tn(ac,t+.05,466,"triangle",.8,.022,233);sw(ac,t,.95,.09,"bandpass",900,240,1.4,.5);}},
+   /* --- Mappe: apertura con il carattere di ogni terra, chiusura, cambio vista, tocco di un punto, tuono del Maelstrom --- */
+   map:function(el){var ac=AC();if(!ac)return;var t=ac.currentTime,i;
+    sw(ac,t,.55,.05,"bandpass",300,2600,.9,.5);nz(ac,t+.02,.3,.025,"highpass",1800,.7,1.2);   /* la pergamena che si apre */
+    if(el==="ardente"){tn(ac,t,70,"sine",1,.08,45);for(i=0;i<12;i++)nz(ac,t+.05+Math.random()*.9,.025,.06,"bandpass",2200+Math.random()*2500,1.5,1);sw(ac,t+.1,1.1,.05,"lowpass",300,900,.7,.3);}
+    else if(el==="glaciale"){[2093,2637,3136,3951].forEach(function(f,k){tn(ac,t+.08+k*.09,f,"sine",1.2,.012)});sw(ac,t,1.3,.04,"highpass",1500,5000,.6,.2);}
+    else if(el==="folgorante"){tn(ac,t+.05,2400,"sawtooth",.18,.02,180);nz(ac,t+.05,.12,.06,"highpass",3000,.7,1);tn(ac,t+.32,1800,"square",.1,.012,240);nz(ac,t+.32,.08,.04,"highpass",3500,.7,1);tn(ac,t,60,"sine",.6,.05,48);}
+    else if(el==="terrestre"){tn(ac,t,62,"sine",.9,.12,40);nz(ac,t,.5,.08,"lowpass",260,.8,1.4);for(i=0;i<5;i++)nz(ac,t+.15+i*.11,.06,.03,"bandpass",500+Math.random()*400,1.2,1);}
+    else if(el==="radiante"){[523,659,784,988,1319].forEach(function(f,k){tn(ac,t+.06+k*.07,f,"triangle",1.3-k*.12,.018)});tn(ac,t+.06,2637,"sine",1.4,.005);}
+    else if(el==="oscuro"){tf(ac,t,110,"sawtooth",1.6,.04,104,500);tf(ac,t,116.5,"sawtooth",1.6,.035,110,480);tn(ac,t+.2,233,"sine",1.2,.02,220);sw(ac,t,1.6,.04,"bandpass",200,700,1.4,.15);}
+    else if(el==="ramsgate"){[0,.5].forEach(function(d){[[523,1.3,.035],[1046,.9,.018],[1569,.6,.01]].forEach(function(q){tn(ac,t+.1+d,q[0],"sine",q[1],q[2])})});sw(ac,t,1.2,.04,"lowpass",250,800,.7,.3);}
+    else if(el==="maelstrom"){tn(ac,t,48,"sine",2.2,.12,38);sw(ac,t,2.4,.07,"lowpass",120,900,.9,.1);nz(ac,t+.3,1.6,.04,"bandpass",300,.6,.4);}
+    else{tn(ac,t+.05,392,"triangle",.8,.02);tn(ac,t+.12,587,"triangle",.8,.015);}
+   },
+   mapClose:function(){var ac=AC();if(!ac)return;var t=ac.currentTime;sw(ac,t,.35,.045,"bandpass",2400,350,.9,.6);tn(ac,t+.05,330,"triangle",.18,.015,220);},
+   flip:function(){var ac=AC();if(!ac)return;var t=ac.currentTime;nz(ac,t,.18,.06,"bandpass",2600,.8,.9);nz(ac,t+.11,.2,.045,"bandpass",1800,.8,.9);tn(ac,t+.04,1046,"sine",.25,.008);},
+   ping:function(){var ac=AC();if(!ac)return;var t=ac.currentTime;tn(ac,t,1760,"sine",.35,.02);tn(ac,t+.03,2637,"sine",.25,.008);},
+   thunder:function(k){var ac=AC();if(!ac)return;var t=ac.currentTime,v=k||.6;nz(ac,t,.12,.09*v,"highpass",1800,.6,.6);nz(ac,t+.04,1.8,.16*v,"lowpass",220,.7,.9);tn(ac,t+.02,52,"sine",1.2,.08*v,34);nz(ac,t+.4,1.2,.06*v,"lowpass",140,.7,.7);},
   };
   window.__sfx=X;
   window.__sfxBoom=sfxBoom;window.__sfxLock=sfxLock;window.__sfxSigil=sfxSigil;window.__sfxBurst=sfxBurst;window.__sfxClick=sfxClick;window.__sfxVortex=sfxVortex;

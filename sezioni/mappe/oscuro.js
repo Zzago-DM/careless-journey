@@ -195,9 +195,9 @@ tcjSezione(`<div class="cj-overlay" id="cj-oscuro" aria-hidden="true"><div class
   <ellipse cx="312" cy="80" rx="122" ry="27" fill="url(#oscuro-thraxZone)"/>
   <ellipse cx="312" cy="80" rx="116" ry="24" fill="none" stroke="#a070e8" stroke-width="1" stroke-dasharray="4 7" opacity="0.3"/>
 </g>
-<text x="312" y="74" text-anchor="middle" fill="#cbabf2" font-family="Cinzel,serif" font-size="13" font-weight="600" opacity="0.82" letter-spacing="1.5">Terre del Nord</text>
-<text x="312" y="91" text-anchor="middle" fill="#b3a0d4" font-family="Georgia,serif" font-size="10.5" font-style="italic" opacity="0.72">qui si cela il portale del Thrax</text>
-<text x="325" y="97" text-anchor="middle" fill="#a99cc4" font-family="Cinzel,serif" font-size="11" opacity="0.6" letter-spacing="1.2">Val’Riden</text><text x="227" y="125" text-anchor="middle" fill="#a99cc4" font-family="Cinzel,serif" font-size="11" opacity="0.6" letter-spacing="1.2">Zeraora</text><text x="395" y="135" text-anchor="middle" fill="#a99cc4" font-family="Cinzel,serif" font-size="11" opacity="0.6" letter-spacing="1.2">Grimstone</text><text x="308" y="183" text-anchor="middle" fill="#a99cc4" font-family="Cinzel,serif" font-size="11" opacity="0.6" letter-spacing="1.2">Monkuiced</text>
+<text x="312" y="61" text-anchor="middle" fill="#cbabf2" font-family="Cinzel,serif" font-size="12.5" font-weight="600" opacity="0.82" letter-spacing="1.5">Terre del Nord</text>
+<text x="312" y="75" text-anchor="middle" fill="#b3a0d4" font-family="Georgia,serif" font-size="9.5" font-style="italic" opacity="0.72">qui si cela il portale del Thrax</text>
+<text x="335" y="106" text-anchor="middle" fill="#a99cc4" font-family="Cinzel,serif" font-size="11" opacity="0.6" letter-spacing="1.2">Val’Riden</text><text x="227" y="125" text-anchor="middle" fill="#a99cc4" font-family="Cinzel,serif" font-size="11" opacity="0.6" letter-spacing="1.2">Zeraora</text><text x="395" y="135" text-anchor="middle" fill="#a99cc4" font-family="Cinzel,serif" font-size="11" opacity="0.6" letter-spacing="1.2">Grimstone</text><text x="308" y="183" text-anchor="middle" fill="#a99cc4" font-family="Cinzel,serif" font-size="11" opacity="0.6" letter-spacing="1.2">Monkuiced</text>
 <g transform="translate(626,40)" opacity="0.5">
   <circle r="16" fill="none" stroke="#9a7ad0" stroke-width="1"/>
   <text x="0" y="-7" text-anchor="middle" fill="#c4a8f0" font-family="Cinzel,serif" font-size="10" font-weight="700">N</text>
