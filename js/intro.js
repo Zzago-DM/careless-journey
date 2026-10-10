@@ -43,18 +43,22 @@
     for(var y=0;y<EH;y++){var acc=0;for(var dx=-3;dx<=3;dx++){acc+=LAND[y*EW+(dx+EW)%EW];}for(var x=0;x<EW;x++){H1[y*EW+x]=acc;acc+=LAND[y*EW+(x+4)%EW]-LAND[y*EW+(x-3+EW)%EW];}}
     for(var x=0;x<EW;x++){for(var y=0;y<EH;y++){var sm=0;for(var dy=-3;dy<=3;dy++){var yy=y+dy;if(yy<0){yy=0;}if(yy>=EH){yy=EH-1;}sm+=H1[yy*EW+x];}COAST[y*EW+x]=sm/49;}}
     function inDesert(la,lo){return (la>14&&la<33&&lo>-17&&lo<58)||(la>36&&la<48&&lo>55&&lo<118)||(la>-32&&la<-18&&lo>118&&lo<146)||(la>-30&&la<-17&&lo>14&&lo<26)||(la>25&&la<38&&lo>-118&&lo<-103)||(la>-27&&la<-17&&lo>-71&&lo<-68);}
+    /* STILIZZATO: coste ammorbidite (si perdono i dettagli minuti), tinte piatte e un contorno scuro attorno alle terre */
+    var SM=new Uint8Array(EW*EH);for(var i=0;i<EW*EH;i++){SM[i]=COAST[i]>0.5?1:0;}
+    for(var y=0;y<EH;y++){if(y>=(EH*168/180|0)){for(var x=0;x<EW;x++){SM[y*EW+x]=1;}}}
+    LAND.set(SM);
+    var PAL={ocean:[38,96,168],shallow:[64,142,200],outline:[22,46,62],ice:[236,244,250],tundra:[158,176,126],desert:[228,194,124],jungle:[58,150,84],green:[104,182,92],green2:[86,160,80]};
     for(var y=0;y<EH;y++){var la=90-(y+0.5)*180/EH,ala=Math.abs(la);
-      for(var x=0;x<EW;x++){var i=y*EW+x,lo=(x+0.5)*360/EW-180,n=samp(N1,x,y),r,g,b;
+      for(var x=0;x<EW;x++){var i=y*EW+x,lo=(x+0.5)*360/EW-180,n=samp(N1,x,y),c;
         if(LAND[i]){
-          var n2=samp(N2,x,y),isDes=inDesert(la+(n2-0.5)*9,lo+(n-0.5)*12),ice=ala>67||la<-60||(la>59&&lo>-74&&lo<-12);
-          if(ice){r=228;g=234;b=240;}
-          else if(ala>56){r=108+n2*40;g=116+n2*28;b=86+n2*10;}
-          else if(isDes){r=176+n2*45;g=146+n2*38;b=96+n2*22;}
-          else if(ala<16){r=30+n2*30;g=80+n2*40;b=34+n2*12;}
-          else{var m=clamp01((n2-0.5)*4);r=58+n*28+m*55;g=104+n*28-m*6;b=46+m*22;}
-          if(!ice&&ala<62&&!isDes&&hsh(x*3+1,y*7+5)<0.05){CITY[i]=1;}
-        }else{var sh=Math.min(1,COAST[i]*2.2);r=10+sh*20+n*8;g=42+sh*48+n*14;b=96+sh*50+n*20;OCEAN[i]=1;}
-        EARTH[i*3]=r|0;EARTH[i*3+1]=g|0;EARTH[i*3+2]=b|0;CLOUD[i]=samp(CLOUDQ,x,y);}
+          var edge=!LAND[y*EW+(x+1)%EW]||!LAND[y*EW+(x-1+EW)%EW]||(y>0&&!LAND[(y-1)*EW+x])||(y<EH-1&&!LAND[(y+1)*EW+x]);
+          var n2=samp(N2,x,y),isDes=inDesert(la+(n2-0.5)*10,lo+(n-0.5)*14),ice=ala>67||la<-60||(la>59&&lo>-74&&lo<-12);
+          if(edge){c=PAL.outline;}
+          else if(ice){c=PAL.ice;}else if(ala>56){c=PAL.tundra;}else if(isDes){c=PAL.desert;}else if(ala<16){c=PAL.jungle;}else{c=n2>0.62?PAL.green2:PAL.green;}
+          if(!ice&&!edge&&ala<62&&!isDes&&hsh(x*3+1,y*7+5)<0.035){CITY[i]=1;}
+        }else{c=COAST[i]>0.12?PAL.shallow:PAL.ocean;OCEAN[i]=1;}
+        EARTH[i*3]=c[0];EARTH[i*3+1]=c[1];EARTH[i*3+2]=c[2];
+        var cq=samp(CLOUDQ,x,y);CLOUD[i]=cq>0.4?1:(cq>0.36?0.5:0);}   /* nuvole a "batuffolo": piene, con un bordo sottile */
     }
   })();
   function earthAt(la,lo){var y=Math.max(0,Math.min(EH-1,((90-la/DEG)/180*EH)|0)),x=(((lo/DEG+180)/360*EW)|0)%EW;if(x<0){x+=EW;}var i=(y*EW+x)*3;return [EARTH[i],EARTH[i+1],EARTH[i+2]];}
@@ -70,19 +74,29 @@
   }
   function drawGlobe(ang,a,t){
     if(!GC||GG!==GLOBE){buildGlobe();}
-    var d=GI.data,su=ang/6.2832*EW,cu=su*1.12+t*0.9;
+    var d=GI.data,su=ang/6.2832*EW,cu=su*1.12+t*0.9,step=EW/12;
     for(var k=0;k<PN;k++){
       var row=P_y[k]*EW,u=(P_u[k]+su)%EW;if(u<0){u+=EW;}var ti=row+(u|0),uc=(P_u[k]+cu)%EW;if(uc<0){uc+=EW;}var ci=row+(uc|0);
-      var lt=P_l[k],day=lt<-0.12?0:lt>0.22?1:(lt+0.12)/0.34,diff=Math.max(0,lt)*0.92+0.06;
-      var r=EARTH[ti*3]*diff,g=EARTH[ti*3+1]*diff,b=EARTH[ti*3+2]*diff;
-      if(OCEAN[ti]){var sp=P_s[k]*190*day;r+=sp;g+=sp;b+=sp*0.9;}
-      else if(CITY[ti]&&day<0.6){var cl0=(1-day/0.6)*(0.7+0.3*Math.sin(t*3+ti));r+=220*cl0;g+=160*cl0;b+=70*cl0;}
-      var c=CLOUD[ci];if(c>0){var cb=(0.08+0.92*day)*235;r+=(cb-r)*c*0.85;g+=(cb-g)*c*0.85;b+=(cb*1.03-b)*c*0.85;}
-      var rim=P_r[k]*(0.25+0.75*day);r+=70*rim;g+=130*rim;b+=235*rim;
+      var lt=P_l[k],sh=lt>0.38?1:lt>0.05?0.8:lt>-0.22?0.6:0.42,night=lt<-0.22;   /* luce a gradini, come un disegno */
+      var r=EARTH[ti*3],g=EARTH[ti*3+1],b=EARTH[ti*3+2];
+      var c=CLOUD[ci];if(c>=1){r=242;g=246;b=250;}else if(c>0){r=150;g=180;b=205;}
+      if(night){r=r*0.55+18;g=g*0.55+22;b=b*0.62+48;}   /* il lato notte vira al blu, non al nero */
+      r*=sh;g*=sh;b*=sh;
+      if(night&&CITY[ti]&&c<1){var cl0=0.7+0.3*Math.sin(t*3+ti);r=255*cl0;g=205*cl0;b=110*cl0;}
+      var la=P_y[k]%(EH/6),fu=u%step;if(la<0.9||fu<0.9){r+=(232-r)*0.32;g+=(200-g)*0.32;b+=(112-b)*0.32;}   /* griglia dorata ogni 30° */
       var o=P_i[k];d[o]=r>255?255:r;d[o+1]=g>255?255:g;d[o+2]=b>255?255:b;d[o+3]=255;
     }
     GX.putImageData(GI,0,0);
-    ctx.globalAlpha=a;ctx.drawImage(GC,cx-GLOBE,cy-GLOBE,GLOBE*2,GLOBE*2);ctx.globalAlpha=1;
+    ctx.globalAlpha=a;ctx.drawImage(GC,cx-GLOBE,cy-GLOBE,GLOBE*2,GLOBE*2);
+    /* riflesso disegnato in alto a sinistra */
+    ctx.save();ctx.beginPath();ctx.arc(cx,cy,GLOBE,0,6.2832);ctx.clip();
+    ctx.fillStyle='rgba(255,255,255,0.16)';ctx.beginPath();ctx.ellipse(cx-GLOBE*0.38,cy-GLOBE*0.42,GLOBE*0.34,GLOBE*0.2,-0.6,0,6.2832);ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,0.45)';ctx.beginPath();ctx.ellipse(cx-GLOBE*0.48,cy-GLOBE*0.5,GLOBE*0.09,GLOBE*0.05,-0.6,0,6.2832);ctx.fill();
+    ctx.restore();
+    /* contorno: tratto scuro e anello d'oro sottile */
+    ctx.lineWidth=Math.max(2,GLOBE*0.025);ctx.strokeStyle='rgba(10,22,40,0.9)';ctx.beginPath();ctx.arc(cx,cy,GLOBE,0,6.2832);ctx.stroke();
+    ctx.lineWidth=1.4;ctx.strokeStyle='rgba(232,200,112,0.75)';ctx.beginPath();ctx.arc(cx,cy,GLOBE*1.035,0,6.2832);ctx.stroke();
+    ctx.globalAlpha=1;
   }
   /* ---------- Il mondo di oggi: i continenti della Mappa, letti direttamente dalla sezione Mappa del sito ---------- */
   var MAP=null;
@@ -312,14 +326,14 @@
     pg.addColorStop(1,'rgba(8,20,50,0)');
     ctx.fillStyle=pg;ctx.beginPath();ctx.arc(cx,cy,GLOBE*1.04,0,6.2832);ctx.fill();
   }
-  function drawAtmosphere(planetA){
+  function drawAtmosphere(planetA){   /* alone sottile e netto, adatto al globo disegnato */
     ctx.globalCompositeOperation='lighter';
-    var ag=ctx.createRadialGradient(cx,cy,GLOBE*0.86,cx,cy,GLOBE*1.2);
-    ag.addColorStop(0,'rgba(90,160,235,0)');
-    ag.addColorStop(0.62,'rgba(120,185,255,'+(0.16*planetA)+')');
-    ag.addColorStop(0.83,'rgba(150,205,255,'+(0.3*planetA)+')');
-    ag.addColorStop(1,'rgba(150,205,255,0)');
-    ctx.fillStyle=ag;ctx.beginPath();ctx.arc(cx,cy,GLOBE*1.2,0,6.2832);ctx.fill();
+    var ag=ctx.createRadialGradient(cx,cy,GLOBE*0.99,cx,cy,GLOBE*1.16);
+    ag.addColorStop(0,'rgba(120,185,255,0)');
+    ag.addColorStop(0.08,'rgba(120,185,255,'+(0.28*planetA)+')');
+    ag.addColorStop(0.4,'rgba(120,185,255,'+(0.1*planetA)+')');
+    ag.addColorStop(1,'rgba(120,185,255,0)');
+    ctx.fillStyle=ag;ctx.beginPath();ctx.arc(cx,cy,GLOBE*1.16,0,6.2832);ctx.fill();
     ctx.globalCompositeOperation='source-over';
   }
   function frame(ts){
