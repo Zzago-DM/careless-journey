@@ -1,0 +1,30 @@
+/* Vista Fisico/Politico delle mappe dei continenti */
+
+.cj-overlay .maptog{position:absolute;left:14px;bottom:12px;display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:rgba(8,6,10,.8);z-index:2}
+.cj-overlay .bar{flex-wrap:wrap}
+.cj-overlay .bar .maptog{position:static;margin-left:auto}
+.cj-overlay .maptog button{background:none;border:0;color:var(--muted);font-family:'Cinzel',serif;font-size:.62rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;padding:.6rem 1rem;cursor:pointer}
+.cj-overlay .maptog button.on{background:rgba(203,168,90,.18);color:var(--gold-bright)}
+.cj-overlay .maptog button:focus-visible{outline:1px solid var(--gold);outline-offset:-3px}
+.cj-overlay .pol-layer{display:none}
+.cj-overlay.pol .pol-layer{display:inline}
+.cj-overlay.pol .marker.pol-hide{display:none}
+.cj-overlay.pol .pol-decor{display:none}
+.cj-overlay .pol-only{display:none}
+.cj-overlay.pol .legend.pol-only{display:flex}
+.cj-overlay.pol .hint .pol-only{display:inline}
+.cj-overlay.pol .fis-only{display:none}
+.cj-overlay .legend .sw.ln{height:3px;border-radius:2px;box-shadow:none}
+.cj-overlay .pc{cursor:pointer;outline:none}
+.cj-overlay .pc .hitc{fill:transparent;pointer-events:all}
+.cj-overlay .pl{font-family:'Cinzel',serif;font-weight:600;fill:#e8eef3;font-size:var(--pl,7px);paint-order:stroke;stroke:#070b10;stroke-width:calc(var(--pl,7px)*.3);stroke-linejoin:round;letter-spacing:.03em;transform-box:fill-box;transform-origin:50% 100%;transition:transform .18s ease,fill .18s ease}
+.cj-overlay .pc.lb .pl{transform-origin:50% 0%}
+.cj-overlay .pc.cap .pl{font-size:var(--plc,calc(var(--pl,7px)*1.4));fill:#f3e6c4}
+.cj-overlay .pc:hover .pl,.cj-overlay .pc.on .pl,.cj-overlay .pc:focus-visible .pl{transform:scale(1.75);fill:#fff}
+.cj-overlay .ps{font-family:Georgia,serif;font-style:italic;fill:#d3dde4;font-size:calc(var(--pl,7px)*.95);paint-order:stroke;stroke:#070b10;stroke-width:calc(var(--pl,7px)*.28);stroke-linejoin:round;opacity:0;transition:opacity .18s ease;pointer-events:none}
+.cj-overlay .pc:hover .ps,.cj-overlay .pc.on .ps,.cj-overlay .pc:focus-visible .ps{opacity:1}
+.cj-overlay .pc.min .pl{font-size:calc(var(--pl,7px)*.82);font-weight:500}
+.cj-overlay .pc.ruin .pl{fill:#d9c8b4;font-style:italic}
+.cj-overlay .prl{font-family:'Cinzel',serif;font-weight:700;text-transform:uppercase;letter-spacing:.22em;fill:#f6ecd6;fill-opacity:.7;font-size:var(--prl,calc(var(--pl,7px)*.95));paint-order:stroke;stroke:#070b10;stroke-opacity:.6;stroke-width:calc(var(--pl,7px)*.22);stroke-linejoin:round;pointer-events:none}
+@media(max-width:640px){.cj-overlay.pol .titleplate{display:none}.cj-overlay .pc.min .pl{opacity:0;transition:opacity .18s,transform .18s}.cj-overlay .pc.min.on .pl,.cj-overlay .pc.min:hover .pl{opacity:1}}
+@media (prefers-reduced-motion:reduce){.cj-overlay .pl,.cj-overlay .ps{transition:none}}

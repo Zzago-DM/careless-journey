@@ -1,0 +1,29 @@
+/* Animazioni del titolo iniziale (sole dorato, scintille) */
+
+.gsun-i{display:inline-block;height:1.3em;width:.68em;vertical-align:-.3em;fill:currentColor;stroke:none;color:var(--gold);filter:drop-shadow(0 0 3px rgba(var(--gold-rgb),.55))}
+.nav-logo .gsun-i{height:1.7em;width:.88em;vertical-align:-.5em;margin-right:.2em}
+.hero-eyebrow .gsun-i{height:1.9em;width:1em;vertical-align:-.65em;margin-right:.9em}
+.hero-sigil{position:absolute;left:50%;top:47%;height:min(80vh,660px);width:auto;aspect-ratio:1739/3364;transform:translate(-50%,-50%);z-index:1;pointer-events:none;
+  fill:var(--gold);fill-opacity:0;stroke:var(--gold);stroke-width:26;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:.2;
+  animation:hsDraw 3.4s cubic-bezier(.6,.05,.3,1) .3s forwards,hsFill 2.2s ease 3.2s forwards,hsBreathe 7s ease-in-out 5.4s infinite}
+@keyframes hsDraw{to{stroke-dashoffset:0}}
+@keyframes hsFill{to{fill-opacity:.07}}
+@keyframes hsBreathe{0%,100%{opacity:.2;filter:drop-shadow(0 0 0 rgba(var(--gold-rgb),0))}50%{opacity:.3;filter:drop-shadow(0 0 22px rgba(var(--gold-rgb),.35))}}
+.hero-orn::before,.hero-orn::after{content:"";position:absolute;border-radius:50%;pointer-events:none}
+.hero-orn::before{inset:26px;border:1px dashed rgba(var(--gold-rgb),.12);animation:ornSpin 140s linear infinite}
+.hero-orn::after{inset:-30px;border:1px solid transparent;border-top-color:rgba(var(--gold-rgb),.22);border-bottom-color:rgba(var(--gold-rgb),.08);animation:ornSpin 60s linear infinite reverse}
+@keyframes ornSpin{to{transform:rotate(360deg)}}
+.hero-title{opacity:1!important;animation:none!important}
+.hero-title .ch{display:inline-block;opacity:0;transform:translateY(.45em);filter:blur(6px);animation:chRise .9s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(.45s + var(--i)*55ms)}
+@keyframes chRise{to{opacity:1;transform:none;filter:blur(0)}}
+.hero-title .ch{color:#fff}
+.hero-title .jr .ch{color:var(--gold)}
+.hero-title .ch.j{animation:chRise .9s cubic-bezier(.2,.7,.2,1) forwards,jrGleam 8s ease-in-out infinite;animation-delay:calc(.45s + var(--i)*55ms),calc(2.6s + var(--i)*90ms)}
+@keyframes jrGleam{0%,9%,100%{color:var(--gold);text-shadow:0 0 0 rgba(255,236,170,0)}4%{color:#fff4cf;text-shadow:0 0 18px rgba(255,226,140,.9),0 0 42px rgba(var(--gold-rgb),.6)}}
+.hero-motes{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.hero-motes i{position:absolute;bottom:-10px;border-radius:50%;background:radial-gradient(circle,#fff1c4,rgba(var(--gold-rgb),.9) 40%,rgba(var(--gold-rgb),0) 70%);opacity:0;animation:moteUp linear infinite}
+@keyframes moteUp{0%{transform:translate(0,0);opacity:0}12%{opacity:var(--o)}80%{opacity:var(--o)}100%{transform:translate(var(--dx),-92vh);opacity:0}}
+@media (prefers-reduced-motion:reduce){
+  .hero-sigil{animation:none;stroke-dashoffset:0;fill-opacity:.07}
+  .hero-orn::before,.hero-orn::after,.hero-motes{animation:none;display:none}
+  .hero-title .ch,.hero-title .ch.j{animation:none;opacity:1;transform:none;filter:none}}

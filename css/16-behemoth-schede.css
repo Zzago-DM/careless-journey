@@ -1,0 +1,14 @@
+/* Schede dei Behemoth con icona e parti */
+
+#bgrid .bcard{cursor:pointer;transition:border-color .2s,background .2s,transform .2s}
+#bgrid .bcard:hover,#bgrid .bcard:focus-visible{border-color:var(--gold3);transform:translateY(-1px)}
+#bgrid .bcard:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.beh-ph{aspect-ratio:1/1}
+.beh-ph img{object-fit:contain;padding:6%}
+.beh-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin:.5rem 0 .2rem}
+.beh-parts{list-style:none;margin:.2rem 0 0;padding:0;display:grid;gap:.35rem;max-width:62ch}
+.beh-parts li{display:flex;justify-content:space-between;gap:1rem;padding:.45rem .7rem;border:1px solid var(--border);border-radius:8px;background:rgba(var(--gold-rgb),.03)}
+.beh-parts .pn{color:var(--text)}
+.beh-parts .pq{color:var(--gold3);font-size:.85em;margin-left:.35rem}
+.beh-parts .pm{color:var(--text2);font-style:italic;text-align:right}
+@media (max-width:640px){.beh-parts li{flex-direction:column;gap:.1rem}.beh-parts .pm{text-align:left}}

@@ -1,0 +1,33 @@
+/* Easter egg: isola sconosciuta nel Maelstrom */
+
+#cj-vecchia{z-index:10001;--fire:#9a5cff;--fire-bright:#d0a8ff}
+#cj-vecchia .stage{background:#1c130d}
+#cj-maelstrom .vr-isle{position:absolute;left:0;top:18%;width:min(17vw,210px);z-index:5;border:0;padding:0;background:none;cursor:pointer;opacity:0;pointer-events:none;transform:translateX(-30vw)}
+#cj-maelstrom .vr-isle svg{display:block;width:100%;height:auto}
+#cj-maelstrom .vr-isle.show{pointer-events:auto;animation:vr-pass 20s linear forwards}
+#cj-maelstrom .vr-isle.show svg{animation:vr-hover 5s ease-in-out infinite}
+#cj-maelstrom .vr-isle:focus-visible{outline:2px solid #d8b45a;outline-offset:6px;border-radius:10px}
+#cj-maelstrom .vr-flash{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:0;background:radial-gradient(circle at 4% 26%,rgba(200,160,255,.45),transparent 45%)}
+#cj-maelstrom .vr-flash.go{animation:vr-flash 1.6s ease-out}
+@media (max-width:640px){#cj-maelstrom .vr-isle{top:64%;width:32%}#cj-maelstrom .vr-flash{background:radial-gradient(circle at 6% 70%,rgba(200,160,255,.45),transparent 50%)}}
+.vr-d0{animation:vr-bob 7s ease-in-out infinite}.vr-d1{animation:vr-bob 9s ease-in-out -3s infinite}.vr-d2{animation:vr-bob 11s ease-in-out -6s infinite}
+.vr-fire path{transform-box:fill-box;transform-origin:50% 100%;animation:vr-flick .5s ease-in-out infinite alternate}
+.vr-f1 path{animation-duration:.62s}.vr-f2 path{animation-duration:.43s}
+.vr-smoke{animation:vr-rise 7s ease-out infinite}.vr-s1{animation-delay:-2.3s}.vr-s2{animation-delay:-4.6s}
+.vr-glow{animation:vr-pulse 3.4s ease-in-out infinite}
+.vr-lamp{animation:vr-lamp 4s ease-in-out infinite}
+.vr-bolt{opacity:0;animation:vr-bolt 9s linear infinite}.vr-b2{animation-delay:-4.1s}
+.vr-ash circle{animation:vr-ash 6s linear infinite}.vr-ash .vr-a1{animation-duration:8s;animation-delay:-2s}.vr-ash .vr-a2{animation-duration:7s;animation-delay:-4s}.vr-ash .vr-a3{animation-duration:9s;animation-delay:-1s}
+.vr-flag{transform-box:fill-box;transform-origin:0 50%;animation:vr-flagw 1.6s ease-in-out infinite alternate}
+@keyframes vr-hover{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes vr-pass{0%{transform:translateX(-30vw);opacity:0}10%{opacity:.92}90%{opacity:.92}100%{transform:translateX(105vw);opacity:0}}
+@keyframes vr-flash{0%{opacity:0}12%{opacity:1}30%{opacity:.15}42%{opacity:.8}100%{opacity:0}}
+@keyframes vr-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes vr-flick{from{transform:scale(1,1)}to{transform:scale(.88,1.14)}}
+@keyframes vr-rise{0%{transform:translate(0,0);opacity:0}20%{opacity:.45}100%{transform:translate(10px,-34px);opacity:0}}
+@keyframes vr-pulse{0%,100%{opacity:.25}50%{opacity:.6}}
+@keyframes vr-lamp{0%,100%{opacity:.5}47%{opacity:.55}50%{opacity:.25}53%{opacity:.55}}
+@keyframes vr-bolt{0%,90%{opacity:0}91%{opacity:1}93%{opacity:0}94%{opacity:.8}96%,100%{opacity:0}}
+@keyframes vr-ash{0%{transform:translateY(0);opacity:0}15%{opacity:.9}100%{transform:translateY(-60px);opacity:0}}
+@keyframes vr-flagw{from{transform:scaleX(1)}to{transform:scaleX(.8)}}
+@media (prefers-reduced-motion:reduce){#cj-vecchia *,#cj-maelstrom .vr-isle,#cj-maelstrom .vr-isle *,#cj-maelstrom .vr-flash{animation:none!important;transition:none!important}#cj-maelstrom .vr-isle.show{opacity:.92;transform:translateX(12vw)}}
