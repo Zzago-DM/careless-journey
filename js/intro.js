@@ -44,7 +44,14 @@
     for(var x=0;x<EW;x++){for(var y=0;y<EH;y++){var sm=0;for(var dy=-3;dy<=3;dy++){var yy=y+dy;if(yy<0){yy=0;}if(yy>=EH){yy=EH-1;}sm+=H1[yy*EW+x];}COAST[y*EW+x]=sm/49;}}
     function inDesert(la,lo){return (la>14&&la<33&&lo>-17&&lo<58)||(la>36&&la<48&&lo>55&&lo<118)||(la>-32&&la<-18&&lo>118&&lo<146)||(la>-30&&la<-17&&lo>14&&lo<26)||(la>25&&la<38&&lo>-118&&lo<-103)||(la>-27&&la<-17&&lo>-71&&lo<-68);}
     /* STILIZZATO: coste ammorbidite (si perdono i dettagli minuti), tinte piatte e un contorno scuro attorno alle terre */
-    var SM=new Uint8Array(EW*EH);for(var i=0;i<EW*EH;i++){SM[i]=COAST[i]>0.5?1:0;}
+    /* SPIGOLOSO: le terre si ricalcolano su una griglia larga (celle di 7,5°) e i bordi diventano tratti dritti, come un disegno a poligoni */
+    var CW=48,CH=24,CF=new Float32Array((CW+1)*(CH+1));
+    for(var gy=0;gy<=CH;gy++){for(var gx=0;gx<=CW;gx++){var sx=Math.round(gx/CW*EW)%EW,sy=Math.min(EH-1,Math.round(gy/CH*EH)),acc=0,cnt=0;
+      for(var dy=-3;dy<=3;dy++){var yy=sy+dy;if(yy<0||yy>=EH){continue;}for(var dx=-3;dx<=3;dx++){acc+=LAND[yy*EW+(sx+dx+EW)%EW];cnt++;}}CF[gy*(CW+1)+gx]=acc/cnt;}}
+    var SM=new Uint8Array(EW*EH);
+    for(var y=0;y<EH;y++){var fy=y/EH*CH,y0=Math.min(CH-1,fy|0),ay=fy-y0;for(var x=0;x<EW;x++){var fx=x/EW*CW,x0=Math.min(CW-1,fx|0),ax=fx-x0;
+      var v=(CF[y0*(CW+1)+x0]*(1-ax)+CF[y0*(CW+1)+x0+1]*ax)*(1-ay)+(CF[(y0+1)*(CW+1)+x0]*(1-ax)+CF[(y0+1)*(CW+1)+x0+1]*ax)*ay;
+      SM[y*EW+x]=v>0.45?1:0;}}
     for(var y=0;y<EH;y++){if(y>=(EH*168/180|0)){for(var x=0;x<EW;x++){SM[y*EW+x]=1;}}}
     LAND.set(SM);
     var PAL={ocean:[38,96,168],shallow:[64,142,200],outline:[22,46,62],ice:[236,244,250],tundra:[158,176,126],desert:[228,194,124],jungle:[58,150,84],green:[104,182,92],green2:[86,160,80]};
