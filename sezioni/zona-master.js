@@ -103,6 +103,11 @@ tcjSezione(`<div id="ms">
 
     <div id="npc-results"></div>
   </div>
+  <div class="msec" id="m-gh" style="border-top:1px solid rgba(200,56,56,.1)">
+    <div class="msecsub">Strumento del DM</div><div class="msect">Aree dei giocatori online</div><div class="msecl"></div>
+    <div class="mq">Con il token del Master vedi e modifichi le aree online di tutti e tre gli Slayer da questo dispositivo: scarichi l'ultima versione salvata da ciascuno, la apri, la correggi e la salvi di nuovo online. Il giocatore la ritrova aggiornata alla prossima apertura.</div>
+    <div id="mgh-body"></div>
+  </div>
   <div class="msec" id="m-plancia" style="border-top:1px solid rgba(200,56,56,.1)">
     <div class="msecsub">Strumento del DM</div><div class="msect">Plancia Behemoth</div><div class="msecl"></div>
     <div class="mq">Gestione in tempo reale di uno o più Behemoth durante un combattimento: PV, token elementali, parti rotte — con i materiali che rilasciano — e variazioni. Spunta le parti mentre le rompi e ottieni i drop; i drop da Uccisione (casuali) sono sempre mostrati. I dati non vengono salvati: la plancia si azzera ad ogni ricaricamento.</div>

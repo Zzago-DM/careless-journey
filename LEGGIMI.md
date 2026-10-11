@@ -34,3 +34,5 @@ Ogni personaggio ha il suo "pacchetto" (scheda, licenza, ritratto, sigillo, note
 **Il giocatore:** apre la sua Area dello Slayer con il codice → "☁ Collega salvataggio online" → incolla il token. Da lì: all'apertura dell'area il sito scarica l'ultima versione, con "☁ Salva online" la carica. Se trova modifiche fatte su due dispositivi, chiede quale versione tenere.
 
 Se un token si perde: revocalo su GitHub e creane uno nuovo; ogni versione salvata resta nella cronologia del repository.
+
+**Token del Master:** un solo token fine-grained con *Only select repositories* = `tcj-athena`, `tcj-panlan`, `tcj-asonnes`, *Contents: Read and write*, *No expiration*. Si incolla nella Zona Master → «Aree dei giocatori online». Da lì si scarica, si apre, si corregge e si salva online l'area di ciascun giocatore; il salvataggio compare su GitHub con la nota «(dal Master)». Il token resta solo sul dispositivo dove lo incolli.

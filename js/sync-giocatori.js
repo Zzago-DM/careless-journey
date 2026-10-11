@@ -28,7 +28,14 @@
   /* ---------- stato del collegamento (fuori dal backup: il prefisso non è "tcj-") ---------- */
   function stato(k){ try { return JSON.parse(localStorage.getItem("tcjgh_"+k) || "null") || {}; } catch(e){ return {}; } }
   function salvaStato(k, s){ try { _orig.setItem.call(localStorage, "tcjgh_"+k, JSON.stringify(s)); } catch(e){} }
-  function collegato(k){ var s = stato(k); return !!(s.token && s.repo); }
+  function master(){ try { return JSON.parse(localStorage.getItem("tcjgh_master") || "null") || {}; } catch(e){ return {}; } }
+  function inMaster(){ try { return typeof paMaster === "function" && paMaster(); } catch(e){ return false; } }
+  function cred(k){   /* il token del giocatore ha la precedenza; in modalità Master si usa quello del Master */
+    var s = stato(k); if(s.token && s.repo) return {token:s.token, repo:s.repo, chi:"giocatore"};
+    var m = master(); if(m.token && inMaster()) return {token:m.token, repo:OWNER+"/tcj-"+k, chi:"master"};
+    return null;
+  }
+  function collegato(k){ return !!cred(k); }
 
   /* ---------- ogni modifica locale di un personaggio collegato lo segna "da salvare online" ---------- */
   var muto = false, _orig = { setItem: Storage.prototype.setItem, removeItem: Storage.prototype.removeItem };
@@ -96,9 +103,9 @@
 
   var occupato = {};
   function scaricaAll(k, silenzioso){
-    var s = stato(k); if(!s.token || occupato[k]) return Promise.resolve();
+    var c = cred(k); if(!c || occupato[k]) return Promise.resolve();
     occupato[k] = 1; disegna();
-    return scarica(s).then(function(res){
+    return scarica(c).then(function(res){
       occupato[k] = 0;
       if(res.stato === "errore"){ avviso(res.msg, true); disegna(); return; }
       if(res.stato === "vuoto"){ if(!silenzioso) avviso("Online non c'è ancora nulla: premi «Salva online» per caricare l'area di "+NOMI[k]+"."); disegna(); return; }
@@ -109,10 +116,10 @@
     });
   }
   function scaricaManuale(k){
-    var s = stato(k); if(!s.token){ finestraCollega(k); return; } if(occupato[k]) return;
+    var c = cred(k); if(!c){ finestraCollega(k); return; } if(occupato[k]) return;
     try { if(typeof paFlush === "function") paFlush(); } catch(e){}
     occupato[k] = 1; disegna();
-    scarica(s).then(function(res){
+    scarica(c).then(function(res){
       occupato[k] = 0; disegna();
       if(res.stato === "errore"){ avviso(res.msg, true); return; }
       if(res.stato === "vuoto"){ avviso("Online non c'è ancora nulla da scaricare: prima premi «Salva online».", true); return; }
@@ -135,19 +142,19 @@
     document.getElementById("gh-dopo").onclick = chiudi;
   }
   function caricaOnline(k, forza){
-    var s = stato(k); if(!s.token || occupato[k]) return;
+    var s = stato(k), c = cred(k); if(!c || occupato[k]) return;
     try { if(typeof paFlush === "function") paFlush(); } catch(e){}
     occupato[k] = 1; disegna();
-    var p = pacchetto(k), corpo = { message: "Area di "+NOMI[k]+" — "+quando(p.salvato), content: b64e(JSON.stringify(p)) };
+    var p = pacchetto(k), corpo = { message: "Area di "+NOMI[k]+" — "+quando(p.salvato)+(c.chi === "master" ? " (dal Master)" : ""), content: b64e(JSON.stringify(p)) };
     if(s.sha) corpo.sha = s.sha;
-    var invia = forza ? scarica(s).then(function(res){ if(res.sha) corpo.sha = res.sha; }) : Promise.resolve();
-    invia.then(function(){ return gh(s, "PUT", "/contents/"+FILE, corpo); }).then(function(r){
+    var invia = forza ? scarica(c).then(function(res){ if(res.sha) corpo.sha = res.sha; }) : Promise.resolve();
+    invia.then(function(){ return gh(c, "PUT", "/contents/"+FILE, corpo); }).then(function(r){
       occupato[k] = 0;
       if(r.status === 409 || r.status === 422){             // online c'è una versione che questo dispositivo non conosce
-        return scarica(s).then(function(res){ if(res.stato === "ok") conflitto(k, res.dati, res.sha); else avviso(res.msg || errore(r), true); disegna(); });
+        return scarica(c).then(function(res){ if(res.stato === "ok") conflitto(k, res.dati, res.sha); else avviso(res.msg || errore(r), true); disegna(); });
       }
       if(!r.ok){ avviso(errore(r), true); disegna(); return; }
-      return r.json().then(function(j){ var s2 = stato(k); s2.sha = j.content && j.content.sha; s2.at = p.salvato; s2.dirty = false; salvaStato(k, s2); disegna(); avviso("Salvato online ✓"); try{ sfxPlay("seal"); }catch(e){} });
+      return r.json().then(function(j){ var s2 = stato(k); s2.sha = j.content && j.content.sha; s2.at = p.salvato; s2.dirty = false; salvaStato(k, s2); disegna(); avviso(c.chi === "master" ? "Area di "+NOMI[k]+" salvata online (Master) ✓" : "Salvato online ✓"); try{ sfxPlay("seal"); }catch(e){} });
     }).catch(function(){ occupato[k] = 0; avviso(errore(null), true); disegna(); });
   }
 
@@ -161,22 +168,23 @@
   var sez = document.getElementById("sv-onl");
   function statoTesto(k, s){
     return occupato[k] ? '<span class="gh-st">⟳ Sincronizzo…</span>'
-         : !s.token ? '<span class="gh-st">☁ Online non collegato</span>'
+         : !cred(k) ? '<span class="gh-st">☁ Online non collegato</span>'
          : s.dirty ? '<span class="gh-st gh-warn">● Modifiche da salvare online</span>'
          : s.at ? '<span class="gh-st gh-ok">☁ Salvato online · '+quando(s.at)+'</span>' : '<span class="gh-st">☁ Collegato · niente salvato ancora</span>';
   }
   function disegna(){
     var k = scCur, s = stato(k), dis = occupato[k] ? ' disabled' : '';
     if(box) box.innerHTML = statoTesto(k, s)
-      + (s.token ? '<button type="button" class="bk-btn gh-btn gh-save" data-gh="salva"'+dis+'>☁ Salva online</button>' : '')
+      + (cred(k) ? '<button type="button" class="bk-btn gh-btn gh-save" data-gh="salva"'+dis+'>☁ Salva online</button>' : '')
       + '<button type="button" class="bk-btn gh-btn" data-gh="vai">💾 Salvataggi</button>';
     if(sez){
       var h = '<div class="sv-h"><span class="sv-i">☁</span>Online</div>';
-      if(!s.token){
+      var cc = cred(k);
+      if(!cc){
         h += '<p class="sv-p">Salva l\'area su internet per ritrovarla su <b>qualsiasi dispositivo</b>. Ti serve il token che ti ha dato il Master: si incolla una volta sola per dispositivo.</p>'
            + '<div class="sv-btns"><button class="bk-btn gh-save" type="button" data-gh="collega">☁ Collega</button></div>';
       } else {
-        h += '<p class="sv-p sv-state">'+statoTesto(k, s)+'</p>'
+        h += '<p class="sv-p sv-state">'+statoTesto(k, s)+(cc.chi === "master" ? ' <span class="gh-st gh-m">· con il token del Master</span>' : '')+'</p>'
            + '<p class="sv-p"><b>Salva online</b> carica l\'area su internet. <b>Scarica da online</b> riprende l\'ultima versione salvata e sostituisce quella di questo dispositivo. All\'apertura dell\'area lo scaricamento avviene da solo.</p>'
            + '<div class="sv-btns"><button class="bk-btn gh-save" type="button" data-gh="salva"'+dis+'>⬆ Salva online</button>'
            + '<button class="bk-btn" type="button" data-gh="scarica"'+dis+'>⬇ Scarica da online</button>'
@@ -257,9 +265,58 @@
   paOpenList().forEach(function(k){ if(collegato(k)) scaricaAll(k, true); });   // aree già aperte al caricamento della pagina
   document.addEventListener("visibilitychange", function(){ if(!document.hidden) paOpenList().forEach(function(k){ if(collegato(k) && !stato(k).dirty) scaricaAll(k, true); }); });
   window.addEventListener("beforeunload", function(e){                         // promemoria prima di chiudere
-    var da = CH.filter(function(k){ var s = stato(k); return s.token && s.dirty; });
+    var da = CH.filter(function(k){ var s = stato(k); return cred(k) && s.dirty; });
     if(da.length){ e.preventDefault(); e.returnValue = ""; }
   });
   window.ghSync = { scarica: scaricaAll, scaricaOra: scaricaManuale, salva: caricaOnline, stato: stato };
+  /* ---------- Zona Master: token del Master e quadro delle tre aree ---------- */
+  var mb = document.getElementById("mgh-body");
+  function disegnaMaster(){
+    if(!mb) return;
+    var m = master();
+    if(!m.token){
+      mb.innerHTML = '<div class="mgh-set"><p class="sv-p">Incolla il token del Master: un token fine-grained valido per <b>tcj-athena</b>, <b>tcj-panlan</b> e <b>tcj-asonnes</b>, con <b>Contents: Read and write</b>. Resta solo su questo dispositivo.</p>'
+        + '<div class="mgh-row"><input type="password" id="mgh-tok" autocomplete="off" spellcheck="false" placeholder="github_pat_…"><button type="button" class="bk-btn" data-mg="collega">☁ Collega</button></div><div class="gh-err" id="mgh-err"></div></div>';
+      return;
+    }
+    var h = '<div class="mgh-list">';
+    CH.forEach(function(k){
+      var s = stato(k), dis = occupato[k] ? ' disabled' : '', proprio = !!(s.token && s.repo);
+      h += '<div class="mgh-it"><div class="mgh-n">'+NOMI[k]+'<small>'+OWNER+'/tcj-'+k+(proprio?' · su questo dispositivo usa il token del giocatore':'')+'</small></div>'
+        + '<div class="mgh-s">'+statoTesto(k, s)+'</div>'
+        + '<div class="mgh-b"><button type="button" class="bk-btn" data-mg="apri" data-k="'+k+'">Apri l\'area</button>'
+        + '<button type="button" class="bk-btn" data-mg="scarica" data-k="'+k+'"'+dis+'>⬇ Scarica</button>'
+        + '<button type="button" class="bk-btn gh-save" data-mg="salva" data-k="'+k+'"'+dis+'>⬆ Salva online</button></div></div>';
+    });
+    h += '</div><div class="mgh-row mgh-foot"><button type="button" class="bk-btn" data-mg="tutte">⬇ Scarica tutte</button><button type="button" class="bk-btn" data-mg="scollega">Scollega il token del Master</button></div>';
+    mb.innerHTML = h;
+  }
+  if(mb) mb.addEventListener("click", function(e){
+    var b = e.target.closest("[data-mg]"); if(!b || b.disabled) return;
+    var a = b.getAttribute("data-mg"), k = b.getAttribute("data-k");
+    if(a === "collega"){
+      var t = (document.getElementById("mgh-tok").value || "").trim(), er = document.getElementById("mgh-err");
+      if(!t){ er.textContent = "Incolla il token."; return; }
+      er.textContent = "Controllo i tre repository…";
+      Promise.all(CH.map(function(c){ return gh({token:t, repo:OWNER+"/tcj-"+c}, "GET", "").then(function(r){ return r.ok ? null : NOMI[c]+": "+errore(r); }).catch(function(){ return errore(null); }); })).then(function(errs){
+        errs = errs.filter(Boolean);
+        if(errs.length){ er.innerHTML = errs.join("<br>"); return; }
+        try { _orig.setItem.call(localStorage, "tcjgh_master", JSON.stringify({token:t})); } catch(_){}
+        try{ sfxPlay("on"); }catch(_){}
+        avviso("Token del Master collegato: scarico le tre aree…");
+        disegnaMaster(); disegna(); CH.forEach(function(c){ scaricaAll(c, true); });
+      });
+    }
+    else if(a === "scollega"){ _orig.removeItem.call(localStorage, "tcjgh_master"); disegnaMaster(); disegna(); avviso("Token del Master scollegato da questo dispositivo."); }
+    else if(a === "tutte") CH.forEach(function(c){ scaricaManuale(c); });
+    else if(a === "scarica") scaricaManuale(k);
+    else if(a === "salva") caricaOnline(k);
+    else if(a === "apri"){ try { scSwitch(k); } catch(_){} var sc = document.getElementById("scheda"); if(sc) sc.scrollIntoView({behavior:"smooth"}); }
+  });
+  var _dis = disegna; disegna = function(){ _dis(); disegnaMaster(); };
+  if(typeof revealMaster === "function"){                      // all'ingresso nella Zona Master scarica le tre aree
+    var _rm = revealMaster;
+    revealMaster = function(){ var r = _rm.apply(this, arguments); if(master().token){ CH.forEach(function(c){ if(!stato(c).dirty) scaricaAll(c, true); }); } disegna(); return r; };
+  }
   disegna();
 })();
