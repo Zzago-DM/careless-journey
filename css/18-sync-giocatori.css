@@ -1,0 +1,27 @@
+/* Aree dei giocatori: salvataggio online (js/sync-giocatori.js) */
+.gh-box{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-left:auto}
+.gh-st{font-family:"Cinzel",serif;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text2)}
+.gh-st.gh-ok{color:var(--gold2)}
+.gh-st.gh-warn{color:#ffb36b}
+.gh-btn.gh-save{border-color:rgba(var(--gold-rgb),.5);color:var(--gold2)}
+.gh-btn.gh-save:hover:not(:disabled){background:rgba(var(--gold-rgb),.12)}
+.gh-btn:disabled{opacity:.5;cursor:wait}
+.gh-btn.gh-cfg{padding:.45rem .7rem}
+.gh-ov{position:fixed;inset:0;z-index:5000;background:rgba(3,4,8,.72);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:16px}
+.gh-ov[hidden]{display:none}
+.gh-box2{width:min(460px,100%);background:var(--bg3);border:1px solid rgba(var(--gold-rgb),.35);border-radius:10px;padding:1.3rem 1.3rem 1.1rem;box-shadow:0 30px 80px -30px rgba(0,0,0,.9)}
+.gh-t{font-family:"Cinzel",serif;font-size:.9rem;letter-spacing:.08em;color:var(--gold2);margin-bottom:.6rem}
+.gh-p{font-size:.88rem;color:var(--text2);margin:0 0 .9rem;line-height:1.55}
+.gh-p.gh-small{font-size:.76rem;margin:.8rem 0 0;opacity:.8}
+.gh-l{display:block;font-family:"Cinzel",serif;font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text2);margin-bottom:.75rem}
+.gh-l input{display:block;width:100%;margin-top:.35rem;padding:.55rem .7rem;background:rgba(0,0,0,.3);border:1px solid var(--border);color:var(--text);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem;letter-spacing:0;text-transform:none;outline:none}
+.gh-l input:focus{border-color:var(--gold)}
+.gh-err{min-height:1.2em;font-size:.8rem;color:#ff8a7a;margin-bottom:.6rem}
+.gh-row{display:flex;gap:.5rem;flex-wrap:wrap}
+.gh-row.gh-col{flex-direction:column}
+.gh-row.gh-col .bk-btn{width:100%;padding:.7rem 1rem}
+.gh-toast{position:fixed;left:50%;bottom:22px;z-index:5100;transform:translate(-50%,20px);opacity:0;pointer-events:none;max-width:min(92vw,520px);
+  background:var(--bg3);border:1px solid rgba(var(--gold-rgb),.4);color:var(--text);padding:.65rem 1rem;border-radius:8px;font-size:.88rem;box-shadow:0 12px 40px -12px rgba(0,0,0,.8);transition:opacity .25s,transform .25s}
+.gh-toast.on{opacity:1;transform:translate(-50%,0)}
+.gh-toast.err{border-color:rgba(255,120,100,.6)}
+@media(max-width:640px){.gh-box{width:100%;margin-left:0}.gh-box .gh-st{width:100%}}
