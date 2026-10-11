@@ -108,6 +108,32 @@
       conflitto(k, rem, res.sha);                                                                          // modifiche da entrambe le parti
     });
   }
+  function scaricaManuale(k){
+    var s = stato(k); if(!s.token){ finestraCollega(k); return; } if(occupato[k]) return;
+    try { if(typeof paFlush === "function") paFlush(); } catch(e){}
+    occupato[k] = 1; disegna();
+    scarica(s).then(function(res){
+      occupato[k] = 0; disegna();
+      if(res.stato === "errore"){ avviso(res.msg, true); return; }
+      if(res.stato === "vuoto"){ avviso("Online non c'è ancora nulla da scaricare: prima premi «Salva online».", true); return; }
+      var rem = res.dati, s2 = stato(k);
+      if(s2.dirty && haDati(k)){ sostituisci(k, rem, res.sha); return; }
+      if(rem.salvato === s2.at){ s2.sha = res.sha; salvaStato(k, s2); avviso("Hai già l'ultima versione online (" + quando(rem.salvato) + ")."); return; }
+      applica(k, rem, res.sha); avviso("Scaricata la versione online del " + quando(rem.salvato) + ". ✓"); try{ sfxPlay("paper"); }catch(e){}
+    });
+  }
+  function sostituisci(k, rem, sha){
+    var s = stato(k);
+    ov.innerHTML = '<div class="gh-box2"><div class="gh-t">Scaricare la versione online?</div>'
+      + '<p class="gh-p">Su questo dispositivo ci sono modifiche <b>non ancora salvate online</b>'+(s.loc?' (del <b>'+quando(s.loc)+'</b>)':'')+'. Se scarichi la versione online del <b>'+quando(rem.salvato)+'</b>, quelle modifiche andranno perse.</p>'
+      + '<div class="gh-row gh-col"><button type="button" class="bk-btn" id="gh-rem">⬇ Scarica comunque</button>'
+      + '<button type="button" class="bk-btn" id="gh-loc">⬆ No, prima salva online le mie</button>'
+      + '<button type="button" class="bk-btn" id="gh-dopo">Annulla</button></div></div>';
+    ov.hidden = false;
+    document.getElementById("gh-rem").onclick = function(){ chiudi(); applica(k, rem, sha); avviso("Scaricata la versione online. ✓"); };
+    document.getElementById("gh-loc").onclick = function(){ chiudi(); var s2 = stato(k); s2.sha = sha; salvaStato(k, s2); caricaOnline(k, true); };
+    document.getElementById("gh-dopo").onclick = chiudi;
+  }
   function caricaOnline(k, forza){
     var s = stato(k); if(!s.token || occupato[k]) return;
     try { if(typeof paFlush === "function") paFlush(); } catch(e){}
@@ -132,21 +158,43 @@
     box = document.createElement("span"); box.className = "gh-box";
     var lock = document.getElementById("pa-lockbtn"); bar.insertBefore(box, lock);
   }
-  function disegna(){
-    if(!box) return;
-    var k = scCur, s = stato(k);
-    if(!s.token){ box.innerHTML = '<button type="button" class="bk-btn gh-btn" data-gh="collega">☁ Collega salvataggio online</button>'; return; }
-    var st = occupato[k] ? '<span class="gh-st">⟳ Sincronizzo…</span>'
-           : s.dirty ? '<span class="gh-st gh-warn">● Modifiche da salvare online</span>'
-           : s.at ? '<span class="gh-st gh-ok">☁ Online · '+quando(s.at)+'</span>' : '<span class="gh-st">☁ Collegato</span>';
-    box.innerHTML = st + '<button type="button" class="bk-btn gh-btn gh-save" data-gh="salva"'+(occupato[k]?' disabled':'')+'>☁ Salva online</button>'
-                  + '<button type="button" class="bk-btn gh-btn gh-cfg" data-gh="impostazioni" title="Impostazioni del salvataggio online" aria-label="Impostazioni del salvataggio online">⚙</button>';
+  var sez = document.getElementById("sv-onl");
+  function statoTesto(k, s){
+    return occupato[k] ? '<span class="gh-st">⟳ Sincronizzo…</span>'
+         : !s.token ? '<span class="gh-st">☁ Online non collegato</span>'
+         : s.dirty ? '<span class="gh-st gh-warn">● Modifiche da salvare online</span>'
+         : s.at ? '<span class="gh-st gh-ok">☁ Salvato online · '+quando(s.at)+'</span>' : '<span class="gh-st">☁ Collegato · niente salvato ancora</span>';
   }
-  if(box) box.addEventListener("click", function(e){
-    var b = e.target.closest("[data-gh]"); if(!b) return;
+  function disegna(){
+    var k = scCur, s = stato(k), dis = occupato[k] ? ' disabled' : '';
+    if(box) box.innerHTML = statoTesto(k, s)
+      + (s.token ? '<button type="button" class="bk-btn gh-btn gh-save" data-gh="salva"'+dis+'>☁ Salva online</button>' : '')
+      + '<button type="button" class="bk-btn gh-btn" data-gh="vai">💾 Salvataggi</button>';
+    if(sez){
+      var h = '<div class="sv-h"><span class="sv-i">☁</span>Online</div>';
+      if(!s.token){
+        h += '<p class="sv-p">Salva l\'area su internet per ritrovarla su <b>qualsiasi dispositivo</b>. Ti serve il token che ti ha dato il Master: si incolla una volta sola per dispositivo.</p>'
+           + '<div class="sv-btns"><button class="bk-btn gh-save" type="button" data-gh="collega">☁ Collega</button></div>';
+      } else {
+        h += '<p class="sv-p sv-state">'+statoTesto(k, s)+'</p>'
+           + '<p class="sv-p"><b>Salva online</b> carica l\'area su internet. <b>Scarica da online</b> riprende l\'ultima versione salvata e sostituisce quella di questo dispositivo. All\'apertura dell\'area lo scaricamento avviene da solo.</p>'
+           + '<div class="sv-btns"><button class="bk-btn gh-save" type="button" data-gh="salva"'+dis+'>⬆ Salva online</button>'
+           + '<button class="bk-btn" type="button" data-gh="scarica"'+dis+'>⬇ Scarica da online</button>'
+           + '<button class="bk-btn gh-cfg" type="button" data-gh="impostazioni" title="Token e repository" aria-label="Impostazioni del salvataggio online">⚙</button></div>';
+      }
+      sez.innerHTML = h;
+    }
+  }
+  function clic(e){
+    var b = e.target.closest("[data-gh]"); if(!b || b.disabled) return;
     var a = b.getAttribute("data-gh");
-    if(a === "salva") caricaOnline(scCur); else finestraCollega(scCur);
-  });
+    if(a === "salva") caricaOnline(scCur);
+    else if(a === "scarica") scaricaManuale(scCur);
+    else if(a === "vai"){ var c = document.getElementById("sv-card"); if(c){ c.scrollIntoView({behavior:"smooth", block:"center"}); c.classList.remove("sv-flash"); void c.offsetWidth; c.classList.add("sv-flash"); } }
+    else finestraCollega(scCur);
+  }
+  if(box) box.addEventListener("click", clic);
+  if(sez) sez.addEventListener("click", clic);
 
   var ov = document.createElement("div"); ov.className = "gh-ov"; ov.setAttribute("role","dialog"); ov.setAttribute("aria-modal","true"); ov.hidden = true;
   document.body.appendChild(ov);
@@ -212,6 +260,6 @@
     var da = CH.filter(function(k){ var s = stato(k); return s.token && s.dirty; });
     if(da.length){ e.preventDefault(); e.returnValue = ""; }
   });
-  window.ghSync = { scarica: scaricaAll, salva: caricaOnline, stato: stato };
+  window.ghSync = { scarica: scaricaAll, scaricaOra: scaricaManuale, salva: caricaOnline, stato: stato };
   disegna();
 })();

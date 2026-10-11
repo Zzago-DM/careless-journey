@@ -67,15 +67,27 @@ tcjSezione(`<section id="scheda" style="background:var(--bg2)">
   <div class="sc-card sc-full"><span class="sc-lbl">Celle Equipaggiate</span><div class="sc-celle-grid" id="sc-celle"></div></div>
   <div class="sc-card sc-full"><div class="cr-head"><span class="sc-lbl" style="margin:0">Corone Aetheriche</span><span class="cr-meta">Possedute <b id="cr-count">0</b> / 12 &middot; Introito <b id="cr-mult">&mdash;</b></span></div><div class="cr-grid" id="cr-grid"></div><div style="font-size:.74rem;color:var(--text2);margin-top:.6rem;font-style:italic">Clicca una Corona per aprirne la scheda; il quadratino in alto a destra segna il possesso.</div></div>
   <div class="sc-card sc-full"><div class="pa-notes-head"><span class="sc-lbl">Note personali</span><span class="pa-hint">Titoli modificabili · sezioni da aggiungere, spostare, eliminare</span></div><div id="pa-notes"></div><button class="sc-coin-add" type="button" onclick="paNoteAdd()">+ Aggiungi sezione</button></div>
-  <div class="sc-card sc-full"><span class="sc-lbl">Backup dei dati</span>
-    <div class="bk-row">
-      <button class="bk-btn" type="button" onclick="bkExport()">⬇ Scarica backup</button>
-      <button class="bk-btn" type="button" onclick="document.getElementById('bk-file').click()">⬆ Ripristina da file</button>
-      <input type="file" id="bk-file" accept=".json,application/json" style="display:none" onchange="bkPick(this)">
+  <div class="sc-card sc-full sv-card" id="sv-card"><span class="sc-lbl">Salvataggi</span>
+    <p class="sv-intro">Tre modi per non perdere la tua area. Il primo è automatico; gli altri due servono a ritrovarla altrove o a farne una copia di sicurezza.</p>
+    <div class="sv-grid">
+      <div class="sv-sec sv-loc">
+        <div class="sv-h"><span class="sv-i">💾</span>Su questo dispositivo</div>
+        <p class="sv-p">Mentre scrivi, l'area si salva da sola in questo browser. Resta <b>solo qui</b>: su un altro telefono o computer non la trovi.</p>
+        <div class="sv-btns"><button class="bk-btn" type="button" id="sc-savebtn" data-t="💾 Salva ora" onclick="scSave()">💾 Salva ora</button></div>
+      </div>
+      <div class="sv-sec sv-onl" id="sv-onl"></div>
+      <div class="sv-sec sv-file">
+        <div class="sv-h"><span class="sv-i">📄</span>File di backup</div>
+        <p class="sv-p">Un file con <b>tutto</b> ciò che il sito tiene in questo browser: aree, Corone, note, nave. Conservalo come copia di sicurezza.</p>
+        <div class="sv-btns">
+          <button class="bk-btn" type="button" onclick="bkExport()">⬇ Scarica il file</button>
+          <button class="bk-btn" type="button" onclick="document.getElementById('bk-file').click()">⬆ Ripristina da file</button>
+          <input type="file" id="bk-file" accept=".json,application/json" style="display:none" onchange="bkPick(this)">
+        </div>
+        <div class="bk-msg" id="bk-msg"></div>
+      </div>
     </div>
-    <div class="bk-msg" id="bk-msg">Salva in un file tutto ciò che il sito tiene in questo browser: le schede dei tre Slayer, le Corone, le note personali e del Master, la nave. Tienilo da parte: se svuoti i dati del browser o cambi computer, è l’unico modo per recuperare tutto.</div>
   </div>
-  <button class="sc-save" id="sc-savebtn" onclick="scSave()">Salva Scheda</button>
 </div>
 </div><!-- /pa-body -->
   </div>
