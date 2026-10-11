@@ -307,7 +307,7 @@
         disegnaMaster(); disegna(); CH.forEach(function(c){ scaricaAll(c, true); });
       });
     }
-    else if(a === "scollega"){ _orig.removeItem.call(localStorage, "tcjgh_master"); disegnaMaster(); disegna(); avviso("Token del Master scollegato da questo dispositivo."); }
+    else if(a === "scollega"){ if(!confirm("Togliere il token del Master e i contenuti della Zona Master da questo dispositivo?")) return; ["tcjgh_master","tcjgh_mcache","tcjgh_mlock","tcjgh_mfirst"].forEach(function(x){ _orig.removeItem.call(localStorage, x); }); location.reload(); }
     else if(a === "tutte") CH.forEach(function(c){ scaricaManuale(c); });
     else if(a === "scarica") scaricaManuale(k);
     else if(a === "salva") caricaOnline(k);
