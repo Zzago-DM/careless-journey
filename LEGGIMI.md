@@ -21,3 +21,16 @@ Il sito era un unico file `index.html`. Adesso è diviso in pezzi: ogni parte st
 - **I file in `sezioni/` sono HTML dentro un contenitore.** Il testo sta tra due accenti gravi `` ` ``. Se nel testo ti serve un accento grave o la sequenza `${`, mettici davanti una barra rovesciata: `` \` `` e `\${`.
 - **I dati dei giocatori non sono qui.** Restano salvati nel browser di ciascuno, come prima.
 - **Dopo una modifica** GitHub Pages può impiegare qualche minuto ad aggiornarsi, e il browser può tenere in memoria la versione vecchia: ricarica la pagina con Ctrl+F5 (o svuota la cache sul telefono).
+
+## Aree dei giocatori online (js/sync-giocatori.js)
+
+Ogni personaggio ha il suo "pacchetto" (scheda, licenza, ritratto, sigillo, note personali, alloggio, tema) che può essere salvato online in un repository privato tutto suo. Il token si incolla nel sito una volta per dispositivo e resta solo in quel browser.
+
+**Preparazione (una volta sola, la fa il Master):**
+1. Crea tre repository **privati** vuoti: `tcj-athena`, `tcj-panlan`, `tcj-asonnes` (spunta "Add a README" così non sono vuoti del tutto).
+2. Per ognuno crea un token in *Settings → Developer settings → Personal access tokens → Fine-grained tokens*: Expiration **No expiration**, Repository access **Only select repositories** (solo quello del giocatore), Permissions **Contents: Read and write**.
+3. Consegna a ogni giocatore il suo token, in privato.
+
+**Il giocatore:** apre la sua Area dello Slayer con il codice → "☁ Collega salvataggio online" → incolla il token. Da lì: all'apertura dell'area il sito scarica l'ultima versione, con "☁ Salva online" la carica. Se trova modifiche fatte su due dispositivi, chiede quale versione tenere.
+
+Se un token si perde: revocalo su GitHub e creane uno nuovo; ogni versione salvata resta nella cronologia del repository.
