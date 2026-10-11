@@ -90,6 +90,7 @@
   function haDati(k){ return chiavi(k).some(function(key){ return localStorage.getItem(key) !== null; }); }
   function applica(k, rem, sha){
     try { if(typeof paFlush === "function") paFlush(); } catch(e){}
+    if(haDati(k)){ try { _orig.setItem.call(localStorage, "tcjgh_prev_"+k, JSON.stringify({ at: new Date().toISOString(), loc: stato(k).loc || null, data: pacchetto(k).data })); } catch(e){} }   /* copia di sicurezza: «Annulla l'ultimo scaricamento» */
     muto = true;
     try {
       chiavi(k).forEach(function(key){ if(rem.data && Object.prototype.hasOwnProperty.call(rem.data, key)) _orig.setItem.call(localStorage, key, rem.data[key]); else _orig.removeItem.call(localStorage, key); });
@@ -99,6 +100,88 @@
     try { if(typeof alCur !== "undefined" && alCur === k && typeof alRender === "function") alRender(); } catch(e){}
     try { if(k === scCur && typeof paTheme === "function") paTheme(); } catch(e){}
     disegna();
+  }
+
+  /* ---------- confronto tra due versioni di un'area ---------- */
+  var LIC = [["nome","Nome completo"],["titolo","Soprannome / Titolo"],["eta","Età"],["giorno","Giorno di nascita"],["triade","Triade"],["aether","Aether di affinità"],["continente","Continente d'origine"],["terra","Terra natale"],["casata","Casata / Affiliazione"],["segni","Segni particolari"],["motto","Motto"]];
+  var CAMPI = [["lvl","Livello"],["rango","Rango"],["pv","PV"],["arma","Arma"],["wcat","Categoria dell'arma"],["abil","Abilità"],["arma2","Seconda arma"],["arma2t","Tipo della seconda arma"],["proiettili","Proiettili"],["equip","Equipaggiamento"],["natt","Nucleo d'attacco"],["ndef","Nucleo di difesa"],["malus","Malus"],["benny","Benny"],["ispirazione","Ispirazione"]];
+  function js(v){ try { return JSON.parse(v); } catch(e){ return null; } }
+  function txt(v){ if(v === undefined || v === null) return ""; if(typeof v === "boolean") return v ? "Sì" : ""; return String(v).trim(); }
+  function riassunto(map, k){
+    var R = [], sc = js(map["tcj-sc4-"+k] || (k === CH[0] ? map["tcj-sc4"] : null)) || {}, id = sc.id || {};
+    function add(sez, et, v, mostra){ R.push({ sez: sez, et: et, v: txt(v), m: mostra !== undefined ? mostra : txt(v) }); }
+    LIC.forEach(function(f){ add("Licenza", f[1], id[f[0]]); });
+    add("Licenza", "Ritratto", id.ritratto || "", id.ritratto ? "Presente" : "");
+    CAMPI.forEach(function(f){ add("Scheda", f[1], sc[f[0]]); });
+    (typeof SC_STATS !== "undefined" ? SC_STATS : []).forEach(function(s){ var o = (sc.stats || {})[s.id] || {}; add("Statistiche", s.nm, txt(o.v) + (txt(o.m) ? " (" + txt(o.m) + ")" : "")); });
+    var comp = (typeof SC_COMPS !== "undefined" ? SC_COMPS : []).filter(function(c){ return (sc.comps || {})[c.id]; }).map(function(c){ return c.nm; });
+    add("Competenze", "Competenze attive", comp.join(", "));
+    (sc.eq_txt || []).forEach(function(e, i){ if(txt(e) || txt((sc.eq_cnt||[])[i])) add("Equipaggiamento", "Oggetto " + (i+1), txt(e) + (txt((sc.eq_cnt||[])[i]) ? " ×" + txt(sc.eq_cnt[i]) : "")); });
+    (sc.celle || []).forEach(function(c, i){ if(txt(c)) add("Equipaggiamento", "Cella " + (i+1), c); });
+    add("Monete", "Fondo di squadra", sc.coin_team); add("Monete", "Monete personali", sc.coin_personal);
+    (sc.coins || []).forEach(function(c, i){ add("Monete", "Valuta " + (i+1), txt(c.a) + " " + txt(c.c)); });
+    var cr = (typeof CROWNS !== "undefined" ? CROWNS : []).filter(function(_, i){ return (sc.crowns || [])[i]; }).map(function(c){ return c.n; });
+    add("Corone", "Corone ottenute", cr.join(", "));
+    (sc.notes || []).forEach(function(n, i){ add("Note personali", txt(n.t) || ("Sezione " + (i+1)), n.b); });
+    var al = js(map["tcj-al-"+k]);
+    if(al){ add("Alloggio", "Nome", al.t); (al.notes || []).forEach(function(n, i){ add("Alloggio", txt(n.t) || ("Sezione " + (i+1)), n.b); }); }
+    add("Tema", "Tema e sfondo", map["tcj_bg_"+k] || "", map["tcj_bg_"+k] ? "Personalizzato" : "Predefinito");
+    return R;
+  }
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+  function corto(s){ s = String(s || ""); return s.length > 220 ? s.slice(0, 220) + "…" : s; }
+  function differenze(mapA, mapB, k){
+    var A = riassunto(mapA, k), B = riassunto(mapB, k), idx = {}, out = [];
+    B.forEach(function(r){ idx[r.sez + "|" + r.et] = r; });
+    A.forEach(function(r){ var b = idx[r.sez + "|" + r.et] || { v: "", m: "" }; delete idx[r.sez + "|" + r.et]; out.push({ sez: r.sez, et: r.et, a: r, b: b, diversa: r.v !== b.v }); });
+    Object.keys(idx).forEach(function(key){ var b = idx[key]; out.push({ sez: b.sez, et: b.et, a: { v: "", m: "" }, b: b, diversa: b.v !== "" }); });
+    return out;
+  }
+  /* modo: "conflitto" | "salva" | "scarica" */
+  function confronto(k, modo, rem, sha, nota){
+    var s = stato(k), righe = differenze(pacchetto(k).data, rem.data || {}, k), nd = righe.filter(function(r){ return r.diversa; }).length;
+    var tit = { conflitto: "Due versioni dell'area di " + NOMI[k], salva: "Salvare online e sostituire?", scarica: "Scaricare la versione online?" }[modo];
+    var spieg = { conflitto: "Online c'è una versione diversa da quella di questo dispositivo. Confrontale e scegli quale tenere: l'altra verrà sostituita.",
+                  salva: "Stai per <b>sostituire la versione online</b> con quella di questo dispositivo. Ecco cosa cambia.",
+                  scarica: "Stai per <b>sostituire la versione di questo dispositivo</b> con quella online. Ecco cosa cambia." }[modo];
+    var h = '<div class="gh-box2 gh-cmp"><div class="gh-t">' + tit + '</div><p class="gh-p">' + spieg + '</p>' + (nota ? '<p class="gh-p gh-note">' + nota + '</p>' : '')
+      + '<div class="cmp-head"><div class="cmp-col cmp-a"><b>📱 Su questo dispositivo</b><small>' + (s.loc ? 'modificata il ' + quando(s.loc) : 'nel browser') + '</small></div>'
+      + '<div class="cmp-col cmp-b"><b>☁ Online</b><small>salvata il ' + quando(rem.salvato) + '</small></div></div>'
+      + '<label class="cmp-solo"><input type="checkbox" id="cmp-solo" checked> Mostra solo le differenze <span class="cmp-n">(' + (nd ? nd + (nd === 1 ? " differenza" : " differenze") : "nessuna differenza") + ')</span></label>'
+      + '<div class="cmp-list" id="cmp-list">';
+    var sez = "";
+    righe.forEach(function(r){
+      if(r.sez !== sez){ sez = r.sez; h += '<div class="cmp-sez" data-s="' + esc(sez) + '">' + esc(sez) + '</div>'; }
+      h += '<div class="cmp-r' + (r.diversa ? ' diff' : ' same') + '" data-s="' + esc(r.sez) + '"><div class="cmp-et">' + esc(r.et) + '</div>'
+        + '<div class="cmp-v cmp-a">' + (r.a.m ? esc(corto(r.a.m)) : '<i>vuoto</i>') + '</div><div class="cmp-v cmp-b">' + (r.b.m ? esc(corto(r.b.m)) : '<i>vuoto</i>') + '</div></div>';
+    });
+    if(!nd) h += '<div class="cmp-uguali">Le due versioni sono uguali.</div>';
+    h += '</div><div class="gh-row gh-col">';
+    if(modo === "conflitto") h += '<button type="button" class="bk-btn gh-save" data-c="mia">⬆ Tieni quella di questo dispositivo e salvala online</button><button type="button" class="bk-btn" data-c="online">⬇ Tieni quella online</button><button type="button" class="bk-btn" data-c="no">Decido dopo</button>';
+    if(modo === "salva") h += '<button type="button" class="bk-btn gh-save" data-c="mia">⬆ Salva online e sostituisci</button><button type="button" class="bk-btn" data-c="no">Annulla</button>';
+    if(modo === "scarica") h += '<button type="button" class="bk-btn gh-save" data-c="online">⬇ Scarica e sostituisci questa</button><button type="button" class="bk-btn" data-c="mia">⬆ No, salva online la mia</button><button type="button" class="bk-btn" data-c="no">Annulla</button>';
+    h += '</div><p class="gh-p gh-small">Prima di sostituire l\'area di questo dispositivo il sito ne tiene una copia: potrai tornare indietro con «↩ Annulla l\'ultimo scaricamento».</p></div>';
+    ov.innerHTML = h; ov.hidden = false;
+    var list = document.getElementById("cmp-list"), solo = document.getElementById("cmp-solo");
+    function filtra(){ list.classList.toggle("solo", solo.checked); list.querySelectorAll(".cmp-sez").forEach(function(sx){ var any = list.querySelector('.cmp-r.diff[data-s="' + sx.getAttribute("data-s") + '"]'); sx.classList.toggle("vuota", !any); }); }
+    solo.onchange = filtra; filtra();
+    ov.querySelectorAll("[data-c]").forEach(function(b){ b.onclick = function(){
+      var c = b.getAttribute("data-c"); chiudi();
+      if(c === "mia"){ var s2 = stato(k); s2.sha = sha; salvaStato(k, s2); caricaOnline(k, true); }
+      else if(c === "online"){ applica(k, rem, sha); avviso("Tenuta la versione online del " + quando(rem.salvato) + ". ✓"); try{ sfxPlay("paper"); }catch(e){} }
+      else disegna();
+    }; });
+  }
+  function annullaScaricamento(k){
+    var p = js(localStorage.getItem("tcjgh_prev_"+k) || "null"); if(!p || !p.data) return;
+    try { if(typeof paFlush === "function") paFlush(); } catch(e){}
+    chiavi(k).forEach(function(key){ if(Object.prototype.hasOwnProperty.call(p.data, key)) localStorage.setItem(key, p.data[key]); else localStorage.removeItem(key); });
+    _orig.removeItem.call(localStorage, "tcjgh_prev_"+k);
+    var s = stato(k); s.dirty = true; s.loc = p.loc || new Date().toISOString(); salvaStato(k, s);
+    try { if(k === scCur && typeof scBuild === "function") scBuild(); } catch(e){}
+    try { if(typeof alCur !== "undefined" && alCur === k && typeof alRender === "function") alRender(); } catch(e){}
+    try { if(k === scCur && typeof paTheme === "function") paTheme(); } catch(e){}
+    disegna(); avviso("Ripristinata la versione che c'era prima dello scaricamento. Se è quella giusta, premi «Salva online».");
   }
 
   var occupato = {};
@@ -112,7 +195,7 @@
       var rem = res.dati, s2 = stato(k);
       if(rem.salvato === s2.at){ s2.sha = res.sha; salvaStato(k, s2); disegna(); return; }               // già allineati
       if(!s2.dirty || !haDati(k)){ applica(k, rem, res.sha); avviso("Area di "+NOMI[k]+" aggiornata con la versione online del "+quando(rem.salvato)+"."); return; }
-      conflitto(k, rem, res.sha);                                                                          // modifiche da entrambe le parti
+      confronto(k, "conflitto", rem, res.sha);                                                           // modifiche da entrambe le parti
     });
   }
   function scaricaManuale(k){
@@ -124,26 +207,27 @@
       if(res.stato === "errore"){ avviso(res.msg, true); return; }
       if(res.stato === "vuoto"){ avviso("Online non c'è ancora nulla da scaricare: prima premi «Salva online».", true); return; }
       var rem = res.dati, s2 = stato(k);
-      if(s2.dirty && haDati(k)){ sostituisci(k, rem, res.sha); return; }
-      if(rem.salvato === s2.at){ s2.sha = res.sha; salvaStato(k, s2); avviso("Hai già l'ultima versione online (" + quando(rem.salvato) + ")."); return; }
-      applica(k, rem, res.sha); avviso("Scaricata la versione online del " + quando(rem.salvato) + ". ✓"); try{ sfxPlay("paper"); }catch(e){}
+      if(!haDati(k)){ applica(k, rem, res.sha); avviso("Scaricata la versione online del " + quando(rem.salvato) + ". ✓"); return; }
+      var nd = differenze(pacchetto(k).data, rem.data || {}, k).filter(function(r){ return r.diversa; }).length;
+      if(!nd){ s2.sha = res.sha; s2.at = rem.salvato; s2.dirty = false; salvaStato(k, s2); disegna(); avviso("Hai già la versione online (" + quando(rem.salvato) + "): sono uguali."); return; }
+      confronto(k, "scarica", rem, res.sha, s2.dirty ? "⚠ Su questo dispositivo ci sono modifiche <b>non ancora salvate online</b>." : "");
     });
-  }
-  function sostituisci(k, rem, sha){
-    var s = stato(k);
-    ov.innerHTML = '<div class="gh-box2"><div class="gh-t">Scaricare la versione online?</div>'
-      + '<p class="gh-p">Su questo dispositivo ci sono modifiche <b>non ancora salvate online</b>'+(s.loc?' (del <b>'+quando(s.loc)+'</b>)':'')+'. Se scarichi la versione online del <b>'+quando(rem.salvato)+'</b>, quelle modifiche andranno perse.</p>'
-      + '<div class="gh-row gh-col"><button type="button" class="bk-btn" id="gh-rem">⬇ Scarica comunque</button>'
-      + '<button type="button" class="bk-btn" id="gh-loc">⬆ No, prima salva online le mie</button>'
-      + '<button type="button" class="bk-btn" id="gh-dopo">Annulla</button></div></div>';
-    ov.hidden = false;
-    document.getElementById("gh-rem").onclick = function(){ chiudi(); applica(k, rem, sha); avviso("Scaricata la versione online. ✓"); };
-    document.getElementById("gh-loc").onclick = function(){ chiudi(); var s2 = stato(k); s2.sha = sha; salvaStato(k, s2); caricaOnline(k, true); };
-    document.getElementById("gh-dopo").onclick = chiudi;
   }
   function caricaOnline(k, forza){
     var s = stato(k), c = cred(k); if(!c || occupato[k]) return;
     try { if(typeof paFlush === "function") paFlush(); } catch(e){}
+    if(!forza){   /* prima di sostituire la versione online, mostra il confronto */
+      occupato[k] = 1; disegna();
+      scarica(c).then(function(res){
+        occupato[k] = 0; disegna();
+        if(res.stato === "errore"){ avviso(res.msg, true); return; }
+        if(res.stato === "vuoto"){ var s0 = stato(k); s0.sha = null; salvaStato(k, s0); caricaOnline(k, true); return; }
+        var rem = res.dati, s2 = stato(k), nd = differenze(pacchetto(k).data, rem.data || {}, k).filter(function(r){ return r.diversa; }).length;
+        if(!nd){ s2.sha = res.sha; s2.at = rem.salvato; s2.dirty = false; salvaStato(k, s2); disegna(); avviso("Online c'è già questa stessa versione: niente da salvare. ✓"); return; }
+        confronto(k, "salva", rem, res.sha, rem.salvato !== s2.at ? "⚠ La versione online è stata salvata <b>da un altro dispositivo</b> dopo l'ultima volta che questo l'ha scaricata." : "");
+      });
+      return;
+    }
     occupato[k] = 1; disegna();
     var p = pacchetto(k), corpo = { message: "Area di "+NOMI[k]+" — "+quando(p.salvato)+(c.chi === "master" ? " (dal Master)" : ""), content: b64e(JSON.stringify(p)) };
     if(s.sha) corpo.sha = s.sha;
@@ -151,7 +235,7 @@
     invia.then(function(){ return gh(c, "PUT", "/contents/"+FILE, corpo); }).then(function(r){
       occupato[k] = 0;
       if(r.status === 409 || r.status === 422){             // online c'è una versione che questo dispositivo non conosce
-        return scarica(c).then(function(res){ if(res.stato === "ok") conflitto(k, res.dati, res.sha); else avviso(res.msg || errore(r), true); disegna(); });
+        return scarica(c).then(function(res){ if(res.stato === "ok") confronto(k, "conflitto", res.dati, res.sha); else avviso(res.msg || errore(r), true); disegna(); });
       }
       if(!r.ok){ avviso(errore(r), true); disegna(); return; }
       return r.json().then(function(j){ var s2 = stato(k); s2.sha = j.content && j.content.sha; s2.at = p.salvato; s2.dirty = false; salvaStato(k, s2); disegna(); avviso(c.chi === "master" ? "Area di "+NOMI[k]+" salvata online (Master) ✓" : "Salvato online ✓"); try{ sfxPlay("seal"); }catch(e){} });
@@ -189,6 +273,8 @@
            + '<div class="sv-btns"><button class="bk-btn gh-save" type="button" data-gh="salva"'+dis+'>⬆ Salva online</button>'
            + '<button class="bk-btn" type="button" data-gh="scarica"'+dis+'>⬇ Scarica da online</button>'
            + '<button class="bk-btn gh-cfg" type="button" data-gh="impostazioni" title="Token e repository" aria-label="Impostazioni del salvataggio online">⚙</button></div>';
+        var pv = js(localStorage.getItem("tcjgh_prev_"+k) || "null");
+        if(pv && pv.at) h += '<div class="sv-btns sv-undo"><button class="bk-btn" type="button" data-gh="annulla">↩ Annulla l\'ultimo scaricamento <small>(' + quando(pv.at) + ')</small></button></div>';
       }
       sez.innerHTML = h;
     }
@@ -198,6 +284,7 @@
     var a = b.getAttribute("data-gh");
     if(a === "salva") caricaOnline(scCur);
     else if(a === "scarica") scaricaManuale(scCur);
+    else if(a === "annulla") annullaScaricamento(scCur);
     else if(a === "vai"){ var c = document.getElementById("sv-card"); if(c){ c.scrollIntoView({behavior:"smooth", block:"center"}); c.classList.remove("sv-flash"); void c.offsetWidth; c.classList.add("sv-flash"); } }
     else finestraCollega(scCur);
   }
@@ -237,19 +324,6 @@
         scaricaAll(k, false);
       }).catch(function(){ er.textContent = errore(null); });
     };
-  }
-  function conflitto(k, rem, sha){
-    var s = stato(k);
-    ov.innerHTML = '<div class="gh-box2"><div class="gh-t">Due versioni dell\'area di '+NOMI[k]+'</div>'
-      + '<p class="gh-p">Online c\'è una versione salvata il <b>'+quando(rem.salvato)+'</b> (forse da un altro dispositivo), ma anche qui ci sono modifiche non salvate'+(s.loc?' del <b>'+quando(s.loc)+'</b>':'')+'. Quale vuoi tenere?</p>'
-      + '<div class="gh-row gh-col"><button type="button" class="bk-btn" id="gh-rem">⬇ Tieni quella online</button>'
-      + '<button type="button" class="bk-btn" id="gh-loc">⬆ Tieni questa e salvala online</button>'
-      + '<button type="button" class="bk-btn" id="gh-dopo">Decido dopo</button></div>'
-      + '<p class="gh-p gh-small">Per sicurezza, prima di scegliere puoi scaricare un backup dal riquadro «Backup dei dati».</p></div>';
-    ov.hidden = false;
-    document.getElementById("gh-rem").onclick = function(){ chiudi(); applica(k, rem, sha); avviso("Tenuta la versione online."); };
-    document.getElementById("gh-loc").onclick = function(){ chiudi(); var s2 = stato(k); s2.sha = sha; salvaStato(k, s2); caricaOnline(k, true); };
-    document.getElementById("gh-dopo").onclick = function(){ chiudi(); disegna(); };
   }
   var toast = document.createElement("div"); toast.className = "gh-toast"; toast.setAttribute("role","status"); document.body.appendChild(toast);
   function avviso(msg, err){ toast.textContent = msg; toast.classList.toggle("err", !!err); toast.classList.remove("on"); void toast.offsetWidth; toast.classList.add("on"); clearTimeout(avviso._t); avviso._t = setTimeout(function(){ toast.classList.remove("on"); }, err ? 6000 : 3200); }
