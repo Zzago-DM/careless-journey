@@ -223,7 +223,11 @@ paExpire();
 setInterval(function(){if(!document.hidden){try{localStorage.setItem("tcj-pa-seen",String(Date.now()))}catch(e){}}},60000);
 document.addEventListener("visibilitychange",function(){if(document.hidden)return;if(paExpire()){try{paThemeOn=false;scBuild();slRender();}catch(e){}}});
 function paOpenList(){try{const l=JSON.parse(localStorage.getItem("tcj-pa-open")||"[]");return Array.isArray(l)?l:[]}catch(e){return[]}}
-function paIsOpen(k){return paMaster()||paOpenList().indexOf(k)>=0}
+/* Master: può chiudere la vista dell'area di un giocatore e riaprirla con un tocco, senza password (vale solo su questo dispositivo) */
+function paMChiuse(){try{const l=JSON.parse(localStorage.getItem("tcjgh_mchiuse")||"[]");return Array.isArray(l)?l:[]}catch(e){return[]}}
+function paMSet(k,chiusa){let l=paMChiuse().filter(x=>x!==k);if(chiusa)l.push(k);try{localStorage.setItem("tcjgh_mchiuse",JSON.stringify(l))}catch(e){}}
+function paIsOpen(k){return (paMaster()&&paMChiuse().indexOf(k)<0)||paOpenList().indexOf(k)>=0}
+function paMApri(k){paMSet(k,false);paThemeOn=true;if(k!==scCur)scSwitch(k);else scBuild();try{slRender();}catch(e){}const b=document.getElementById("pa-body");if(b){b.classList.remove("pa-in");void b.offsetWidth;b.classList.add("pa-in");}try{sfxPlay("on")}catch(e){}}
 function paSetOpen(k,on){let l=paOpenList().filter(x=>x!==k);if(on)l.push(k);try{localStorage.setItem("tcj-pa-open",JSON.stringify(l))}catch(e){}}
 function paChar(){return SC_CHARS.find(c=>c.k===scCur)||SC_CHARS[0]}
 function paPrep(){const sec=document.getElementById("scheda"),c=paChar(),open=paIsOpen(scCur);
@@ -231,14 +235,15 @@ function paPrep(){const sec=document.getElementById("scheda"),c=paChar(),open=pa
  const t=document.getElementById("pa-title");if(t)t.textContent=PA_FULL[scCur]||c.n;
  const g=document.getElementById("pa-gate"),b=document.getElementById("pa-body");
  if(g)g.style.display=open?"none":"";if(b)b.style.display=open?"":"none";
+ if(g){let mb=document.getElementById("pa-gate-m");if(!mb){mb=document.createElement("button");mb.type="button";mb.id="pa-gate-m";mb.className="pa-gate-btn pa-gate-mbtn";mb.textContent="👑 Apri con l'accesso Master";mb.onclick=function(){paMApri(scCur)};const er0=document.getElementById("pa-gate-err");g.insertBefore(mb,er0||null);}mb.style.display=paMaster()?"":"none";}
  if(!open){const nm=document.getElementById("pa-gate-nm");if(nm)nm.textContent=c.n;const se=document.getElementById("pa-gate-seal");if(se)se.textContent=c.e;const inp=document.getElementById("pa-code");if(inp)inp.value="";const er=document.getElementById("pa-gate-err");if(er)er.classList.remove("on");scTabs();return false;}
- const lb=document.getElementById("pa-lockbtn");if(lb)lb.style.display=paOpenList().indexOf(scCur)>=0?"":"none";
+ const lb=document.getElementById("pa-lockbtn");if(lb)lb.style.display=(paOpenList().indexOf(scCur)>=0||paMaster())?"":"none";
  paStatus(paMaster()&&paOpenList().indexOf(scCur)<0?"Aperta con l'accesso Master":"Salvataggio automatico attivo");
  return true;}
 function paTry(){const inp=document.getElementById("pa-code"),v=(inp?inp.value:"").trim().toLowerCase();
  if(v&&v===String(PA_CODES[scCur]||"").toLowerCase()){paSetOpen(scCur,true);paThemeOn=true;scBuild();pgPlay(scCur);const b=document.getElementById("pa-body");if(b){b.classList.remove("pa-in");void b.offsetWidth;b.classList.add("pa-in");}if(window.__sfxBurst){try{window.__sfxBurst()}catch(e){}}return;}
  sfxPlay("deny");const er=document.getElementById("pa-gate-err"),g=document.getElementById("pa-gate");if(er)er.classList.add("on");if(g){g.classList.remove("pa-shake");void g.offsetWidth;g.classList.add("pa-shake");}if(inp){inp.select();}}
-function paLock(){clearTimeout(paT);scSave(true);paSetOpen(scCur,false);scBuild();}
+function paLock(){clearTimeout(paT);scSave(true);paSetOpen(scCur,false);if(paMaster())paMSet(scCur,true);scBuild();try{slRender();}catch(e){}}
 function paRefresh(){if(document.getElementById("pa-body").style.display==="none")scBuild();else scTabs();}
 function paStatus(txt,ok){const e=document.getElementById("pa-status");if(!e)return;e.textContent=txt;e.classList.toggle("ok",!!ok);}
 function paFlush(){try{if(paT){clearTimeout(paT);paT=null;scSave(true);}}catch(e){}try{if(typeof alT!=="undefined"&&alT){clearTimeout(alT);alT=null;alSave();}}catch(e){}}
@@ -543,11 +548,11 @@ function alRender(){const m=document.getElementById("al-body");if(!m)return;
  AL_SLOTS.forEach(function(row){row.forEach(function(k){
   if(!k){h+='<button type="button" class="al-door" disabled><span class="al-e">🚪</span><span class="al-n">Alloggio libero</span><span class="al-s">Non ancora assegnato</span></button>';return;}
   const c=SC_CHARS.find(function(x){return x.k===k}),open=paIsOpen(k),o=alLoad(k);
-  h+='<button type="button" class="al-door" onclick="alPick(\''+k+'\')"><span class="al-e">'+c.e+'</span><span class="al-n">'+((o&&o.t)||("Alloggio di "+c.n))+'</span><span class="al-s">'+(open?"Entra":"🔒 Serve la password di "+c.n)+'</span></button>';});});
+  h+='<button type="button" class="al-door" onclick="alPick(\''+k+'\')"><span class="al-e">'+c.e+'</span><span class="al-n">'+((o&&o.t)||("Alloggio di "+c.n))+'</span><span class="al-s">'+(open?"Entra":(paMaster()?"👑 Entra come Master":"🔒 Serve la password di "+c.n))+'</span></button>';});});
  h+='</div>';
  if(alAsk){const c=SC_CHARS.find(function(x){return x.k===alAsk});h+='<div class="al-code"><input type="password" id="al-code-in" placeholder="Password di '+c.n+'" autocomplete="off" onkeydown="if(event.key===\'Enter\')alTry()"><button type="button" onclick="alTry()">Apri</button></div><div class="al-err" id="al-err">Password errata. Riprova.</div>';}
  m.innerHTML=h;if(alAsk){const i=document.getElementById("al-code-in");if(i)setTimeout(function(){i.focus()},0);}}
-function alPick(k){if(paIsOpen(k)){alCur=k;alAsk=null;alRender();return;}alAsk=k;alRender();}
+function alPick(k){if(!paIsOpen(k)&&paMaster()){paMSet(k,false);try{slRender();if(k===scCur)scBuild();}catch(e){}}if(paIsOpen(k)){alCur=k;alAsk=null;alRender();return;}alAsk=k;alRender();}
 function alTry(){const k=alAsk,i=document.getElementById("al-code-in");if(!k||!i)return;const v=i.value.trim().toLowerCase();
  if(v&&v===String(PA_CODES[k]||"").toLowerCase()){paSetOpen(k,true);alAsk=null;alCur=k;alRender();try{slGo(k);slRender();pgPlay(k);}catch(e){}return;}
  const er=document.getElementById("al-err");if(er)er.style.display="block";i.select();}
@@ -867,7 +872,7 @@ function slRender(){const b=document.getElementById("sl-btn"),m=document.getElem
  if(m.hidden)return;
  let h='<div class="sl-h">Personaggio</div>';
  SC_CHARS.forEach(c=>{const open=paIsOpen(c.k),on=c.k===act;
-  h+=`<button type="button" class="sl-item${on?" on":""}" onclick="slPick('${c.k}')"><span class="sl-e">${c.e}</span><span class="sl-nm">${c.n}</span><span class="sl-st">${on?"✓ attivo":open?"aperta":"🔒"}</span></button>`;
+  h+=`<button type="button" class="sl-item${on?" on":""}" onclick="slPick('${c.k}')"><span class="sl-e">${c.e}</span><span class="sl-nm">${c.n}</span><span class="sl-st">${on?"✓ attivo":open?"aperta":(paMaster()?"🔒 chiusa":"🔒")}</span></button>`;
   if(slAsk===c.k)h+=`<div class="sl-code"><input type="password" id="sl-code-in" placeholder="Password" aria-label="Password di ${c.n}" autocomplete="off" onkeydown="if(event.key==='Enter')slTry()"><button type="button" onclick="slTry()">Apri</button></div><div class="sl-err" id="sl-err" style="display:none">Password errata. Riprova.</div>`;});
  h+=`<div class="sl-sep"></div><div class="sl-row"><div><span>Suoni</span><small>Effetti sonori del sito</small></div><button type="button" class="sl-sw" role="switch" aria-checked="${sfxOn()}" aria-label="Suoni" onclick="sfxToggle()"></button></div>`;
  h+=`<div class="sl-row"><div><span>Effetti laterali</span><small>${(act||mThemeActive())?"Particelle animate ai lati della pagina":"Visibili quando un personaggio è attivo"}</small></div><button type="button" class="sl-sw" role="switch" aria-checked="${fxOn()}" aria-label="Effetti laterali" onclick="fxToggle()"></button></div>`;
@@ -880,11 +885,11 @@ function slRender(){const b=document.getElementById("sl-btn"),m=document.getElem
   if(mp.on)h+='<div class="sl-bg"><label>Colore del sito<select onchange="mSetPref(\'c\',this.value)">'+mopt(mp.c)+'</select></label><label>Effetti laterali<select onchange="mSetPref(\'fx\',this.value)">'+mopt(mp.fx)+'</select></label>'+('<label>Rotta della nave<select onchange="wmSetRoute(this.value)"><option value="">'+(NV_ROTTA?'Quella del sito ('+WM_NAME[NV_ROTTA]+')':'Nessuna (come nel sito)')+'</option><option value="none"'+(function(){try{return localStorage.getItem("tcj_rotta")==="none"?" selected":""}catch(e){return""}})()+'>Nascondi rotta</option>'+Object.keys(WM_NAME).map(function(k){let cur=null;try{cur=localStorage.getItem("tcj_rotta")}catch(e){}return '<option value="'+k+'"'+(cur===k?' selected':'')+'>'+WM_NAME[k]+'</option>'}).join("")+'</select></label>')+(mp.custom?'<button type="button" class="sl-act" onclick="mResetPref()">\u21BA Torna al Cremisi del Master</button>':'<small>Cremisi del Master, con il Sigillo Cremisi ai lati</small>')+'</div>';}
  h+='<div class="sl-sep"></div><a class="sl-act" href="#scheda" onclick="slClose()">↓ Vai all\'Area Slayer</a>';
  if(ac)h+=`<button type="button" class="sl-act" onclick="slClose();paNeutral()">◆ Torna al colore neutro</button>`;
- if(ac&&paOpenList().indexOf(act)>=0)h+=`<button type="button" class="sl-act" onclick="slClose();paLock()">🔒 Chiudi l'area di ${ac.n}</button>`;
+ if(ac&&(paOpenList().indexOf(act)>=0||paMaster()))h+=`<button type="button" class="sl-act" onclick="slClose();paLock()">🔒 Chiudi l'area di ${ac.n}</button>`;
  m.innerHTML=h;
  if(slAsk){const i=document.getElementById("sl-code-in");if(i)setTimeout(function(){i.focus()},0);}}
 function slGo(k){paThemeOn=true;if(k!==scCur)scSwitch(k);else scBuild();}
-function slPick(k){if(paIsOpen(k)){slClose();slGo(k);slRender();return;}slAsk=(slAsk===k?null:k);slRender();}
+function slPick(k){if(paIsOpen(k)){slClose();slGo(k);slRender();return;}if(paMaster()){slClose();paMApri(k);return;}slAsk=(slAsk===k?null:k);slRender();}
 function slTry(){const k=slAsk,i=document.getElementById("sl-code-in");if(!k||!i)return;const v=i.value.trim().toLowerCase();
  if(v&&v===String(PA_CODES[k]||"").toLowerCase()){paSetOpen(k,true);slClose();slGo(k);slRender();pgPlay(k);if(window.__sfxBurst){try{window.__sfxBurst()}catch(e){}}return;}
  const er=document.getElementById("sl-err");if(er)er.style.display="";const box=i.parentNode;if(box){box.classList.remove("pa-shake");void box.offsetWidth;box.classList.add("pa-shake");}i.select();}

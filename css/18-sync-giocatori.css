@@ -114,3 +114,6 @@
 
 /* mentre una mappa toccata troppo presto sta arrivando */
 html.tcj-attesa, html.tcj-attesa *{cursor:progress!important}
+
+/* Master: riapre l'area di un giocatore senza password */
+.pa-gate-mbtn{margin-top:.6rem;background:rgba(200,72,72,.12)!important;border-color:rgba(255,96,96,.45)!important;color:#ffb0b0!important}
