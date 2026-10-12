@@ -1,6 +1,6 @@
 /* Sezione: Manuale dello Slayer — testo e struttura HTML.
    Viene inserita nella pagina esattamente nel punto in cui index.html la richiama.
-   Le schede di armi, celle, Omnicelle e AMP sono costruite dai dati in dati/manuale.js. */
+   Le schede di armi e celle sono costruite dai dati in dati/manuale.js. */
 tcjSezione(`<section id="manuale">
   <div class="si">
     <div class="sh"><div class="sl">Regole</div><h2 class="st">Manuale dello Slayer</h2><div class="sline"></div><p class="sdesc">Le regole per giocare, spiegate in ordine: dalle basi al combattimento, fino a celle, elementi e progressione.</p></div>
@@ -16,7 +16,6 @@ tcjSezione(`<section id="manuale">
       <button class="mtab" data-p="equipaggiamento" onclick="swTab('equipaggiamento',this)">Tonici &amp; Piloni</button>
       <button class="mtab" data-p="supporto" onclick="swTab('supporto',this)">Armi di supporto</button>
       <button class="mtab" data-p="progressione" onclick="swTab('progressione',this)">Progressione</button>
-      <button class="mtab" data-p="omnicelle" onclick="swTab('omnicelle',this)">Omnicelle &amp; AMP</button>
     </div>
     <div class="bbox" id="bbox-manuale">
 
@@ -68,7 +67,7 @@ tcjSezione(`<section id="manuale">
         <div><b>Round e turno</b>Un round è il turno degli Slayer seguito dal turno del Behemoth.</div>
         <div><b>Quadretto</b>L'unità di misura per spostamenti, distanze e aree (per esempio 3×3).</div>
         <div><b>Parte</b>Ogni Behemoth ha parti (testa, zampe, coda…) che si possono colpire e rompere.</div>
-        <div><b>Carica Aetherica</b>L'energia che accumuli combattendo; è legata agli attacchi speciali delle armi e serve ad attivare le Omnicelle.</div>
+        <div><b>Carica Aetherica</b>L'energia che accumuli combattendo, legata agli attacchi speciali delle armi.</div>
         <div><b>Token elementale</b>Segnalino lasciato sul Behemoth dagli attacchi elementali: a 10 dello stesso elemento scatta il malus.</div>
         <div><b>Vantaggio / Svantaggio</b>Tiri due D20 e tieni il più alto (vantaggio) o il più basso (svantaggio).</div>
         <div><b>Atterrato</b>Uno Slayer a 0 PV: non è morto, ma è a terra finché non si rialza.</div>
@@ -324,7 +323,7 @@ tcjSezione(`<section id="manuale">
       <ul class="mn-list">
         <li><b>Punti Vita:</b> +5 PV + il tuo Bonus COST.</li>
         <li><b>Ogni 2 livelli:</b> assegni 2 punti alle caratteristiche, alternando due gruppi: una volta <b>FOR, DES, COST</b>, la volta dopo <b>SAG, INT, CAR</b>.</li>
-        <li><b>Dal livello 20</b> le caratteristiche non salgono più. Le armi però continuano a crescere grazie a <b>Omnicelle e AMP</b>.</li>
+        <li><b>Dal livello 20</b> le caratteristiche non salgono più.</li>
       </ul>
       <h3 class="mn-h">Gli stadi dello Slayer</h3>
       <div class="mn-tw"><table class="tcj-t"><thead><tr><th style="width:20%">Stadio</th><th style="width:12%">Livelli</th><th>Celle</th></tr></thead><tbody>
@@ -334,28 +333,6 @@ tcjSezione(`<section id="manuale">
         <tr><td style="color:var(--gold2)"><b style="color:inherit">Maestro</b></td><td>16–20</td><td>Accesso alle celle di <b>Forza superiori</b>, potenziabili al +6. A discrezione del DM, anche tutte le celle di Vigore e Tecnica al +6.</td></tr>
         <tr><td style="color:var(--radiant)"><b style="color:inherit">Fenice</b></td><td>21–30</td><td><b>Cadono tutti i limiti.</b> Il corpo dello Slayer regge qualsiasi build, con equipaggiamenti che solo in pochi sanno usare.</td></tr>
       </tbody></table></div>
-    </div>
-
-    <!-- ===================== OMNICELLE & AMP ===================== -->
-    <div class="mpanel" id="p-omnicelle">
-      <p class="mn-lead">Ogni Slayer ha un <b>slot Omnicella</b>, separato dalle celle normali e legato al <b>personaggio</b>, non all'arma. In quello slot puoi mettere, a tua scelta:</p>
-      <div class="mn-grid">
-        <div class="mn-c"><div class="ct">Fino a 4 AMP</div><p>Potenziamenti passivi minori, scelti liberamente dal catalogo qui sotto. Sempre disponibili, ma più deboli.</p></div>
-        <div class="mn-c"><div class="ct">Oppure un'Omnicella</div><p>Un potere elementale molto forte. Una volta ottenuta è disponibile per <b>tutto il gruppo</b>, non solo per chi l'ha trovata.</p></div>
-      </div>
-      <p class="mn-p">Puoi sempre scegliere liberamente tra le due modalità. Le condizioni per ottenere ciascuna Omnicella le conosce solo il Master.</p>
-      <h3 class="mn-h">Cariche Aetheriche</h3>
-      <ul class="mn-list">
-        <li>Ogni <b>attacco speciale</b> genera <b>1 Carica</b>. Se il dado di danno più alto del tiro mostra il suo valore massimo, ne genera <b>1 in più</b> (con più dadi conta solo il singolo dado più alto).</li>
-        <li>Normalmente puoi accumulare al massimo <b>6 Cariche</b>, che si azzerano a fine combattimento.</li>
-        <li>Con un'Omnicella montata il massimo sale a <b>12</b>. Le 6 Cariche in più, se piene, <b>non si azzerano</b> tra un combattimento e l'altro.</li>
-        <li>Attivare un'Omnicella costa sempre <b>12 Cariche</b>.</li>
-      </ul>
-      <h3 class="mn-h">Le sei Omnicelle</h3>
-      <div id="ogrid" class="mn-grid wide"></div>
-      <h3 class="mn-h">Catalogo AMP</h3>
-      <p class="mn-p">Puoi montarne fino a 4 insieme. Si attivano <b>da soli</b> quando succede la loro condizione, senza usare azioni né Cariche, salvo dove è indicato.</p>
-      <div class="mn-tw"><table class="tcj-t"><thead><tr><th style="width:30%">AMP</th><th>Effetto</th></tr></thead><tbody id="ampbody"></tbody></table></div>
     </div>
 
     </div>

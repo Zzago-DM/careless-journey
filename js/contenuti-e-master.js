@@ -1,4 +1,4 @@
-/* Logica dei contenuti: bestiario, manuale (armi, celle, Omnicelle, amplificatori), plancia, generatore NPC, calendario, note, accesso e schede della Zona Master, continenti */
+/* Logica dei contenuti: bestiario, manuale (armi, celle), plancia, generatore NPC, calendario, note, accesso e schede della Zona Master, continenti */
 
 /* BD: spostato in dati/behemoth.js */
 const aC={glaciale:"var(--ice)",ardente:"var(--fire)",folgorante:"var(--lightning)",terrestre:"var(--earth)",radiante:"var(--radiant)",oscuro:"var(--dark)",neutro:"var(--neutral)"};
@@ -18,10 +18,6 @@ function buildW(){const L=["Lv 1–5","Lv 6–10","Lv 11–15","Lv 16–20","Lv 
 
 /* CD: spostato in dati/manuale.js */
 function buildC(){let h="";for(const[cat,items] of Object.entries(CD)){h+=`<div class="cct" style="grid-column:1/-1">${cat}</div>`;if(typeof CDD!=="undefined"&&CDD[cat])h+=`<div class="cct-d">${CDD[cat]}</div>`;h+=items.map(c=>`<div class="ccrd"><div class="cn">${c.n}</div><div class="cr"><span class="clbl">+3</span><span style="color:var(--text)">${c.p3}</span></div><div class="cr"><span class="clbl">+6</span><span style="color:var(--gold2)">${c.p6}</span></div></div>`).join("");}document.getElementById("cgrid").innerHTML=h;}
-/* OD: spostato in dati/manuale.js */
-function buildO(){document.getElementById("ogrid").innerHTML=OD.map(o=>`<div class="mn-c el" style="--c:${o.col}"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem"><div class="ct">${o.n}</div><span class="tag ${o.tag}">${o.ae}</span></div><div class="mn-k" style="margin:.1rem 0 .6rem">Costo: 12 Cariche Aetheriche</div><ul class="mn-list" style="margin:0">${o.eff.map(e=>`<li>${e}</li>`).join("")}</ul></div>`).join("");}
-/* AMPD: spostato in dati/manuale.js */
-function buildAMP(){document.getElementById("ampbody").innerHTML=AMPD.map(a=>`<tr><td><strong>${a[0]}</strong></td><td>${a[1]}</td></tr>`).join("");}
 /* PL_BEHEMOTHS: spostato in dati/plancia.js */
 
 const PL_ELEMENTS=[{k:"Glaciale",c:"#7ec8e3"},{k:"Ardente",c:"#e05a20"},{k:"Folgorante",c:"#f0d020"},{k:"Terrestre",c:"#8b9d6b"},{k:"Radiante",c:"#d4a8ff"},{k:"Oscuro",c:"#a888d8"}];
@@ -252,6 +248,6 @@ function initMapClicks(){
   });
 }
 
-window.addEventListener("load",()=>{buildBeh();buildW();buildC();buildO();buildAMP();buildTR();loadMN();mlLoad();scBuild();initMapClicks();try{document.querySelectorAll(".al-ov,.cr-ov").forEach(function(o){document.body.appendChild(o)});htlBuild();wmRoute();wmHoverInit();mlInit();calRender();}catch(e){console.error(e)}try{nvInit();nvToggleAll(localStorage.getItem("tcj_nv_all")==="1");}catch(e){}try{orbInit();orbSet("att",scGv("sc-natt-s"),true);orbSet("def",scGv("sc-ndef-s"),true);}catch(e){}buildNpcQtyBtns();if(!Object.keys(plState).length)plAdd();});
+window.addEventListener("load",()=>{buildBeh();buildW();buildC();buildTR();loadMN();mlLoad();scBuild();initMapClicks();try{document.querySelectorAll(".al-ov,.cr-ov").forEach(function(o){document.body.appendChild(o)});htlBuild();wmRoute();wmHoverInit();mlInit();calRender();}catch(e){console.error(e)}try{nvInit();nvToggleAll(localStorage.getItem("tcj_nv_all")==="1");}catch(e){}try{orbInit();orbSet("att",scGv("sc-natt-s"),true);orbSet("def",scGv("sc-ndef-s"),true);}catch(e){}buildNpcQtyBtns();if(!Object.keys(plState).length)plAdd();});
 window.addEventListener("scroll",updNav,{passive:true});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closepw();});

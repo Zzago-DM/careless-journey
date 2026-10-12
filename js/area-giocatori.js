@@ -55,8 +55,6 @@ function skBuild(){
   document.querySelectorAll("#bgrid .bn").forEach(e=>add(e,"Behemoth"));
   document.querySelectorAll("#wgrid .mn-c > .ct").forEach(e=>add(e,"Arma"));
   document.querySelectorAll("#cgrid .cn").forEach(e=>add(e,"Cella"));
-  document.querySelectorAll("#ogrid .ct").forEach(e=>add(e,"Omnicella"));
-  document.querySelectorAll("#ampbody tr td:first-child").forEach(e=>add(e,"AMP"));
   document.querySelectorAll("#trgrid .trn").forEach(e=>add(e,"Timeline"));
   document.querySelectorAll("section .ct").forEach(e=>{const sec=e.closest("section"),st=sec&&sec.querySelector(".st");add(e,st?st.textContent.trim():"Voce");});
   document.querySelectorAll("section .st").forEach(e=>add(e,"Sezione"));
@@ -99,7 +97,7 @@ function skHits(words){
 function skRender(q){
   const list=document.getElementById("sk-list");if(!list)return;
   const nq=skNorm(q).trim();
-  if(!nq){skRes=[];list.innerHTML='<div class="sk-none">Scrivi per cercare tra Behemoth, armi, celle, omnicelle, AMP, NPC e sezioni.</div>';return;}
+  if(!nq){skRes=[];list.innerHTML='<div class="sk-none">Scrivi per cercare tra Behemoth, armi, celle, NPC e sezioni.</div>';return;}
   const words0=nq.split(/\s+/).filter(Boolean);
   // in italiano singolare/plurale cambiano la coda: se non trovo nulla, accorcio le parole
   let words=words0, hits=[];
