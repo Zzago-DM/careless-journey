@@ -40,10 +40,10 @@
     '<radialGradient id="mlm-alone" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#5fe8e0" stop-opacity=".22"/><stop offset=".5" stop-color="#2a7f9a" stop-opacity=".08"/><stop offset="1" stop-color="#2a7f9a" stop-opacity="0"/></radialGradient>' +
     '<linearGradient id="mlm-fianco" gradientUnits="userSpaceOnUse" x1="0" y1="' + (CY - H) + '" x2="0" y2="' + (CY + H) + '"><stop offset="0" stop-color="#5fe8e0" stop-opacity=".55"/><stop offset=".5" stop-color="#d8fbff" stop-opacity=".9"/><stop offset="1" stop-color="#5fe8e0" stop-opacity=".55"/></linearGradient>';
 
-  /* trasparenza lieve verso le due bocche: pieno al centro, circa 60% alle bocche, meno ancora oltre */
+  /* trasparenza lieve verso le due bocche: pieno al centro, circa 35% alle bocche, meno ancora oltre */
   var sf = document.createElementNS(NS, "linearGradient");
   [["id","mlm-sfuma-g"],["gradientUnits","userSpaceOnUse"],["x1",0],["x2",0],["y1",CY - H - 40],["y2",CY + H + 40]].forEach(function(a){ sf.setAttribute(a[0], a[1]); });
-  [[0,.45],[.085,.6],[.3,.86],[.5,1],[.7,.86],[.915,.6],[1,.45]].forEach(function(st){ var e = document.createElementNS(NS, "stop"); e.setAttribute("offset", st[0]); e.setAttribute("stop-color", "#fff"); e.setAttribute("stop-opacity", st[1]); sf.appendChild(e); });
+  [[0,.2],[.085,.35],[.3,.72],[.5,1],[.7,.72],[.915,.35],[1,.2]].forEach(function(st){ var e = document.createElementNS(NS, "stop"); e.setAttribute("offset", st[0]); e.setAttribute("stop-color", "#fff"); e.setAttribute("stop-opacity", st[1]); sf.appendChild(e); });
   defs.appendChild(sf);
   var mk = el("mask", { id: "mlm-sfuma", maskUnits: "userSpaceOnUse", x: CX - R * 2.2, y: CY - H * 1.6, width: R * 4.4, height: H * 3.2 }, defs);
   el("rect", { x: CX - R * 2.2, y: CY - H * 1.6, width: R * 4.4, height: H * 3.2, fill: "url(#mlm-sfuma-g)" }, mk);
