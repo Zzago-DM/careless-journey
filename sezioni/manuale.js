@@ -4,7 +4,7 @@
 tcjSezione(`<section id="manuale">
   <div class="si">
     <div class="sh"><div class="sl">Regole</div><h2 class="st">Manuale dello Slayer</h2><div class="sline"></div><p class="sdesc">Le regole per giocare, spiegate in ordine: dalle basi al combattimento, fino a celle, elementi e progressione.</p></div>
-    <div class="cta-row"><a href="https://zzago-dm.github.io/Manuale-Cacciatore/Manuale_dello_Slayer.pdf" target="_blank" rel="noopener noreferrer" class="tcj-cta tcj-cta-purple">📖 Apri il Manuale completo</a><a href="https://www.owlbear.rodeo/room/jrCXLMk2u9Yz/The%20Faint%20Maker" target="_blank" rel="noopener noreferrer" class="tcj-cta tcj-cta-gold">⚔ Entra al tavolo · Owlbear Rodeo</a></div>
+    <div class="cta-row"><a href="media/Manuale_dello_Slayer.pdf" target="_blank" rel="noopener noreferrer" class="tcj-cta tcj-cta-purple">📖 Apri il Manuale completo</a><a href="https://www.owlbear.rodeo/room/jrCXLMk2u9Yz/The%20Faint%20Maker" target="_blank" rel="noopener noreferrer" class="tcj-cta tcj-cta-gold">⚔ Entra al tavolo · Owlbear Rodeo</a></div>
     <div class="mtabs">
       <button class="mtab active" data-p="basi" onclick="swTab('basi',this)">Le basi</button>
       <button class="mtab" data-p="combattimento" onclick="swTab('combattimento',this)">Combattimento</button>
