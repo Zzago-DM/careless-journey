@@ -25,7 +25,8 @@
   var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   var CX = CFG.x, CY = CFG.y, H = CFG.alto, R = CFG.bocca, R0 = CFG.collo, T = CFG.incl;
 
-  function el(tag, attr, padre){ var e = document.createElementNS(NS, tag); for(var k in attr) e.setAttribute(k, attr[k]); (padre || host).appendChild(e); return e; }
+  var corpo = null;   /* gruppo con la sfumatura verso le bocche: ci finisce tutto il disegno */
+  function el(tag, attr, padre){ var e = document.createElementNS(NS, tag); for(var k in attr) e.setAttribute(k, attr[k]); (padre || corpo || host).appendChild(e); return e; }
   function rnd(a, b){ return a + Math.random() * (b - a); }
   function raggio(h){ return R0 + (R - R0) * Math.pow(Math.min(1, Math.abs(h) / H), CFG.curva); }
   function f(n){ return n.toFixed(1); }
@@ -38,6 +39,15 @@
     '<radialGradient id="mlm-cuore" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffffff" stop-opacity="1"/><stop offset=".18" stop-color="#d8fbff" stop-opacity=".9"/><stop offset=".45" stop-color="#5fe8e0" stop-opacity=".35"/><stop offset="1" stop-color="#2a8fb0" stop-opacity="0"/></radialGradient>' +
     '<radialGradient id="mlm-alone" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#5fe8e0" stop-opacity=".22"/><stop offset=".5" stop-color="#2a7f9a" stop-opacity=".08"/><stop offset="1" stop-color="#2a7f9a" stop-opacity="0"/></radialGradient>' +
     '<linearGradient id="mlm-fianco" gradientUnits="userSpaceOnUse" x1="0" y1="' + (CY - H) + '" x2="0" y2="' + (CY + H) + '"><stop offset="0" stop-color="#5fe8e0" stop-opacity=".55"/><stop offset=".5" stop-color="#d8fbff" stop-opacity=".9"/><stop offset="1" stop-color="#5fe8e0" stop-opacity=".55"/></linearGradient>';
+
+  /* trasparenza lieve verso le due bocche: pieno al centro, circa 60% alle bocche, meno ancora oltre */
+  var sf = document.createElementNS(NS, "linearGradient");
+  [["id","mlm-sfuma-g"],["gradientUnits","userSpaceOnUse"],["x1",0],["x2",0],["y1",CY - H - 40],["y2",CY + H + 40]].forEach(function(a){ sf.setAttribute(a[0], a[1]); });
+  [[0,.45],[.085,.6],[.3,.86],[.5,1],[.7,.86],[.915,.6],[1,.45]].forEach(function(st){ var e = document.createElementNS(NS, "stop"); e.setAttribute("offset", st[0]); e.setAttribute("stop-color", "#fff"); e.setAttribute("stop-opacity", st[1]); sf.appendChild(e); });
+  defs.appendChild(sf);
+  var mk = el("mask", { id: "mlm-sfuma", maskUnits: "userSpaceOnUse", x: CX - R * 2.2, y: CY - H * 1.6, width: R * 4.4, height: H * 3.2 }, defs);
+  el("rect", { x: CX - R * 2.2, y: CY - H * 1.6, width: R * 4.4, height: H * 3.2, fill: "url(#mlm-sfuma-g)" }, mk);
+  corpo = el("g", { mask: "url(#mlm-sfuma)" }, host);
 
   /* ---------- livelli, dal fondo al davanti ---------- */
   el("ellipse", { cx: CX, cy: CY, rx: R * 1.75, ry: H * 1.25, fill: "url(#mlm-nebbia)" });               /* foschia scura attorno */
@@ -101,7 +111,7 @@
   var lampo = el("path", { fill: "none", stroke: "#e6f8ff", "stroke-width": 2.2, "stroke-linejoin": "bevel", opacity: 0 });
   var lampoAlone = el("path", { fill: "none", stroke: "#7fe6f0", "stroke-width": 8, opacity: 0 });
   /* area cliccabile (invisibile) che copre tutta la clessidra */
-  el("ellipse", { cx: CX, cy: CY, rx: R * 1.3, ry: H + R * T * 1.4, fill: "#000", opacity: 0, "pointer-events": "all" });
+  el("ellipse", { cx: CX, cy: CY, rx: R * 1.3, ry: H + R * T * 1.4, fill: "#000", opacity: 0, "pointer-events": "all" }, host);
 
   /* ---------- correnti ---------- */
   var P = [];
