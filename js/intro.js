@@ -14,7 +14,7 @@
   var GLOBE=Math.min(W,H)*0.18;if(GLOBE<100){GLOBE=100;}if(GLOBE>170){GLOBE=170;}
   var maxR=Math.max(220,Math.min(W,H)*0.62);
   var VFLAT=0.55;
-  var AETHER=[[126,200,227],[224,90,32],[240,208,32],[139,104,64],[212,168,255],[136,96,208]];
+  var AETHER=[[126,200,227],[224,90,32],[240,208,32],[74,150,64],[212,168,255],[136,96,208]];
   var DEG=Math.PI/180;
   var CC=[[8,20,0.55],[48,95,0.55],[50,-100,0.5],[-18,-62,0.48],[-28,134,0.4],[-82,8,0.5]];
   function hsl2rgb(h,s,l){var c=(1-Math.abs(2*l-1))*s,x=c*(1-Math.abs((h/60)%2-1)),m=l-c/2,r=0,g=0,b=0;if(h<60){r=c;g=x;}else if(h<120){r=x;g=c;}else if(h<180){g=c;b=x;}else if(h<240){g=x;b=c;}else if(h<300){r=x;b=c;}else{r=c;b=x;}return [Math.round((r+m)*255),Math.round((g+m)*255),Math.round((b+m)*255)];}
