@@ -396,10 +396,56 @@
     ctx.fillStyle=ag;ctx.beginPath();ctx.arc(cx,cy,GLOBE*1.16,0,6.2832);ctx.fill();
     ctx.globalCompositeOperation='source-over';
   }
+  /* ---------- Il pianeta si crepa (prima dell'esplosione) ----------
+     Al primo clic il pianeta si ferma e si incrina in più punti: le crepe si aprono una dopo l'altra,
+     lasciano filtrare la luce del Maelstrom, il pianeta trema sempre di più e infine esplode.
+     Da lì l'animazione prosegue esattamente come prima. Un secondo clic durante le crepe fa esplodere subito. */
+  var T_CRACK=3.6,cracking=false,cStart=null,CR=[];
+  function crGrow(x,y,dir,len,steps){var pts=[[x,y]],seg=len/steps,d0=dir;for(var s=0;s<steps;s++){dir=d0+(Math.random()-0.5)*1.5;var sl=seg*(0.6+Math.random()*0.8);x+=Math.cos(dir)*sl;y+=Math.sin(dir)*sl;pts.push([x,y]);d0+=(Math.random()-0.5)*0.35;}return pts;}
+  function makeCracks(){
+    CR=[];var n=8;
+    for(var i=0;i<n;i++){
+      var a=Math.random()*6.2832,r=Math.sqrt(Math.random())*0.68,ox=Math.cos(a)*r,oy=Math.sin(a)*r;
+      var main=crGrow(ox,oy,Math.random()*6.2832,0.45+Math.random()*0.45,12),br=[];
+      for(var b=0;b<2;b++){var idx=2+((Math.random()*(main.length-3))|0),pp=main[idx],dir=Math.atan2(pp[1]-main[idx-1][1],pp[0]-main[idx-1][0])+(Math.random()<0.5?-1:1)*(0.6+Math.random()*0.6);
+        br.push({at:idx/(main.length-1),pts:crGrow(pp[0],pp[1],dir,0.14+Math.random()*0.2,6)});}
+      CR.push({t0:0.2+i*(T_CRACK*0.6/n)+Math.random()*0.15,dur:0.5+Math.random()*0.35,main:main,br:br,o:[ox,oy],on:false});
+    }
+  }
+  function crPart(pts,f){var n=pts.length-1,end=f*n;ctx.moveTo(cx+pts[0][0]*GLOBE,cy+pts[0][1]*GLOBE);
+    for(var i=1;i<=n;i++){if(i<=end){ctx.lineTo(cx+pts[i][0]*GLOBE,cy+pts[i][1]*GLOBE);}else{var u=end-(i-1);if(u>0){var a=pts[i-1],b=pts[i];ctx.lineTo(cx+(a[0]+(b[0]-a[0])*u)*GLOBE,cy+(a[1]+(b[1]-a[1])*u)*GLOBE);}break;}}}
+  function crChips(x,y,n){var S=GLOBE/120;for(var i=0;i<n;i++){var a=Math.random()*6.2832,v=(30+Math.random()*90)*S;
+    SP.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-20*S,l:0,L:0.5+Math.random()*0.6,c:Math.random()<0.5?[190,250,255]:[150,135,110],w:0.7+Math.random()*1.1});}}
+  function drawCracks(tc,fade){
+    var q=clamp01(tc/T_CRACK),S=GLOBE/120,pulse=0.75+0.25*Math.sin(tc*(8+q*16));
+    ctx.save();ctx.beginPath();ctx.arc(cx,cy,GLOBE*0.995,0,6.2832);ctx.clip();
+    ctx.fillStyle='rgba(4,8,16,'+(0.3*q*fade)+')';ctx.fillRect(cx-GLOBE,cy-GLOBE,GLOBE*2,GLOBE*2);   /* il pianeta si incupisce */
+    ctx.globalCompositeOperation='lighter';ctx.lineCap='round';ctx.lineJoin='round';
+    for(var i=0;i<CR.length;i++){var c=CR[i],g=clamp01((tc-c.t0)/c.dur);if(g<=0){continue;}
+      var ox=cx+c.o[0]*GLOBE,oy=cy+c.o[1]*GLOBE;
+      if(!c.on&&fade>=1){c.on=true;try{sfxPlay('crack');}catch(e){}crChips(ox,oy,10);}
+      var hot=fade*pulse*(0.55+0.45*q),gr=GLOBE*(0.1+0.24*q),gg=ctx.createRadialGradient(ox,oy,0,ox,oy,gr);
+      gg.addColorStop(0,'rgba(200,250,255,'+(0.5*hot)+')');gg.addColorStop(1,'rgba(95,232,224,0)');ctx.fillStyle=gg;ctx.beginPath();ctx.arc(ox,oy,gr,0,6.2832);ctx.fill();
+      var eg=easeOut(g);
+      ctx.globalCompositeOperation='source-over';ctx.strokeStyle='rgba(10,8,14,'+(0.85*fade)+')';ctx.lineWidth=(3.2+3.4*q)*S;ctx.beginPath();crPart(c.main,eg);   /* bordo scuro della spaccatura */
+      c.br.forEach(function(b){var gb=clamp01((eg-b.at)/(1-b.at));if(gb>0){crPart(b.pts,gb);}});ctx.stroke();ctx.globalCompositeOperation='lighter';
+      [[(4+6*q)*S,'95,232,224',0.16],[(1.6+1.8*q)*S,'160,240,255',0.6],[(0.7+0.6*q)*S,'255,255,255',0.95]].forEach(function(L){
+        ctx.strokeStyle='rgba('+L[1]+','+(L[2]*hot)+')';ctx.lineWidth=L[0];ctx.beginPath();crPart(c.main,eg);
+        c.br.forEach(function(b){var gb=clamp01((eg-b.at)/(1-b.at));if(gb>0){crPart(b.pts,gb);}});ctx.stroke();});
+    }
+    ctx.restore();
+    if(q>0.7){var a=(q-0.7)/0.3*fade,rg=ctx.createRadialGradient(cx,cy,GLOBE*0.92,cx,cy,GLOBE*1.7);   /* la luce trabocca dal bordo */
+      rg.addColorStop(0,'rgba(170,240,255,'+(0.35*a)+')');rg.addColorStop(1,'rgba(95,232,224,0)');ctx.globalCompositeOperation='lighter';ctx.fillStyle=rg;ctx.beginPath();ctx.arc(cx,cy,GLOBE*1.7,0,6.2832);ctx.fill();}
+    ctx.globalCompositeOperation='source-over';
+  }
+  function crShake(tc){var q=clamp01(tc/T_CRACK),k=0.5+5*q*q;cv.style.transform='translate('+((Math.random()-0.5)*k).toFixed(1)+'px,'+((Math.random()-0.5)*k).toFixed(1)+'px)';shaking=true;}
+  function startCrack(){cracking=true;cStart=null;makeCracks();if(hint){hint.style.animation='none';hint.style.opacity='0';}try{sfxPlay('crack');}catch(e){}}
+  function endCrack(){cracking=false;cv.style.transform='';shaking=false;trigger();}
   function frame(ts){
     if(start===null){start=ts;}
     var t=(ts-start)/1000;
-    if(triggered&&tTrig===null){tTrig=t;aFreeze=t*ROT;}
+    if(cracking&&cStart===null){cStart=t;aFreeze=t*ROT;}
+    if(triggered&&tTrig===null){tTrig=t;if(!CR.length){aFreeze=t*ROT;}}
     var te=triggered?(t-tTrig):-1;
     var dt=Math.min(0.05,Math.max(0,t-lastT));lastT=t;
     ctx.globalCompositeOperation='source-over';
@@ -409,9 +455,9 @@
     drawShootingStar(t,dt);
     if(triggered){shake(te);}
     if(triggered){vortexBack(te,dt,t);}
-    var ang=triggered?aFreeze:t*ROT,ca=Math.cos(ang),sa=Math.sin(ang);
+    var ang=(triggered||cracking)?aFreeze:t*ROT,ca=Math.cos(ang),sa=Math.sin(ang);
     var planetA=!triggered?1:(te<tExpEnd?1-easeOut(te/T.exp):0);
-    if(!triggered){drawInvite(t);}
+    if(!triggered&&!cracking){drawInvite(t);}
     if(planetA>0.02){drawGlobe(ang,planetA,t);}
     ORBT=triggered?Math.max(0,te-tExpEnd):0;TH=OMEGA*ORBT;
     if(triggered){mapXform();infall(te,dt);drawIslands(t,ease((te-tExpEnd-0.6)/(T.settle*0.75)));}
@@ -461,6 +507,8 @@
       ctx.closePath();ctx.fill();
     }
     if(planetA>0.02){drawAtmosphere(planetA*(triggered?1:0.85+0.3*Math.sin(t*1.7)));}
+    if(cracking){var tc=t-cStart;drawCracks(tc,1);drawSparks(dt);crShake(tc);if(tc>=T_CRACK){endCrack();}}
+    else if(triggered&&CR.length&&te<0.45){drawCracks(T_CRACK,1-te/0.45);}
     if(triggered){drawArcs(t,te);vortexFront(te,dt,t);drawSparks(dt);drawBlast(te);}
     if(triggered&&te>=tTitle&&ttl&&!ttl.classList.contains('show')){ttl.classList.add('show');}
     if(triggered&&!hintBack&&te>=tTitle+0.8){hintBack=true;if(hint){hint.style.animation='';hint.style.opacity='';}}
@@ -469,7 +517,7 @@
   function finish(){if(done){return;}done=true;cancelAnimationFrame(raf);document.body.style.overflow='';if(intro&&intro.parentNode){intro.parentNode.removeChild(intro);}window.removeEventListener('resize',resize);}
   function exitIntro(){if(done){return;}if(intro){intro.classList.add('hide');}setTimeout(finish,1150);}
   function trigger(){if(triggered||done){return;}triggered=true;burst();try{assignTargets();}catch(e){MAP=null;}if(hint){hint.style.animation='none';hint.style.opacity='0';}if(window.__sfxBoom){try{window.__sfxBoom(0.6);}catch(e){}}setTimeout(function(){if(!done&&window.__sfxVortex){try{window.__sfxVortex();}catch(e){}}},T.exp*1000);}
-  intro.addEventListener('click',function(){if(done){return;}if(!triggered){trigger();}else{exitIntro();}});
+  intro.addEventListener('click',function(){if(done){return;}if(!triggered&&!cracking){startCrack();}else if(cracking){endCrack();}else{exitIntro();}});
   if(skip){skip.addEventListener('click',function(e){e.stopPropagation();exitIntro();});}
   if(reduce){if(ttl){ttl.classList.add('show');}intro.classList.add('hide');setTimeout(finish,900);}
   else{raf=requestAnimationFrame(frame);}
