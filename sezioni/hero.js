@@ -8,7 +8,7 @@ tcjSezione(`<section id="hero">
     <div class="hero-sub">Un gioco di ruolo cooperativo</div>
     <div class="hero-div"></div>
     <p class="hero-tag">Isole Frantumate. Behemoth senza fine. Slayer che scelgono di affrontare l'ignoto — non per gloria, ma perché non esiste un'altra strada.</p>
-    <div class="hero-cta-row"><a href="https://zzago-dm.github.io/Manuale-Cacciatore/Manuale_dello_Slayer.pdf" target="_blank" rel="noopener" class="hero-cta">📖 Apri il Manuale completo</a><a href="https://www.owlbear.rodeo/room/jrCXLMk2u9Yz/The%20Faint%20Maker" target="_blank" rel="noopener noreferrer" class="hero-cta hero-cta-gold">⚔ Entra al tavolo · Owlbear Rodeo</a></div>
+    <div class="hero-cta-row"><a href="media/Manuale_dello_Slayer.pdf" target="_blank" rel="noopener" class="hero-cta">📖 Apri il Manuale completo</a><a href="https://www.owlbear.rodeo/room/jrCXLMk2u9Yz/The%20Faint%20Maker" target="_blank" rel="noopener noreferrer" class="hero-cta hero-cta-gold">⚔ Entra al tavolo · Owlbear Rodeo</a></div>
   </div>
   <div class="hero-scroll">Scorri</div>
 </section>`);
