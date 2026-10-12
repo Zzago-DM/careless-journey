@@ -53,7 +53,7 @@ function skBuild(){
   const add=(el,cat)=>{if(!el||seen.has(el))return;const t=(el.textContent||"").replace(/\s+/g," ").trim();
     if(!t||t.length>72)return;seen.add(el);idx.push({e:el,t:t,l:skNorm(t),c:cat});};
   document.querySelectorAll("#bgrid .bn").forEach(e=>add(e,"Behemoth"));
-  document.querySelectorAll("#wgrid .card > div:first-child").forEach(e=>add(e,"Arma"));
+  document.querySelectorAll("#wgrid .mn-c > .ct").forEach(e=>add(e,"Arma"));
   document.querySelectorAll("#cgrid .cn").forEach(e=>add(e,"Cella"));
   document.querySelectorAll("#ogrid .ct").forEach(e=>add(e,"Omnicella"));
   document.querySelectorAll("#ampbody tr td:first-child").forEach(e=>add(e,"AMP"));
@@ -124,7 +124,9 @@ function skMove(d){
 function skGo(i){
   const it=skRes[(i===undefined?skSel:i)];if(!it)return;
   skClose();
-  const card=it.e.closest(".bcard,.ccrd,.card,tr")||it.e;
+  const card=it.e.closest(".bcard,.ccrd,.card,.mn-c,tr")||it.e;
+  const pan=it.e.closest(".mpanel");   /* voce del Manuale in una scheda chiusa: apro quella scheda */
+  if(pan&&!pan.classList.contains("active")){const tb=document.querySelector('.mtab[data-p="'+pan.id.slice(2)+'"]');if(tb&&typeof swTab==="function")swTab(pan.id.slice(2),tb);}
   if(card.classList.contains("hidden"))card.classList.remove("hidden");
   const sec=it.e.closest("section");
   if(sec&&sec.style.display==="none")sec.style.display="";
@@ -737,6 +739,8 @@ function calRender(anim,prev){const box=document.getElementById("cal-sky");if(!b
 /* ==== Celle equipaggiate: tendine con regole di unicità e potenziamento ==== */
 const CELL_CAT={"Celle di Forza — Offensiva":{k:"forza",t:"Forza"},"Celle di Vigore — Sopravvivenza":{k:"vigore",t:"Vigore"},"Celle di Tecnica — Stile di gioco":{k:"tecnica",t:"Tecnica"}};
 function cellNorm(t){return String(t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g," ").trim();}
+/* testo di un attacco speciale o della mossa bonus (dati/manuale.js: d = frase, r = righe [etichetta, testo]) */
+function wpnRighe(x){if(typeof x==="string")return wpnEsc(x);return (x.d?'<div>'+wpnEsc(x.d)+'</div>':'')+(x.r||[]).map(function(r){return '<div><i>'+wpnEsc(r[0])+':</i> '+wpnEsc(r[1])+'</div>'}).join("");}
 function cellAll(){const out=[];for(const[cat,items] of Object.entries(CD)){const c=CELL_CAT[cat]||{k:"x",t:cat};items.forEach(function(it){out.push({n:it.n,p3:it.p3,p6:it.p6,cat:cat,ck:c.k,ct:c.t})});}return out;}
 function cellParse(v){v=String(v||"").trim();if(!v)return null;const m=v.match(/^(.*?)\s*\+\s*([36])\s*$/);const name=m?m[1]:v,lv=m?+m[2]:(/\b6\b/.test(v)?6:3);
  const nn=cellNorm(name.replace(/\b[36]\b/g,""));const c=cellAll().find(function(x){return cellNorm(x.n)===nn})||cellAll().find(function(x){const k=cellNorm(x.n);return nn&&(nn.indexOf(k)===0||k.indexOf(nn)===0)});
@@ -777,8 +781,8 @@ function wpnRender(anim){const sel=document.getElementById("sc-wcat"),box=docume
  box.innerHTML='<div class="sc-wh"><b>'+w.n+'</b><span>'+wpnEsc(w.t)+'</span></div>'+
   '<div class="sc-wtr">'+w.tr.map(function(d,i){return '<div class="'+(i===ri?"on":"")+'"><small>'+WPN_RL[i]+'</small>'+d+'</div>'}).join("")+'</div>'+
   '<div class="sc-wch">Cariche: '+wpnEsc(w.ch)+'</div>'+
-  (w.bm?'<div class="sc-wsp bm"><b>Bonus-move</b>'+wpnEsc(w.bm)+'</div>':'')+
-  w.sp.map(function(s){return '<div class="sc-wsp"><b>'+wpnEsc(s.n)+'</b>'+wpnEsc(s.d)+'</div>'}).join("");
+  (w.bm?'<div class="sc-wsp bm"><b>Mossa bonus</b>'+wpnRighe(w.bm)+'</div>':'')+
+  w.sp.map(function(s){return '<div class="sc-wsp"><b>'+wpnEsc(s.n)+(s.tp?' · '+wpnEsc(s.tp):'')+'</b>'+wpnRighe(s)+'</div>'}).join("");
  if(anim){box.classList.remove("in");void box.offsetWidth;box.classList.add("in");}}
 document.addEventListener("change",function(e){if(!e.target)return;if(e.target.id==="sc-wcat"){e.target.dataset.v=e.target.value;wpnRender(true);sfxPlay("clang");}if(e.target.id==="sc-rango")wpnRender();});
 

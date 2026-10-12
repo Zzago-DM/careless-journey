@@ -1,0 +1,69 @@
+/* Manuale dello Slayer: impaginazione dei testi (introduzioni, passi, glossario, schede) */
+#manuale .mtab{font-size:.6rem}
+#manuale .mn-lead{font-size:1rem;line-height:1.7;color:var(--text);margin:.2rem 0 1.1rem;max-width:72ch}
+#manuale .mn-lead b,#manuale .mn-p b,#manuale .mn-li b{color:var(--gold2);font-weight:600}
+#manuale .mn-p{font-size:.92rem;line-height:1.7;color:var(--text);margin:0 0 .9rem;max-width:74ch}
+#manuale .mn-h{font-family:"Cinzel",serif;font-size:.95rem;font-weight:700;color:var(--gold2);margin:2rem 0 .75rem;display:flex;align-items:center;gap:.7rem}
+#manuale .mn-h::after{content:"";flex:1;height:1px;background:var(--border)}
+#manuale .mn-h:first-child{margin-top:.3rem}
+#manuale .mn-h small{font-family:"Crimson Pro",Georgia,serif;font-weight:400;font-size:.82rem;color:var(--text2);letter-spacing:0;text-transform:none;font-style:italic}
+#manuale .mn-note{border-left:2px solid var(--gold3);background:rgba(var(--gold-rgb),.04);padding:.65rem 1rem;margin:.9rem 0 1.2rem;font-size:.88rem;line-height:1.6;color:var(--text);max-width:74ch}
+#manuale .mn-note .mn-k{display:block;margin-bottom:.2rem}
+#manuale .mn-k{font-family:"Cinzel",serif;font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold3)}
+#manuale .mn-steps{list-style:none;counter-reset:mn;margin:.3rem 0 1.2rem;padding:0;display:grid;gap:.55rem;max-width:74ch}
+#manuale .mn-steps>li{counter-increment:mn;position:relative;padding:.1rem 0 .1rem 2.3rem;font-size:.92rem;line-height:1.6;color:var(--text)}
+#manuale .mn-steps>li::before{content:counter(mn);position:absolute;left:0;top:.05rem;width:1.55rem;height:1.55rem;border:1px solid var(--gold3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"Cinzel",serif;font-size:.7rem;color:var(--gold2)}
+#manuale .mn-list{margin:.2rem 0 1.1rem;padding-left:1.1rem;max-width:74ch}
+#manuale .mn-list li{font-size:.9rem;line-height:1.6;color:var(--text);margin-bottom:.3rem}
+#manuale .mn-list li::marker{color:var(--gold3)}
+#manuale .mn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.8rem;margin:.4rem 0 1.4rem}
+#manuale .mn-grid.wide{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+#manuale .mn-grid.small{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+#manuale .mn-c{background:var(--bg3);border:1px solid var(--border);padding:.9rem 1rem;position:relative}
+#manuale .mn-c.el{border-top:3px solid var(--c,var(--gold3))}
+#manuale .mn-c .ct{font-size:.86rem;margin-bottom:.45rem;color:var(--c,var(--gold2))}
+#manuale .mn-c p{margin:0 0 .45rem;font-size:.86rem;line-height:1.55;color:var(--text)}
+#manuale .mn-c p:last-child{margin-bottom:0}
+#manuale .mn-c .mn-k{margin-right:.35rem}
+#manuale .mn-c .mn-sub{font-size:.8rem;color:var(--text2);font-style:italic}
+#manuale .mn-row{display:grid;grid-template-columns:6.2rem 1fr;gap:.6rem;padding:.38rem 0;border-top:1px solid rgba(var(--gold-rgb),.07);font-size:.85rem;line-height:1.5;color:var(--text)}
+#manuale .mn-row:first-of-type{border-top:0}
+#manuale .mn-row>.mn-k{padding-top:.15rem}
+#manuale .mn-gl{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.1rem 1.6rem;margin:.3rem 0 1.4rem}
+#manuale .mn-gl div{padding:.5rem 0;border-bottom:1px solid rgba(var(--gold-rgb),.07);font-size:.87rem;line-height:1.55;color:var(--text2)}
+#manuale .mn-gl b{display:block;font-family:"Cinzel",serif;font-size:.74rem;color:var(--gold2);font-weight:600;margin-bottom:.1rem}
+#manuale .mn-pair{display:flex;align-items:stretch;gap:.4rem}
+#manuale .mn-pair>div{flex:1;padding:.5rem .6rem;background:rgba(0,0,0,.18);border:1px solid rgba(var(--gold-rgb),.08)}
+#manuale .mn-pair .arr{flex:0 0 auto;align-self:center;padding:0;background:none;border:0;color:var(--text2);font-size:.9rem}
+#manuale .mn-pair b{display:block;font-family:"Cinzel",serif;font-size:.72rem;color:var(--c,var(--gold2));margin-bottom:.15rem}
+#manuale .mn-pair span{font-size:.8rem;color:var(--text);line-height:1.45}
+#manuale .mn-pair i{display:block;font-size:.66rem;color:var(--text2);font-style:normal;font-family:"Cinzel",serif;letter-spacing:.08em;text-transform:uppercase;margin-top:.2rem}
+#manuale .mn-chip{display:inline-block;font-family:"Cinzel",serif;font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;padding:.12rem .45rem;border:1px solid rgba(var(--gold-rgb),.3);color:var(--gold3);margin:0 .25rem .25rem 0;vertical-align:middle}
+#manuale .tcj-t td b{color:var(--gold2);font-weight:600}
+#manuale .tcj-t td .mn-sub{display:block;font-size:.8rem;color:var(--text2);margin-top:.15rem}
+#manuale .mn-tw{overflow-x:auto;margin-bottom:1.2rem}
+#manuale .mn-tw .tcj-t{margin-bottom:0}
+#manuale .mn-skills{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:0 1.2rem;margin:.2rem 0 1.4rem}
+#manuale .mn-skills div{display:flex;justify-content:space-between;align-items:center;gap:.5rem;padding:.42rem .2rem;border-bottom:1px solid rgba(var(--gold-rgb),.07);font-size:.9rem;color:var(--text)}
+#manuale .mn-skills .mn-chip{margin:0}
+/* scheda delle armi */
+#manuale .wp-dice{display:grid;grid-template-columns:repeat(5,1fr);gap:.2rem;margin:.2rem 0 .7rem}
+#manuale .wp-dice div{background:rgba(var(--gold-rgb),.05);padding:.3rem .2rem;text-align:center}
+#manuale .wp-dice i{display:block;font-family:"Cinzel",serif;font-style:normal;font-size:.48rem;color:var(--text2);letter-spacing:.05em}
+#manuale .wp-dice span{font-size:.82rem;color:var(--text)}
+#manuale .wp-sp{padding:.55rem 0;border-top:1px solid rgba(var(--gold-rgb),.08)}
+#manuale .wp-sp .wp-n{font-family:"Cinzel",serif;font-size:.74rem;font-weight:700;color:var(--gold2);margin-bottom:.25rem}
+#manuale .wp-sp .wp-n em{font-style:normal;font-weight:400;color:var(--text2);font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;margin-left:.3rem}
+#manuale .wp-sp p{margin:0 0 .2rem;font-size:.84rem;line-height:1.5;color:var(--text)}
+#manuale .wp-sp p .mn-k{margin-right:.35rem}
+#manuale .cct-d{grid-column:1/-1;margin:-.4rem 0 .4rem;font-size:.86rem;color:var(--text2);font-style:italic;line-height:1.55}
+@media (max-width:560px){
+  #manuale .tcj-t{font-size:.84rem}
+  #manuale .tcj-t th,#manuale .tcj-t td{padding:.5rem .5rem}
+  #manuale .tcj-t th{font-size:.52rem;letter-spacing:.08em}
+  #manuale .mn-skills{grid-template-columns:1fr 1fr;gap:0 .8rem}
+  #manuale .mn-skills div{font-size:.82rem;flex-wrap:wrap}
+  #manuale .mn-row{grid-template-columns:1fr;gap:.1rem}
+  #manuale .mn-pair{flex-direction:column}
+  #manuale .mn-pair .arr{transform:rotate(90deg);align-self:center}
+}
