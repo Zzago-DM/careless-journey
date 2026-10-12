@@ -8,7 +8,6 @@ tcjSezione(`<section id="manuale">
       <button class="mtab active" onclick="swTab('armi',this)">Armi</button>
       <button class="mtab" onclick="swTab('tipologie',this)">Tipologie Attacco</button>
       <button class="mtab" onclick="swTab('celle',this)">Celle di Aether</button>
-      <button class="mtab" onclick="swTab('omnicelle',this)">Omnicelle &amp; AMP</button>
       <button class="mtab" onclick="swTab('combattimento',this)">Combattimento</button>
       <button class="mtab" onclick="swTab('elementi',this)">Nuclei &amp; Elementi</button>
       <button class="mtab" onclick="swTab('stati',this)">Stati &amp; Effetti</button>
@@ -35,15 +34,6 @@ tcjSezione(`<section id="manuale">
     <div class="mpanel" id="p-celle">
       <div class="qi">Ogni Slayer può equipaggiare fino a 6 celle, suddivise in tre categorie potenziabili (+3 e +6).</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.85rem;margin-top:1.25rem" id="cgrid"></div>
-    </div>
-    <div class="mpanel" id="p-omnicelle">
-      <div class="qi">Ogni Slayer possiede un singolo slot Omnicella, distinto dalle celle normali e legato al personaggio, non all'arma. Lo slot può ospitare fino a 4 AMP scelti liberamente dal catalogo, oppure una delle sei Omnicelle elementali una volta ottenuta. La scelta tra le due modalità resta sempre libera.</div>
-      <div style="font-size:.78rem;color:var(--text2);font-style:italic;margin:.6rem 0 1.5rem">Le condizioni per ottenere ciascuna Omnicella sono note solo al Master.</div>
-      <h3 style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold2);margin:1.25rem 0 .9rem">Le Sei Omnicelle</h3>
-      <div id="ogrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;margin-bottom:2rem"></div>
-      <h3 style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold2);margin:1.25rem 0 .9rem">Catalogo AMP</h3>
-      <div class="qi" style="margin-bottom:1rem">Potenziamenti passivi minori: fino a 4 equipaggiabili contemporaneamente nello slot Omnicella, finché non si ottiene la versione elementale.</div>
-      <table class="tcj-t"><thead><tr><th style="width:28%">AMP</th><th>Effetto</th></tr></thead><tbody id="ampbody"></tbody></table>
     </div>
     <div class="mpanel" id="p-combattimento">
       <div class="qi">Combattimento strutturato in round alternati tra Slayer e Behemoth.</div>
