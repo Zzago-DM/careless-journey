@@ -125,48 +125,63 @@ function buildNpcQtyBtns(){
   if(!el)return;
   el.innerHTML=[1,2,3,4,5,6].map(q=>`<button onclick="npcSetQty(${q})" style="flex:1;padding:.45rem;font-family:'Cinzel',serif;font-size:.7rem;border:1px solid ${q===npcQty?'var(--master)':'rgba(200,56,56,.2)'};background:${q===npcQty?'rgba(200,56,56,.15)':'transparent'};color:${q===npcQty?'var(--master2)':'#a08080'};cursor:pointer;transition:all .2s">${q}</button>`).join("");
 }
+/* Dossier umanoidi: tenuti come dati (NPC_DOSS) così si possono salvare e ritrovare su ogni dispositivo del Master */
+let NPC_DOSS=[];
+function npcSalva(){if(window.tcjMasterCambio)tcjMasterCambio("plancia");}
 function npcGenerate(){
   sfxPlay("dice");
   const level=parseInt(document.getElementById("npc-lvl").value);
   const role=document.getElementById("npc-role").value.trim()||"Umanoide";
-  let html="";
+  const nuovi=[];
   for(let i=0;i<npcQty;i++){
     const stats=npcRollStats(level);
-    const costMod=Math.floor((stats.COST-10)/2);
-    const hp=(5+costMod)*level;
-    html+=`<div class="sc" data-max="${hp}" data-cur="${hp}" style="animation:npcStamp .4s ease-out both;animation-delay:${i*70}ms">
+    const hp=(5+Math.floor((stats.COST-10)/2))*level;
+    nuovi.push({id:"d"+Date.now().toString(36)+i+Math.random().toString(36).slice(2,5),role:role,level:level,stats:stats,hp:hp,cur:hp,nuovo:i+1});
+  }
+  NPC_DOSS=nuovi.concat(NPC_DOSS);
+  npcRender();npcSalva();
+}
+function npcCard(d){
+  const cls="sc"+(d.cur===0?" npc-down":(d.cur<=d.hp/4?" npc-low":""));
+  const anim=d.nuovo?` style="animation:npcStamp .4s ease-out both;animation-delay:${(d.nuovo-1)*70}ms"`:"";
+  return `<div class="${cls}" data-id="${d.id}"${anim}>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
-        <div style="flex:1;min-width:0"><span class="scl" style="margin-bottom:0">${role}</span></div>
+        <div style="flex:1;min-width:0"><span class="scl" style="margin-bottom:0">${plEsc(d.role)}</span></div>
         <div style="text-align:right;flex-shrink:0;margin-left:.6rem;display:flex;align-items:center;gap:.6rem">
-          <div class="npc-pv"><div class="npc-pv-l">PV</div><div class="npc-pv-n"><span class="npc-cur">${hp}</span><span class="npc-max">/${hp}</span></div></div>
+          <div class="npc-pv"><div class="npc-pv-l">PV</div><div class="npc-pv-n"><span class="npc-cur">${d.cur}</span><span class="npc-max">/${d.hp}</span></div></div>
           <div class="npc-dmg"><input type="number" inputmode="numeric" placeholder="0" aria-label="PV da togliere" title="Scrivi i danni e premi Invio (un numero negativo cura)" onkeydown="if(event.key==='Enter'){event.preventDefault();npcDmg(this)}"><button type="button" onclick="npcDmg(this.previousElementSibling)" title="Togli PV">−</button></div>
-          <span style="font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.08em;border:1px solid var(--master);color:var(--master2);padding:.15rem .55rem">LV. ${level}</span>
+          <span style="font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.08em;border:1px solid var(--master);color:var(--master2);padding:.15rem .55rem">LV. ${d.level}</span>
+          <button type="button" class="npc-x" onclick="npcDel('${d.id}')" title="Elimina questo dossier" aria-label="Elimina questo dossier">✕</button>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
         ${NPC_STATS.map(s=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:.45rem .65rem;background:rgba(255,255,255,.02);border:1px solid rgba(200,56,56,.1)">
           <span style="color:#a08080;font-size:.76rem">${s.l}</span>
-          <span style="font-family:'Cinzel',serif;font-size:.85rem;color:var(--text)">${stats[s.k]} <b style="color:var(--master2)">${npcMod(stats[s.k])}</b></span>
+          <span style="font-family:'Cinzel',serif;font-size:.85rem;color:var(--text)">${d.stats[s.k]} <b style="color:var(--master2)">${npcMod(d.stats[s.k])}</b></span>
         </div>`).join("")}
       </div>
-      <div style="margin-top:.5rem;font-size:.68rem;color:#806060;font-style:italic">PV = (5 + bonus COST ${npcMod(stats.COST)}) × Lv.${level} = ${hp}</div>
+      <div style="margin-top:.5rem;font-size:.68rem;color:#806060;font-style:italic">PV = (5 + bonus COST ${npcMod(d.stats.COST)}) × Lv.${d.level} = ${d.hp}</div>
     </div>`;
-  }
-  document.getElementById("npc-results").innerHTML=html;
 }
+function npcRender(){
+  const el=document.getElementById("npc-results");if(!el)return;
+  el.innerHTML=(NPC_DOSS.length?`<div class="npc-tools"><span>${NPC_DOSS.length} ${NPC_DOSS.length===1?"dossier":"dossier"} salvati</span><button type="button" class="npc-clear" onclick="npcClear()">Svuota tutti</button></div>`:"")+NPC_DOSS.map(npcCard).join("");
+  NPC_DOSS.forEach(d=>{delete d.nuovo;});
+}
+function npcDel(id){NPC_DOSS=NPC_DOSS.filter(d=>d.id!==id);sfxPlay("drop");npcRender();npcSalva();}
+function npcClear(){if(!NPC_DOSS.length||!confirm("Eliminare tutti i dossier umanoidi?"))return;NPC_DOSS=[];sfxPlay("drop");npcRender();npcSalva();}
 /* Toglie al dossier i PV scritti nel riquadro (un numero negativo li restituisce, senza superare il massimo) */
 function npcDmg(inp){
   const v=parseInt(inp.value,10);inp.value="";
   if(!v)return;
-  const card=inp.closest(".sc"),max=+card.dataset.max;
-  const cur=Math.max(0,Math.min(max,(+card.dataset.cur)-v));
-  card.dataset.cur=cur;
-  card.querySelector(".npc-cur").textContent=cur;
-  card.classList.toggle("npc-down",cur===0);
-  card.classList.toggle("npc-low",cur>0&&cur<=max/4);
+  const card=inp.closest(".sc"),d=NPC_DOSS.find(x=>x.id===card.dataset.id);if(!d)return;
+  d.cur=Math.max(0,Math.min(d.hp,d.cur-v));
+  card.querySelector(".npc-cur").textContent=d.cur;
+  card.classList.toggle("npc-down",d.cur===0);
+  card.classList.toggle("npc-low",d.cur>0&&d.cur<=d.hp/4);
   if(v>0){card.style.animation="";card.classList.remove("npc-hit");void card.offsetWidth;card.classList.add("npc-hit");}
   sfxPlay(v>0?"tick":"mend");
-  inp.focus();
+  inp.focus();npcSalva();
 }
 
 const TR=[{n:1,b:"ly",nm:"Triade Radiante",t:"Nascita, inizio, luce pura"},{n:2,b:"ly",nm:"Triade Folgorante",t:"Scoperta, energia, espansione"},{n:3,b:"ly",nm:"Triade Ardente",t:"Conflitto, coraggio, passione"},{n:4,b:"ly",nm:"Triade Terrestre",t:"Stabilità, costruzione, prosperità"},{n:5,b:"ly",nm:"Triade Congelante",t:"Silenzio, attesa, gelo"},{n:6,b:"ly",nm:"Triade Oscura",t:"Crepuscolo, introspezione"},{n:"p",txt:"✦ Passaggio da Lyra a Kornos ✦",sub:"Giorno 30 Triade Oscura → Giorno 1 Triade Alborea"},{n:7,b:"ko",nm:"Triade Alborea",t:"Rinascita, memoria, chiarore dopo l'ombra"},{n:8,b:"ko",nm:"Triade Tuonante",t:"Turbolenza, prova, voce interiore"},{n:9,b:"ko",nm:"Triade Fiammeggiante",t:"Purificazione, rivoluzione"},{n:10,b:"ko",nm:"Triade Sporizzata",t:"Decomposizione, metamorfosi"},{n:11,b:"ko",nm:"Triade Algente",t:"Morte apparente, immobilità"},{n:12,b:"ko",nm:"Triade Foscomanto",t:"Oscurità totale, fine del ciclo"},{n:"p2",txt:"✦ Passaggio da Kornos a Lyra ✦",sub:"Giorno 30 Triade Foscomanto → Giorno 1 Triade Radiante"}];
@@ -237,6 +252,6 @@ function initMapClicks(){
   });
 }
 
-window.addEventListener("load",()=>{buildBeh();buildW();buildC();buildO();buildAMP();buildTR();loadMN();mlLoad();scBuild();initMapClicks();try{document.querySelectorAll(".al-ov,.cr-ov").forEach(function(o){document.body.appendChild(o)});htlBuild();wmRoute();wmHoverInit();mlInit();calRender();}catch(e){console.error(e)}try{nvInit();nvToggleAll(localStorage.getItem("tcj_nv_all")==="1");}catch(e){}try{orbInit();orbSet("att",scGv("sc-natt-s"),true);orbSet("def",scGv("sc-ndef-s"),true);}catch(e){}buildNpcQtyBtns();plAdd();});
+window.addEventListener("load",()=>{buildBeh();buildW();buildC();buildO();buildAMP();buildTR();loadMN();mlLoad();scBuild();initMapClicks();try{document.querySelectorAll(".al-ov,.cr-ov").forEach(function(o){document.body.appendChild(o)});htlBuild();wmRoute();wmHoverInit();mlInit();calRender();}catch(e){console.error(e)}try{nvInit();nvToggleAll(localStorage.getItem("tcj_nv_all")==="1");}catch(e){}try{orbInit();orbSet("att",scGv("sc-natt-s"),true);orbSet("def",scGv("sc-ndef-s"),true);}catch(e){}buildNpcQtyBtns();if(!Object.keys(plState).length)plAdd();});
 window.addEventListener("scroll",updNav,{passive:true});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closepw();});

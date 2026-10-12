@@ -90,3 +90,24 @@
   .cmp-head{grid-template-columns:1fr 1fr}.cmp-head::before{display:none}
   .cmp-r{grid-template-columns:1fr 1fr}.cmp-et{grid-column:1/-1}
 }
+/* Zona Master: note libere, stato del salvataggio, dossier salvati */
+.mdat-st{font-family:"Cinzel",serif;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:#a08080;margin-top:.7rem}
+.mdat-st.ok{color:#d0a0a0}
+.mdat-st.warn{color:#ffb36b}
+.mn-list{display:flex;flex-direction:column;gap:.8rem;margin-bottom:.8rem}
+.mn-item{border:1px solid rgba(200,56,56,.18);background:rgba(200,56,56,.035);padding:.7rem .8rem}
+.mn-head{display:flex;gap:.35rem;align-items:center;margin-bottom:.5rem}
+.mn-t{flex:1;min-width:0;background:transparent;border:0;border-bottom:1px solid rgba(200,56,56,.2);color:#e0b0b0;font-family:"Cinzel Decorative","Cinzel",serif;font-size:1rem;padding:.2rem .1rem;outline:none}
+.mn-t:focus{border-bottom-color:var(--master)}
+.mn-b{width:2rem;height:2rem;flex-shrink:0;background:transparent;border:1px solid rgba(200,56,56,.25);color:#c08080;cursor:pointer;font-size:.85rem;transition:background .2s}
+.mn-b:hover:not(:disabled){background:rgba(200,56,56,.15)}
+.mn-b:disabled{opacity:.3;cursor:default}
+.mn-b.mn-del:hover{color:#ff8a7a;border-color:rgba(255,120,100,.5)}
+.mn-x{display:block;width:100%;min-height:110px;resize:vertical;background:rgba(0,0,0,.25);border:1px solid rgba(200,56,56,.12);color:var(--text);font-family:"Crimson Pro",Georgia,serif;font-size:.95rem;line-height:1.6;padding:.6rem .7rem;outline:none}
+.mn-x:focus{border-color:rgba(200,56,56,.45)}
+.mn-vuoto{color:#a08080;font-style:italic;font-size:.9rem}
+.npc-tools{display:flex;justify-content:space-between;align-items:center;margin:0 0 .8rem;font-family:"Cinzel",serif;font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:#a08080}
+.npc-clear{background:transparent;border:1px solid rgba(200,56,56,.3);color:#c08080;font-family:inherit;font-size:inherit;letter-spacing:inherit;text-transform:inherit;padding:.35rem .7rem;cursor:pointer}
+.npc-clear:hover{background:rgba(200,56,56,.15)}
+.npc-x{background:transparent;border:1px solid rgba(200,56,56,.25);color:#a08080;width:1.8rem;height:1.8rem;cursor:pointer;font-size:.75rem}
+.npc-x:hover{color:#ff8a7a;border-color:rgba(255,120,100,.5)}
