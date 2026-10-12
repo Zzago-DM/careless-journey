@@ -20,7 +20,26 @@ Il sito era un unico file `index.html`. Adesso è diviso in pezzi: ogni parte st
 - **L'ordine conta.** Gli stili si sovrascrivono in ordine (per questo i file in `css/` sono numerati), e alcuni script usano cose create da quelli prima. Se sposti una riga in `index.html`, controlla il sito.
 - **I file in `sezioni/` sono HTML dentro un contenitore.** Il testo sta tra due accenti gravi `` ` ``. Se nel testo ti serve un accento grave o la sequenza `${`, mettici davanti una barra rovesciata: `` \` `` e `\${`.
 - **I dati dei giocatori non sono qui.** Restano salvati nel browser di ciascuno, come prima.
-- **Dopo una modifica** GitHub Pages può impiegare qualche minuto ad aggiornarsi, e il browser può tenere in memoria la versione vecchia: ricarica la pagina con Ctrl+F5 (o svuota la cache sul telefono).
+- **Dopo una modifica, lancia `node strumenti/versiona.js`** (vedi sotto). Se te ne dimentichi il sito funziona lo stesso, solo che i browser possono tenere la versione vecchia per una decina di minuti.
+
+## Aggiornamenti sicuri (strumenti/versiona.js)
+
+Prima di ogni pubblicazione si lancia `node strumenti/versiona.js`. Lo strumento:
+
+- aggiunge a ogni file richiamato da `index.html` un'etichetta `?v=…` che cambia **solo** quando cambia quel file: il browser riscarica solo ciò che è stato modificato, e non può mai mescolare file vecchi e nuovi;
+- scrive la versione della pagina in `index.html` (`TCJ_VERSIONE`) e in `versione.json`. Se un browser apre una copia vecchia della pagina, nei primi secondi si aggiorna da solo; più tardi mostra «È disponibile una versione nuova del sito · Aggiorna», senza interrompere nessuno.
+
+Si può lanciare quante volte si vuole: se non è cambiato niente, non tocca niente. Se aggiungi un file che a sua volta richiama altri file del sito, aggiungilo all'elenco `DA_AGGIORNARE` dentro lo strumento.
+
+## Apertura leggera (js/caricamento.js)
+
+Le parti pesanti che non servono nei primi secondi arrivano in sottofondo appena la pagina è aperta, nello stesso ordine e nello stesso punto di prima:
+
+- `tcjGruppo("mappe", [...])` in `index.html`: le mappe ingrandite (`sezioni/mappe/`), il Maelstrom, l'isola sconosciuta e i loro script. Se qualcuno tocca una terra prima che siano arrivate, vengono scaricate subito e la mappa si apre da sola.
+- `tcjGruppo("ritratti", [...])`: i ritratti delle armi dei personaggi (`dati/ritratti-giocatori.js`), usati solo nell'animazione di sblocco.
+- La scena animata del Maelstrom si accende solo alla prima apertura; il simbolo dei Mael e le Corone si caricano quando si arriva a vederli.
+
+Per aggiungere un file a un gruppo basta metterlo nell'elenco, nella posizione giusta.
 
 ## Aree dei giocatori online (js/sync-giocatori.js)
 

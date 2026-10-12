@@ -7,28 +7,56 @@
 <title>The Careless Journey — Manuale del Mondo</title>
 <script>/* Inserisce nella pagina il contenuto di un file della cartella sezioni/, nel punto esatto in cui viene richiamato */
 function tcjSezione(h){var s=document.currentScript;s.insertAdjacentHTML("beforebegin",h);s.remove();}</script>
-<script src="js/caricamento.js"></script>
+<script src="js/caricamento.js?v=e6ef2034"></script>
+<script>/* Versione della pagina: la scrive strumenti/versiona.js a ogni pubblicazione.
+   Se il browser ha aperto una copia vecchia rimasta in memoria, il sito se ne accorge:
+   nei primi secondi si aggiorna da solo, più tardi propone «Aggiorna» (senza mai interrompere chi sta scrivendo). */
+var TCJ_VERSIONE="b1af5652";
+(function(){
+  var nascita=Date.now(),ultimo=0;
+  function nuova(v){location.replace(location.pathname+"?v="+v+location.hash);}
+  function avvisa(){
+    if(!document.body){document.addEventListener("DOMContentLoaded",avvisa);return;}
+    if(document.getElementById("tcj-ver-av"))return;
+    var t=document.createElement("div");t.id="tcj-ver-av";t.className="gh-toast on";t.setAttribute("role","status");
+    t.innerHTML='È disponibile una versione nuova del sito. <button type="button" class="bk-btn">Aggiorna</button>';
+    t.querySelector("button").onclick=function(){nuova(Date.now().toString(36));};
+    document.body.appendChild(t);
+  }
+  function controlla(){
+    if(!TCJ_VERSIONE||!window.fetch||Date.now()-ultimo<60000)return;ultimo=Date.now();
+    fetch("versione.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null;}).then(function(j){
+      if(!j||!j.versione||j.versione===TCJ_VERSIONE)return;
+      var gia=null;try{gia=sessionStorage.getItem("tcj-ver-agg");}catch(e){}
+      if(Date.now()-nascita<5000&&gia!==j.versione){try{sessionStorage.setItem("tcj-ver-agg",j.versione);}catch(e){}nuova(j.versione);return;}
+      avvisa();
+    }).catch(function(){});
+  }
+  if(/[?&]v=/.test(location.search))try{history.replaceState(null,"",location.pathname+location.hash);}catch(e){}
+  controlla();
+  document.addEventListener("visibilitychange",function(){if(!document.hidden)controlla();});
+})();</script>
 <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap&family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/01-base.css">
+<link rel="stylesheet" href="css/01-base.css?v=eac9017d">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/02-mappe-continenti.css" id="cj-styles">
-<link rel="stylesheet" href="css/03-hero-animazioni.css" id="hero-anim-css">
-<link rel="stylesheet" href="css/04-master-icone.css" id="ms-extra-css">
-<link rel="stylesheet" href="css/05-plancia-galleria.css" id="plp-css">
-<link rel="stylesheet" href="css/06-master-animazioni.css" id="ms-anim-css">
+<link rel="stylesheet" href="css/02-mappe-continenti.css?v=2f981e86" id="cj-styles">
+<link rel="stylesheet" href="css/03-hero-animazioni.css?v=fc52480b" id="hero-anim-css">
+<link rel="stylesheet" href="css/04-master-icone.css?v=229c6e9b" id="ms-extra-css">
+<link rel="stylesheet" href="css/05-plancia-galleria.css?v=3b462e3a" id="plp-css">
+<link rel="stylesheet" href="css/06-master-animazioni.css?v=66458e0d" id="ms-anim-css">
 <!-- Dati del sito (solo valori: statistiche, testi, tabelle) -->
-<script src="dati/corone-immagini.js"></script>
-<script>tcjGruppo("ritratti", ["dati/ritratti-giocatori.js"])</script>
-<script src="dati/sigillo-e-ranghi.js"></script>
-<script src="dati/behemoth.js"></script>
-<script src="dati/manuale.js"></script>
-<script src="dati/plancia.js"></script>
-<script src="js/master-cache.js"></script>
-<script src="dati/continenti.js"></script>
-<script src="dati/terra.js"></script>
+<script src="dati/corone-immagini.js?v=65836a22"></script>
+<script>tcjGruppo("ritratti", ["dati/ritratti-giocatori.js?v=30d3f434"])</script>
+<script src="dati/sigillo-e-ranghi.js?v=dc254a47"></script>
+<script src="dati/behemoth.js?v=63f7e5ad"></script>
+<script src="dati/manuale.js?v=819d9491"></script>
+<script src="dati/plancia.js?v=a20310b9"></script>
+<script src="js/master-cache.js?v=cf236a1a"></script>
+<script src="dati/continenti.js?v=3072a0c6"></script>
+<script src="dati/terra.js?v=5e606a2f"></script>
 </head>
 <body>
-<script src="sezioni/simboli-svg.js"></script>
+<script src="sezioni/simboli-svg.js?v=68cb87ff"></script>
 
 <div id="intro">
   <canvas id="introCanvas"></canvas>
@@ -40,7 +68,7 @@ function tcjSezione(h){var s=document.currentScript;s.insertAdjacentHTML("before
   <div id="introHint">Clicca per entrare</div>
   <button id="introSkip" type="button">Salta ›</button>
 </div>
-<script src="js/intro.js"></script>
+<script src="js/intro.js?v=e19a4c35"></script>
 
 <div class="stars"></div>
 <div class="pwo" id="pwo">
@@ -56,7 +84,7 @@ function tcjSezione(h){var s=document.currentScript;s.insertAdjacentHTML("before
   </div>
   </div>
 </div>
-<script src="sezioni/sblocco-master.js"></script>
+<script src="sezioni/sblocco-master.js?v=7d2a59c3"></script>
 <nav>
   <div class="nav-inner">
     <a href="#hero" class="nav-logo"><svg class="gsun-i" viewBox="0 0 1739 3364" aria-hidden="true" focusable="false"><use href="#gsun"/></svg> TCJ</a>
@@ -75,33 +103,33 @@ function tcjSezione(h){var s=document.currentScript;s.insertAdjacentHTML("before
 <div id="pgun" aria-hidden="true" onclick="pgSkip()"><canvas id="pgun-cv"></canvas><div id="pgun-wp"></div><div id="pgun-skip">Tocca o premi Esc per saltare</div></div>
 <div class="sk-ov" id="sk-ov" onclick="if(event.target===this)skClose()"><div class="sk-panel"><input class="sk-inp" id="sk-inp" type="text" autocomplete="off" spellcheck="false" placeholder="Cerca un Behemoth, un'arma, una cella…" oninput="skRender(this.value)"><div class="sk-list" id="sk-list"></div><div class="sk-hint">↑↓ per scorrere · Invio per aprire · Esc per chiudere</div></div></div>
 
-<script src="sezioni/hero.js"></script>
+<script src="sezioni/hero.js?v=1d4e5fc9"></script>
 
-<script src="sezioni/mondo.js"></script>
+<script src="sezioni/mondo.js?v=b7bbedb8"></script>
 
-<link rel="stylesheet" href="css/07-mappa.css">
-<script src="sezioni/mappa.js"></script>
+<link rel="stylesheet" href="css/07-mappa.css?v=0b7e5e72">
+<script src="sezioni/mappa.js?v=b23578b7"></script>
 
-<script src="sezioni/timeline.js"></script>
+<script src="sezioni/timeline.js?v=3a212e47"></script>
 
-<script src="sezioni/mael.js"></script>
+<script src="sezioni/mael.js?v=833b0e0a"></script>
 
-<script src="sezioni/behemoth.js"></script>
+<script src="sezioni/behemoth.js?v=60cc9bf5"></script>
 
-<script src="sezioni/manuale.js"></script>
+<script src="sezioni/manuale.js?v=95ccb5db"></script>
 
-<script src="sezioni/calendario.js"></script>
+<script src="sezioni/calendario.js?v=be809d8e"></script>
 
-<script src="sezioni/corone.js"></script>
+<script src="sezioni/corone.js?v=8ab99806"></script>
 
-<script src="sezioni/npc.js"></script>
+<script src="sezioni/npc.js?v=d2085499"></script>
 
-<script src="sezioni/nave.js"></script>
-<script src="js/nave-riserve.js"></script>
+<script src="sezioni/nave.js?v=32e5cf13"></script>
+<script src="js/nave-riserve.js?v=78a3bc4e"></script>
 
 
-<script src="sezioni/scheda.js"></script>
-<script src="js/area-giocatori.js"></script>
+<script src="sezioni/scheda.js?v=3c796914"></script>
+<script src="js/area-giocatori.js?v=6fde8980"></script>
 
 
 
@@ -112,40 +140,40 @@ function tcjSezione(h){var s=document.currentScript;s.insertAdjacentHTML("before
 
 <script>tcjMasterSezione()</script>
 
-<link rel="stylesheet" href="css/11-plancia-drop.css">
+<link rel="stylesheet" href="css/11-plancia-drop.css?v=5625edaf">
 
-<script src="js/contenuti-e-master.js"></script>
-<script src="js/suoni.js"></script>
+<script src="js/contenuti-e-master.js?v=cc277436"></script>
+<script src="js/suoni.js?v=a1ebd3f3"></script>
 
 <!-- ===== Viste dettagliate dei continenti, Maelstrom e isola sconosciuta =====
      Arrivano in sottofondo appena la pagina è aperta (vedi js/caricamento.js), inserite qui, in questo ordine. -->
 <script>tcjGruppo("mappe", [
-  "sezioni/mappe/ardente.js",
-  "sezioni/mappe/terrestre.js",
-  "sezioni/mappe/radiante.js",
-  "sezioni/mappe/folgorante.js",
-  "sezioni/mappe/glaciale.js",
-  "sezioni/mappe/oscuro.js",
-  "sezioni/mappe/ramsgate.js",
-  "sezioni/mappe/vecchia.js",
-  "sezioni/mappe/maelstrom.js",
-  "js/mappe-apertura.js",
-  "js/maelstrom-apertura.js",
-  "js/mappe-politiche.js",
-  "js/mappe-rilievo.js",
-  "js/ramsgate.js",
-  "js/isola-vecchia.js",
-  "js/mappe-effetti.js"
+  "sezioni/mappe/ardente.js?v=25ff3a88",
+  "sezioni/mappe/terrestre.js?v=423c6810",
+  "sezioni/mappe/radiante.js?v=3e192205",
+  "sezioni/mappe/folgorante.js?v=8976b8fc",
+  "sezioni/mappe/glaciale.js?v=5ac438a3",
+  "sezioni/mappe/oscuro.js?v=8aaf2258",
+  "sezioni/mappe/ramsgate.js?v=cb27da62",
+  "sezioni/mappe/vecchia.js?v=40ae5ceb",
+  "sezioni/mappe/maelstrom.js?v=eb9ff77f",
+  "js/mappe-apertura.js?v=7f5fcf3d",
+  "js/maelstrom-apertura.js?v=716cf5cb",
+  "js/mappe-politiche.js?v=8682898d",
+  "js/mappe-rilievo.js?v=27b0ae94",
+  "js/ramsgate.js?v=e9c15abf",
+  "js/isola-vecchia.js?v=0d0c08be",
+  "js/mappe-effetti.js?v=0b8e95c5"
 ])</script>
 
 
-<link rel="stylesheet" href="css/12-schermo-intero.css" id="bfs-css">
-<script src="js/schermo-intero.js"></script>
-<link rel="stylesheet" href="css/13-mappe-politiche.css" id="polmap-css">
-<link rel="stylesheet" href="css/17-mappe-effetti.css">
-<link rel="stylesheet" href="css/18-sync-giocatori.css">
-<link rel="stylesheet" href="css/14-isola-vecchia.css" id="vr-css">
-<script src="js/hero-animazione.js" id="hero-anim-js"></script>
+<link rel="stylesheet" href="css/12-schermo-intero.css?v=3573e6a3" id="bfs-css">
+<script src="js/schermo-intero.js?v=7e12b732"></script>
+<link rel="stylesheet" href="css/13-mappe-politiche.css?v=33a356b5" id="polmap-css">
+<link rel="stylesheet" href="css/17-mappe-effetti.css?v=3b13b2be">
+<link rel="stylesheet" href="css/18-sync-giocatori.css?v=97fb90d1">
+<link rel="stylesheet" href="css/14-isola-vecchia.css?v=0dfc6e72" id="vr-css">
+<script src="js/hero-animazione.js?v=34d3e1d0" id="hero-anim-js"></script>
 <div class="mae-ov" id="mae-ov" role="dialog" aria-modal="true" aria-labelledby="mae-n" hidden>
  <div class="mae-box">
   <button type="button" class="mae-x" id="mae-x" aria-label="Chiudi la scheda">✕</button>
@@ -159,8 +187,8 @@ function tcjSezione(h){var s=document.currentScript;s.insertAdjacentHTML("before
   </div>
  </div>
 </div>
-<link rel="stylesheet" href="css/15-maestri.css" id="mae-css">
-<script src="js/maestri.js" id="mae-js"></script>
+<link rel="stylesheet" href="css/15-maestri.css?v=70679062" id="mae-css">
+<script src="js/maestri.js?v=b0fb2d4e" id="mae-js"></script>
 <div class="mae-ov" id="beh-ov" role="dialog" aria-modal="true" aria-labelledby="beh-n" hidden>
  <div class="mae-box">
   <button type="button" class="mae-x" id="beh-x" aria-label="Chiudi la scheda">✕</button>
@@ -174,9 +202,9 @@ function tcjSezione(h){var s=document.currentScript;s.insertAdjacentHTML("before
   </div>
  </div>
 </div>
-<link rel="stylesheet" href="css/16-behemoth-schede.css" id="beh-css">
-<script src="js/behemoth-schede.js" id="beh-js"></script>
-<script src="js/master-icone.js" id="ms-extra-js"></script>
+<link rel="stylesheet" href="css/16-behemoth-schede.css?v=1eee6cf7" id="beh-css">
+<script src="js/behemoth-schede.js?v=49285761" id="beh-js"></script>
+<script src="js/master-icone.js?v=8ad64bb9" id="ms-extra-js"></script>
 <div class="plp-ov" id="plp-ov" role="dialog" aria-modal="true" aria-labelledby="plp-t" hidden>
  <div class="plp-box">
   <div class="plp-top"><div class="plp-t" id="plp-t">Scegli un Behemoth</div><button type="button" class="plp-x" id="plp-x" aria-label="Chiudi">✕</button></div>
@@ -186,11 +214,11 @@ function tcjSezione(h){var s=document.currentScript;s.insertAdjacentHTML("before
   <div class="plp-none" id="plp-none" hidden>Nessun Behemoth corrisponde.</div>
  </div>
 </div>
-<script src="js/plancia-galleria.js" id="plp-js"></script>
-<script src="js/master-animazioni.js" id="ms-anim-js"></script>
-<script src="js/sync-giocatori.js"></script>
-<script src="js/master-accesso.js"></script>
-<script src="js/master-dati.js"></script>
-<script src="js/particelle-sfondo.js"></script>
+<script src="js/plancia-galleria.js?v=785c3d6a" id="plp-js"></script>
+<script src="js/master-animazioni.js?v=c6491196" id="ms-anim-js"></script>
+<script src="js/sync-giocatori.js?v=aa5da21d"></script>
+<script src="js/master-accesso.js?v=7c8faeb1"></script>
+<script src="js/master-dati.js?v=4ecc179b"></script>
+<script src="js/particelle-sfondo.js?v=134912a7"></script>
 </body>
 </html>
