@@ -208,10 +208,10 @@ tcjSezione(`<section id="manuale">
           <div class="mn-row"><span class="mn-k">Sull'arma</span><span>+2 danni contro i Behemoth infuocati. Può infliggere <b>Ibernato</b>, ma non ai Behemoth di ghiaccio.</span></div>
           <div class="mn-row"><span class="mn-k">Sull'armatura</span><span>¼ di danni in meno dai Behemoth glaciali, ¼ in più da quelli infuocati.</span></div></div>
         <div class="mn-c el" style="--c:var(--earth)"><div class="ct">🌍 Terrestre</div>
-          <div class="mn-row"><span class="mn-k">Sull'arma</span><span>+2 danni contro i Behemoth elettrici. Può infliggere <b>Fulminato</b>, ma non ai Behemoth di terra.</span></div>
+          <div class="mn-row"><span class="mn-k">Sull'arma</span><span>+2 danni contro i Behemoth elettrici. Può infliggere <b>Interrato</b>, ma non ai Behemoth di terra.</span></div>
           <div class="mn-row"><span class="mn-k">Sull'armatura</span><span>¼ di danni in meno dai Behemoth terrestri, ¼ in più da quelli elettrici.</span></div></div>
         <div class="mn-c el" style="--c:var(--lightning)"><div class="ct">⚡ Elettrico</div>
-          <div class="mn-row"><span class="mn-k">Sull'arma</span><span>+2 danni contro i Behemoth terrestri. Può infliggere <b>Interrato</b>, ma non ai Behemoth elettrici.</span></div>
+          <div class="mn-row"><span class="mn-k">Sull'arma</span><span>+2 danni contro i Behemoth terrestri. Può infliggere <b>Fulminato</b>, ma non ai Behemoth elettrici.</span></div>
           <div class="mn-row"><span class="mn-k">Sull'armatura</span><span>¼ di danni in meno dai Behemoth elettrici, ¼ in più da quelli terrestri.</span></div></div>
         <div class="mn-c el" style="--c:var(--dark)"><div class="ct">🌑 Oscuro</div>
           <div class="mn-row"><span class="mn-k">Sull'arma</span><span>+2 danni contro i Behemoth radianti. Può infliggere <b>Corrotto</b>, ma non ai Behemoth oscuri.</span></div>
