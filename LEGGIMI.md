@@ -64,3 +64,11 @@ I contenuti della Zona Master (testi, segreti, schede di Mael e Maestri) **non s
 - Il dispositivo tiene una copia dei contenuti e da lì in poi apre la Zona Master da solo. In cima alla Zona ci sono «🔒 Chiudi» e «Scollega questo dispositivo».
 - Per modificare la Zona Master si modificano i file di `tcj-master`; i dispositivi con il token propongono «Ricarica» quando trovano la versione nuova.
 - Le versioni precedenti di questo sito, nella cronologia di GitHub, contengono ancora i vecchi contenuti della Zona Master.
+
+## Codici delle aree dei giocatori
+
+Nel sito non c'è più nessun codice in chiaro: in `js/area-giocatori.js` (PA_HASH) c'è solo l'«impronta» di ogni codice, da cui non si risale al codice vero. Per cambiare il codice di un personaggio:
+
+    node strumenti/impronta.js "NuovoCodice"
+
+e incolla il risultato al posto dell'impronta di quel personaggio. Maiuscole e minuscole non contano.

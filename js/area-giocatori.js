@@ -10,7 +10,7 @@ function scTogDot(id){const el=document.getElementById("scd-"+id);const on=el.cl
 function scEqCnt(i,delta){const el=document.getElementById("sc-eq-cnt-"+i);el.value=Math.max(0,(parseInt(el.value)||0)+delta);}
 function scCoinRow(amount,currency){const div=document.createElement("div");div.className="sc-coin-row";div.innerHTML='<input class="sc-in sc-coin-amt" type="text" inputmode="numeric" placeholder="Somma..." style="flex:1"><input class="sc-in sc-coin-cur" type="text" placeholder="Valuta" style="width:96px"><button class="sc-coin-del" type="button" title="Rimuovi valuta" onclick="scCoinDel(this)">×</button>';div.querySelector(".sc-coin-amt").value=amount||"";div.querySelector(".sc-coin-cur").value=currency||"";return div;}
 function scCoinAdd(amount,currency){const c=document.getElementById("sc-coin-rows");if(c)c.appendChild(scCoinRow(amount,currency));}
-function scCoinDel(btn){const r=btn.closest(".sc-coin-row");if(r){sfxPlay("drop");r.remove();}}
+function scCoinDel(btn){const r=btn.closest(".sc-coin-row");if(!r)return;tcjConferma({titolo:"Eliminare questa riga?",testo:"La riga verrà tolta dalla scheda, con il suo valore.",si:"Sì, elimina",attesa:0}).then(function(ok){if(!ok)return;sfxPlay("drop");r.remove();try{paAuto()}catch(e){}});}
 function scBuildComps(saved,mods){const grid=document.getElementById("sc-comps-grid");if(!grid)return;grid.innerHTML=SC_COMPS.map(cp=>{const on=saved&&saved[cp.id];const mv=mods&&mods[cp.id]!==undefined?mods[cp.id]:"";return`<div class="sc-comp-row"><span class="sc-dot ${on?"on":"off"}" id="scd-${cp.id}" onclick="scTogDot('${cp.id}')" style="cursor:pointer">${on?"●":"○"}</span><span style="font-size:.82rem;color:var(--text);flex:1;cursor:pointer" onclick="scTogDot('${cp.id}')">${cp.nm}</span><span style="font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.06em;color:var(--text2);border:1px solid var(--border);padding:.04rem .22rem;margin-right:.3rem">${cp.st}</span><input type="text" id="scmod-${cp.id}" class="sc-calc" readonly tabindex="-1" value="" placeholder="+0" title="Modificatore caratteristica + Bonus Competenza (se competente)" style="width:38px;background:var(--bg);border:1px solid var(--border);color:var(--gold2);font-family:'Cinzel',serif;font-size:.68rem;text-align:center;padding:.1rem;outline:none"></div>`;}).join("");}
 
 const CR_PH="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23908878' stroke-width='2.4' opacity='.4'%3E%3Cpath d='M50 13 L79 40 L65 84 L35 84 L21 40 Z'/%3E%3Cpath d='M50 31 L65 43 L58 68 L42 68 L35 43 Z' opacity='.55'/%3E%3C/g%3E%3Ctext x='50' y='63' font-family='Georgia,serif' font-size='27' fill='%23908878' opacity='.45' text-anchor='middle'%3E?%3C/text%3E%3C/svg%3E";
@@ -209,7 +209,22 @@ function bkApply(){
 
 /* ==== Area dello Slayer ==== */
 /* Codici d'accesso: cambiali qui (maiuscole/minuscole non contano) */
-const PA_CODES={athena:"OrsoPolare",panlan:"eclissi",asonnes:"DoccinoSenpai"};
+/* Codici delle aree: qui c'è solo l'«impronta» (SHA-256) di ogni codice, non il codice vero.
+   Il sito calcola l'impronta di ciò che si scrive e la confronta: dall'impronta non si risale al codice.
+   Per cambiare un codice: strumenti/impronta.js "nuovo codice" e incolla qui il risultato. */
+const PA_HASH={athena:"f8f91c6afa0abf1059b5c63aeb9297852acffe02064009019b44ac572d772b12",panlan:"9d6ce77944f7257b469b5468f9ed6c50c81de4237e77e69d558d0a666469c632",asonnes:"4e4be505082df512958b8db4a3204cc52b55c3e735b81fea1a94d7fd71895380"};
+function paSha(str){/* SHA-256 (UTF-8) → esadecimale */
+ const b=unescape(encodeURIComponent(str)),K=[1116352408,1899447441,3049323471,3921009573,961987163,1508970993,2453635748,2870763221,3624381080,310598401,607225278,1426881987,1925078388,2162078206,2614888103,3248222580,3835390401,4022224774,264347078,604807628,770255983,1249150122,1555081692,1996064986,2554220882,2821834349,2952996808,3210313671,3336571891,3584528711,113926993,338241895,666307205,773529912,1294757372,1396182291,1695183700,1986661051,2177026350,2456956037,2730485921,2820302411,3259730800,3345764771,3516065817,3600352804,4094571909,275423344,430227734,506948616,659060556,883997877,958139571,1322822218,1537002063,1747873779,1955562222,2024104815,2227730452,2361852424,2428436474,2756734187,3204031479,3329325298];
+ let h=[1779033703,3144134277,1013904242,2773480762,1359893119,2600822924,528734635,1541459225];const l=b.length,n=((l+8>>6)+1)*16,w=new Array(n).fill(0);
+ for(let i=0;i<l;i++)w[i>>2]|=b.charCodeAt(i)<<(24-(i%4)*8);w[l>>2]|=0x80<<(24-(l%4)*8);w[n-1]=l*8;
+ const r=(x,c)=>(x>>>c)|(x<<(32-c));
+ for(let j=0;j<n;j+=16){const W=w.slice(j,j+16);let[a,bb,c,d,e,f,g,hh]=h;
+  for(let i=0;i<64;i++){if(i>=16){const x=W[i-15],y=W[i-2];W[i]=(W[i-16]+(r(x,7)^r(x,18)^(x>>>3))+W[i-7]+(r(y,17)^r(y,19)^(y>>>10)))|0;}
+   const t1=(hh+(r(e,6)^r(e,11)^r(e,25))+((e&f)^(~e&g))+K[i]+W[i])|0,t2=((r(a,2)^r(a,13)^r(a,22))+((a&bb)^(a&c)^(bb&c)))|0;
+   hh=g;g=f;f=e;e=(d+t1)|0;d=c;c=bb;bb=a;a=(t1+t2)|0;}
+  h=[(h[0]+a)|0,(h[1]+bb)|0,(h[2]+c)|0,(h[3]+d)|0,(h[4]+e)|0,(h[5]+f)|0,(h[6]+g)|0,(h[7]+hh)|0];}
+ return h.map(x=>(x>>>0).toString(16).padStart(8,"0")).join("");}
+function paCodeOk(k,v){return !!v&&!!PA_HASH[k]&&paSha("tcj·"+String(v).trim().toLowerCase())===PA_HASH[k];}
 const PA_FULL={athena:"Athena de la Roche",panlan:"Pan Lan Batuk",asonnes:"Asonnes Eninbaal"};
 const PA_SIGLA={athena:"ATH",panlan:"PNL",asonnes:"ASN"};
 const PA_IDF=["nome","titolo","eta","giorno","triade","aether","continente","terra","casata","segni","motto"];
@@ -241,7 +256,7 @@ function paPrep(){const sec=document.getElementById("scheda"),c=paChar(),open=pa
  paStatus(paMaster()&&paOpenList().indexOf(scCur)<0?"Aperta con l'accesso Master":"Salvataggio automatico attivo");
  return true;}
 function paTry(){const inp=document.getElementById("pa-code"),v=(inp?inp.value:"").trim().toLowerCase();
- if(v&&v===String(PA_CODES[scCur]||"").toLowerCase()){paSetOpen(scCur,true);paThemeOn=true;scBuild();pgPlay(scCur);const b=document.getElementById("pa-body");if(b){b.classList.remove("pa-in");void b.offsetWidth;b.classList.add("pa-in");}if(window.__sfxBurst){try{window.__sfxBurst()}catch(e){}}return;}
+ if(paCodeOk(scCur,v)){paSetOpen(scCur,true);paThemeOn=true;scBuild();pgPlay(scCur);const b=document.getElementById("pa-body");if(b){b.classList.remove("pa-in");void b.offsetWidth;b.classList.add("pa-in");}if(window.__sfxBurst){try{window.__sfxBurst()}catch(e){}}return;}
  sfxPlay("deny");const er=document.getElementById("pa-gate-err"),g=document.getElementById("pa-gate");if(er)er.classList.add("on");if(g){g.classList.remove("pa-shake");void g.offsetWidth;g.classList.add("pa-shake");}if(inp){inp.select();}}
 function paLock(){clearTimeout(paT);scSave(true);paSetOpen(scCur,false);if(paMaster())paMSet(scCur,true);scBuild();try{slRender();}catch(e){}}
 function paRefresh(){if(document.getElementById("pa-body").style.display==="none")scBuild();else scTabs();}
@@ -323,7 +338,7 @@ function pcOk(){const P=PC;if(!P)return;const OW=360,OH=480,k=OW/P.W;const cv=do
  st.addEventListener("wheel",function(e){if(!PC)return;e.preventDefault();const r=st.getBoundingClientRect();pcZoomTo(PC.s*(e.deltaY<0?1.08:1/1.08),e.clientX-r.left,e.clientY-r.top);},{passive:false});}
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();})();
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&PC)pcClose();});
-function paPortraitDel(){paSetPortrait("");paAuto();}
+function paPortraitDel(){tcjConferma({titolo:"Togliere il ritratto?",testo:"Il ritratto del personaggio verrà tolto dalla scheda.",si:"Sì, togli",attesa:0}).then(function(ok){if(!ok)return;paSetPortrait("");paAuto();});}
 function paGrow(t){t.style.height="auto";t.style.height=Math.max(90,t.scrollHeight)+"px";}
 function paNoteEl(title,body){const w=document.createElement("div");w.className="pa-note";
  w.innerHTML='<div class="pa-note-top"><input class="pa-note-t" placeholder="Titolo della sezione" aria-label="Titolo della sezione"><div class="pa-note-ctl"><button type="button" title="Sposta su" onclick="paNoteMove(this,-1)">▲</button><button type="button" title="Sposta giù" onclick="paNoteMove(this,1)">▼</button><button type="button" class="del" title="Elimina sezione" onclick="paNoteDel(this)">✕</button></div></div><textarea class="pa-note-b" placeholder="Scrivi qui…" oninput="paGrow(this)"></textarea>';
@@ -332,7 +347,7 @@ function paGetNotes(){return[].slice.call(document.querySelectorAll("#pa-notes .
 function paNotesEmpty(){const box=document.getElementById("pa-notes");if(!box)return;const has=box.querySelector(".pa-note");let em=box.querySelector(".pa-note-empty");if(!has&&!em){em=document.createElement("div");em.className="pa-note-empty";em.textContent="Nessuna sezione. Aggiungine una qui sotto.";box.appendChild(em);}else if(has&&em){em.remove();}}
 function paNoteAdd(){const box=document.getElementById("pa-notes");if(!box)return;const el=paNoteEl("Nuova sezione","");box.appendChild(el);paNotesEmpty();const t=el.querySelector(".pa-note-t");t.focus();t.select();paAuto();}
 function paNoteMove(btn,dir){const n=btn.closest(".pa-note");if(!n)return;if(dir<0&&n.previousElementSibling)n.parentNode.insertBefore(n,n.previousElementSibling);else if(dir>0&&n.nextElementSibling)n.parentNode.insertBefore(n.nextElementSibling,n);paAuto();}
-function paNoteDel(btn){if(!btn.classList.contains("arm")){btn.classList.add("arm");btn.textContent="Elimina?";clearTimeout(btn._t);btn._t=setTimeout(function(){btn.classList.remove("arm");btn.textContent="✕";},3000);return;}const n=btn.closest(".pa-note");if(n)n.remove();paNotesEmpty();paAuto();}
+function paNoteDel(btn){const n=btn.closest(".pa-note");if(!n)return;const t=(n.querySelector(".pa-note-t")||{}).value||"";tcjConferma({titolo:"Eliminare questa sezione?",testo:"La sezione"+(t?" <b>«"+t.replace(/</g,"&lt;")+"»</b>":"")+" verrà tolta, con tutto il suo testo.",si:"Sì, elimina",attesa:0}).then(function(ok){if(!ok)return;n.remove();paNotesEmpty();paAuto();});}
 document.addEventListener("input",function(e){if(e.target&&e.target.closest&&e.target.closest("#pa-body")&&e.target.id!=="bk-file")paAuto();});
 document.addEventListener("change",function(e){if(e.target&&e.target.closest&&e.target.closest("#pa-body")&&e.target.id!=="bk-file"&&e.target.id!=="pa-portrait-file")paAuto();});
 document.addEventListener("click",function(e){const t=e.target;if(!t||!t.closest)return;if(t.closest(".bk-btn")||t.closest(".pa-note-ctl"))return;if((t.closest("#pa-body")&&t.closest("button,.sc-dot,.sc-comp-row,.cr-box"))||t.closest("#cr-ov button"))paAuto();});
@@ -554,12 +569,12 @@ function alRender(){const m=document.getElementById("al-body");if(!m)return;
  m.innerHTML=h;if(alAsk){const i=document.getElementById("al-code-in");if(i)setTimeout(function(){i.focus()},0);}}
 function alPick(k){if(!paIsOpen(k)&&paMaster()){paMSet(k,false);try{slRender();if(k===scCur)scBuild();}catch(e){}}if(paIsOpen(k)){alCur=k;alAsk=null;alRender();return;}alAsk=k;alRender();}
 function alTry(){const k=alAsk,i=document.getElementById("al-code-in");if(!k||!i)return;const v=i.value.trim().toLowerCase();
- if(v&&v===String(PA_CODES[k]||"").toLowerCase()){paSetOpen(k,true);alAsk=null;alCur=k;alRender();try{slGo(k);slRender();pgPlay(k);}catch(e){}return;}
+ if(paCodeOk(k,v)){paSetOpen(k,true);alAsk=null;alCur=k;alRender();try{slGo(k);slRender();pgPlay(k);}catch(e){}return;}
  const er=document.getElementById("al-err");if(er)er.style.display="block";i.select();}
 function alNoteEl(t,b){const w=paNoteEl(t,b);w.querySelectorAll(".pa-note-ctl button").forEach(function(btn){const tl=btn.getAttribute("title")||"";btn.removeAttribute("onclick");
  btn.addEventListener("click",function(){if(tl.indexOf("su")>=0){if(w.previousElementSibling)w.parentNode.insertBefore(w,w.previousElementSibling);alAuto();}
   else if(tl.indexOf("giù")>=0){if(w.nextElementSibling)w.parentNode.insertBefore(w.nextElementSibling,w);alAuto();}
-  else{if(!btn.classList.contains("arm")){btn.classList.add("arm");btn.textContent="Elimina?";clearTimeout(btn._t);btn._t=setTimeout(function(){btn.classList.remove("arm");btn.textContent="✕"},3000);return;}w.remove();alAuto();}});});return w;}
+  else{const t=(w.querySelector(".pa-note-t")||{}).value||"";tcjConferma({titolo:"Eliminare questa sezione?",testo:"La sezione"+(t?" <b>«"+t.replace(/</g,"&lt;")+"»</b>":"")+" verrà tolta dall'alloggio, con tutto il suo testo.",si:"Sì, elimina",attesa:0}).then(function(ok){if(!ok)return;w.remove();alAuto();});}});});return w;}
 function alNoteAdd(){const nb=document.getElementById("al-notes");if(!nb)return;const el=alNoteEl("Nuova sezione","");nb.appendChild(el);const t=el.querySelector(".pa-note-t");t.focus();t.select();alAuto();}
 document.addEventListener("input",function(e){if(e.target&&e.target.closest&&e.target.closest("#al-body")&&alCur)alAuto();});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"){const o=document.getElementById("al-ov");if(o&&o.classList.contains("open"))alClose();}});
@@ -827,7 +842,8 @@ function ammoFire(){const f=AMMO_FX.find(function(x){return x.k===AMMO_PICK});if
   const ring=document.createElement("span");ring.className="am-ring";ring.style.left=(r.left+r.width/2)+"px";ring.style.top=(r.top+r.height/2)+"px";ring.style.borderColor=f.c;ring.style.boxShadow="0 0 18px "+f.c;document.body.appendChild(ring);setTimeout(function(){ring.remove()},800);
   sfxPlay("orb",f.k);setTimeout(function(){ammoSetCount(n-1)},620);}
  else{sfxPlay("orb",f.k);ammoSetCount(n-1);}}
-function ammoReset(){ammoSetCount(AMMO_MAX);const lg=document.getElementById("sc-ammo-log");if(lg)lg.value="";ammoRender();sfxPlay("charge");
+function ammoReset(){tcjConferma({titolo:"Ricaricare le munizioni?",testo:"Le munizioni tornano al massimo e il registro dei colpi viene svuotato.",si:"Sì, ricarica",attesa:0}).then(function(ok){if(ok)ammoResetOk();});}
+function ammoResetOk(){ammoSetCount(AMMO_MAX);const lg=document.getElementById("sc-ammo-log");if(lg)lg.value="";ammoRender();sfxPlay("charge");
  document.querySelectorAll("#sc-ammo .sc-am").forEach(function(b,i){b.style.animationDelay=(i*.06)+"s";b.classList.add("load");setTimeout(function(){b.classList.remove("load")},900);});}
 document.addEventListener("change",function(e){if(e.target&&e.target.id==="sc-arma2t")ammoRender();});
 document.addEventListener("input",function(e){if(e.target&&e.target.id==="sc-proiettili")ammoRender();});
@@ -891,7 +907,7 @@ function slRender(){const b=document.getElementById("sl-btn"),m=document.getElem
 function slGo(k){paThemeOn=true;if(k!==scCur)scSwitch(k);else scBuild();}
 function slPick(k){if(paIsOpen(k)){slClose();slGo(k);slRender();return;}if(paMaster()){slClose();paMApri(k);return;}slAsk=(slAsk===k?null:k);slRender();}
 function slTry(){const k=slAsk,i=document.getElementById("sl-code-in");if(!k||!i)return;const v=i.value.trim().toLowerCase();
- if(v&&v===String(PA_CODES[k]||"").toLowerCase()){paSetOpen(k,true);slClose();slGo(k);slRender();pgPlay(k);if(window.__sfxBurst){try{window.__sfxBurst()}catch(e){}}return;}
+ if(paCodeOk(k,v)){paSetOpen(k,true);slClose();slGo(k);slRender();pgPlay(k);if(window.__sfxBurst){try{window.__sfxBurst()}catch(e){}}return;}
  const er=document.getElementById("sl-err");if(er)er.style.display="";const box=i.parentNode;if(box){box.classList.remove("pa-shake");void box.offsetWidth;box.classList.add("pa-shake");}i.select();}
 document.addEventListener("click",function(e){if(!slMenuOpen())return;const dd=document.getElementById("sl-dd");const path=e.composedPath?e.composedPath():[];if(dd&&path.indexOf(dd)<0)slClose();});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&slMenuOpen())slClose();});

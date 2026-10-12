@@ -155,7 +155,7 @@
       var b = e.target.closest("[data-a]"); if(!b || b.disabled) return;
       var a = b.getAttribute("data-a"), it = b.closest(".mn-item"), i = it ? +it.getAttribute("data-i") : -1;
       if(a === "add"){ NOTES.push({ t: "Nuova nota", b: "" }); disegnaNote(); var ts = nb.querySelectorAll(".mn-t"); var u = ts[ts.length - 1]; if(u){ u.focus(); u.select(); } try{ sfxPlay("paper"); }catch(_){} }
-      else if(a === "del"){ if(!confirm("Eliminare la nota «" + (NOTES[i].t || "senza titolo") + "»?")) return; NOTES.splice(i, 1); disegnaNote(); try{ sfxPlay("drop"); }catch(_){} }
+      else if(a === "del"){ tcjConferma({titolo:"Eliminare questa nota?",testo:"La nota <b>«" + (NOTES[i].t || "senza titolo").replace(/</g,"&lt;") + "»</b> verrà tolta dalle note del Master, anche sugli altri dispositivi del Master.",si:"Sì, elimina",attesa:0}).then(function(ok){ if(!ok) return; NOTES.splice(i, 1); disegnaNote(); try{ sfxPlay("drop"); }catch(_){} cambio("note"); }); return; }
       else if(a === "su" && i > 0){ var x = NOTES.splice(i, 1)[0]; NOTES.splice(i - 1, 0, x); disegnaNote(); }
       else if(a === "giu" && i < NOTES.length - 1){ var y = NOTES.splice(i, 1)[0]; NOTES.splice(i + 1, 0, y); disegnaNote(); }
       else return;

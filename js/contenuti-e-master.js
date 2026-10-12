@@ -31,7 +31,7 @@ function plAdd(){
   PL_ELEMENTS.forEach(e=>{plState[id].tokens[e.k]=0;plState[id].malus[e.k]=false;});
   plRender();
 }
-function plDel(id){sfxPlay("drop");delete plState[id];plRender();}
+function plDel(id){const s=plState[id],bn=(s&&typeof PL_BEHEMOTHS!=="undefined"&&PL_BEHEMOTHS[s.behIndex])?PL_BEHEMOTHS[s.behIndex].nome:"";tcjConferma({titolo:"Togliere questo Behemoth dalla Plancia?",testo:"La scheda"+(bn?" di <b>"+String(bn).replace(/</g,"&lt;")+"</b>":"")+" verrà tolta dalla Plancia, con i suoi PV e le parti rotte.",si:"Sì, togli",attesa:0}).then(function(ok){if(!ok)return;sfxPlay("drop");delete plState[id];plRender();});}
 function plSetBeh(id,idx){plState[id].behIndex=parseInt(idx);plState[id].brokenParts={};plRender();}
 function plSetMult(id,m){plState[id].mult=m;plRender();}
 function plSetPvCur(id,v){plState[id].pvCurrent=v;}
@@ -41,7 +41,7 @@ function plSetToken(id,elem,val){const cur=plState[id].tokens[elem];plState[id].
 function plToggleMalus(id,elem){plState[id].malus[elem]=!plState[id].malus[elem];sfxPlay(plState[id].malus[elem]?"on":"off");plRender();}
 function plPartTog(id,i){var s=plState[id];s.brokenParts[i]=s.brokenParts[i]?0:1;sfxPlay(s.brokenParts[i]?"crack":"mend");plRender();}
 function plPartStep(id,i,d){var s=plState[id];var p=PL_DROPS[PL_BEHEMOTHS[s.behIndex].nome].p[i];var mx=p.rg?999:p.q;var v=(s.brokenParts[i]||0)+d;s.brokenParts[i]=Math.max(0,Math.min(mx,v));plRender();}
-function plPartsReset(id){sfxPlay("mend");plState[id].brokenParts={};plRender();}
+function plPartsReset(id){tcjConferma({titolo:"Riparare tutte le parti?",testo:"Tutte le parti rotte di questo Behemoth torneranno integre.",si:"Sì, ripara",attesa:0}).then(function(ok){if(!ok||!plState[id])return;sfxPlay("mend");plState[id].brokenParts={};plRender();});}
 function plEsc(x){return (""+x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 function plRar(r){return "<span class='pl-rp "+r+"'>"+r+"</span>";}
 /* PL_DROPS: spostato in dati/plancia.js */
@@ -164,8 +164,8 @@ function npcRender(){
   el.innerHTML=(NPC_DOSS.length?`<div class="npc-tools"><span>${NPC_DOSS.length} ${NPC_DOSS.length===1?"dossier":"dossier"} salvati</span><button type="button" class="npc-clear" onclick="npcClear()">Svuota tutti</button></div>`:"")+NPC_DOSS.map(npcCard).join("");
   NPC_DOSS.forEach(d=>{delete d.nuovo;});
 }
-function npcDel(id){NPC_DOSS=NPC_DOSS.filter(d=>d.id!==id);sfxPlay("drop");npcRender();npcSalva();}
-function npcClear(){if(!NPC_DOSS.length||!confirm("Eliminare tutti i dossier umanoidi?"))return;NPC_DOSS=[];sfxPlay("drop");npcRender();npcSalva();}
+function npcDel(id){const d=NPC_DOSS.find(x=>x.id===id);tcjConferma({titolo:"Eliminare questo dossier?",testo:"Il dossier"+(d&&d.role?" <b>"+String(d.role).replace(/</g,"&lt;")+"</b>":"")+" verrà tolto dai dossier umanoidi.",si:"Sì, elimina",attesa:0}).then(function(ok){if(!ok)return;NPC_DOSS=NPC_DOSS.filter(d=>d.id!==id);sfxPlay("drop");npcRender();npcSalva();});}
+function npcClear(){if(!NPC_DOSS.length)return;tcjConferma({titolo:"Eliminare tutti i dossier?",testo:"Verranno tolti <b>tutti i "+NPC_DOSS.length+" dossier umanoidi</b> generati.",si:"Sì, elimina tutti",attesa:0}).then(function(ok){if(!ok)return;NPC_DOSS=[];sfxPlay("drop");npcRender();npcSalva();});}
 /* Toglie al dossier i PV scritti nel riquadro (un numero negativo li restituisce, senza superare il massimo) */
 function npcDmg(inp){
   const v=parseInt(inp.value,10);inp.value="";
