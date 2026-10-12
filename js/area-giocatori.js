@@ -20,7 +20,7 @@ let crCur=-1;
 function crSrc(c){return c.i&&CR_IMG[c.i]?CR_IMG[c.i]:CR_PH;}
 function crEsc(t){return String(t).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");}
 function crBuild(owned){const g=document.getElementById("cr-grid");if(!g)return;const o=owned||[];
- g.innerHTML=CROWNS.map((c,i)=>`<div class="cr-box${o[i]?" has":""}${c.dk?" dk":""}" id="cr-box-${i}" onclick="crOpen(${i})" title="${crEsc(c.n)}"><img src="${crSrc(c)}" alt="${crEsc(c.n)}"><span class="cr-num">${i+1}</span><button class="cr-tog" type="button" title="Segna come conquistata" onclick="event.stopPropagation();crTog(${i})">\u2713</button></div>`).join("");
+ g.innerHTML=CROWNS.map((c,i)=>`<div class="cr-box${o[i]?" has":""}${c.dk?" dk":""}" id="cr-box-${i}" onclick="crOpen(${i})" title="${crEsc(c.n)}"><img src="${crSrc(c)}" loading="lazy" decoding="async" alt="${crEsc(c.n)}"><span class="cr-num">${i+1}</span><button class="cr-tog" type="button" title="Segna come conquistata" onclick="event.stopPropagation();crTog(${i})">\u2713</button></div>`).join("");
  crCount();}
 function crCount(){let n=0;for(let i=0;i<CROWNS.length;i++){const b=document.getElementById("cr-box-"+i);if(b&&b.classList.contains("has"))n++;}
  const c=document.getElementById("cr-count"),m=document.getElementById("cr-mult");
@@ -345,6 +345,7 @@ function pgPlay(k){
  const ov=document.getElementById("pgun"),cv=document.getElementById("pgun-cv"),wp=document.getElementById("pgun-wp");if(!ov||!cv||!wp)return;
  if(PG)pgEnd();
  wp.innerHTML=pgWeaponHTML(k);wp.style.opacity="0";
+ if(typeof PG_WP==="undefined"&&window.tcjCarica)tcjCarica("ritratti").then(function(){if(PG&&PG.k===k&&PG.wp===wp)wp.innerHTML=pgWeaponHTML(k);}); /* i ritratti arrivano in sottofondo: se non ci sono ancora, li prendo adesso */
  ov.className="show pg-"+k;ov.style.opacity="0";
  PG={k:k,ov:ov,wp:wp,cv:cv,t0:performance.now(),skipT:0,op:0,boom:false};pgSize();
  PG.rs=function(){if(PG)pgSize();};window.addEventListener("resize",PG.rs);

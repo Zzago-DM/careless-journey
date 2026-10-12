@@ -7,6 +7,7 @@
 <title>The Careless Journey — Manuale del Mondo</title>
 <script>/* Inserisce nella pagina il contenuto di un file della cartella sezioni/, nel punto esatto in cui viene richiamato */
 function tcjSezione(h){var s=document.currentScript;s.insertAdjacentHTML("beforebegin",h);s.remove();}</script>
+<script src="js/caricamento.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap&family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/01-base.css">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
@@ -17,7 +18,7 @@ function tcjSezione(h){var s=document.currentScript;s.insertAdjacentHTML("before
 <link rel="stylesheet" href="css/06-master-animazioni.css" id="ms-anim-css">
 <!-- Dati del sito (solo valori: statistiche, testi, tabelle) -->
 <script src="dati/corone-immagini.js"></script>
-<script src="dati/ritratti-giocatori.js"></script>
+<script>tcjGruppo("ritratti", ["dati/ritratti-giocatori.js"])</script>
 <script src="dati/sigillo-e-ranghi.js"></script>
 <script src="dati/behemoth.js"></script>
 <script src="dati/manuale.js"></script>
@@ -116,34 +117,34 @@ function tcjSezione(h){var s=document.currentScript;s.insertAdjacentHTML("before
 <script src="js/contenuti-e-master.js"></script>
 <script src="js/suoni.js"></script>
 
-<!-- ===== Viste dettagliate dei continenti ===== -->
-<script src="sezioni/mappe/ardente.js"></script>
-<script src="sezioni/mappe/terrestre.js"></script>
-<script src="sezioni/mappe/radiante.js"></script>
-<script src="sezioni/mappe/folgorante.js"></script>
-<script src="sezioni/mappe/glaciale.js"></script>
-<script src="sezioni/mappe/oscuro.js"></script>
-<script src="sezioni/mappe/ramsgate.js"></script>
+<!-- ===== Viste dettagliate dei continenti, Maelstrom e isola sconosciuta =====
+     Arrivano in sottofondo appena la pagina è aperta (vedi js/caricamento.js), inserite qui, in questo ordine. -->
+<script>tcjGruppo("mappe", [
+  "sezioni/mappe/ardente.js",
+  "sezioni/mappe/terrestre.js",
+  "sezioni/mappe/radiante.js",
+  "sezioni/mappe/folgorante.js",
+  "sezioni/mappe/glaciale.js",
+  "sezioni/mappe/oscuro.js",
+  "sezioni/mappe/ramsgate.js",
+  "sezioni/mappe/vecchia.js",
+  "sezioni/mappe/maelstrom.js",
+  "js/mappe-apertura.js",
+  "js/maelstrom-apertura.js",
+  "js/mappe-politiche.js",
+  "js/mappe-rilievo.js",
+  "js/ramsgate.js",
+  "js/isola-vecchia.js",
+  "js/mappe-effetti.js"
+])</script>
 
-<!-- ===== Easter egg: isola sconosciuta (Vecchia Ramsgate) ===== -->
-<script src="sezioni/mappe/vecchia.js"></script>
 
-<!-- ===== Vista del Maelstrom ===== -->
-<script src="sezioni/mappe/maelstrom.js"></script>
-<script src="js/mappe-apertura.js"></script>
-
-
-<script src="js/maelstrom-apertura.js"></script>
 <link rel="stylesheet" href="css/12-schermo-intero.css" id="bfs-css">
 <script src="js/schermo-intero.js"></script>
 <link rel="stylesheet" href="css/13-mappe-politiche.css" id="polmap-css">
 <link rel="stylesheet" href="css/17-mappe-effetti.css">
 <link rel="stylesheet" href="css/18-sync-giocatori.css">
-<script src="js/mappe-politiche.js"></script>
-<script src="js/mappe-rilievo.js" id="relief-js"></script>
-<script src="js/ramsgate.js" id="rams-js"></script>
 <link rel="stylesheet" href="css/14-isola-vecchia.css" id="vr-css">
-<script src="js/isola-vecchia.js" id="vr-js"></script>
 <script src="js/hero-animazione.js" id="hero-anim-js"></script>
 <div class="mae-ov" id="mae-ov" role="dialog" aria-modal="true" aria-labelledby="mae-n" hidden>
  <div class="mae-box">
@@ -190,7 +191,6 @@ function tcjSezione(h){var s=document.currentScript;s.insertAdjacentHTML("before
 <script src="js/sync-giocatori.js"></script>
 <script src="js/master-accesso.js"></script>
 <script src="js/master-dati.js"></script>
-<script src="js/mappe-effetti.js"></script>
 <script src="js/particelle-sfondo.js"></script>
 </body>
 </html>

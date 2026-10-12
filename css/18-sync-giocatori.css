@@ -111,3 +111,6 @@
 .npc-clear:hover{background:rgba(200,56,56,.15)}
 .npc-x{background:transparent;border:1px solid rgba(200,56,56,.25);color:#a08080;width:1.8rem;height:1.8rem;cursor:pointer;font-size:.75rem}
 .npc-x:hover{color:#ff8a7a;border-color:rgba(255,120,100,.5)}
+
+/* mentre una mappa toccata troppo presto sta arrivando */
+html.tcj-attesa, html.tcj-attesa *{cursor:progress!important}
