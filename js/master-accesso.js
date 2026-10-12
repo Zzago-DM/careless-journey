@@ -70,9 +70,12 @@
         var mb = document.getElementById("mbtn"); if(mb){ mb.textContent = "🔒 Master"; mb.classList.remove("unlocked"); }
         try{ paRefresh(); paTheme(); slRender(); sfxPlay("off"); }catch(_){}
         window.scrollTo({ top: 0, behavior: "smooth" });
-      } else if(confirm("Togliere il token del Master e i contenuti della Zona Master da questo dispositivo?")){
-        ["tcjgh_master","tcjgh_mcache","tcjgh_mlock","tcjgh_mfirst"].forEach(function(k){ try{ localStorage.removeItem(k); }catch(_){} });
-        location.reload();
+      } else {
+        tcjConferma({titolo:"Scollegare questo dispositivo?",testo:"Da questo dispositivo verranno tolti il <b>token del Master</b> e i contenuti della <b>Zona Master</b>.<br><br>Niente viene cancellato online: i dati restano su GitHub. Per riaprire la Zona Master qui dovrai però incollare di nuovo il token.",si:"Sì, scollega"}).then(function(ok){
+          if(!ok) return;
+          ["tcjgh_master","tcjgh_mcache","tcjgh_mlock","tcjgh_mfirst"].forEach(function(k){ try{ localStorage.removeItem(k); }catch(_){} });
+          location.reload();
+        });
       }
     });
   }

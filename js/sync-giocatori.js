@@ -310,7 +310,10 @@
     ov.hidden = false;
     var tok = document.getElementById("gh-tok"); tok.focus(); if(s.token) tok.select();
     document.getElementById("gh-no").onclick = chiudi;
-    if(s.token) document.getElementById("gh-off").onclick = function(){ _orig.removeItem.call(localStorage, "tcjgh_"+k); chiudi(); disegna(); avviso("Scollegato: l'area resta salvata in questo browser."); };
+    if(s.token) document.getElementById("gh-off").onclick = function(){
+      tcjConferma({titolo:"Scollegare questo dispositivo?",testo:"Da questo dispositivo verrà tolto il <b>token di "+NOMI[k]+"</b>: l'area non si salverà più online da qui.<br><br>L'area resta salvata in questo browser e online non viene cancellato niente. Per ricollegarti dovrai incollare di nuovo il token.",si:"Sì, scollega"}).then(function(ok){
+        if(!ok) return; _orig.removeItem.call(localStorage, "tcjgh_"+k); chiudi(); disegna(); avviso("Scollegato: l'area resta salvata in questo browser."); });
+    };
     document.getElementById("gh-ok").onclick = function(){
       var t = tok.value.trim(), r = document.getElementById("gh-repo").value.trim().replace(/^https?:\/\/github\.com\//,"").replace(/\/+$/,"");
       if(t === "••••••••") t = s.token;
@@ -381,7 +384,7 @@
         disegnaMaster(); disegna(); CH.forEach(function(c){ scaricaAll(c, true); });
       });
     }
-    else if(a === "scollega"){ if(!confirm("Togliere il token del Master e i contenuti della Zona Master da questo dispositivo?")) return; ["tcjgh_master","tcjgh_mcache","tcjgh_mlock","tcjgh_mfirst"].forEach(function(x){ _orig.removeItem.call(localStorage, x); }); location.reload(); }
+    else if(a === "scollega"){ tcjConferma({titolo:"Scollegare questo dispositivo?",testo:"Da questo dispositivo verranno tolti il <b>token del Master</b> e i contenuti della <b>Zona Master</b>.<br><br>Niente viene cancellato online: i dati restano su GitHub. Per riaprire la Zona Master qui dovrai però incollare di nuovo il token.",si:"Sì, scollega"}).then(function(ok){ if(!ok) return; ["tcjgh_master","tcjgh_mcache","tcjgh_mlock","tcjgh_mfirst"].forEach(function(x){ _orig.removeItem.call(localStorage, x); }); location.reload(); }); }
     else if(a === "tutte") CH.forEach(function(c){ scaricaManuale(c); });
     else if(a === "scarica") scaricaManuale(k);
     else if(a === "salva") caricaOnline(k);

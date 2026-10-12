@@ -117,3 +117,20 @@ html.tcj-attesa, html.tcj-attesa *{cursor:progress!important}
 
 /* Master: riapre l'area di un giocatore senza password */
 .pa-gate-mbtn{margin-top:.6rem;background:rgba(200,72,72,.12)!important;border-color:rgba(255,96,96,.45)!important;color:#ffb0b0!important}
+
+/* schermata di conferma (js/conferma.js) */
+.tcj-conf{position:fixed;inset:0;z-index:6000;display:flex;align-items:center;justify-content:center;padding:1rem;background:rgba(4,6,10,.72);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;transition:opacity .2s ease}
+.tcj-conf.on{opacity:1}
+.tcj-conf-box{width:min(420px,100%);background:var(--bg2,#0d1018);border:1px solid rgba(255,96,96,.45);box-shadow:0 18px 60px rgba(0,0,0,.6),0 0 0 1px rgba(200,72,72,.15) inset;padding:1.6rem 1.4rem 1.3rem;text-align:center;transform:translateY(10px) scale(.98);transition:transform .2s ease}
+.tcj-conf.on .tcj-conf-box{transform:none}
+.tcj-conf-ic{width:3rem;height:3rem;margin:0 auto .7rem;border:1px solid rgba(255,96,96,.55);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:#ff8080}
+.tcj-conf-t{font-family:"Cinzel",serif;font-size:1.02rem;font-weight:700;color:#ffb0b0;margin-bottom:.7rem}
+.tcj-conf-s{font-size:.92rem;line-height:1.6;color:var(--text,#d0c8b8);margin-bottom:1.3rem}
+.tcj-conf-s b{color:#fff;font-weight:600}
+.tcj-conf-b{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.tcj-conf-b button{font-family:"Cinzel",serif;font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;padding:.7rem 1.2rem;cursor:pointer;min-width:9.5rem;flex:1 1 9.5rem;transition:background .2s,opacity .2s}
+.tcj-conf-no{background:rgba(var(--gold-rgb,200,168,75),.12);border:1px solid var(--gold3,#a07830);color:var(--gold2,#e8c870)}
+.tcj-conf-no:hover{background:rgba(var(--gold-rgb,200,168,75),.22)}
+.tcj-conf-si{background:rgba(200,72,72,.18);border:1px solid rgba(255,96,96,.6);color:#ffb0b0}
+.tcj-conf-si:hover:not(:disabled){background:rgba(200,72,72,.32)}
+.tcj-conf-si:disabled{opacity:.45;cursor:not-allowed}
