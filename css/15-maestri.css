@@ -32,3 +32,10 @@
 .mae-nav button:hover,.mae-nav button:focus-visible{border-color:var(--gold3);color:var(--gold)}
 @media (max-width:640px){.mae-box{grid-template-columns:1fr;padding:1.2rem;gap:1rem}.mae-ph{width:min(220px,62%);justify-self:center}}
 @media (prefers-reduced-motion:reduce){.mae-ov,.mae-box,.mae-it,.mae-ph img{transition:none}}
+/* Il Governatore: una scheda sola, più larga, con il ritratto */
+.mae-capo-list{grid-template-columns:minmax(0,520px);justify-content:center}
+.mae-it.mae-capo{flex-direction:row;align-items:center;gap:1rem;padding:.9rem 1.2rem;border-color:var(--gold3);background:linear-gradient(90deg,rgba(var(--gold-rgb),.08),transparent)}
+.mae-capo-ico{flex:none;width:64px;height:64px;border-radius:50%;overflow:hidden;border:1px solid var(--gold3);background:radial-gradient(circle at 50% 40%,rgba(var(--gold-rgb),.18),transparent 70%),#0d0b08}
+.mae-capo-ico img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(2.4);transform-origin:61% 8%}
+.mae-capo-t{display:flex;flex-direction:column;gap:.25rem;min-width:0}
+.mae-capo .ct{font-size:1.25rem}
