@@ -2,6 +2,7 @@
    - L'elenco completo (anche chi è ancora nascosto) sta nel repository privato tcj-master:
        incontri/personaggi.json   i personaggi, con le note del Master e i segni «visibile ai giocatori»
        incontri/foto/             la galleria delle foto originali
+   - Ogni personaggio può avere più foto (es. un gruppo di Slayer): la prima è quella dell'elenco.
    - «Pubblica sul sito» copia nel sito pubblico SOLO quello che è segnato come visibile:
        dati/incontri.json e le foto già ritagliate in img/incontri/, in un'unica modifica.
    Funziona solo dove la Zona Master è aperta con il token del Master. */
@@ -55,15 +56,19 @@
 
   /* ---------- dati ---------- */
   var D = { v: 1, personaggi: [], fazioni: [], tag: [], pubblicato: null }, sha = null, sel = null, filtro = "";
-  var sporco = false, timer = null, occupato = false;
+  var sporco = false, timer = null, occupato = false, fi = 0;   /* fi = foto scelta del personaggio aperto */
   function nuovo(){
     return { id: uid(), nome: "", continente: "ramsgate", stato: "vivo", fazioni: [], tag: [], pres: "", note: "",
-      foto: null, vis: { mostra: false, foto: false, pres: true, stato: false, fazioni: false, tag: false } };
+      foti: [], vis: { mostra: false, foto: false, pres: true, stato: false, fazioni: false, tag: false } };
   }
   function pulisci(p){
+    if(p.foto && !p.foti) p.foti = [p.foto];          /* elenchi vecchi: una sola foto */
+    delete p.foto;
     var n = nuovo(); Object.keys(n).forEach(function(k){ if(p[k] === undefined) p[k] = n[k]; });
     p.vis = Object.assign(n.vis, p.vis || {});
     if(!Array.isArray(p.fazioni)) p.fazioni = []; if(!Array.isArray(p.tag)) p.tag = [];
+    if(!Array.isArray(p.foti)) p.foti = [];
+    p.foti = p.foti.filter(function(f){ return f && f.file; });
     return p;
   }
   function trova(id){ for(var i = 0; i < D.personaggi.length; i++) if(D.personaggi[i].id === id) return D.personaggi[i]; return null; }
@@ -131,10 +136,13 @@
     immagini[nome] = pr; pr.catch(function(){ delete immagini[nome]; });
     return pr;
   }
-  /* disegna la foto ritagliata: z = ingrandimento (1 = riempie la cornice), ox/oy = spostamento (frazioni della cornice) */
+  /* disegna la foto ritagliata: z = ingrandimento (1 = riempie la cornice, meno di 1 = si vede tutta), ox/oy = spostamento (frazioni della cornice) */
+  function zMin(im, w, h){ var a = w / im.naturalWidth, b = h / im.naturalHeight; return Math.min(a, b) / Math.max(a, b); }
   function limita(f, im, w, h){
+    if(f.auto){ f.z = im.naturalWidth > im.naturalHeight ? zMin(im, w, h) : 1; delete f.auto; }   /* foto larghe (gruppi): all'inizio si vede tutta */
+    f.z = Math.max(zMin(im, w, h), Math.min(4, f.z || 1));
     var s = Math.max(w / im.naturalWidth, h / im.naturalHeight) * f.z;
-    var mx = Math.max(0, (im.naturalWidth * s - w) / 2 / w), my = Math.max(0, (im.naturalHeight * s - h) / 2 / h);
+    var mx = Math.abs(im.naturalWidth * s - w) / 2 / w, my = Math.abs(im.naturalHeight * s - h) / 2 / h;
     f.ox = Math.max(-mx, Math.min(mx, f.ox || 0)); f.oy = Math.max(-my, Math.min(my, f.oy || 0));
   }
   function disegnaFoto(cv, im, f){
@@ -190,7 +198,7 @@
     l.forEach(function(p){
       var c = cont(p.continente);
       h += '<button type="button" role="listitem" class="ie-it' + (p.id === sel ? " on" : "") + '" data-id="' + p.id + '">'
-        + '<span class="ie-av">' + (p.foto ? '<canvas width="64" height="80" data-f="' + esc(p.foto.file) + '"></canvas>' : sole("ie-sole")) + '</span>'
+        + '<span class="ie-av">' + (p.foti.length ? '<canvas width="64" height="80" data-f="' + esc(p.foti[0].file) + '"></canvas>' : sole("ie-sole")) + '</span>'
         + '<span class="ie-it-t"><span class="ie-it-n">' + esc(p.nome || "Senza nome") + '</span>'
         + '<span class="ie-it-c"><i style="background:' + c[2] + '"></i>' + esc(c[1]) + '</span></span>'
         + '<span class="ie-occhio' + (p.vis.mostra ? " on" : "") + '" title="' + (p.vis.mostra ? "Visibile ai giocatori" : "Nascosto ai giocatori") + '">' + (p.vis.mostra ? "👁" : "◌") + '</span></button>';
@@ -198,7 +206,7 @@
     $("ie-lista").innerHTML = h || '<div class="ie-vuoto">' + (q ? "Nessun personaggio corrisponde." : "Ancora nessun personaggio: inizia con «＋ Nuovo personaggio».") + '</div>';
     $("ie-lista").querySelectorAll("canvas[data-f]").forEach(function(cv){
       var p = trova(cv.parentNode.parentNode.getAttribute("data-id"));
-      immagine(cv.getAttribute("data-f")).then(function(im){ var f = Object.assign({}, p.foto); disegnaFoto(cv, im, f); }).catch(function(){});
+      immagine(cv.getAttribute("data-f")).then(function(im){ var f = Object.assign({}, p.foti[0]); limita(f, im, cv.width, cv.height); disegnaFoto(cv, im, f); }).catch(function(){});
     });
   }
 
@@ -218,13 +226,26 @@
   function disegnaForm(){
     var f = $("ie-form"), p = trova(sel);
     if(!p){ f.innerHTML = '<div class="ie-vuoto ie-vuoto-g">' + sole("ie-sole-g") + '<p>Scegli un personaggio dall\'elenco, o creane uno nuovo.</p></div>'; return; }
+    fi = Math.max(0, Math.min(fi, p.foti.length - 1));
+    var fs = p.foti[fi] || null, tante = p.foti.length > 1;
     var h = '<div class="ie-fgrid"><div class="ie-col-foto">'
-      + (p.foto ? '<div class="ie-cornice" id="ie-cornice"><canvas id="ie-cv" width="' + W / 2 + '" height="' + H / 2 + '" aria-label="Foto: trascina per spostarla"></canvas></div>'
+      + (fs ? '<div class="ie-cornice" id="ie-cornice"><canvas id="ie-cv" width="' + W / 2 + '" height="' + H / 2 + '" aria-label="Foto ' + (fi + 1) + ': trascina per spostarla"></canvas></div>'
         : '<button type="button" class="ie-cornice ie-cornice-vuota" id="ie-cornice-v" aria-label="Scegli una foto dalla galleria">' + sole("ie-sole-f") + '<span>Tocca per scegliere una foto</span></button>');
-    if(p.foto) h += '<label class="ie-lbl" for="ie-zoom">Ingrandimento</label><input type="range" id="ie-zoom" min="1" max="4" step="0.01" value="' + (p.foto.z || 1) + '">'
-      + '<div class="ie-nota">Trascina la foto per spostarla. Rotella o pizzico per ingrandire.</div>';
-    h += '<div class="ie-fbtn"><button type="button" class="ie-btn ie-gal-b" id="ie-gal">🖼 ' + (p.foto ? "Cambia foto" : "Scegli dalla galleria") + '</button>'
-      + (p.foto ? '<button type="button" class="ie-btn ie-soft" id="ie-nofoto">Togli la foto</button>' : '') + '</div></div>'
+    if(fs){
+      h += '<div class="ie-strip" role="group" aria-label="Foto del personaggio">';
+      p.foti.forEach(function(x, i){
+        h += '<button type="button" class="ie-th' + (i === fi ? " on" : "") + '" data-fi="' + i + '" aria-pressed="' + (i === fi) + '" aria-label="Foto ' + (i + 1) + (i === 0 ? ", quella dell\'elenco" : "") + '">'
+          + '<canvas width="88" height="110" data-tf="' + esc(x.file) + '"></canvas>' + (i === 0 ? '<span class="ie-th-p" aria-hidden="true">★</span>' : '') + '</button>';
+      });
+      h += '<button type="button" class="ie-th ie-th-add" id="ie-addfoto" aria-label="Aggiungi un\'altra foto" title="Aggiungi un\'altra foto">＋</button></div>';
+      if(tante) h += '<div class="ie-nota">La foto con la ★ è quella che si vede nell\'elenco.</div>';
+      h += '<label class="ie-lbl" for="ie-zoom">Ingrandimento</label><input type="range" id="ie-zoom" min="0.2" max="4" step="0.01" value="' + (fs.z || 1) + '">'
+        + '<div class="ie-nota">Trascina la foto per spostarla. Rotella o pizzico per ingrandire; tutto a sinistra per vederla intera.</div>';
+    }
+    h += '<div class="ie-fbtn"><button type="button" class="ie-btn ie-gal-b" id="ie-gal">🖼 ' + (fs ? (tante ? "Cambia questa foto" : "Cambia foto") : "Scegli dalla galleria") + '</button>'
+      + (fs ? '<button type="button" class="ie-btn" id="ie-addfoto2">＋ Aggiungi un\'altra foto</button>' : '')
+      + (fi > 0 ? '<button type="button" class="ie-btn ie-soft" id="ie-prima">★ Mettila per prima</button>' : '')
+      + (fs ? '<button type="button" class="ie-btn ie-soft" id="ie-nofoto">' + (tante ? "Togli questa foto" : "Togli la foto") + '</button>' : '') + '</div></div>'
       + '<div class="ie-col-dati">'
       + '<label class="ie-lbl" for="ie-nome">Nome</label><input type="text" id="ie-nome" class="ie-in ie-big" value="' + esc(p.nome) + '" placeholder="Nome del personaggio">'
       + '<div class="ie-riga"><div><label class="ie-lbl" for="ie-cont">Continente</label><select id="ie-cont" class="ie-in">';
@@ -241,14 +262,19 @@
     VIS.forEach(function(v){ h += '<label class="ie-sw"><input type="checkbox" data-vis="' + v[0] + '"' + (p.vis[v[0]] ? " checked" : "") + (p.vis.mostra ? "" : " disabled") + '><span></span>' + v[1] + '</label>'; });
     h += '</div></div><div class="ie-fondo"><button type="button" class="ie-btn ie-del" id="ie-del">🗑 Elimina personaggio</button></div></div></div>';
     f.innerHTML = h;
-    if(p.foto) preparaRitaglio(p);
+    if(fs) preparaRitaglio(fs);
+    f.querySelectorAll("canvas[data-tf]").forEach(function(cv){
+      var x = p.foti[+cv.parentNode.getAttribute("data-fi")];
+      immagine(x.file).then(function(im){ var c = Object.assign({}, x); limita(c, im, cv.width, cv.height); disegnaFoto(cv, im, c); }).catch(function(){});
+    });
   }
 
-  function preparaRitaglio(p){
+  function preparaRitaglio(fo){
     var cv = $("ie-cv"), z = $("ie-zoom"), im = null;
-    immagine(p.foto.file).then(function(i){ im = i; limita(p.foto, im, cv.width, cv.height); disegnaFoto(cv, im, p.foto); })
-      .catch(function(){ var c = cv.getContext("2d"); c.fillStyle = "#4a2020"; c.fillRect(0, 0, cv.width, cv.height); stato("Non riesco ad aprire la foto " + p.foto.file, true); });
-    function ridisegna(){ if(!im) return; limita(p.foto, im, cv.width, cv.height); disegnaFoto(cv, im, p.foto); }
+    immagine(fo.file).then(function(i){ im = i; var era = fo.auto; if(z) z.min = Math.min(1, zMin(im, cv.width, cv.height)).toFixed(3); ridisegna(); if(era){ cambiato(); disegnaLista(); } })
+      .catch(function(){ var c = cv.getContext("2d"); c.fillStyle = "#4a2020"; c.fillRect(0, 0, cv.width, cv.height); stato("Non riesco ad aprire la foto " + fo.file, true); });
+    function ridisegna(){ if(!im) return; limita(fo, im, cv.width, cv.height); disegnaFoto(cv, im, fo); if(z) z.value = fo.z; disegnaMiniatura(); }
+    function disegnaMiniatura(){ var t = document.querySelector('.ie-th[data-fi="' + fi + '"] canvas'); if(t && im){ var c = Object.assign({}, fo); limita(c, im, t.width, t.height); disegnaFoto(t, im, c); } }
     var tocchi = {}, inizio = null;
     cv.addEventListener("pointerdown", function(e){ cv.setPointerCapture(e.pointerId); tocchi[e.pointerId] = { x: e.clientX, y: e.clientY }; inizio = null; });
     cv.addEventListener("pointermove", function(e){
@@ -258,30 +284,32 @@
         var a = tocchi[ids[0]], b = tocchi[ids[1]];
         tocchi[e.pointerId] = { x: e.clientX, y: e.clientY };
         var d = Math.hypot(a.x - b.x, a.y - b.y);
-        if(inizio === null) inizio = { d: d, z: p.foto.z };
-        p.foto.z = Math.max(1, Math.min(4, inizio.z * d / (inizio.d || 1)));
-        if(z) z.value = p.foto.z;
+        if(inizio === null) inizio = { d: d, z: fo.z };
+        fo.z = Math.min(4, inizio.z * d / (inizio.d || 1));
+        if(z) z.value = fo.z;
       } else {
         var t = tocchi[e.pointerId];
-        p.foto.ox += (e.clientX - t.x) / r.width; p.foto.oy += (e.clientY - t.y) / r.height;
+        fo.ox += (e.clientX - t.x) / r.width; fo.oy += (e.clientY - t.y) / r.height;
         tocchi[e.pointerId] = { x: e.clientX, y: e.clientY };
       }
       ridisegna();
     });
     function fine(e){ if(tocchi[e.pointerId]){ delete tocchi[e.pointerId]; inizio = null; cambiato(); disegnaLista(); } }
     cv.addEventListener("pointerup", fine); cv.addEventListener("pointercancel", fine);
-    cv.addEventListener("wheel", function(e){ e.preventDefault(); p.foto.z = Math.max(1, Math.min(4, p.foto.z * (e.deltaY < 0 ? 1.06 : 0.94))); if(z) z.value = p.foto.z; ridisegna(); clearTimeout(cv._t); cv._t = setTimeout(function(){ cambiato(); disegnaLista(); }, 400); }, { passive: false });
-    if(z) z.addEventListener("input", function(){ p.foto.z = +z.value; ridisegna(); });
+    cv.addEventListener("wheel", function(e){ e.preventDefault(); fo.z = Math.min(4, fo.z * (e.deltaY < 0 ? 1.06 : 0.94)); if(z) z.value = fo.z; ridisegna(); clearTimeout(cv._t); cv._t = setTimeout(function(){ cambiato(); disegnaLista(); }, 400); }, { passive: false });
+    if(z) z.addEventListener("input", function(){ fo.z = +z.value; ridisegna(); });
     if(z) z.addEventListener("change", function(){ cambiato(); disegnaLista(); });
   }
 
   function disegna(){ disegnaLista(); disegnaForm(); }
 
   /* galleria: tutte le foto, con quelle già usate segnate; riusarne una chiede conferma */
-  var gOv = null, gSolo = "tutte", gObs = null;
-  function chiLaUsa(nome){ return D.personaggi.filter(function(x){ return x.foto && x.foto.file === nome; }); }
-  function apriGalleria(){
+  var gOv = null, gSolo = "tutte", gObs = null, gModo = "cambia";   /* gModo: "cambia" la foto scelta o "aggiungi" una nuova */
+  function haFoto(x, nome){ return x.foti.some(function(f){ return f.file === nome; }); }
+  function chiLaUsa(nome){ return D.personaggi.filter(function(x){ return haFoto(x, nome); }); }
+  function apriGalleria(modo){
     var p = trova(sel); if(!p) return;
+    gModo = (modo === "aggiungi" || !p.foti.length) ? "aggiungi" : "cambia";
     if(!gOv){
       gOv = document.createElement("div"); gOv.className = "ie-gov"; gOv.setAttribute("role", "dialog"); gOv.setAttribute("aria-modal", "true"); gOv.setAttribute("aria-labelledby", "ie-gt");
       gOv.innerHTML = '<div class="ie-gbox"><div class="ie-gtop"><strong id="ie-gt">Galleria</strong>'
@@ -298,10 +326,13 @@
         var q = trova(sel); if(!q) return;
         var nome = b.getAttribute("data-g"), altri = chiLaUsa(nome).filter(function(x){ return x.id !== q.id; });
         var scegli = function(){
-          q.foto = { file: nome, z: 1, ox: 0, oy: 0 }; if(q.vis.mostra) q.vis.foto = true;
+          var nf = { file: nome, z: 1, ox: 0, oy: 0, auto: 1 };
+          if(gModo === "aggiungi"){ q.foti.push(nf); fi = q.foti.length - 1; } else q.foti[fi] = nf;
+          if(q.vis.mostra) q.vis.foto = true;
           chiudiGalleria(); cambiato(); disegna(); suono("paper");
         };
-        if(q.foto && q.foto.file === nome){ chiudiGalleria(); return; }
+        var gia = q.foti.map(function(f){ return f.file; }).indexOf(nome);
+        if(gia >= 0){ fi = gia; chiudiGalleria(); disegnaForm(); return; }   /* è già sua: la apro */
         if(!altri.length){ scegli(); return; }
         var chi = altri.map(function(x){ return "<b>" + esc(x.nome || "Senza nome") + "</b>"; }).join(", ");
         var conf = typeof tcjConferma === "function"
@@ -314,7 +345,7 @@
       $("ie-gup").addEventListener("change", function(){ var fl = [].slice.call(this.files || []); this.value = ""; if(fl.length) caricaTante(fl); });
     }
     gOv.hidden = false; document.documentElement.style.overflow = "hidden";
-    $("ie-gt").textContent = "Galleria — foto per " + (p.nome || "il nuovo personaggio");
+    $("ie-gt").textContent = "Galleria — " + (gModo === "aggiungi" && p.foti.length ? "un'altra foto per " : "foto per ") + (p.nome || "il nuovo personaggio");
     $("ie-gq").value = ""; riempiGalleria(); try { $("ie-gq").focus(); } catch(_){}
   }
   function chiudiGalleria(){ gOv.hidden = true; document.documentElement.style.overflow = ""; var b = $("ie-gal") || $("ie-cornice-v"); if(b) try { b.focus(); } catch(_){} }
@@ -344,9 +375,9 @@
       if(!nuove.length) $("ie-gsub").textContent = l.length + " foto · " + (l.length - usate) + " libere · " + usate + " già assegnate";
       if(!v.length){ g.innerHTML = '<div class="ie-vuoto">' + (l.length ? (gSolo === "libere" ? "Nessuna foto libera: sono tutte assegnate." : "Nessuna foto corrisponde.") : "La galleria è vuota: carica le prime foto con «⬆ Carica foto».") + '</div>'; return; }
       g.innerHTML = v.map(function(n){
-        var u = chiLaUsa(n), mia = p && p.foto && p.foto.file === n, altri = u.filter(function(x){ return !p || x.id !== p.id; });
+        var u = chiLaUsa(n), mia = p && haFoto(p, n), altri = u.filter(function(x){ return !p || x.id !== p.id; });
         var cls = "ie-gi" + (mia ? " mia" : "") + (altri.length ? " usata" : "") + (nuove.indexOf(n) >= 0 ? " nuova" : "");
-        var badge = mia ? '<span class="ie-gbadge mia">✓ Questa</span>' : (altri.length ? '<span class="ie-gbadge">In uso: ' + esc(altri.map(function(x){ return x.nome || "Senza nome"; }).join(", ")) + '</span>' : (nuove.indexOf(n) >= 0 ? '<span class="ie-gbadge nuova">Nuova</span>' : ""));
+        var badge = mia ? '<span class="ie-gbadge mia">✓ Già sua</span>' : (altri.length ? '<span class="ie-gbadge">In uso: ' + esc(altri.map(function(x){ return x.nome || "Senza nome"; }).join(", ")) + '</span>' : (nuove.indexOf(n) >= 0 ? '<span class="ie-gbadge nuova">Nuova</span>' : ""));
         return '<button type="button" class="' + cls + '" data-g="' + esc(n) + '" aria-label="' + esc(n) + (altri.length ? ", già usata da " + esc(altri.map(function(x){ return x.nome; }).join(", ")) : "") + '">'
           + '<span class="ie-gimg"><img alt="" data-src="' + esc(n) + '">' + badge + '</span><span class="ie-gn">' + esc(n.replace(/\.[^.]+$/, "")) + '</span></button>';
       }).join("");
@@ -359,8 +390,8 @@
 
   /* ---------- eventi ---------- */
   $("ie-q").addEventListener("input", function(){ filtro = this.value; disegnaLista(); });
-  $("ie-new").addEventListener("click", function(){ var p = nuovo(); D.personaggi.push(p); sel = p.id; filtro = ""; $("ie-q").value = ""; cambiato(); disegna(); suono("paper"); try { $("ie-nome").focus(); } catch(_){} });
-  $("ie-lista").addEventListener("click", function(e){ var b = e.target.closest("[data-id]"); if(!b) return; sel = b.getAttribute("data-id"); disegna(); suono("paper"); });
+  $("ie-new").addEventListener("click", function(){ var p = nuovo(); D.personaggi.push(p); sel = p.id; fi = 0; filtro = ""; $("ie-q").value = ""; cambiato(); disegna(); suono("paper"); try { $("ie-nome").focus(); } catch(_){} });
+  $("ie-lista").addEventListener("click", function(e){ var b = e.target.closest("[data-id]"); if(!b) return; var id = b.getAttribute("data-id"); if(id !== sel) fi = 0; sel = id; disegna(); suono("paper"); });
   $("ie-pub").addEventListener("click", pubblica);
 
   var form = $("ie-form");
@@ -393,21 +424,24 @@
     if((b = e.target.closest("[data-agg]"))){ var c = b.getAttribute("data-agg"), inp = form.querySelector('[data-nuovo="' + c + '"]'); aggiungi(p, c, inp && inp.value); return; }
     if((b = e.target.closest("[data-usa]"))){ aggiungi(p, b.getAttribute("data-usa"), b.getAttribute("data-v")); return; }
     if((b = e.target.closest("[data-rm]"))){ p[b.getAttribute("data-rm")].splice(+b.getAttribute("data-i"), 1); cambiato(); disegnaForm(); return; }
-    if(e.target.closest("#ie-gal") || e.target.closest("#ie-cornice-v")){ apriGalleria(); return; }
-    if(e.target.closest("#ie-nofoto")){ p.foto = null; p.vis.foto = false; cambiato(); disegna(); return; }
+    if((b = e.target.closest("[data-fi]"))){ fi = +b.getAttribute("data-fi"); disegnaForm(); try { form.querySelector('[data-fi="' + fi + '"]').focus(); } catch(_){} return; }
+    if(e.target.closest("#ie-gal")){ apriGalleria("cambia"); return; }
+    if(e.target.closest("#ie-cornice-v") || e.target.closest("#ie-addfoto") || e.target.closest("#ie-addfoto2")){ apriGalleria("aggiungi"); return; }
+    if(e.target.closest("#ie-prima")){ var x = p.foti.splice(fi, 1)[0]; p.foti.unshift(x); fi = 0; cambiato(); disegna(); return; }
+    if(e.target.closest("#ie-nofoto")){ p.foti.splice(fi, 1); fi = Math.max(0, fi - 1); if(!p.foti.length) p.vis.foto = false; cambiato(); disegna(); return; }
     if(e.target.closest("#ie-del")){
       var chi = p.nome || "questo personaggio";
-      var conferma = typeof tcjConferma === "function" ? tcjConferma({ titolo: "Eliminare " + chi + "?", testo: "Il personaggio sparisce dall'elenco. Se era visibile, sparirà dal sito alla prossima pubblicazione.<br><br>La sua foto resta nella galleria.", si: "Sì, elimina" }) : Promise.resolve(confirm("Eliminare " + chi + "?"));
+      var conferma = typeof tcjConferma === "function" ? tcjConferma({ titolo: "Eliminare " + chi + "?", testo: "Il personaggio sparisce dall'elenco. Se era visibile, sparirà dal sito alla prossima pubblicazione.<br><br>Le sue foto restano nella galleria.", si: "Sì, elimina" }) : Promise.resolve(confirm("Eliminare " + chi + "?"));
       conferma.then(function(si){ if(!si) return; D.personaggi = D.personaggi.filter(function(x){ return x.id !== p.id; }); sel = null; cambiato(); disegna(); });
     }
   });
 
   /* ---------- pubblicazione: un'unica modifica sul sito ---------- */
   function hash(s){ var h = 2166136261; for(var i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); }
-  function fotoPubblica(p){
+  function fotoPubblica(fo){
     var cv = document.createElement("canvas"); cv.width = W; cv.height = H;
-    return immagine(p.foto.file).then(function(im){
-      var f = Object.assign({}, p.foto); limita(f, im, W, H); disegnaFoto(cv, im, f);
+    return immagine(fo.file).then(function(im){
+      var f = Object.assign({}, fo); limita(f, im, W, H); disegnaFoto(cv, im, f);
       return new Promise(function(ris){ cv.toBlob(ris, "image/webp", 0.86); });
     }).then(function(b){ return b.arrayBuffer(); }).then(function(buf){ return b64bytes(new Uint8Array(buf)); });
   }
@@ -422,9 +456,13 @@
       if(p.vis.pres && p.pres.trim()) o.pres = p.pres.trim();
       if(p.vis.fazioni && p.fazioni.length) o.fazioni = p.fazioni.slice();
       if(p.vis.tag && p.tag.length) o.tag = p.tag.slice();
-      if(p.vis.foto && p.foto){
-        var nome = p.id + "-" + hash(JSON.stringify([p.foto.file, +(p.foto.z || 1).toFixed(3), +(p.foto.ox || 0).toFixed(4), +(p.foto.oy || 0).toFixed(4)])) + ".webp";
-        o.foto = P_FOTO + "/" + nome; servono[nome] = p;
+      if(p.vis.foto && p.foti.length){
+        var percorsi = p.foti.map(function(f){
+          var nome = p.id + "-" + hash(JSON.stringify([f.file, +(f.z || 1).toFixed(3), +(f.ox || 0).toFixed(4), +(f.oy || 0).toFixed(4)])) + ".webp";
+          servono[nome] = f; return P_FOTO + "/" + nome;
+        });
+        o.foto = percorsi[0];                          /* la prima: elenco e pagine vecchie */
+        if(percorsi.length > 1) o.foti = percorsi;     /* tutte, per sfogliarle nella scheda */
       }
       dati.personaggi.push(o);
     });

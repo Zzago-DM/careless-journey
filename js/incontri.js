@@ -12,7 +12,7 @@
     ["ramsgate", "Ramsgate", "#c8a84b"], ["altrove", "Altrove", "var(--neutral)"]
   ];
   var STATI = { vivo: "Vivo", morto: "Morto", sconosciuto: "Sorte sconosciuta" };
-  var P = [], ord = "az", q = "", cur = -1, back = null, scelto = null;
+  var P = [], ord = "az", q = "", cur = -1, back = null, scelto = null, fk = 0;   /* fk = foto mostrata nella scheda aperta */
   try { if(localStorage.getItem("tcj-inc-ord") === "cont") ord = "cont"; } catch(e){}
 
   function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
@@ -80,9 +80,25 @@
     + '</div></div>';
   document.body.appendChild(ov);
   function ordinati(){ return Array.prototype.map.call(lista.querySelectorAll(".inc-card"), function(b){ return +b.getAttribute("data-i"); }); }
+  /* tutte le foto del personaggio: più foto quando è un gruppo (es. una squadra di Slayer) */
+  function album(p){ return (p.foti && p.foti.length) ? p.foti : (p.foto ? [p.foto] : []); }
+  function mostraFoto(k){
+    var p = P[cur]; if(!p) return; var a = album(p), ph = document.getElementById("inc-ph");
+    if(!a.length){ ph.innerHTML = '<div class="inc-ph-vuota">' + sole("inc-sole-xl") + '<span>Nessun ritratto</span></div>'; return; }
+    fk = (k + a.length) % a.length;
+    var h = '<img src="' + esc(a[fk]) + '" alt="Ritratto di ' + esc(p.nome) + (a.length > 1 ? ", foto " + (fk + 1) + " di " + a.length : "") + '">';
+    if(a.length > 1){
+      h += '<button type="button" class="inc-ph-b inc-ph-p" data-fk="' + (fk - 1) + '" aria-label="Foto precedente">‹</button>'
+        + '<button type="button" class="inc-ph-b inc-ph-n" data-fk="' + (fk + 1) + '" aria-label="Foto successiva">›</button><div class="inc-ph-dots">';
+      a.forEach(function(_, j){ h += '<button type="button" class="inc-ph-dot' + (j === fk ? " on" : "") + '" data-fk="' + j + '" aria-label="Foto ' + (j + 1) + ' di ' + a.length + '"' + (j === fk ? ' aria-current="true"' : '') + '></button>'; });
+      h += '</div>';
+      a.forEach(function(u, j){ if(j !== fk){ var im = new Image(); im.src = u; } });   /* le altre arrivano subito */
+    }
+    ph.innerHTML = h;
+  }
   function riempi(i){
     cur = i; var p = P[i]; if(!p) return; var c = cont(p.continente);
-    document.getElementById("inc-ph").innerHTML = p.foto ? '<img src="' + esc(p.foto) + '" alt="Ritratto di ' + esc(p.nome) + '">' : '<div class="inc-ph-vuota">' + sole("inc-sole-xl") + '<span>Nessun ritratto</span></div>';
+    mostraFoto(0);
     document.getElementById("inc-r").innerHTML = '<i style="background:' + c[2] + '"></i>' + esc(c[1]) + (p.stato ? ' · <span class="inc-st s-' + esc(p.stato) + '">' + esc(STATI[p.stato] || p.stato) + '</span>' : '');
     document.getElementById("inc-n").textContent = p.nome;
     var ch = "";
@@ -135,6 +151,13 @@
   document.getElementById("inc-next").addEventListener("click", function(){ passa(1); });
   ov.addEventListener("click", function(e){
     if(e.target === ov){ chiudi(); return; }
+    var f = e.target.closest("[data-fk]");
+    if(f){
+      var tipo = f.classList.contains("inc-ph-p") ? ".inc-ph-p" : f.classList.contains("inc-ph-n") ? ".inc-ph-n" : null;
+      mostraFoto(+f.getAttribute("data-fk")); suono("swish");
+      var t = document.querySelector(tipo ? ".inc-ph " + tipo : '.inc-ph-dot[data-fk="' + fk + '"]'); if(t) t.focus();   /* il fuoco resta dov'era */
+      return;
+    }
     var b = e.target.closest("[data-pg]");
     if(b && b.classList.contains("inc-chi-b")){ scelto = b.getAttribute("data-pg"); disegnaNote(P[cur]); return; }
     if(e.target.closest("#inc-vai")){ chiudi(); var s = document.getElementById("scheda"); if(s) s.scrollIntoView({ behavior: "smooth" }); }
