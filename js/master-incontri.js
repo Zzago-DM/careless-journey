@@ -3,6 +3,7 @@
        incontri/personaggi.json   i personaggi, con le note del Master e i segni «visibile ai giocatori»
        incontri/foto/             la galleria delle foto originali
    - Ogni personaggio può avere più foto (es. un gruppo di Slayer): la prima è quella dell'elenco.
+   - Per ogni foto si sceglie la versione senza sfondo (incontri/foto/) o con sfondo (incontri/originali/, stesso nome).
    - «Pubblica sul sito» copia nel sito pubblico SOLO quello che è segnato come visibile:
        dati/incontri.json e le foto già ritagliate in img/incontri/, in un'unica modifica.
    Funziona solo dove la Zona Master è aperta con il token del Master. */
@@ -10,7 +11,7 @@
   var box = document.getElementById("inc-ed");
   if(!box) return;
   var OWNER = "Zzago-DM", PRIV = OWNER + "/tcj-master", SITO = OWNER + "/careless-journey", RAMO = "main";
-  var F_DATI = "incontri/personaggi.json", D_FOTO = "incontri/foto";
+  var F_DATI = "incontri/personaggi.json", D_FOTO = "incontri/foto", D_ORIG = "incontri/originali";
   var P_DATI = "dati/incontri.json", P_FOTO = "img/incontri";
   var LOC = "tcj-mincontri";
   var CONT = [
@@ -116,7 +117,7 @@
   }
 
   /* ---------- foto: galleria, caricamento, ritaglio ---------- */
-  var galleria = null, immagini = {};
+  var galleria = null, originali = null, immagini = {};
   function elencoFoto(){
     if(galleria) return Promise.resolve(galleria);
     return gh(PRIV, "GET", "/contents/" + D_FOTO).then(function(r){
@@ -128,12 +129,20 @@
       return galleria;
     });
   }
-  function immagine(nome){
-    if(immagini[nome]) return immagini[nome];
-    var pr = gh(PRIV, "GET", "/contents/" + D_FOTO + "/" + encodeURIComponent(nome), null, true).then(ok)
+  /* le foto con lo sfondo: stessi nomi della galleria, in un'altra cartella */
+  function elencoOriginali(){
+    if(originali) return Promise.resolve(originali);
+    return gh(PRIV, "GET", "/contents/" + D_ORIG).then(function(r){ return r.status === 404 ? [] : ok(r).json(); })
+      .then(function(l){ originali = (l || []).filter(function(f){ return f.type === "file"; }).map(function(f){ return f.name; }); return originali; });
+  }
+  function fonte(fo){ return immagine(fo.file, !!fo.sfondo); }
+  function immagine(nome, conSfondo){
+    var chiave = (conSfondo ? "s:" : "") + nome;
+    if(immagini[chiave]) return immagini[chiave];
+    var pr = gh(PRIV, "GET", "/contents/" + (conSfondo ? D_ORIG : D_FOTO) + "/" + encodeURIComponent(nome), null, true).then(ok)
       .then(function(r){ return r.blob(); })
       .then(function(b){ return new Promise(function(ris, rif){ var im = new Image(); im.onload = function(){ ris(im); }; im.onerror = rif; im.src = URL.createObjectURL(b); }); });
-    immagini[nome] = pr; pr.catch(function(){ delete immagini[nome]; });
+    immagini[chiave] = pr; pr.catch(function(){ delete immagini[chiave]; });
     return pr;
   }
   /* disegna la foto ritagliata: z = ingrandimento (1 = riempie la cornice, meno di 1 = si vede tutta), ox/oy = spostamento (frazioni della cornice) */
@@ -206,7 +215,7 @@
     $("ie-lista").innerHTML = h || '<div class="ie-vuoto">' + (q ? "Nessun personaggio corrisponde." : "Ancora nessun personaggio: inizia con «＋ Nuovo personaggio».") + '</div>';
     $("ie-lista").querySelectorAll("canvas[data-f]").forEach(function(cv){
       var p = trova(cv.parentNode.parentNode.getAttribute("data-id"));
-      immagine(cv.getAttribute("data-f")).then(function(im){ var f = Object.assign({}, p.foti[0]); limita(f, im, cv.width, cv.height); disegnaFoto(cv, im, f); }).catch(function(){});
+      fonte(p.foti[0]).then(function(im){ var f = Object.assign({}, p.foti[0]); limita(f, im, cv.width, cv.height); disegnaFoto(cv, im, f); }).catch(function(){});
     });
   }
 
@@ -239,6 +248,10 @@
       });
       h += '<button type="button" class="ie-th ie-th-add" id="ie-addfoto" aria-label="Aggiungi un\'altra foto" title="Aggiungi un\'altra foto">＋</button></div>';
       if(tante) h += '<div class="ie-nota">La foto con la ★ è quella che si vede nell\'elenco.</div>';
+      h += '<div class="ie-lbl" id="ie-sf-t">Sfondo</div><div class="ie-sf" role="radiogroup" aria-labelledby="ie-sf-t">'
+        + '<button type="button" role="radio" class="ie-sf-b' + (fs.sfondo ? "" : " on") + '" aria-checked="' + !fs.sfondo + '" data-sf="0">Senza sfondo</button>'
+        + '<button type="button" role="radio" class="ie-sf-b' + (fs.sfondo ? " on" : "") + '" aria-checked="' + !!fs.sfondo + '" data-sf="1" id="ie-sf-con">Con sfondo</button></div>'
+        + '<div class="ie-nota" id="ie-sf-nota" hidden>Questa foto non ha la versione con lo sfondo.</div>';
       h += '<label class="ie-lbl" for="ie-zoom">Ingrandimento</label><input type="range" id="ie-zoom" min="0.2" max="4" step="0.01" value="' + (fs.z || 1) + '">'
         + '<div class="ie-nota">Trascina la foto per spostarla. Rotella o pizzico per ingrandire; tutto a sinistra per vederla intera.</div>';
     }
@@ -262,17 +275,23 @@
     VIS.forEach(function(v){ h += '<label class="ie-sw"><input type="checkbox" data-vis="' + v[0] + '"' + (p.vis[v[0]] ? " checked" : "") + (p.vis.mostra ? "" : " disabled") + '><span></span>' + v[1] + '</label>'; });
     h += '</div></div><div class="ie-fondo"><button type="button" class="ie-btn ie-del" id="ie-del">🗑 Elimina personaggio</button></div></div></div>';
     f.innerHTML = h;
-    if(fs) preparaRitaglio(fs);
+    if(fs){
+      preparaRitaglio(fs);
+      elencoOriginali().then(function(l){   /* «Con sfondo» solo se la versione esiste */
+        if(l.indexOf(fs.file) >= 0 || fs.sfondo) return;
+        var b = $("ie-sf-con"), n = $("ie-sf-nota"); if(b) b.disabled = true; if(n) n.hidden = false;
+      }).catch(function(){});
+    }
     f.querySelectorAll("canvas[data-tf]").forEach(function(cv){
       var x = p.foti[+cv.parentNode.getAttribute("data-fi")];
-      immagine(x.file).then(function(im){ var c = Object.assign({}, x); limita(c, im, cv.width, cv.height); disegnaFoto(cv, im, c); }).catch(function(){});
+      fonte(x).then(function(im){ var c = Object.assign({}, x); limita(c, im, cv.width, cv.height); disegnaFoto(cv, im, c); }).catch(function(){});
     });
   }
 
   function preparaRitaglio(fo){
     var cv = $("ie-cv"), z = $("ie-zoom"), im = null;
-    immagine(fo.file).then(function(i){ im = i; var era = fo.auto; if(z) z.min = Math.min(1, zMin(im, cv.width, cv.height)).toFixed(3); ridisegna(); if(era){ cambiato(); disegnaLista(); } })
-      .catch(function(){ var c = cv.getContext("2d"); c.fillStyle = "#4a2020"; c.fillRect(0, 0, cv.width, cv.height); stato("Non riesco ad aprire la foto " + fo.file, true); });
+    fonte(fo).then(function(i){ im = i; var era = fo.auto; if(z) z.min = Math.min(1, zMin(im, cv.width, cv.height)).toFixed(3); ridisegna(); if(era){ cambiato(); disegnaLista(); } })
+      .catch(function(){ var c = cv.getContext("2d"); c.fillStyle = "#4a2020"; c.fillRect(0, 0, cv.width, cv.height); stato("Non riesco ad aprire la foto " + fo.file + (fo.sfondo ? " con lo sfondo" : ""), true); });
     function ridisegna(){ if(!im) return; limita(fo, im, cv.width, cv.height); disegnaFoto(cv, im, fo); if(z) z.value = fo.z; disegnaMiniatura(); }
     function disegnaMiniatura(){ var t = document.querySelector('.ie-th[data-fi="' + fi + '"] canvas'); if(t && im){ var c = Object.assign({}, fo); limita(c, im, t.width, t.height); disegnaFoto(t, im, c); } }
     var tocchi = {}, inizio = null;
@@ -424,6 +443,7 @@
     if((b = e.target.closest("[data-agg]"))){ var c = b.getAttribute("data-agg"), inp = form.querySelector('[data-nuovo="' + c + '"]'); aggiungi(p, c, inp && inp.value); return; }
     if((b = e.target.closest("[data-usa]"))){ aggiungi(p, b.getAttribute("data-usa"), b.getAttribute("data-v")); return; }
     if((b = e.target.closest("[data-rm]"))){ p[b.getAttribute("data-rm")].splice(+b.getAttribute("data-i"), 1); cambiato(); disegnaForm(); return; }
+    if((b = e.target.closest("[data-sf]"))){ var fo = p.foti[fi], v = b.getAttribute("data-sf") === "1"; if(fo && !!fo.sfondo !== v){ if(v) fo.sfondo = true; else delete fo.sfondo; cambiato(); disegna(); } return; }
     if((b = e.target.closest("[data-fi]"))){ fi = +b.getAttribute("data-fi"); disegnaForm(); try { form.querySelector('[data-fi="' + fi + '"]').focus(); } catch(_){} return; }
     if(e.target.closest("#ie-gal")){ apriGalleria("cambia"); return; }
     if(e.target.closest("#ie-cornice-v") || e.target.closest("#ie-addfoto") || e.target.closest("#ie-addfoto2")){ apriGalleria("aggiungi"); return; }
@@ -440,7 +460,7 @@
   function hash(s){ var h = 2166136261; for(var i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); }
   function fotoPubblica(fo){
     var cv = document.createElement("canvas"); cv.width = W; cv.height = H;
-    return immagine(fo.file).then(function(im){
+    return fonte(fo).then(function(im){
       var f = Object.assign({}, fo); limita(f, im, W, H); disegnaFoto(cv, im, f);
       return new Promise(function(ris){ cv.toBlob(ris, "image/webp", 0.86); });
     }).then(function(b){ return b.arrayBuffer(); }).then(function(buf){ return b64bytes(new Uint8Array(buf)); });
@@ -458,7 +478,7 @@
       if(p.vis.tag && p.tag.length) o.tag = p.tag.slice();
       if(p.vis.foto && p.foti.length){
         var percorsi = p.foti.map(function(f){
-          var nome = p.id + "-" + hash(JSON.stringify([f.file, +(f.z || 1).toFixed(3), +(f.ox || 0).toFixed(4), +(f.oy || 0).toFixed(4)])) + ".webp";
+          var nome = p.id + "-" + hash(JSON.stringify([f.file, +(f.z || 1).toFixed(3), +(f.ox || 0).toFixed(4), +(f.oy || 0).toFixed(4)].concat(f.sfondo ? [1] : []))) + ".webp";
           servono[nome] = f; return P_FOTO + "/" + nome;
         });
         o.foto = percorsi[0];                          /* la prima: elenco e pagine vecchie */
