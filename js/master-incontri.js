@@ -219,11 +219,11 @@
     var f = $("ie-form"), p = trova(sel);
     if(!p){ f.innerHTML = '<div class="ie-vuoto ie-vuoto-g">' + sole("ie-sole-g") + '<p>Scegli un personaggio dall\'elenco, o creane uno nuovo.</p></div>'; return; }
     var h = '<div class="ie-fgrid"><div class="ie-col-foto">'
-      + '<div class="ie-cornice" id="ie-cornice">' + (p.foto ? '<canvas id="ie-cv" width="' + W / 2 + '" height="' + H / 2 + '" aria-label="Foto: trascina per spostarla"></canvas>' : sole("ie-sole-f")) + '</div>';
+      + (p.foto ? '<div class="ie-cornice" id="ie-cornice"><canvas id="ie-cv" width="' + W / 2 + '" height="' + H / 2 + '" aria-label="Foto: trascina per spostarla"></canvas></div>'
+        : '<button type="button" class="ie-cornice ie-cornice-vuota" id="ie-cornice-v" aria-label="Scegli una foto dalla galleria">' + sole("ie-sole-f") + '<span>Tocca per scegliere una foto</span></button>');
     if(p.foto) h += '<label class="ie-lbl" for="ie-zoom">Ingrandimento</label><input type="range" id="ie-zoom" min="1" max="4" step="0.01" value="' + (p.foto.z || 1) + '">'
       + '<div class="ie-nota">Trascina la foto per spostarla. Rotella o pizzico per ingrandire.</div>';
-    h += '<div class="ie-fbtn"><button type="button" class="ie-btn" id="ie-gal">🖼 Scegli dalla galleria</button>'
-      + '<label class="ie-btn ie-file">⬆ Carica una foto<input type="file" id="ie-up" accept="image/*" hidden></label>'
+    h += '<div class="ie-fbtn"><button type="button" class="ie-btn ie-gal-b" id="ie-gal">🖼 ' + (p.foto ? "Cambia foto" : "Scegli dalla galleria") + '</button>'
       + (p.foto ? '<button type="button" class="ie-btn ie-soft" id="ie-nofoto">Togli la foto</button>' : '') + '</div></div>'
       + '<div class="ie-col-dati">'
       + '<label class="ie-lbl" for="ie-nome">Nome</label><input type="text" id="ie-nome" class="ie-in ie-big" value="' + esc(p.nome) + '" placeholder="Nome del personaggio">'
@@ -277,38 +277,82 @@
 
   function disegna(){ disegnaLista(); disegnaForm(); }
 
-  /* galleria */
-  var gOv = null;
+  /* galleria: tutte le foto, con quelle già usate segnate; riusarne una chiede conferma */
+  var gOv = null, gSolo = "tutte", gObs = null;
+  function chiLaUsa(nome){ return D.personaggi.filter(function(x){ return x.foto && x.foto.file === nome; }); }
   function apriGalleria(){
     var p = trova(sel); if(!p) return;
     if(!gOv){
-      gOv = document.createElement("div"); gOv.className = "ie-gov"; gOv.setAttribute("role", "dialog"); gOv.setAttribute("aria-modal", "true"); gOv.setAttribute("aria-label", "Galleria delle foto");
-      gOv.innerHTML = '<div class="ie-gbox"><div class="ie-gtop"><strong>Galleria delle foto</strong><input type="search" class="ie-in" id="ie-gq" placeholder="Cerca per nome del file…"><button type="button" class="ie-x" id="ie-gx" aria-label="Chiudi">✕</button></div><div class="ie-ggrid" id="ie-ggrid"></div></div>';
+      gOv = document.createElement("div"); gOv.className = "ie-gov"; gOv.setAttribute("role", "dialog"); gOv.setAttribute("aria-modal", "true"); gOv.setAttribute("aria-labelledby", "ie-gt");
+      gOv.innerHTML = '<div class="ie-gbox"><div class="ie-gtop"><strong id="ie-gt">Galleria</strong>'
+        + '<input type="search" class="ie-in" id="ie-gq" placeholder="Cerca per nome del file…" aria-label="Cerca nella galleria">'
+        + '<div class="ie-gfil" role="radiogroup" aria-label="Quali foto mostrare"><button type="button" role="radio" data-gs="tutte">Tutte</button><button type="button" role="radio" data-gs="libere">Solo libere</button></div>'
+        + '<label class="ie-btn ie-gup">⬆ Carica foto<input type="file" id="ie-gup" accept="image/*" multiple hidden></label>'
+        + '<button type="button" class="ie-x" id="ie-gx" aria-label="Chiudi la galleria">✕</button></div>'
+        + '<div class="ie-gsub" id="ie-gsub" aria-live="polite"></div><div class="ie-ggrid" id="ie-ggrid"></div></div>';
       document.body.appendChild(gOv);
       gOv.addEventListener("click", function(e){
-        if(e.target === gOv || e.target.closest("#ie-gx")){ gOv.hidden = true; return; }
+        if(e.target === gOv || e.target.closest("#ie-gx")){ chiudiGalleria(); return; }
+        var f = e.target.closest("[data-gs]"); if(f){ gSolo = f.getAttribute("data-gs"); riempiGalleria(); return; }
         var b = e.target.closest("[data-g]"); if(!b) return;
         var q = trova(sel); if(!q) return;
-        q.foto = { file: b.getAttribute("data-g"), z: 1, ox: 0, oy: 0 };
-        if(q.vis.mostra) q.vis.foto = true;
-        gOv.hidden = true; cambiato(); disegna();
+        var nome = b.getAttribute("data-g"), altri = chiLaUsa(nome).filter(function(x){ return x.id !== q.id; });
+        var scegli = function(){
+          q.foto = { file: nome, z: 1, ox: 0, oy: 0 }; if(q.vis.mostra) q.vis.foto = true;
+          chiudiGalleria(); cambiato(); disegna(); suono("paper");
+        };
+        if(q.foto && q.foto.file === nome){ chiudiGalleria(); return; }
+        if(!altri.length){ scegli(); return; }
+        var chi = altri.map(function(x){ return "<b>" + esc(x.nome || "Senza nome") + "</b>"; }).join(", ");
+        var conf = typeof tcjConferma === "function"
+          ? tcjConferma({ titolo: "Foto già in uso", testo: "Questa foto è già assegnata a " + chi + ".<br><br>Vuoi usarla anche per <b>" + esc(q.nome || "questo personaggio") + "</b>?", si: "Sì, usala" })
+          : Promise.resolve(confirm("Questa foto è già in uso. Usarla anche qui?"));
+        conf.then(function(si){ if(si) scegli(); });
       });
-      gOv.addEventListener("keydown", function(e){ if(e.key === "Escape") gOv.hidden = true; });
+      gOv.addEventListener("keydown", function(e){ if(e.key === "Escape"){ e.stopPropagation(); chiudiGalleria(); } });
       $("ie-gq").addEventListener("input", riempiGalleria);
+      $("ie-gup").addEventListener("change", function(){ var fl = [].slice.call(this.files || []); this.value = ""; if(fl.length) caricaTante(fl); });
     }
-    gOv.hidden = false; $("ie-gq").value = ""; riempiGalleria(); try { $("ie-gq").focus(); } catch(_){}
+    gOv.hidden = false; document.documentElement.style.overflow = "hidden";
+    $("ie-gt").textContent = "Galleria — foto per " + (p.nome || "il nuovo personaggio");
+    $("ie-gq").value = ""; riempiGalleria(); try { $("ie-gq").focus(); } catch(_){}
   }
-  var gObs = null;
-  function riempiGalleria(){
-    var g = $("ie-ggrid"); g.innerHTML = '<div class="ie-vuoto">Apro la galleria…</div>';
+  function chiudiGalleria(){ gOv.hidden = true; document.documentElement.style.overflow = ""; var b = $("ie-gal") || $("ie-cornice-v"); if(b) try { b.focus(); } catch(_){} }
+  function caricaTante(fl){
+    var fatte = 0, ultimi = [];
+    $("ie-gsub").textContent = "Carico 0 di " + fl.length + "…";
+    fl.reduce(function(pr, f){
+      return pr.then(function(){ return caricaFoto(f).then(function(n){ ultimi.push(n); fatte++; $("ie-gsub").textContent = "Carico " + fatte + " di " + fl.length + "…"; }); });
+    }, Promise.resolve()).then(function(){
+      $("ie-gsub").textContent = fl.length === 1 ? "Foto aggiunta: toccala per sceglierla." : fl.length + " foto aggiunte alla galleria.";
+      riempiGalleria(ultimi);
+    }).catch(function(e){ $("ie-gsub").textContent = msgErr(e); riempiGalleria(ultimi); });
+  }
+  function riempiGalleria(nuove){
+    nuove = Array.isArray(nuove) ? nuove : [];
+    var g = $("ie-ggrid"), p = trova(sel);
+    gOv.querySelectorAll("[data-gs]").forEach(function(b){ var on = b.getAttribute("data-gs") === gSolo; b.classList.toggle("on", on); b.setAttribute("aria-checked", on); });
+    if(!g.children.length) g.innerHTML = '<div class="ie-vuoto">Apro la galleria…</div>';
     elencoFoto().then(function(l){
       var q = norm($("ie-gq").value);
-      var v = l.filter(function(n){ return !q || norm(n).indexOf(q) >= 0; });
-      if(!v.length){ g.innerHTML = '<div class="ie-vuoto">' + (l.length ? "Nessuna foto corrisponde." : "La galleria è vuota: carica una foto dalla scheda del personaggio.") + '</div>'; return; }
-      g.innerHTML = v.map(function(n){ return '<button type="button" class="ie-gi" data-g="' + esc(n) + '"><span class="ie-gimg"><img alt="" data-src="' + esc(n) + '"></span><span class="ie-gn">' + esc(n.replace(/\.[^.]+$/, "")) + '</span></button>'; }).join("");
+      var v = l.filter(function(n){
+        if(q && norm(n).indexOf(q) < 0) return false;
+        if(gSolo === "libere"){ var u = chiLaUsa(n); return !u.length || (p && u.length === 1 && u[0].id === p.id); }
+        return true;
+      });
+      var usate = l.filter(function(n){ return chiLaUsa(n).length; }).length;
+      if(!nuove.length) $("ie-gsub").textContent = l.length + " foto · " + (l.length - usate) + " libere · " + usate + " già assegnate";
+      if(!v.length){ g.innerHTML = '<div class="ie-vuoto">' + (l.length ? (gSolo === "libere" ? "Nessuna foto libera: sono tutte assegnate." : "Nessuna foto corrisponde.") : "La galleria è vuota: carica le prime foto con «⬆ Carica foto».") + '</div>'; return; }
+      g.innerHTML = v.map(function(n){
+        var u = chiLaUsa(n), mia = p && p.foto && p.foto.file === n, altri = u.filter(function(x){ return !p || x.id !== p.id; });
+        var cls = "ie-gi" + (mia ? " mia" : "") + (altri.length ? " usata" : "") + (nuove.indexOf(n) >= 0 ? " nuova" : "");
+        var badge = mia ? '<span class="ie-gbadge mia">✓ Questa</span>' : (altri.length ? '<span class="ie-gbadge">In uso: ' + esc(altri.map(function(x){ return x.nome || "Senza nome"; }).join(", ")) + '</span>' : (nuove.indexOf(n) >= 0 ? '<span class="ie-gbadge nuova">Nuova</span>' : ""));
+        return '<button type="button" class="' + cls + '" data-g="' + esc(n) + '" aria-label="' + esc(n) + (altri.length ? ", già usata da " + esc(altri.map(function(x){ return x.nome; }).join(", ")) : "") + '">'
+          + '<span class="ie-gimg"><img alt="" data-src="' + esc(n) + '">' + badge + '</span><span class="ie-gn">' + esc(n.replace(/\.[^.]+$/, "")) + '</span></button>';
+      }).join("");
       if(gObs) gObs.disconnect();
       gObs = new IntersectionObserver(function(es){ es.forEach(function(e){ if(!e.isIntersecting) return; var img = e.target; gObs.unobserve(img);
-        immagine(img.getAttribute("data-src")).then(function(im){ img.src = im.src; }).catch(function(){}); }); }, { root: g });
+        immagine(img.getAttribute("data-src")).then(function(im){ img.src = im.src; img.classList.add("ok"); }).catch(function(){}); }); }, { root: g, rootMargin: "200px" });
       g.querySelectorAll("img[data-src]").forEach(function(i){ gObs.observe(i); });
     }).catch(function(e){ g.innerHTML = '<div class="ie-vuoto"></div>'; g.firstChild.textContent = msgErr(e); });
   }
@@ -330,11 +374,6 @@
     var p = trova(sel); if(!p) return; var t = e.target;
     if(t.id === "ie-cont"){ p.continente = t.value; cambiato(); disegnaLista(); }
     else if(t.hasAttribute("data-vis")){ p.vis[t.getAttribute("data-vis")] = t.checked; cambiato(); disegna(); }
-    else if(t.id === "ie-up" && t.files && t.files[0]){
-      var fl = t.files[0]; stato("Carico la foto nella galleria…");
-      caricaFoto(fl).then(function(nome){ var q = trova(sel); if(!q) return; q.foto = { file: nome, z: 1, ox: 0, oy: 0 }; if(q.vis.mostra) q.vis.foto = true; cambiato(); disegna(); avviso("Foto aggiunta alla galleria: " + nome); })
-        .catch(function(err){ stato(msgErr(err), true); });
-    }
   });
   function aggiungi(p, campo, v){
     v = String(v || "").replace(/\s+/g, " ").trim(); if(!v) return;
@@ -354,7 +393,7 @@
     if((b = e.target.closest("[data-agg]"))){ var c = b.getAttribute("data-agg"), inp = form.querySelector('[data-nuovo="' + c + '"]'); aggiungi(p, c, inp && inp.value); return; }
     if((b = e.target.closest("[data-usa]"))){ aggiungi(p, b.getAttribute("data-usa"), b.getAttribute("data-v")); return; }
     if((b = e.target.closest("[data-rm]"))){ p[b.getAttribute("data-rm")].splice(+b.getAttribute("data-i"), 1); cambiato(); disegnaForm(); return; }
-    if(e.target.closest("#ie-gal")){ apriGalleria(); return; }
+    if(e.target.closest("#ie-gal") || e.target.closest("#ie-cornice-v")){ apriGalleria(); return; }
     if(e.target.closest("#ie-nofoto")){ p.foto = null; p.vis.foto = false; cambiato(); disegna(); return; }
     if(e.target.closest("#ie-del")){
       var chi = p.nome || "questo personaggio";
