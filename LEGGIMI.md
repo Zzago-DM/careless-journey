@@ -72,3 +72,10 @@ Nel sito non c'è più nessun codice in chiaro: in `js/area-giocatori.js` (PA_HA
     node strumenti/impronta.js "NuovoCodice"
 
 e incolla il risultato al posto dell'impronta di quel personaggio. Maiuscole e minuscole non contano.
+
+## Incontri (sezione pubblica + editor del Master)
+
+- La sezione **Incontri** (`sezioni/incontri.js`, `js/incontri.js`) legge `dati/incontri.json`: contiene **solo** ciò che i giocatori possono vedere. Le foto pubblicate, già ritagliate, stanno in `img/incontri/`.
+- I dati veri stanno nel repository privato `tcj-master`: `incontri/personaggi.json` (elenco completo, note del Master, interruttori di visibilità) e `incontri/foto/` (galleria delle foto originali).
+- Si lavora dalla Zona Master, capitolo «Incontri — Registro dei personaggi» (`js/master-incontri.js`). «📣 Pubblica sul sito» riscrive `dati/incontri.json` e le foto in un'unica modifica: il token del Master deve includere anche `careless-journey` (Contents: Read and write).
+- Le note dei giocatori sui personaggi stanno nel loro pacchetto (`tcj-inc-<personaggio>`) e seguono il loro salvataggio online.

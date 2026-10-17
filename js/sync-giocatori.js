@@ -8,6 +8,7 @@
      tcj-al-<pg>   alloggio sulla nave
      tcj_bg_<pg>   tema e sfondo scelti
      tcj-n-<pg>    vecchie note (sezione Note)
+     tcj-inc-<pg>  note personali sui personaggi incontrati (sezione Incontri)
    Restano invece in comune o solo locali: nave, note sui Mael, note del Master, preferenze del sito. */
 (function(){
   var OWNER = "Zzago-DM";                 // proprietario dei repository dei giocatori
@@ -18,10 +19,10 @@
   var NOMI = {}; SC_CHARS.forEach(function(c){ NOMI[c.k] = (typeof PA_FULL !== "undefined" && PA_FULL[c.k]) || c.n; });
 
   /* ---------- chiavi di ogni personaggio ---------- */
-  function chiavi(k){ var l = ["tcj-sc4-"+k, "tcj-al-"+k, "tcj_bg_"+k, "tcj-n-"+k]; if(k === CH[0]) l.push("tcj-sc4"); return l; }
+  function chiavi(k){ var l = ["tcj-sc4-"+k, "tcj-al-"+k, "tcj_bg_"+k, "tcj-n-"+k, "tcj-inc-"+k]; if(k === CH[0]) l.push("tcj-sc4"); return l; }
   function diChi(key){
     if(key === "tcj-sc4") return CH[0];
-    var m = /^(?:tcj-sc4-|tcj-al-|tcj_bg_|tcj-n-)(.+)$/.exec(key);
+    var m = /^(?:tcj-sc4-|tcj-al-|tcj_bg_|tcj-n-|tcj-inc-)(.+)$/.exec(key);
     return m && CH.indexOf(m[1]) >= 0 ? m[1] : null;
   }
 
