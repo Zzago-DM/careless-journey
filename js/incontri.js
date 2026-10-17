@@ -86,6 +86,10 @@
     var p = P[cur]; if(!p) return; var a = album(p), ph = document.getElementById("inc-ph");
     if(!a.length){ ph.innerHTML = '<div class="inc-ph-vuota">' + sole("inc-sole-xl") + '<span>Nessun ritratto</span></div>'; return; }
     fk = (k + a.length) % a.length;
+    /* la cornice segue la foto: quelle orizzontali vanno sopra, a tutta larghezza */
+    var fr = String((p.formati || [])[fk] || "4:5").split(":"), largo = +fr[0] > +fr[1];
+    ph.style.aspectRatio = fr[0] + " / " + fr[1];
+    document.querySelector(".inc-box").classList.toggle("inc-largo", largo);
     var h = '<img src="' + esc(a[fk]) + '" alt="Ritratto di ' + esc(p.nome) + (a.length > 1 ? ", foto " + (fk + 1) + " di " + a.length : "") + '">';
     if(a.length > 1){
       h += '<button type="button" class="inc-ph-b inc-ph-p" data-fk="' + (fk - 1) + '" aria-label="Foto precedente">‹</button>'

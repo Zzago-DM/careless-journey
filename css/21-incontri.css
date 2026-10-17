@@ -42,6 +42,10 @@
 .inc-ph img{width:100%;height:100%;object-fit:cover;display:block}
 /* più foto (gruppi): frecce e pallini sopra il ritratto */
 .inc-ph{position:relative}
+/* foto orizzontali (cornice 4:3 o 16:9): sopra il testo, a tutta larghezza */
+.inc-box.inc-largo{grid-template-columns:1fr}
+.inc-box.inc-largo .inc-ph{max-width:none;width:100%}
+.inc-box.inc-largo .inc-r{padding-right:0}
 .inc-ph-b{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:rgba(8,6,4,.72);color:var(--gold);font-size:1.4rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0 0 .15rem;transition:border-color .2s,background .2s}
 .inc-ph-p{left:.45rem}.inc-ph-n{right:.45rem}
 .inc-ph-b:hover,.inc-ph-b:focus-visible{border-color:var(--gold3);background:rgba(8,6,4,.92);outline:none}
@@ -142,6 +146,10 @@ textarea.ie-in{resize:vertical;line-height:1.55}
 .ie-sf-b.on{color:#fff;background:rgba(200,56,56,.22)}
 .ie-sf-b:hover:not(:disabled),.ie-sf-b:focus-visible{color:#fff;outline:none;box-shadow:inset 0 0 0 1px #ff6060}
 .ie-sf-b:disabled{opacity:.4;cursor:not-allowed}
+.ie-rp{margin-bottom:.2rem}
+.ie-rp .ie-sf-b{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;padding:.35rem 0;min-height:48px;letter-spacing:.04em}
+.ie-rp-i{display:block;border:1.5px solid currentColor;border-radius:2px;opacity:.75}
+.ie-cornice{max-width:100%}
 .ie-file{position:relative}
 .ie-riga{display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:end}
 .ie-pills{display:flex;gap:.3rem;flex-wrap:wrap}
