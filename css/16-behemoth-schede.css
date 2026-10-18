@@ -4,7 +4,7 @@
 #bgrid .bcard:hover,#bgrid .bcard:focus-visible{border-color:var(--gold3);transform:translateY(-1px)}
 #bgrid .bcard:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .beh-ph{aspect-ratio:1/1}
-.beh-ph img{object-fit:contain;padding:6%}
+.beh-ph img{object-fit:contain;object-position:center;padding:6%}
 .beh-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin:.5rem 0 .2rem}
 .beh-parts{list-style:none;margin:.2rem 0 0;padding:0;display:grid;gap:.35rem;max-width:62ch}
 .beh-parts li{display:flex;justify-content:space-between;gap:1rem;padding:.45rem .7rem;border:1px solid var(--border);border-radius:8px;background:rgba(var(--gold-rgb),.03)}

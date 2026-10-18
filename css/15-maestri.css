@@ -14,7 +14,7 @@
 .mae-x{position:absolute;top:.6rem;right:.6rem;background:transparent;border:1px solid var(--border);color:var(--gold2);border-radius:999px;width:2.2rem;height:2.2rem;cursor:pointer;font-size:.95rem;z-index:2}
 .mae-x:hover,.mae-x:focus-visible{border-color:var(--gold3);color:var(--gold)}
 .mae-ph{position:relative;aspect-ratio:4/5;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:radial-gradient(circle at 50% 40%,rgba(var(--gold-rgb),.12),transparent 70%),#0d0b08;align-self:start}
-.mae-ph img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;object-position:center;display:block;opacity:0;transition:opacity .35s;filter:drop-shadow(0 10px 18px rgba(0,0,0,.55))}
+.mae-ph img{position:absolute;inset:0;box-sizing:border-box;z-index:1;width:100%;height:100%;object-fit:contain;object-position:center bottom;display:block;opacity:0;transition:opacity .35s;filter:drop-shadow(0 10px 18px rgba(0,0,0,.55))}
 .mae-ph::after{content:"";position:absolute;left:12%;right:12%;bottom:4%;height:14%;border-radius:50%;background:radial-gradient(ellipse,rgba(var(--gold-rgb),.22),transparent 70%);pointer-events:none}
 .mae-ph img.ok{opacity:1}
 .mae-fb{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;color:var(--gold)}
