@@ -105,7 +105,7 @@
 
   /* ---------- confronto tra due versioni di un'area ---------- */
   var LIC = [["nome","Nome completo"],["titolo","Soprannome / Titolo"],["eta","Età"],["giorno","Giorno di nascita"],["triade","Triade"],["aether","Aether di affinità"],["continente","Continente d'origine"],["terra","Terra natale"],["casata","Casata / Affiliazione"],["segni","Segni particolari"],["motto","Motto"]];
-  var CAMPI = [["lvl","Livello"],["rango","Rango"],["pv","PV"],["arma","Arma"],["wcat","Categoria dell'arma"],["abil","Abilità"],["arma2","Seconda arma"],["arma2t","Tipo della seconda arma"],["proiettili","Proiettili"],["equip","Equipaggiamento"],["natt","Nucleo d'attacco"],["ndef","Nucleo di difesa"],["malus","Malus"],["benny","Benny"],["ispirazione","Ispirazione"]];
+  var CAMPI = [["lvl","Livello"],["rango","Rango"],["pv","PV"],["pvmax","PV massimi"],["arma","Arma"],["wcat","Categoria dell'arma"],["abil","Abilità"],["arma2","Seconda arma"],["arma2t","Tipo della seconda arma"],["proiettili","Proiettili"],["equip","Equipaggiamento"],["natt","Nucleo d'attacco"],["ndef","Nucleo di difesa"],["malus","Malus"],["benny","Benny"],["ispirazione","Ispirazione"]];
   function js(v){ try { return JSON.parse(v); } catch(e){ return null; } }
   function txt(v){ if(v === undefined || v === null) return ""; if(typeof v === "boolean") return v ? "Sì" : ""; return String(v).trim(); }
   function riassunto(map, k){
@@ -114,6 +114,7 @@
     LIC.forEach(function(f){ add("Licenza", f[1], id[f[0]]); });
     add("Licenza", "Ritratto", id.ritratto || "", id.ritratto ? "Presente" : "");
     CAMPI.forEach(function(f){ add("Scheda", f[1], sc[f[0]]); });
+    add("Scheda", "Stati alterati", typeof grStatiTesto === "function" ? grStatiTesto(sc.stati) : sc.stati);
     (typeof SC_STATS !== "undefined" ? SC_STATS : []).forEach(function(s){ var o = (sc.stats || {})[s.id] || {}; add("Statistiche", s.nm, txt(o.v) + (txt(o.m) ? " (" + txt(o.m) + ")" : "")); });
     var comp = (typeof SC_COMPS !== "undefined" ? SC_COMPS : []).filter(function(c){ return (sc.comps || {})[c.id]; }).map(function(c){ return c.nm; });
     add("Competenze", "Competenze attive", comp.join(", "));

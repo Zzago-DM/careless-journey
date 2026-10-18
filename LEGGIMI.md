@@ -56,6 +56,17 @@ Se un token si perde: revocalo su GitHub e creane uno nuovo; ogni versione salva
 
 **Token del Master:** un solo token fine-grained con *Only select repositories* = `tcj-athena`, `tcj-panlan`, `tcj-asonnes`, *Contents: Read and write*, *No expiration*. Si incolla nella Zona Master → «Aree dei giocatori online». Da lì si scarica, si apre, si corregge e si salva online l'area di ciascun giocatore; il salvataggio compare su GitHub con la nota «(dal Master)». Il token resta solo sul dispositivo dove lo incolli.
 
+## Il Gruppo — PV e stati in diretta (js/gruppo.js)
+
+La sezione **Il Gruppo** (`sezioni/gruppo.js`, `css/22-gruppo.css`, `js/gruppo.js`), subito sopra l'Area dello Slayer, mostra a tutti i Punti Vita (con la barra) e gli stati alterati di ogni personaggio. Nella scheda ci sono i PV attuali / massimi con i pulsanti ±1 e ±5 e il riquadro «Stati alterati» (un tocco: forma lieve, due: grave, tre: via; «⏭ Fine turno» toglie un turno a tutti).
+
+- I dati stanno nel repository **privato** `tcj-gruppo`, file `stato.json`. Quando un giocatore cambia PV o stati, dopo un paio di secondi il sito invia la sua riga; gli altri dispositivi la rileggono ogni pochi secondi mentre la pagina è aperta.
+- Si usa il token del personaggio (se manca, quello del Master). Senza token il quadro mostra solo ciò che è salvato su quel dispositivo.
+
+**Preparazione (una volta sola, la fa il Master):**
+1. Crea il repository privato `tcj-gruppo` (spunta "Add a README").
+2. In *Settings → Developer settings → Fine-grained tokens* apri **ognuno dei quattro token** (Athena, Pan Lan, Asonnes, Master) → *Edit* → in *Repository access* aggiungi `tcj-gruppo` → salva. I permessi restano *Contents: Read and write*. I giocatori non devono reincollare niente.
+
 ## Zona Master privata
 
 I contenuti della Zona Master (testi, segreti, schede di Mael e Maestri) **non stanno più in questo repository**: sono nel repository privato `tcj-master` (`zona-master.html`, `schede.json`).
