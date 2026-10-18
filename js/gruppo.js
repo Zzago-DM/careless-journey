@@ -124,6 +124,8 @@
     if(tok) h.Authorization = "Bearer " + tok;
     if(corpo) h["Content-Type"] = "application/json";
     if(extra) Object.keys(extra).forEach(function(x){ h[x] = extra[x]; });
+    /* GitHub tiene in memoria le risposte fino a 60 secondi: un parametro sempre diverso obbliga a leggere la versione appena salvata */
+    if(metodo === "GET") perc += (perc.indexOf("?") < 0 ? "?" : "&") + "_=" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
     return fetch(API + REPO + perc, { method: metodo, headers: h, body: corpo ? JSON.stringify(corpo) : undefined, cache: "no-store" });
   }
   function aspetta(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
@@ -156,7 +158,7 @@
   function prossimo(){
     clearTimeout(timer);
     if(document.hidden) return;
-    var ms = !tokLettura() ? 120000 : (accesso === "noaccesso" || accesso === "tokenko") ? 90000 : inVista ? 7000 : 30000;
+    var ms = !tokLettura() ? 120000 : (accesso === "noaccesso" || accesso === "tokenko") ? 90000 : inVista ? 3000 : 12000;
     timer = setTimeout(function(){ leggi().then(prossimo); }, ms);
   }
   document.addEventListener("visibilitychange", function(){ if(!document.hidden){ leggi().then(prossimo); } else clearTimeout(timer); });
@@ -164,7 +166,7 @@
 
   /* ---------- invio ---------- */
   var coda = {}, invioT = null, inviando = false;
-  function accoda(k){ coda[k] = 1; clearTimeout(invioT); invioT = setTimeout(invia, 1500); condivisione("attesa"); }
+  function accoda(k){ coda[k] = 1; clearTimeout(invioT); invioT = setTimeout(invia, 500); condivisione("attesa"); }
   function voce(k){
     var r = daScheda(k); if(!r) return Promise.resolve(null);
     return miniatura(r.rit).then(function(img){
@@ -215,7 +217,7 @@
       if(!errore){ condivisione("ok"); segnala("ok"); return; }
       var st = errore && errore.status;
       condivisione(st === 404 ? "noaccesso" : st === 401 ? "tokenko" : st === 403 ? "permesso" : "rete");
-      if(st !== 404 && st !== 401 && st !== 403){ clearTimeout(invioT); invioT = setTimeout(invia, 15000); }   /* riprova da solo se era solo la rete */
+      if(st !== 404 && st !== 401 && st !== 403){ clearTimeout(invioT); invioT = setTimeout(invia, 5000); }   /* riprova da solo se era solo la rete */
       else coda = {};
     });
   }
