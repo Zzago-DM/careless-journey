@@ -6,11 +6,22 @@ var M=[{"n": "Estarossa", "s": "estarossa", "r": "Mael dell'Aether Terrestre —
 var ov=document.getElementById("mae-ov"),img=document.getElementById("mae-img"),ph=document.getElementById("mae-ph"),cur=0,back=null;
 if(!ov)return;
 function esc(t){var d=document.createElement("div");d.textContent=t;return d.innerHTML;}
+var box=ov.querySelector(".mae-box");
+/* scorrimento col dito: verso sinistra la scheda dopo, verso destra quella prima */
+function scorri(box,vai){var x0=0,y0=0,t0=0,ok=false;
+  box.addEventListener("touchstart",function(e){ok=e.touches.length===1&&!e.target.closest("textarea,input,select");if(ok){x0=e.touches[0].clientX;y0=e.touches[0].clientY;t0=Date.now();}},{passive:true});
+  box.addEventListener("touchend",function(e){if(!ok)return;ok=false;var t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0;
+    if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.6&&Date.now()-t0<900)vai(dx<0?1:-1,e.target);},{passive:true});}
+/* scheda nuova: si riparte dall'alto (la foto deve essere in vista mentre si carica) e un piccolo scivolamento */
+function entra(box,d){box.scrollTop=0;if(!d)return;try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches)box.animate([{opacity:.35,transform:"translateX("+(d*28)+"px)"},{opacity:1,transform:"none"}],{duration:220,easing:"ease-out"});}catch(_){}}
+/* Safari su iPhone a volte disegna solo il pezzo di foto visibile in quel momento: la si fa ridisegnare */
+function ridisegna(im){requestAnimationFrame(function(){im.style.transform="translateZ(0)";requestAnimationFrame(function(){im.style.transform="";});});}
 function photo(m){var c=[],k=0;["webp","jpg","png"].forEach(function(e){c.push("img/"+m.s+"."+e,"img/maestri/"+m.s+"."+e);});
   ph.classList.remove("has");img.classList.remove("ok");img.removeAttribute("src");img.alt="Ritratto di "+m.n;
-  img.onload=function(){ph.classList.add("has");img.classList.add("ok");};
+  img.onload=function(){ph.classList.add("has");img.classList.add("ok");ridisegna(img);};
   img.onerror=function(){k++;if(k<c.length)img.src=c[k];else img.removeAttribute("src");};
   img.src=c[0];}
+function passa(d){fill(cur+d);entra(box,d);}
 function fill(i){cur=(i+M.length)%M.length;var m=M[cur];
   document.getElementById("mae-r").textContent=m.r;document.getElementById("mae-n").textContent=m.n;
   document.getElementById("mae-a").textContent=m.a?(m.f?"detta anche ":"detto anche ")+m.a:"";
@@ -18,7 +29,7 @@ function fill(i){cur=(i+M.length)%M.length;var m=M[cur];
   var b="";[["Chi è","storia"],["Oggi","oggi"],["Carattere","carattere"],["Legami","legami"]].forEach(function(p){if(m[p[1]])b+='<div class="mae-sec"><h4>'+p[0]+'</h4><p>'+esc(m[p[1]])+'</p></div>';});
   document.getElementById("mae-body").innerHTML=b;
   document.getElementById("mae-pos").textContent=(cur+1)+" / "+M.length;
-  photo(m);}
+  box.scrollTop=0;photo(m);}
 function open(i,from){back=from||null;fill(i);ov.hidden=false;document.body.style.overflow="hidden";requestAnimationFrame(function(){ov.classList.add("on");});
   try{sfxPlay("paper")}catch(_){}
   document.getElementById("mae-x").focus();}
@@ -27,11 +38,12 @@ function close(){ov.classList.remove("on");setTimeout(function(){ov.hidden=true;
   if(back)try{back.focus()}catch(_){}}
 document.addEventListener("click",function(e){var it=e.target.closest&&e.target.closest(".mae-it");if(it){e.preventDefault();open(+it.getAttribute("data-i"),it);}});
 document.getElementById("mae-x").addEventListener("click",close);
-document.getElementById("mae-prev").addEventListener("click",function(){fill(cur-1);});
-document.getElementById("mae-next").addEventListener("click",function(){fill(cur+1);});
+document.getElementById("mae-prev").addEventListener("click",function(){passa(-1);});
+document.getElementById("mae-next").addEventListener("click",function(){passa(1);});
+scorri(box,function(d){passa(d);});
 ov.addEventListener("click",function(e){if(e.target===ov)close();});
 document.addEventListener("keydown",function(e){if(ov.hidden)return;
   if(e.key==="Escape"){e.stopPropagation();close();}
-  else if(e.key==="ArrowRight")fill(cur+1);else if(e.key==="ArrowLeft")fill(cur-1);
+  else if(e.key==="ArrowRight")passa(1);else if(e.key==="ArrowLeft")passa(-1);
   else if(e.key==="Tab"){var f=ov.querySelectorAll("button"),a=f[0],z=f[f.length-1];if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus();}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus();}}},true);
 })();

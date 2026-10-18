@@ -79,6 +79,16 @@
     + '<div class="mae-nav"><button type="button" id="inc-prev">‹ Precedente</button><span id="inc-pos"></span><button type="button" id="inc-next">Successivo ›</button></div>'
     + '</div></div>';
   document.body.appendChild(ov);
+  var box = ov.querySelector(".inc-box");
+/* scorrimento col dito: verso sinistra la scheda dopo, verso destra quella prima */
+  function scorri(box,vai){var x0=0,y0=0,t0=0,ok=false;
+  box.addEventListener("touchstart",function(e){ok=e.touches.length===1&&!e.target.closest("textarea,input,select");if(ok){x0=e.touches[0].clientX;y0=e.touches[0].clientY;t0=Date.now();}},{passive:true});
+  box.addEventListener("touchend",function(e){if(!ok)return;ok=false;var t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0;
+    if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.6&&Date.now()-t0<900)vai(dx<0?1:-1,e.target);},{passive:true});}
+/* scheda nuova: si riparte dall'alto (la foto deve essere in vista mentre si carica) e un piccolo scivolamento */
+  function entra(box,d){box.scrollTop=0;if(!d)return;try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches)box.animate([{opacity:.35,transform:"translateX("+(d*28)+"px)"},{opacity:1,transform:"none"}],{duration:220,easing:"ease-out"});}catch(_){}}
+/* Safari su iPhone a volte disegna solo il pezzo di foto visibile in quel momento: la si fa ridisegnare */
+  function ridisegna(im){requestAnimationFrame(function(){im.style.transform="translateZ(0)";requestAnimationFrame(function(){im.style.transform="";});});}
   function ordinati(){ return Array.prototype.map.call(lista.querySelectorAll(".inc-card"), function(b){ return +b.getAttribute("data-i"); }); }
   /* tutte le foto del personaggio: più foto quando è un gruppo (es. una squadra di Slayer) */
   function album(p){ return (p.foti && p.foti.length) ? p.foti : (p.foto ? [p.foto] : []); }
@@ -99,9 +109,12 @@
       a.forEach(function(u, j){ if(j !== fk){ var im = new Image(); im.src = u; } });   /* le altre arrivano subito */
     }
     ph.innerHTML = h;
+    var im0 = ph.querySelector("img");
+    if(im0){ if(im0.complete) ridisegna(im0); else im0.addEventListener("load", function(){ ridisegna(im0); }); }
   }
   function riempi(i){
     cur = i; var p = P[i]; if(!p) return; var c = cont(p.continente);
+    box.scrollTop = 0;
     mostraFoto(0);
     document.getElementById("inc-r").innerHTML = '<i style="background:' + c[2] + '"></i>' + esc(c[1]) + (p.stato ? ' · <span class="inc-st s-' + esc(p.stato) + '">' + esc(STATI[p.stato] || p.stato) + '</span>' : '');
     document.getElementById("inc-n").textContent = p.nome;
@@ -147,7 +160,13 @@
     disegna();
     if(back) try { var b = lista.querySelector('.inc-card[data-i="' + back + '"]'); if(b) b.focus(); } catch(_){}
   }
-  function passa(d){ var o = ordinati(), k = o.indexOf(cur); if(!o.length) return; riempi(o[(k + d + o.length) % o.length]); }
+  function passa(d){ var o = ordinati(), k = o.indexOf(cur); if(!o.length) return; riempi(o[(k + d + o.length) % o.length]); entra(box, d); }
+  /* col dito: sulla foto di un gruppo si sfogliano le sue foto, altrove si passa al personaggio vicino */
+  scorri(box, function(d, dove){
+    var p = P[cur];
+    if(dove.closest(".inc-ph") && p && album(p).length > 1){ mostraFoto(fk + d); suono("swish"); return; }
+    passa(d); suono("paper");
+  });
 
   lista.addEventListener("click", function(e){ var b = e.target.closest(".inc-card"); if(b) apri(+b.getAttribute("data-i"), b.getAttribute("data-i")); });
   document.getElementById("inc-x").addEventListener("click", chiudi);
