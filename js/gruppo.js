@@ -1,18 +1,18 @@
 /* Il Gruppo: Punti Vita e stati alterati di tutti gli Slayer, visibili a tutti e aggiornati in diretta.
 
-   Dove stanno i dati: nel repository privato Zzago-DM/tcj-gruppo, file stato.json (uno per tutto il gruppo).
+   Dove stanno i dati: nel repository privato Zzago-DM/gruppo, file stato.json (uno per tutto il gruppo).
    - Ogni volta che un giocatore cambia PV o stati nella propria scheda, il sito invia la sua riga a stato.json
      (dopo un paio di secondi, così più tocchi di fila diventano un solo invio).
    - Ogni dispositivo con un token (di un giocatore o del Master) rilegge stato.json ogni pochi secondi
      mentre la pagina è aperta: se nulla è cambiato GitHub risponde «uguale» e non costa niente.
    - Per scrivere si usa il token del personaggio; se manca, quello del Master; se manca anche quello,
-     un altro token presente sul dispositivo. Tutti i token devono includere tcj-gruppo.
+     un altro token presente sul dispositivo. Tutti i token devono includere gruppo.
 
    Nella scheda: PV attuali / massimi con barra e pulsanti ±, e la scelta degli stati alterati
    (salvati nella scheda come «pvmax» e «stati», quindi seguono anche il salvataggio online dell'area). */
 (function(){
   "use strict";
-  var OWNER = "Zzago-DM", REPO = OWNER + "/tcj-gruppo", FILE = "stato.json";
+  var OWNER = "Zzago-DM", REPO = OWNER + "/gruppo", FILE = "stato.json";
   var API = "https://api.github.com/repos/";
   if(typeof SC_CHARS === "undefined") return;
   var CH = SC_CHARS.map(function(c){ return c.k; });
@@ -236,7 +236,7 @@
   var MSG = {
     ok: "In diretta",
     notoken: "Collega il salvataggio online nella tua Area dello Slayer per vedere il gruppo in diretta. Qui sotto c'è solo ciò che è salvato su questo dispositivo.",
-    noaccesso: "Il quadro del gruppo non è ancora attivo: manca il repository «tcj-gruppo», oppure il token non lo include ancora.",
+    noaccesso: "Il quadro del gruppo non è ancora attivo: manca il repository «gruppo», oppure il token non lo include ancora.",
     tokenko: "Il token di questo dispositivo non è più valido: chiedine uno nuovo al Master.",
     limite: "GitHub ha chiesto una pausa: il quadro riprende tra poco.",
     rete: "Connessione assente: il quadro riprende appena torna internet.",
@@ -276,17 +276,17 @@
       var vede = 0, validi = 0, h = "<ul>";
       elenco.forEach(function(e, i){
         var g = ris[i][0], s = ris[i][1], esito, cls;
-        if(g === 200){ esito = "✓ vede «tcj-gruppo»"; cls = "si"; vede++; validi++; }
+        if(g === 200){ esito = "✓ vede «gruppo»"; cls = "si"; vede++; validi++; }
         else if(g === 401 || s === 401){ esito = "✗ non è più valido (revocato o sostituito): va incollato quello nuovo"; cls = "no"; }
         else if(g === 0){ esito = "? nessuna risposta da GitHub (connessione)"; cls = "forse"; }
-        else if(s === 200){ esito = "✗ funziona, ma <b>non vede «tcj-gruppo»</b>"; cls = "no"; validi++; }
-        else { esito = "✗ non vede né «tcj-gruppo» né il suo repository (" + g + ")"; cls = "no"; }
+        else if(s === 200){ esito = "✗ funziona, ma <b>non vede «gruppo»</b>"; cls = "no"; validi++; }
+        else { esito = "✗ non vede né «gruppo» né il suo repository (" + g + ")"; cls = "no"; }
         h += '<li class="' + cls + '"><b>' + esc(e.nm) + "</b>" + (e.tok === usato ? " <small>(quello che usa il quadro)</small>" : "") + ": " + esito + "</li>";
       });
       h += "</ul>";
-      if(!vede && validi) h += "<p>Nessun token vede «tcj-gruppo». Di solito vuol dire che il repository <b>ha un nome diverso</b> (deve essere esattamente <b>tcj-gruppo</b>, sotto <b>" + OWNER + "</b>), oppure che nella pagina del token non è stato premuto <b>Update</b> dopo averlo aggiunto.</p>";
-      else if(vede < elenco.length) h += "<p>Ai token segnati con ✗ va aggiunto «tcj-gruppo» (GitHub → Settings → Developer settings → Fine-grained tokens → il token → Edit → Repository access → Update).</p>";
-      else h += "<p>Tutti i token vedono «tcj-gruppo»: il quadro si accende tra un istante.</p>";
+      if(!vede && validi) h += "<p>Nessun token vede «gruppo». Di solito vuol dire che il repository <b>ha un nome diverso</b> (deve essere esattamente <b>gruppo</b>, sotto <b>" + OWNER + "</b>), oppure che nella pagina del token non è stato premuto <b>Update</b> dopo averlo aggiunto.</p>";
+      else if(vede < elenco.length) h += "<p>Ai token segnati con ✗ va aggiunto «gruppo» (GitHub → Settings → Developer settings → Fine-grained tokens → il token → Edit → Repository access → Update).</p>";
+      else h += "<p>Tutti i token vedono «gruppo»: il quadro si accende tra un istante.</p>";
       box.innerHTML = h;
       if(vede){ etag = null; leggi().then(prossimo); }
     });
@@ -296,9 +296,9 @@
     invio: ["att", "Invio al gruppo…"],
     ok: ["ok", "✓ Il gruppo vede questi PV e stati"],
     notoken: ["loc", "Solo su questo dispositivo: collega il salvataggio online qui sotto per mostrarli al gruppo."],
-    noaccesso: ["ko", "Non inviato: manca il repository «tcj-gruppo» o il token non lo include."],
+    noaccesso: ["ko", "Non inviato: manca il repository «gruppo» o il token non lo include."],
     tokenko: ["ko", "Non inviato: il token non è più valido."],
-    permesso: ["ko", "Non inviato: il token può solo leggere «tcj-gruppo» (serve «Contents: Read and write»)."],
+    permesso: ["ko", "Non inviato: il token può solo leggere «gruppo» (serve «Contents: Read and write»)."],
     rete: ["ko", "Non inviato per ora: riprovo appena torna la connessione."]
   };
   var shareStato = null;
