@@ -158,7 +158,7 @@
   function prossimo(){
     clearTimeout(timer);
     if(document.hidden) return;
-    var ms = !tokLettura() ? 120000 : (accesso === "noaccesso" || accesso === "tokenko") ? 90000 : inVista ? 3000 : 12000;
+    var ms = !tokLettura() ? 120000 : (accesso === "noaccesso" || accesso === "tokenko") ? 20000 : inVista ? 3000 : 12000;
     timer = setTimeout(function(){ leggi().then(prossimo); }, ms);
   }
   document.addEventListener("visibilitychange", function(){ if(!document.hidden){ leggi().then(prossimo); } else clearTimeout(timer); });
@@ -248,7 +248,48 @@
     w.setAttribute("data-s", s === "ok" ? "ok" : (s === "notoken" ? "loc" : "ko"));
     t.textContent = MSG[s] || MSG.errore;
     if(s === "noaccesso" && (!shareStato || shareStato === "ok")) condivisione("noaccesso");
+    var bt = $("gr-diag-b");
+    if((s === "noaccesso" || s === "tokenko") && !bt){
+      bt = document.createElement("button"); bt.type = "button"; bt.id = "gr-diag-b"; bt.className = "gr-sbtn gr-diag-b"; bt.textContent = "🔍 Controlla i token";
+      bt.onclick = diagnosi; w.appendChild(bt);
+    }
+    if(bt) bt.hidden = !(s === "noaccesso" || s === "tokenko");
+    if(s === "ok"){ var dg = $("gr-diag"); if(dg) dg.remove(); }
     rendiBoard();
+  }
+
+  /* ---------- controllo dei token di questo dispositivo ---------- */
+  function prova(tok, repo){
+    return fetch(API + repo + "?_=" + Date.now().toString(36), { headers: { "Authorization": "Bearer " + tok, "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" }, cache: "no-store" })
+      .then(function(r){ return r.status; }).catch(function(){ return 0; });
+  }
+  function diagnosi(){
+    var box = $("gr-diag");
+    if(!box){ box = document.createElement("div"); box.id = "gr-diag"; box.className = "gr-diag"; var w = $("gr-live"); w.parentNode.insertBefore(box, w.nextSibling); }
+    var elenco = [];
+    var m = tokMaster(); if(m) elenco.push({ nm: "Token del Master", tok: m, suo: OWNER + "/tcj-" + CH[0] });
+    CH.forEach(function(k){ var st = leggiJ("tcjgh_" + k); if(st.token && st.repo) elenco.push({ nm: "Token di " + NOME[k].split(" ")[0], tok: st.token, suo: st.repo }); });
+    if(!elenco.length){ box.innerHTML = "<p>Su questo dispositivo non c'è nessun token: collegalo dall'Area dello Slayer («☁ Collega salvataggio online»).</p>"; return; }
+    box.innerHTML = "<p>Controllo in corso…</p>";
+    var usato = tokLettura();
+    Promise.all(elenco.map(function(e){ return Promise.all([prova(e.tok, REPO), prova(e.tok, e.suo)]); })).then(function(ris){
+      var vede = 0, validi = 0, h = "<ul>";
+      elenco.forEach(function(e, i){
+        var g = ris[i][0], s = ris[i][1], esito, cls;
+        if(g === 200){ esito = "✓ vede «tcj-gruppo»"; cls = "si"; vede++; validi++; }
+        else if(g === 401 || s === 401){ esito = "✗ non è più valido (revocato o sostituito): va incollato quello nuovo"; cls = "no"; }
+        else if(g === 0){ esito = "? nessuna risposta da GitHub (connessione)"; cls = "forse"; }
+        else if(s === 200){ esito = "✗ funziona, ma <b>non vede «tcj-gruppo»</b>"; cls = "no"; validi++; }
+        else { esito = "✗ non vede né «tcj-gruppo» né il suo repository (" + g + ")"; cls = "no"; }
+        h += '<li class="' + cls + '"><b>' + esc(e.nm) + "</b>" + (e.tok === usato ? " <small>(quello che usa il quadro)</small>" : "") + ": " + esito + "</li>";
+      });
+      h += "</ul>";
+      if(!vede && validi) h += "<p>Nessun token vede «tcj-gruppo». Di solito vuol dire che il repository <b>ha un nome diverso</b> (deve essere esattamente <b>tcj-gruppo</b>, sotto <b>" + OWNER + "</b>), oppure che nella pagina del token non è stato premuto <b>Update</b> dopo averlo aggiunto.</p>";
+      else if(vede < elenco.length) h += "<p>Ai token segnati con ✗ va aggiunto «tcj-gruppo» (GitHub → Settings → Developer settings → Fine-grained tokens → il token → Edit → Repository access → Update).</p>";
+      else h += "<p>Tutti i token vedono «tcj-gruppo»: il quadro si accende tra un istante.</p>";
+      box.innerHTML = h;
+      if(vede){ etag = null; leggi().then(prossimo); }
+    });
   }
   var SHARE = {
     attesa: ["att", "Modifica in arrivo al gruppo…"],

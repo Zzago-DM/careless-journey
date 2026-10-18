@@ -93,6 +93,17 @@
 @keyframes grGoccia{0%,60%{transform:translateY(0)}80%{transform:translateY(2px)}100%{transform:translateY(0)}}
 @keyframes grGira{to{transform:rotate(360deg)}}
 
+.gr-live{flex-wrap:wrap}
+.gr-diag-b{font-style:normal}
+.gr-diag{max-width:640px;margin:-.8rem auto 1.6rem;padding:.8rem 1rem;background:var(--bg3);border:1px solid var(--border);font-size:.92rem;line-height:1.45}
+.gr-diag ul{list-style:none;margin:0 0 .5rem}
+.gr-diag li{padding:.25rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.gr-diag li.si{color:#8ee0a8}
+.gr-diag li.no{color:#ff9a88}
+.gr-diag li b{color:var(--text)}
+.gr-diag small{color:var(--text2);font-style:italic}
+.gr-diag p{color:var(--text2);font-style:italic}
+
 /* ================= Scheda: PV ================= */
 .gr-lblsm{font-family:"Crimson Pro",Georgia,serif;font-size:.78rem;letter-spacing:0;text-transform:none;font-style:italic;color:var(--text2)}
 .gr-pvrow{display:flex;align-items:center;gap:.4rem}
