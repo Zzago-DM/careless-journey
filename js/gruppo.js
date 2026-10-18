@@ -23,12 +23,12 @@
 
   /* ---------- stati alterati (dal Manuale dello Slayer) ---------- */
   var AE = [
-    { f:"fuoco",    n:"Fuoco",       i:"🔥", c:"#ff6a2a", forme:[{id:"scottato", n:"Scottato", fx:"−2 PV a turno", t:3}, {id:"bruciato", n:"Bruciato", fx:"−5 PV a turno", t:3}] },
+    { f:"fuoco",    n:"Fuoco",       i:"🔥", c:"#ff6a2a", forme:[{id:"scottato", n:"Scottato", fx:"−2 PV a turno", t:3, dot:2}, {id:"bruciato", n:"Bruciato", fx:"−5 PV a turno", t:3, dot:5}] },
     { f:"ghiaccio", n:"Ghiaccio",    i:"❄️", c:"#7ec8e3", forme:[{id:"ghiacciato", n:"Ghiacciato", fx:"−3 DES", t:3}, {id:"ibernato", n:"Ibernato", fx:"−5 DES", t:3}] },
-    { f:"fulmine",  n:"Elettricità", i:"⚡", c:"#f0d020", forme:[{id:"elettrificato", n:"Elettrificato", fx:"−1 PV a turno · niente azioni bonus", t:3}, {id:"fulminato", n:"Fulminato", fx:"−3 PV a turno · niente azioni bonus", t:3}] },
+    { f:"fulmine",  n:"Elettricità", i:"⚡", c:"#f0d020", forme:[{id:"elettrificato", n:"Elettrificato", fx:"−1 PV a turno · niente azioni bonus", t:3, dot:1}, {id:"fulminato", n:"Fulminato", fx:"−3 PV a turno · niente azioni bonus", t:3, dot:3}] },
     { f:"terra",    n:"Terra",       i:"🌍", c:"#5fae50", forme:[{id:"interrato", n:"Interrato", fx:"Movimento dimezzato", t:3}, {id:"drenato", n:"Drenato", fx:"Non puoi muoverti", t:3}] },
-    { f:"oscurita", n:"Oscurità",    i:"🌑", c:"#a57cf0", forme:[{id:"corrotto", n:"Corrotto", fx:"−5 PV a turno · svantaggio ai tiri di COST", t:5}] },
-    { f:"luce",     n:"Luce",        i:"✨", c:"#e2c2ff", forme:[{id:"abbagliato", n:"Abbagliato", fx:"−5 PV a turno · svantaggio ai tiri di DES", t:5}] }
+    { f:"oscurita", n:"Oscurità",    i:"🌑", c:"#a57cf0", forme:[{id:"corrotto", n:"Corrotto", fx:"−5 PV a turno · svantaggio ai tiri di COST", t:5, dot:5}] },
+    { f:"luce",     n:"Luce",        i:"✨", c:"#e2c2ff", forme:[{id:"abbagliato", n:"Abbagliato", fx:"−5 PV a turno · svantaggio ai tiri di DES", t:5, dot:5}] }
   ];
   var DI = [
     { f:"sanguinante", n:"Sanguinante", i:"🩸", c:"#e0533f", forme:[{id:"sanguinante", n:"Sanguinante", fx:"−2 PV quando ti muovi o agisci · si toglie rinunciando al turno", t:3}] },
@@ -137,7 +137,9 @@
   function ricevi(d){
     if(!d || typeof d !== "object") return;
     d.pg = d.pg && typeof d.pg === "object" ? d.pg : {};
-    doc = d; salvaCache(); rendiBoard();
+    doc = d; salvaCache();
+    try { controllaTurno(); } catch(e){ console.error(e); }
+    rendiBoard();
   }
 
   /* ---------- lettura periodica ---------- */
@@ -167,13 +169,18 @@
   /* ---------- invio ---------- */
   var coda = {}, invioT = null, inviando = false;
   function accoda(k){ coda[k] = 1; clearTimeout(invioT); invioT = setTimeout(invia, 500); condivisione("attesa"); }
+  function applicato(k){ var v = parseInt(localStorage.getItem("tcjgr_tb_" + k) || "", 10); return isNaN(v) ? -1 : v; }
+  function segnaApplicato(k, n){ try { localStorage.setItem("tcjgr_tb_" + k, String(n)); } catch(e){} }
+  function turnoN(d){ return (d && d.turno && d.turno.n) || 0; }
   function voce(k){
     var r = daScheda(k); if(!r) return Promise.resolve(null);
     return miniatura(r.rit).then(function(img){
-      return { n: NOME[k], pv: r.pv, max: r.max, st: r.st, el: r.el, img: img, t: new Date().toISOString() };
+      return { n: NOME[k], pv: r.pv, max: r.max, st: r.st, el: r.el, img: img, t: new Date().toISOString(), tb: applicato(k) };
     });
   }
-  function scrivi(tok, voci, tent){
+  /* legge stato.json, lo cambia con fn(d) e lo salva; se nel frattempo qualcun altro l'ha salvato, riprova */
+  function modifica(tok, fn, tent){
+    tent = tent || 0;
     return gh(tok, "GET", "/contents/" + FILE).then(function(r){
       if(r.status === 404) return { d: { app: "the-careless-journey", tipo: "stato-del-gruppo", v: 1, pg: {} }, sha: null };
       if(!r.ok) throw r;
@@ -183,16 +190,30 @@
       });
     }).then(function(o){
       var d = o.d && typeof o.d === "object" ? o.d : {}; d.pg = d.pg && typeof d.pg === "object" ? d.pg : {};
-      var nomi = [];
-      Object.keys(voci).forEach(function(k){ d.pg[k] = voci[k]; nomi.push(NOME[k].split(" ")[0] + " " + (voci[k].pv == null ? "—" : voci[k].pv) + (voci[k].max ? "/" + voci[k].max : "") + " PV"); });
+      var msg = fn(d);
+      if(!msg){ ricevi(d); return; }
       d.agg = new Date().toISOString();
-      var corpo = { message: "Gruppo · " + nomi.join(" · "), content: b64e(JSON.stringify(d)) };
+      var corpo = { message: msg, content: b64e(JSON.stringify(d)) };
       if(o.sha) corpo.sha = o.sha;
       return gh(tok, "PUT", "/contents/" + FILE, corpo).then(function(r){
-        if((r.status === 409 || r.status === 422) && tent < 4) return aspetta(400 + tent * 500).then(function(){ return scrivi(tok, voci, tent + 1); });
+        if((r.status === 409 || r.status === 422) && tent < 5) return aspetta(300 + tent * 450).then(function(){ return modifica(tok, fn, tent + 1); });
         if(!r.ok) throw r;
         etag = null; ricevi(d);
       });
+    });
+  }
+  function scrivi(tok, voci){
+    return modifica(tok, function(d){
+      var nomi = [];
+      Object.keys(voci).forEach(function(k){
+        var v = voci[k];
+        if(turnoN(d) > Math.max(v.tb, 0)) return;     /* il Master ha appena chiuso un turno: prima si prendono i suoi valori, poi si riscrive */
+        var vecchia = d.pg[k] || {};
+        delete v.tb;
+        d.pg[k] = Object.assign({}, vecchia, v);
+        nomi.push(NOME[k].split(" ")[0] + " " + (v.pv == null ? "—" : v.pv) + (v.max ? "/" + v.max : "") + " PV");
+      });
+      return nomi.length ? "Gruppo · " + nomi.join(" · ") : false;
     });
   }
   function invia(){
@@ -326,6 +347,7 @@
       + '<div class="gr-head"><div class="gr-av"><img alt="" decoding="async"><span class="gr-av-e" aria-hidden="true">' + EMO[k] + '</span></div>'
       + '<div class="gr-who"><div class="gr-nm">' + esc(NOME[k]) + '</div><div class="gr-meta"></div></div>'
       + '<div class="gr-num"><b class="gr-pv">—</b><span class="gr-max"></span><small>PV</small></div></div>'
+      + '<div class="gr-fatto" aria-hidden="true">✓ Azione conclusa</div>'
       + '<div class="gr-bar" aria-hidden="true"><i class="gr-ghost"></i><i class="gr-fill"></i><span class="gr-shine"></span></div>'
       + '<div class="gr-chips"></div><div class="gr-ko" aria-hidden="true">Atterrato</div>';
     a.addEventListener("click", function(){
@@ -410,9 +432,13 @@
     card.setAttribute("aria-label", NOME[k] + ": " + (pv === null ? "PV sconosciuti" : pv + (max ? " su " + max : "") + " PV") + (st ? ". Stati: " + st : ". Nessuno stato alterato"));
     var apribile = false; try { apribile = typeof paIsOpen === "function" && paIsOpen(k); } catch(e){}
     card.classList.toggle("apri", apribile);
+    var fatto = !vuota && eFatto(k);
+    if(fatto && !card.classList.contains("fatto") && card._pronta2){ card.classList.remove("fatto-in"); void card.offsetWidth; card.classList.add("fatto-in"); }
+    card.classList.toggle("fatto", fatto); card._pronta2 = true;
     card.title = apribile ? "Apri la scheda" : "";
   }
   function rendiBoard(){
+    rendiTurno(); rendiFatto();
     var b = $("gr-board"); if(!b) return;
     CH.forEach(function(k){
       var c = b.querySelector('.gr-card[data-k="' + k + '"]');
@@ -421,6 +447,202 @@
     });
   }
   setInterval(function(){ if(!document.hidden) rendiBoard(); }, 30000);
+
+
+  /* =================== Turni: «Ho concluso l'azione» e «Fine turno» del Master =================== */
+  var fattoLoc = {}, visto = null;
+  function eFatto(k){ if(fattoLoc[k]) return fattoLoc[k].v; return !!(doc.pg && doc.pg[k] && doc.pg[k].fatto); }
+  function recente(iso){ var t = Date.parse(iso || ""); return !isNaN(t) && Date.now() - t < 45000; }
+  function sonoMaster(){ return !!tokMaster(); }
+  var toastEl = null;
+  function avvisa(msg, err){
+    if(!toastEl){ toastEl = document.createElement("div"); toastEl.className = "gh-toast gr-toast"; toastEl.setAttribute("role", "status"); document.body.appendChild(toastEl); }
+    toastEl.innerHTML = msg; toastEl.classList.toggle("err", !!err);
+    toastEl.classList.remove("on"); void toastEl.offsetWidth; toastEl.classList.add("on");
+    clearTimeout(avvisa._t); avvisa._t = setTimeout(function(){ toastEl.classList.remove("on"); }, err ? 6000 : 4200);
+  }
+  function errMsg(e){ var st = e && e.status; return st === 404 ? "manca il repository «gruppo» o il token non lo include" : st === 401 ? "il token non è più valido" : st === 403 ? "il token non può scrivere" : "connessione assente"; }
+
+  /* cosa fa la fine del turno a un personaggio: danni degli stati attivi, poi un turno in meno a ogni stato */
+  function calcolaTurno(r){
+    var st = statiDi(r.st), danni = 0, voci = [], eff = [], resta = [];
+    st.forEach(function(x){
+      var F = FORMA[x.id]; eff.push(F.fa.f);
+      if(F.fo.dot){ danni += F.fo.dot; voci.push(F.fo.n + " −" + F.fo.dot); }
+      if((x.t || 0) - 1 > 0) resta.push({ id: x.id, t: x.t - 1 });
+    });
+    var pv = (r.pv === null || r.pv === undefined) ? null : Math.max(0, r.pv - danni);
+    return { danni: pv === null ? 0 : danni, voci: voci, eff: eff, st: resta, pv: pv };
+  }
+  window.grFineTurnoMaster = function(){
+    if(!sonoMaster()){ avvisa("Solo il Master può chiudere il turno."); return; }
+    if(accesso !== "ok"){ avvisa("Il quadro non è collegato: " + (MSG[accesso] || ""), true); return; }
+    var righe = [], manca = [];
+    CH.forEach(function(k){
+      var r = doc.pg[k]; if(!r) return;
+      var c = calcolaTurno(r), nm = esc(NOME[k].split(" ")[0]);
+      righe.push("<b>" + nm + "</b>: " + (c.danni ? "−" + c.danni + " PV <small>(" + esc(c.voci.join(", ")) + ")</small>" : "nessun danno") + (statiDi(r.st).some(function(x){ return /sanguinante|emorragia/.test(x.id); }) ? " <small>· sanguina: i PV si tolgono quando si muove o agisce</small>" : ""));
+      if(!r.fatto) manca.push(nm);
+    });
+    if(!righe.length){ avvisa("Nessun personaggio sul quadro."); return; }
+    var testo = righe.join("<br>") + (manca.length ? "<br><br>⚠ Non hanno ancora concluso l'azione: <b>" + manca.join(", ") + "</b>" : "");
+    var vai = function(){
+      var b = $("gr-fine"); if(b) b.disabled = true;
+      modifica(tokMaster(), function(d){
+        var n = turnoN(d) + 1, ora = new Date().toISOString(), nomi = [];
+        CH.forEach(function(k){
+          var r = d.pg[k]; if(!r) return;
+          var c = calcolaTurno(r);
+          r.pv = c.pv === null ? r.pv : c.pv; r.st = c.st; r.fatto = false; r.t = ora;
+          r.ultimo = { n: n, danni: c.danni, eff: c.eff };
+          if(c.danni) nomi.push(NOME[k].split(" ")[0] + " −" + c.danni);
+        });
+        d.turno = { n: n, s: (d.turno && d.turno.s) || 0, t: ora };
+        return "Fine del turno " + (n - ((d.turno.s) || 0)) + (nomi.length ? " · " + nomi.join(" · ") : "");
+      }).then(function(){ var b2 = $("gr-fine"); if(b2) b2.disabled = false; })
+        .catch(function(e){ var b2 = $("gr-fine"); if(b2) b2.disabled = false; avvisa("Turno non chiuso: " + errMsg(e) + ". Riprova.", true); });
+    };
+    if(typeof tcjConferma === "function") tcjConferma({ titolo: "Chiudere il turno " + turnoMostrato() + "?", testo: testo, si: "⏭ Sì, chiudi il turno", attesa: 1 }).then(function(ok){ if(ok) vai(); });
+    else vai();
+  };
+  window.grAzzera = function(){
+    if(!sonoMaster()) return;
+    var vai = function(){
+      modifica(tokMaster(), function(d){
+        var n = turnoN(d); d.turno = { n: n, s: n, t: (d.turno && d.turno.t) || null };
+        CH.forEach(function(k){ if(d.pg[k]) d.pg[k].fatto = false; });
+        return "Nuovo scontro: i turni ripartono da 1";
+      }).catch(function(e){ avvisa("Non riuscito: " + errMsg(e) + ".", true); });
+    };
+    if(typeof tcjConferma === "function") tcjConferma({ titolo: "Nuovo scontro?", testo: "Il contatore dei turni riparte da 1 e le azioni concluse si azzerano. PV e stati restano come sono.", si: "Sì, ricomincia", attesa: 1 }).then(function(ok){ if(ok) vai(); });
+    else vai();
+  };
+  function turnoMostrato(){ var T = doc.turno || {}; return (T.n || 0) - (T.s || 0) + 1; }
+  function rendiTurno(){
+    var nEl = $("gr-turno"); if(!nEl) return;
+    var nuovo = String(turnoMostrato());
+    if(nEl.textContent !== nuovo){ if(nEl.textContent && nEl.textContent !== "—"){ nEl.classList.remove("cambia"); void nEl.offsetWidth; nEl.classList.add("cambia"); } nEl.textContent = nuovo; }
+    var righe = CH.filter(function(k){ return doc.pg && doc.pg[k]; }), fatti = righe.filter(eFatto);
+    var dn = $("gr-tb-done");
+    if(dn) dn.innerHTML = '<span class="gr-tb-pips">' + righe.map(function(k){ return '<i class="' + (eFatto(k) ? "on" : "") + '" title="' + esc(NOME[k]) + (eFatto(k) ? ": azione conclusa" : ": sta ancora agendo") + '">' + EMO[k] + '</i>'; }).join("") + '</span>Azioni concluse <b>' + fatti.length + " / " + righe.length + "</b>";
+    var m = sonoMaster(), b = $("gr-fine"), h = $("gr-tb-h"), az = $("gr-azzera"), bar = $("gr-turnbar");
+    if(bar) bar.classList.toggle("tutti", righe.length > 0 && fatti.length === righe.length);
+    if(b){ b.classList.toggle("bloccato", !m); b.setAttribute("aria-disabled", m ? "false" : "true"); b.title = m ? "Chiude il turno per tutti: danni degli stati, un turno in meno a ogni stato" : "Solo il Master può chiudere il turno"; b.innerHTML = (m ? "" : '<span aria-hidden="true">🔒 </span>') + "⏭ Fine turno"; }
+    if(h) h.textContent = m ? (fatti.length === righe.length && righe.length ? "Tutti hanno concluso: puoi chiudere il turno" : "Quando sei pronto, chiudi il turno per tutti") : "Solo il Master può chiudere il turno";
+    if(az) az.hidden = !m;
+  }
+
+  /* giocatore: «Ho concluso l'azione» / «Riprendi l'azione» */
+  function segnaFatto(k, v){
+    var tok = tokScrittura(k);
+    if(!tok){ avvisa("Collega il salvataggio online qui sotto: senza token il gruppo non può vederlo.", true); return; }
+    fattoLoc[k] = { v: v }; rendiBoard(); suono(v ? "seal" : "flip");
+    try { if(typeof paFlush === "function") paFlush(); } catch(e){}
+    modifica(tok, function(d){
+      var r = d.pg[k] || (d.pg[k] = { n: NOME[k] });
+      if(!!r.fatto === v) return false;
+      r.fatto = v;
+      return NOME[k].split(" ")[0] + (v ? " ha concluso l'azione" : " riprende l'azione");
+    }).then(function(){ delete fattoLoc[k]; rendiBoard(); })
+      .catch(function(e){ delete fattoLoc[k]; rendiBoard(); avvisa("Non inviato: " + errMsg(e) + ". Riprova.", true); });
+  }
+  window.grConcludi = function(){
+    var k = scCur;
+    if(eFatto(k)){ segnaFatto(k, false); return; }
+    var vai = function(){ segnaFatto(k, true); };
+    if(typeof tcjConferma === "function") tcjConferma({ titolo: "Hai concluso l'azione?", testo: "Il Master e il gruppo vedranno che hai finito. Finché il Master non chiude il turno potrai tornare indietro con «↩ Riprendi l'azione».", si: "✓ Sì, ho concluso", no: "No, sto ancora agendo", attesa: 0 }).then(function(ok){ if(ok) vai(); });
+    else vai();
+  };
+  function rendiFatto(){
+    var b = $("gr-concludi"), banner = $("gr-attesa"); if(!b) return;
+    var f = eFatto(scCur);
+    b.textContent = f ? "↩ Riprendi l'azione" : "✓ Ho concluso l'azione";
+    b.classList.toggle("fatto", f);
+    if(banner){ banner.hidden = !f; banner.textContent = "Azione conclusa · in attesa che il Master chiuda il turno"; }
+  }
+
+  /* un turno nuovo arrivato da stato.json */
+  function controllaTurno(){
+    var T = doc.turno || {}, n = T.n || 0;
+    CH.forEach(function(k){
+      var app = applicato(k);
+      if(n <= app) return;
+      var r = doc.pg[k];
+      if(r && r.ultimo && r.ultimo.n === n && daScheda(k)) adotta(k, r, recente(T.t));
+      segnaApplicato(k, n);
+    });
+    if(visto === null){ visto = n; return; }
+    if(n > visto){
+      visto = n;
+      suono("gong");
+      var tuoi = [];
+      CH.forEach(function(k){
+        var r = doc.pg[k]; if(!r || !r.ultimo || r.ultimo.n !== n) return;
+        setTimeout(function(){ var c = document.querySelector('.gr-card[data-k="' + k + '"]'); if(c) effetto(c, r.ultimo, false); }, 80);
+        if(tokPg(k)) tuoi.push(k);
+      });
+      var x = tuoi.length === 1 ? doc.pg[tuoi[0]].ultimo : null;
+      avvisa("⏭ Il Master ha chiuso il turno · inizia il <b>turno " + turnoMostrato() + "</b>" + (x && x.danni ? " · <b>−" + x.danni + " PV</b>" : ""));
+    }
+  }
+  /* porta nella scheda di questo dispositivo i PV e gli stati decisi dalla fine del turno */
+  function adotta(k, r, conEffetto){
+    var key = localStorage.getItem("tcj-sc4-" + k) !== null ? "tcj-sc4-" + k : (k === CH[0] && localStorage.getItem("tcj-sc4") !== null ? "tcj-sc4" : null);
+    if(!key) return;
+    var d = scheda(k); if(!d) return;
+    var st = statiDi(r.st);
+    d.pv = r.pv === null || r.pv === undefined ? (d.pv || "") : String(r.pv);
+    if(r.max) d.pvmax = String(r.max);
+    d.stati = st.length ? JSON.stringify(st) : "";
+    try { localStorage.setItem(key, JSON.stringify(d)); } catch(e){}
+    delete locali[k];
+    var aperta = false; try { aperta = k === scCur && paIsOpen(k) && !!$("sc-pv"); } catch(e){}
+    if(aperta){
+      $("sc-pv").value = d.pv; if($("sc-pvmax") && d.pvmax) $("sc-pvmax").value = d.pvmax; $("sc-stati").value = d.stati;
+      rendiPv(); rendiTiles();
+      if(conEffetto) effetto(null, r.ultimo, true);
+    }
+    base[k] = firma(daScheda(k));
+  }
+
+  /* ---------- effetti visivi della fine del turno ---------- */
+  var FX = { fuoco:{n:22, s:"🔥"}, ghiaccio:{n:16, s:"❄"}, fulmine:{n:0}, terra:{n:18}, oscurita:{n:9}, luce:{n:10}, sanguinante:{n:12}, emorragia:{n:16}, stordito:{n:6, s:"✦"}, frenesia:{n:0} };
+  function effetto(card, u, schermo){
+    if(!u) return;
+    var eff = (u.eff || []).filter(function(f, i, a){ return a.indexOf(f) === i && FX[f]; }).slice(0, 4);
+    var bersaglio = schermo ? document.querySelector("#pa-body .sc-wrap") : card;
+    if(schermo){
+      var sc = $("scheda"); if(!sc) return;
+      var rc = sc.getBoundingClientRect(); if(rc.bottom < 0 || rc.top > innerHeight) return;   /* la scheda non è sullo schermo: basta la card */
+    }
+    var box = document.createElement("div");
+    box.className = "gr-fx" + (schermo ? " schermo" : "") + (RIDOTTO ? " calmo" : "");
+    if(!eff.length) box.innerHTML = '<div class="gr-fx-l" data-f="nessuno"><span class="gr-fx-sweep"></span></div>';
+    eff.forEach(function(f, j){
+      var l = document.createElement("div"); l.className = "gr-fx-l"; l.setAttribute("data-f", f); l.style.setProperty("--c", FAMI[f].c); l.style.animationDelay = (j * 0.18) + "s";
+      var h = '<span class="gr-fx-vig"></span>';
+      if(!RIDOTTO){
+        if(f === "fulmine") h += '<span class="gr-fx-flash"></span><svg class="gr-fx-bolt" viewBox="0 0 40 100" preserveAspectRatio="none" style="left:' + (15 + Math.random() * 55) + '%"><path d="M24 0 L8 46 L20 46 L12 100 L34 38 L21 38 L30 0 Z"/></svg>';
+        if(f === "luce") h += '<span class="gr-fx-bloom"></span>';
+        if(f === "frenesia") h += '<span class="gr-fx-pulse"></span>';
+        var nn = FX[f].n * (schermo ? 1 : 0.6);
+        for(var i = 0; i < nn; i++){
+          var x = Math.random() * 100, dl = (Math.random() * 0.7 + j * 0.18).toFixed(2), sz = (0.6 + Math.random() * 0.9).toFixed(2);
+          h += '<i class="gr-fx-p" style="left:' + x.toFixed(1) + '%;animation-delay:' + dl + 's;--s:' + sz + ';--r:' + Math.round(Math.random() * 360) + 'deg;--x:' + Math.round(Math.random() * 60 - 30) + 'px">' + (FX[f].s || "") + '</i>';
+        }
+      }
+      l.innerHTML = h; box.appendChild(l);
+    });
+    if(schermo && u.danni){ var t = document.createElement("div"); t.className = "gr-fx-dan"; t.innerHTML = "<small>Fine del turno</small>−" + u.danni + " PV"; box.appendChild(t); }
+    else if(schermo){ var t2 = document.createElement("div"); t2.className = "gr-fx-dan zero"; t2.innerHTML = "<small>Fine del turno</small>Turno " + turnoMostrato(); box.appendChild(t2); }
+    (schermo ? document.body : card).appendChild(box);
+    if(bersaglio && !RIDOTTO){
+      var cls = eff.indexOf("terra") >= 0 || u.danni ? "gr-scossa" : eff.indexOf("stordito") >= 0 ? "gr-barcolla" : "";
+      if(cls){ bersaglio.classList.remove(cls); void bersaglio.offsetWidth; bersaglio.classList.add(cls); setTimeout(function(){ bersaglio.classList.remove(cls); }, 900); }
+    }
+    setTimeout(function(){ box.classList.add("via"); }, 2100);
+    setTimeout(function(){ box.remove(); }, 2700);
+  }
 
   /* =================== Scheda: PV e stati =================== */
   function tocca(el){ if(!el) return; el.dispatchEvent(new Event("input", { bubbles: true })); }
@@ -464,13 +686,6 @@
     }
     scriviStati(a);
   }
-  window.grFineTurno = function(){
-    var a = leggiStati(); if(!a.length) return;
-    var restano = [];
-    a.forEach(function(x){ var t = (x.t || 0) - 1; if(t > 0) restano.push({ id: x.id, t: t }); });
-    suono("tick"); scriviStati(restano);
-    var c = $("gr-stcard"); if(c){ c.classList.remove("giro"); void c.offsetWidth; c.classList.add("giro"); }
-  };
   window.grPulisci = function(){
     if(!leggiStati().length) return;
     var fai = function(){ suono("mend"); scriviStati([]); };
@@ -510,7 +725,7 @@
     var c = p.closest(".sc-card"); if(c) c.classList.toggle("ko", v.pv !== null && v.pv <= 0);
   }
   function rendiScheda(){
-    rendiPv(); rendiTiles();
+    rendiPv(); rendiTiles(); rendiFatto();
     var s = shareStato;
     if(!s || s === "notoken" || s === "ok") s = !tokScrittura(scCur) ? "notoken" : (accesso === "noaccesso" ? "noaccesso" : (s === "ok" ? "ok" : null));
     condivisione(s);

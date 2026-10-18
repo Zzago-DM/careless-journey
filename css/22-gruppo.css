@@ -177,3 +177,113 @@
   .gr-card *,.gr-card,.gr-card::after,.gr-tile,.gr-tile *,.gr-dot,.gr-shine,.gr-glow{animation:none!important}
   .gr-ghost,.gr-fill{transition:none!important}
 }
+
+/* ================= Turni ================= */
+.gr-turnbar{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:1.1rem;max-width:1100px;margin:0 auto 1.1rem;padding:.75rem 1.1rem;background:linear-gradient(90deg,rgba(var(--gold-rgb),.07),rgba(0,0,0,.25) 40%,rgba(0,0,0,.25) 60%,rgba(var(--gold-rgb),.07));border:1px solid var(--border);transition:border-color .4s,box-shadow .4s}
+.gr-turnbar.tutti{border-color:rgba(111,220,140,.45);box-shadow:0 0 22px rgba(111,220,140,.12)}
+.gr-tb-n{display:flex;flex-direction:column;align-items:center;line-height:1;min-width:64px}
+.gr-tb-n small{font-family:"Cinzel",serif;font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;color:var(--text2);margin-bottom:.2rem}
+.gr-tb-n b{font-family:"Cinzel Decorative",serif;font-size:2rem;color:var(--gold2);font-variant-numeric:tabular-nums}
+.gr-tb-n b.cambia{animation:grNumTurno .9s cubic-bezier(.2,1.4,.4,1)}
+@keyframes grNumTurno{0%{transform:scale(.4) rotate(-12deg);opacity:0;filter:blur(3px)}60%{transform:scale(1.35);opacity:1;filter:blur(0);text-shadow:0 0 18px var(--gold2)}100%{transform:scale(1)}}
+.gr-tb-done{font-family:"Cinzel",serif;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+.gr-tb-done b{color:var(--text);font-size:.8rem}
+.gr-tb-pips{display:inline-flex;gap:.3rem}
+.gr-tb-pips i{font-style:normal;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.35);font-size:.85rem;filter:grayscale(.8) opacity(.6);transition:all .35s}
+.gr-tb-pips i.on{filter:none;border-color:rgba(111,220,140,.7);box-shadow:0 0 10px rgba(111,220,140,.35);animation:grEntra .5s cubic-bezier(.2,1.5,.4,1)}
+.gr-tb-act{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;justify-content:flex-end}
+.gr-tb-h{flex-basis:100%;text-align:right;font-size:.78rem;font-style:italic;color:var(--text2)}
+.gr-fine{font-family:"Cinzel",serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.55rem 1.1rem;background:linear-gradient(180deg,rgba(200,72,72,.28),rgba(120,20,20,.35));border:1px solid var(--master2);color:#ffd8d0;cursor:pointer;box-shadow:0 0 14px rgba(255,96,96,.25);transition:transform .12s,box-shadow .3s,filter .3s}
+.gr-fine:hover{box-shadow:0 0 24px rgba(255,96,96,.45)}
+.gr-fine:active{transform:scale(.96)}
+.gr-fine:disabled{opacity:.6;cursor:wait}
+.gr-turnbar.tutti .gr-fine:not(.bloccato){animation:grPronto 1.6s ease-in-out infinite}
+@keyframes grPronto{50%{box-shadow:0 0 30px rgba(255,96,96,.6);filter:brightness(1.2)}}
+.gr-fine.bloccato{background:rgba(0,0,0,.3);border-color:rgba(255,255,255,.12);color:var(--text2);box-shadow:none;cursor:not-allowed}
+.gr-azzera{width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.3);border:1px solid var(--border);color:var(--gold2);font-size:1rem;cursor:pointer}
+.gr-azzera:hover{border-color:var(--gold3)}
+
+/* card: azione conclusa */
+.gr-fatto{position:absolute;top:.55rem;right:.6rem;z-index:2;font-family:"Cinzel",serif;font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:.15rem .45rem;color:#0d1a10;background:#7ce69a;border-radius:2px;box-shadow:0 0 12px rgba(111,220,140,.5);opacity:0;transform:translateY(-6px) scale(.8);transition:opacity .3s,transform .35s cubic-bezier(.2,1.5,.4,1);pointer-events:none}
+.gr-card.fatto .gr-fatto{opacity:1;transform:none}
+.gr-card.fatto{border-color:rgba(111,220,140,.5)}
+.gr-card.fatto .gr-head{opacity:.92}
+.gr-card.fatto-in::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background:radial-gradient(circle at 85% 10%,rgba(111,220,140,.35),transparent 60%);animation:grLampo .9s ease-out forwards}
+.gr-card .gr-num{margin-top:.6rem}
+
+/* scheda: ho concluso l'azione */
+.gr-concludi{color:#a8f0be;border-color:rgba(111,220,140,.45)}
+.gr-concludi:hover{background:rgba(111,220,140,.1);border-color:rgba(111,220,140,.7)}
+.gr-concludi.fatto{color:var(--gold2);border-color:var(--border)}
+.gr-attesa{margin:.6rem 0 .2rem;padding:.5rem .75rem;border:1px solid rgba(111,220,140,.4);background:rgba(111,220,140,.08);color:#a8f0be;font-family:"Cinzel",serif;font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;animation:grEntra .5s ease-out}
+.gr-toast{bottom:76px}
+
+/* ================= Effetti della fine del turno ================= */
+.gr-fx{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden;border-radius:inherit;transition:opacity .6s}
+.gr-fx.schermo{position:fixed;z-index:900}
+.gr-fx.via{opacity:0}
+.gr-fx-l{position:absolute;inset:0}
+.gr-fx-vig{position:absolute;inset:0;opacity:0;box-shadow:inset 0 0 60px 10px var(--c);animation:grVig 1.9s ease-out forwards;animation-delay:inherit}
+.gr-fx.schermo .gr-fx-vig{box-shadow:inset 0 0 160px 30px var(--c)}
+@keyframes grVig{0%{opacity:0}18%{opacity:.85}100%{opacity:0}}
+.gr-fx-p{position:absolute;font-style:normal;line-height:1;opacity:0;font-size:calc(1rem * var(--s));will-change:transform,opacity}
+/* fuoco: braci che salgono */
+.gr-fx-l[data-f=fuoco] .gr-fx-p{bottom:-10%;font-size:calc(.9rem * var(--s));filter:drop-shadow(0 0 6px #ff6a2a);animation:grSali 1.6s ease-out forwards}
+@keyframes grSali{0%{opacity:0;transform:translate(0,0) scale(.6)}15%{opacity:1}100%{opacity:0;transform:translate(var(--x),-110vh) scale(1.2)}}
+.gr-fx:not(.schermo) .gr-fx-l[data-f=fuoco] .gr-fx-p{animation-name:grSaliC}
+@keyframes grSaliC{0%{opacity:0;transform:translate(0,0) scale(.6)}15%{opacity:1}100%{opacity:0;transform:translate(var(--x),-260px) scale(1.2)}}
+/* ghiaccio: fiocchi che scendono + brina ai bordi */
+.gr-fx-l[data-f=ghiaccio] .gr-fx-p,.gr-fx-l[data-f=stordito] .gr-fx-p{top:-8%;color:#d8f2ff;text-shadow:0 0 8px #7ec8e3;animation:grScendi 1.9s ease-in forwards}
+@keyframes grScendi{0%{opacity:0;transform:translate(0,0) rotate(0)}15%{opacity:1}100%{opacity:0;transform:translate(var(--x),105vh) rotate(var(--r))}}
+.gr-fx:not(.schermo) .gr-fx-l[data-f=ghiaccio] .gr-fx-p{animation-name:grScendiC}
+@keyframes grScendiC{0%{opacity:0;transform:translate(0,0) rotate(0)}15%{opacity:1}100%{opacity:0;transform:translate(var(--x),240px) rotate(var(--r))}}
+.gr-fx-l[data-f=ghiaccio] .gr-fx-vig{box-shadow:inset 0 0 70px 14px rgba(190,235,255,.9)}
+.gr-fx.schermo .gr-fx-l[data-f=ghiaccio] .gr-fx-vig{box-shadow:inset 0 0 190px 40px rgba(190,235,255,.85)}
+/* fulmine: lampo e saetta */
+.gr-fx-flash{position:absolute;inset:0;background:rgba(255,248,200,.55);opacity:0;animation:grLampi .9s steps(1) forwards}
+@keyframes grLampi{0%{opacity:0}8%{opacity:1}16%{opacity:0}26%{opacity:.8}34%{opacity:0}48%{opacity:.5}56%{opacity:0}}
+.gr-fx-bolt{position:absolute;top:0;width:60px;height:100%;fill:#fff7c0;filter:drop-shadow(0 0 10px #f0d020) drop-shadow(0 0 22px #f0d020);opacity:0;animation:grSaetta .7s steps(1) .05s forwards}
+@keyframes grSaetta{0%{opacity:1}20%{opacity:0}35%{opacity:1}55%{opacity:0}}
+/* terra: polvere verde che si alza */
+.gr-fx-l[data-f=terra] .gr-fx-p{bottom:-4%;width:calc(10px * var(--s));height:calc(10px * var(--s));border-radius:50%;background:radial-gradient(circle,rgba(150,210,110,.9),rgba(95,174,80,0));animation:grPolvere 1.5s ease-out forwards}
+@keyframes grPolvere{0%{opacity:0;transform:translate(0,0) scale(.5)}20%{opacity:1}100%{opacity:0;transform:translate(var(--x),-120px) scale(2.4)}}
+/* oscurità: fumo viola */
+.gr-fx-l[data-f=oscurita] .gr-fx-p{top:20%;width:calc(120px * var(--s));height:calc(120px * var(--s));margin-left:-60px;border-radius:50%;background:radial-gradient(circle,rgba(70,30,130,.75),rgba(30,10,60,0) 70%);filter:blur(8px);animation:grFumo 1.9s ease-out forwards}
+@keyframes grFumo{0%{opacity:0;transform:scale(.3) translateY(30px)}30%{opacity:.9}100%{opacity:0;transform:scale(1.8) translateY(-40px)}}
+.gr-fx-l[data-f=oscurita] .gr-fx-vig{box-shadow:inset 0 0 90px 30px rgba(40,10,80,.95)}
+/* luce: bagliore */
+.gr-fx-bloom{position:absolute;left:50%;top:45%;width:10px;height:10px;border-radius:50%;background:#fff;box-shadow:0 0 60px 40px rgba(255,255,255,.8),0 0 160px 120px rgba(226,194,255,.6);transform:translate(-50%,-50%) scale(.2);opacity:0;animation:grBagliore 1.4s ease-out forwards}
+@keyframes grBagliore{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}25%{opacity:1;transform:translate(-50%,-50%) scale(3)}100%{opacity:0;transform:translate(-50%,-50%) scale(6)}}
+.gr-fx-l[data-f=luce] .gr-fx-p{top:45%;width:2px;height:40%;margin-top:-20%;background:linear-gradient(180deg,transparent,rgba(255,240,255,.9),transparent);transform-origin:50% 50%;transform:rotate(var(--r));opacity:0;animation:grRaggio 1.2s ease-out forwards}
+@keyframes grRaggio{30%{opacity:.9}100%{opacity:0;transform:rotate(calc(var(--r) + 25deg)) scaleY(1.6)}}
+/* sangue: gocce */
+.gr-fx-l[data-f=sanguinante] .gr-fx-p,.gr-fx-l[data-f=emorragia] .gr-fx-p{top:-4%;width:calc(6px * var(--s));height:calc(14px * var(--s));border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:linear-gradient(180deg,#ff5040,#8a0a1a);box-shadow:0 0 6px rgba(200,20,30,.6);animation:grGocce 1.5s cubic-bezier(.5,0,.9,.6) forwards}
+@keyframes grGocce{0%{opacity:0;transform:translateY(0) scaleY(.6)}12%{opacity:1}100%{opacity:0;transform:translateY(260px) scaleY(1.3)}}
+.gr-fx.schermo .gr-fx-l[data-f=sanguinante] .gr-fx-p,.gr-fx.schermo .gr-fx-l[data-f=emorragia] .gr-fx-p{animation-name:grGocceS}
+@keyframes grGocceS{0%{opacity:0;transform:translateY(0) scaleY(.6)}12%{opacity:1}100%{opacity:0;transform:translateY(100vh) scaleY(1.3)}}
+/* stordito: stelline */
+.gr-fx-l[data-f=stordito] .gr-fx-p{color:#ffe9a0;text-shadow:0 0 8px #e8c870}
+/* frenesia: battito rosso */
+.gr-fx-pulse{position:absolute;inset:0;box-shadow:inset 0 0 80px 20px rgba(255,80,40,.8);opacity:0;animation:grBattito 1.4s ease-in-out forwards}
+@keyframes grBattito{15%{opacity:1}30%{opacity:.2}45%{opacity:1}100%{opacity:0}}
+/* nessuno stato: scia dorata */
+.gr-fx-sweep{position:absolute;top:0;bottom:0;width:30%;left:-30%;background:linear-gradient(90deg,transparent,rgba(var(--gold-rgb),.35),transparent);animation:grScia 1.1s ease-out forwards}
+@keyframes grScia{to{left:110%}}
+/* scritta al centro dello schermo */
+.gr-fx-dan{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);text-align:center;font-family:"Cinzel Decorative",serif;font-weight:900;font-size:clamp(2.4rem,9vw,4.5rem);color:#ff6a55;text-shadow:0 4px 24px rgba(0,0,0,.9),0 0 30px rgba(255,60,40,.6);animation:grDanni 2.2s cubic-bezier(.2,.9,.3,1) forwards;opacity:0}
+.gr-fx-dan.zero{color:var(--gold2);text-shadow:0 4px 24px rgba(0,0,0,.9),0 0 30px rgba(var(--gold-rgb),.5);font-size:clamp(1.8rem,6vw,3rem)}
+.gr-fx-dan small{display:block;font-family:"Cinzel",serif;font-size:.8rem;font-weight:700;letter-spacing:.35em;text-transform:uppercase;color:var(--text);margin-bottom:.3rem}
+@keyframes grDanni{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}14%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}24%{transform:translate(-50%,-50%) scale(1)}75%{opacity:1}100%{opacity:0;transform:translate(-50%,-70%) scale(1)}}
+/* scossa e barcollo */
+.gr-scossa{animation:grColpo .55s cubic-bezier(.36,.07,.19,.97)}
+.gr-barcolla{animation:grBarcolla .8s ease-in-out}
+@keyframes grBarcolla{25%{transform:rotate(-1deg) translateX(-4px);filter:blur(1px)}50%{transform:rotate(1deg) translateX(4px)}75%{transform:rotate(-.5deg);filter:blur(.5px)}}
+.gr-fx.calmo .gr-fx-vig{animation-duration:2.4s}
+
+@media(max-width:640px){
+  .gr-turnbar{grid-template-columns:auto 1fr;gap:.7rem}
+  .gr-tb-act{grid-column:1/-1;justify-content:stretch}
+  .gr-fine{flex:1}
+  .gr-tb-h{text-align:center}
+}
+@media(prefers-reduced-motion:reduce){.gr-fx-p,.gr-fx-flash,.gr-fx-bolt,.gr-fx-bloom{display:none}.gr-scossa,.gr-barcolla,.gr-tb-n b.cambia{animation:none}}

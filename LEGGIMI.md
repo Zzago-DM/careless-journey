@@ -61,7 +61,8 @@ Se un token si perde: revocalo su GitHub e creane uno nuovo; ogni versione salva
 La sezione **Il Gruppo** (`sezioni/gruppo.js`, `css/22-gruppo.css`, `js/gruppo.js`), subito sopra l'Area dello Slayer, mostra a tutti i Punti Vita (con la barra) e gli stati alterati di ogni personaggio. Nella scheda ci sono i PV attuali / massimi con i pulsanti ±1 e ±5 e il riquadro «Stati alterati» (un tocco: forma lieve, due: grave, tre: via; «⏭ Fine turno» toglie un turno a tutti).
 
 - I dati stanno nel repository **privato** `gruppo`, file `stato.json`. Quando un giocatore cambia PV o stati, dopo un paio di secondi il sito invia la sua riga; gli altri dispositivi la rileggono ogni pochi secondi mentre la pagina è aperta.
-- Si usa il token del personaggio (se manca, quello del Master). Senza token il quadro mostra solo ciò che è salvato su quel dispositivo.
+- Si usa il token del personaggio (se manca, quello del Master).
+- **Turni.** Il giocatore preme «✓ Ho concluso l'azione» (con conferma; può tornare indietro con «↩ Riprendi l'azione» finché il turno è aperto) e sul quadro compare «Azione conclusa». Solo chi ha il **token del Master** può premere «⏭ Fine turno» nella sezione Il Gruppo: per ogni personaggio toglie i PV degli stati che fanno danno a turno (Scottato −2, Bruciato −5, Elettrificato −1, Fulminato −3, Corrotto −5, Abbagliato −5), toglie un turno a ogni stato e azzera le azioni concluse. Le schede dei giocatori si aggiornano da sole e partono gli effetti visivi. «↺» riporta il contatore a 1 per un nuovo scontro. Sanguinante ed Emorragia non tolgono PV in automatico (dipendono da quando ci si muove o si agisce). Senza token il quadro mostra solo ciò che è salvato su quel dispositivo.
 
 **Preparazione (una volta sola, la fa il Master):**
 1. Crea il repository privato `gruppo` (spunta "Add a README").
