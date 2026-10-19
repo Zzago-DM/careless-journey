@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-19T17:51:57.040Z",
+ "aggiornato": "2026-10-19T17:52:32.157Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -270,6 +270,11 @@
    "formati": [
     "3:4"
    ]
+  },
+  {
+   "id": "pmvfjxc3hm7yj",
+   "nome": "Railen Krona",
+   "continente": "ramsgate"
   },
   {
    "id": "pmvexwjy49ioq",
