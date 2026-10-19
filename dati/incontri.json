@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-19T07:41:45.290Z",
+ "aggiornato": "2026-10-19T07:42:52.886Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -271,6 +271,15 @@
     "Amorlarien"
    ],
    "foto": "img/incontri/pmvexwjy49ioq-4mw7ec.webp",
+   "formati": [
+    "3:4"
+   ]
+  },
+  {
+   "id": "pmvey4s4c05co",
+   "nome": "Revelor Baalz",
+   "continente": "terrestre",
+   "foto": "img/incontri/pmvey4s4c05co-ato6im.webp",
    "formati": [
     "3:4"
    ]
