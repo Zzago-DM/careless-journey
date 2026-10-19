@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-19T08:23:57.549Z",
+ "aggiornato": "2026-10-19T08:24:18.798Z",
  "reliquie": [
   {
    "id": "rmvezhisx4xi5",
@@ -12,6 +12,12 @@
    "nome": "Frammento Solcavuoto",
    "descr": "Tre segni ti attendono, scolpiti nel cielo: \nla lama che fende l’aurora cadente, \nil cuore che pulsa ma tace silente, \nl’occhio che guarda l’abisso, suo velo.",
    "foto": "img/reliquie/rmvezlf26audn-1bwj76e.webp"
+  },
+  {
+   "id": "rmvezmw091d7j",
+   "nome": "Frammento 8",
+   "descr": "Così nella selva che inghiotte ogni suono \nil vuoto risponde soltanto al coraggio.\nChi spezza catene troverà il passaggio, \nchi teme se stesso si perde nel buono.",
+   "foto": "img/reliquie/rmvezmw091d7j-1fw0n3v.webp"
   }
  ]
 }
