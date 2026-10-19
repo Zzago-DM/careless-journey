@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-19T07:37:09.202Z",
+ "aggiornato": "2026-10-19T07:38:06.110Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -15,6 +15,15 @@
    "foto": "img/arkan-drew.webp",
    "formati": [
     "1:1"
+   ]
+  },
+  {
+   "id": "pmvexyrhyprg7",
+   "nome": "atreo silver",
+   "continente": "glaciale",
+   "foto": "img/incontri/pmvexyrhyprg7-1x7b274.webp",
+   "formati": [
+    "3:4"
    ]
   },
   {
