@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-19T07:31:03.578Z",
+ "aggiornato": "2026-10-19T07:32:32.946Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -16,6 +16,11 @@
    "formati": [
     "1:1"
    ]
+  },
+  {
+   "id": "pmvexqygit6c0",
+   "nome": "Cendrik Voltz",
+   "continente": "folgorante"
   },
   {
    "id": "r-ernest-ozz-honest",
