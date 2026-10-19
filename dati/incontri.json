@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-19T07:42:52.886Z",
+ "aggiornato": "2026-10-19T07:43:29.643Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -260,6 +260,15 @@
    "foto": "img/nonna-yaga.webp",
    "formati": [
     "1:1"
+   ]
+  },
+  {
+   "id": "pmvey627nik40",
+   "nome": "Paramin",
+   "continente": "terrestre",
+   "foto": "img/incontri/pmvey627nik40-1inlmh9.webp",
+   "formati": [
+    "3:4"
    ]
   },
   {
