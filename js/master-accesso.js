@@ -44,7 +44,7 @@
     }).catch(function(e){ try{ sfxPlay("deny"); }catch(_){} if(pwe){ pwe.textContent = msgErr(e); pwe.style.display = "block"; } if(pwi) pwi.select(); });
   };
   /* apertura della Zona Master quando i contenuti sono già in questo browser */
-  function costruisci(){ try { buildMBeh(); buildMCards(MD,50,"grid-mael"); buildMCards(AD,26,"grid-alti"); buildMCards(MND,26,"grid-minori"); } catch(e){} }
+  function costruisci(){ try { buildMBeh(); if(window.buildMaelPreview) buildMaelPreview(MD); else buildMCards(MD,50,"grid-mael"); buildMCards(AD,26,"grid-alti"); buildMCards(MND,26,"grid-minori"); } catch(e){} }
   window.tcjMasterApri = function(animazione){
     if(!TCJ_MASTER || !token()) return false;
     mOpen = true; costruisci();
