@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-19T07:32:32.946Z",
+ "aggiornato": "2026-10-19T07:33:35.353Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -53,6 +53,15 @@
    "foto": "img/estarossa.webp",
    "formati": [
     "1:1"
+   ]
+  },
+  {
+   "id": "pmvexsqtdsrxh",
+   "nome": "Gregor e. tasher",
+   "continente": "folgorante",
+   "foto": "img/incontri/pmvexsqtdsrxh-1de5721.webp",
+   "formati": [
+    "3:4"
    ]
   },
   {
