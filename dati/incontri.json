@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-19T07:38:06.110Z",
+ "aggiornato": "2026-10-19T07:38:43.754Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -15,6 +15,15 @@
    "foto": "img/arkan-drew.webp",
    "formati": [
     "1:1"
+   ]
+  },
+  {
+   "id": "pmvexzwvqipob",
+   "nome": "Athena silver",
+   "continente": "glaciale",
+   "foto": "img/incontri/pmvexzwvqipob-1rikwlz.webp",
+   "formati": [
+    "3:4"
    ]
   },
   {
