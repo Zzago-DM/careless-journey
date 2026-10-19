@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-19T07:33:56.601Z",
+ "aggiornato": "2026-10-19T07:34:08.257Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -67,6 +67,10 @@
    "id": "pmvexsqtdsrxh",
    "nome": "Gregor e. tasher",
    "continente": "folgorante",
+   "stato": "vivo",
+   "fazioni": [
+    "Guardie di Ostia"
+   ],
    "foto": "img/incontri/pmvexsqtdsrxh-1de5721.webp",
    "formati": [
     "3:4"
