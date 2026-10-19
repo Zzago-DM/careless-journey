@@ -525,7 +525,7 @@ document.addEventListener("visibilitychange",function(){if(!document.hidden)orbK
 const NV_INFO={
  ponte_esterno:{card:"Ponte Esterno"},sala_mappe:{card:"Sala Mappe"},ponte_comando:{card:"Ponte di Comando"},alloggi:{card:"Alloggi Principali",alloggi:true},
  mensa:{card:"Mensa"},stiva_modulare:{card:"Stiva Modulare"},stiva_primaria:{card:"Stiva Primaria"},sala_macchine:{card:"Sala Macchine"},
- zona_segreta:{e:"🗝️",t:"Zona Segreta — Reliquie",s:"3° Piano Prua · dietro i muri della Sala Macchine",b:"Una stanza nascosta dietro uno dei muri rinforzati della Sala Macchine, dove vengono custoditi <strong>reliquie e artefatti</strong>. Vi si accede da una scala a pioli."},
+ zona_segreta:{e:"🗝️",t:"Zona Segreta — Reliquie",s:"3° Piano Prua · dietro i muri della Sala Macchine",b:"Una stanza nascosta dietro uno dei muri rinforzati della Sala Macchine, dove vengono custoditi <strong>reliquie e artefatti</strong>. Vi si accede da una scala a pioli.",rel:true},
  scale:{e:"🪜",t:"Scale principali",s:"Collegamento tra i ponti",b:"La scalinata che collega i ponti della nave: dal <strong>Ponte di Comando</strong> scende alla Sala Mappe, poi alla Stiva Modulare e fino al fondo della nave."},
  scala_pioli:{e:"🌀",t:"Scala a chiocciola",s:"Parete di poppa · servizio",b:"Passaggio di servizio lungo la parete di poppa, dagli <strong>Alloggi</strong> fino al fondo della nave."},
  ascensore:{e:"🛗",t:"Ascensore centrale",s:"Stiva Modulare ↔ Stiva Primaria",b:"Collega la <strong>Stiva Modulare</strong> e la <strong>Stiva Primaria</strong>, per spostare carichi e attrezzature tra i due livelli."}};
@@ -534,7 +534,7 @@ function nvPick(k){const info=NV_INFO[k],p=document.getElementById("nv-pop");if(
  let html="";
  if(info.card){const c=[].slice.call(document.querySelectorAll("#nv-cards > .card")).find(function(x){const t=x.querySelector(".ct");return t&&t.textContent.trim()===info.card});if(c)html=c.innerHTML;}
  if(!html)html='<div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.6rem">'+info.e+'</div><div><div class="ct">'+info.t+'</div><div class="cs">'+info.s+'</div></div></div><div class="cb"><p>'+info.b+'</p></div>';
- if(info.alloggi)html+='<button type="button" class="nv-go" onclick="alOpen()">🚪 Entra negli alloggi</button>';
+ if(info.alloggi)html+='<button type="button" class="nv-go" onclick="alOpen()">🚪 Entra negli alloggi</button>';if(info.rel)html+='<button type="button" class="nv-go" onclick="relApri()">🗝️ Entra nella stanza delle Reliquie</button>';
  sfxPlay("paper");p.innerHTML='<div class="nv-popin">'+html+'</div>';document.getElementById("nv-ov").classList.add("open");}
 function nvClose(){const o=document.getElementById("nv-ov");if(o)o.classList.remove("open");document.querySelectorAll("#nave .nv-a.on").forEach(function(a){a.classList.remove("on")});}
 function nvToggleAll(force){const g=document.getElementById("nv-cards"),b=document.getElementById("nv-tog");if(!g||!b)return;const on=typeof force==="boolean"?force:!g.classList.contains("show");

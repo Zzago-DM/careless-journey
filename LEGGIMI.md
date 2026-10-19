@@ -68,6 +68,13 @@ La sezione **Il Gruppo** (`sezioni/gruppo.js`, `css/22-gruppo.css`, `js/gruppo.j
 1. Crea il repository privato `gruppo` (spunta "Add a README").
 2. In *Settings → Developer settings → Fine-grained tokens* apri **ognuno dei quattro token** (Athena, Pan Lan, Asonnes, Master) → *Edit* → in *Repository access* aggiungi `gruppo` → salva. I permessi restano *Contents: Read and write*. I giocatori non devono reincollare niente.
 
+## Reliquie (Nave › Zona Segreta + capitolo del Master)
+
+- Nella Nave, toccando la **Zona Segreta** compare «🗝️ Entra nella stanza delle Reliquie»: una stanza con un piedistallo per ogni artefatto visibile (`js/reliquie.js`, `css/23-reliquie.css`). Toccando un artefatto si apre la sua scheda: descrizione del Master e «Le mie note» del giocatore, salvate nel suo pacchetto (`tcj-rel-<personaggio>`) e quindi nel suo salvataggio online.
+- Il sito pubblico legge solo `dati/reliquie.json` e le immagini in `img/reliquie/`: contengono **solo** le reliquie che il Master ha deciso di mostrare.
+- I dati veri stanno in `tcj-master`: `reliquie/reliquie.json` (tutte le reliquie, note del Master, «Mostra ai giocatori») e `reliquie/foto/` (galleria: gli 8 frammenti e armi e artefatti dei Mael).
+- Si lavora dalla Zona Master, capitolo «Reliquie della nave» (`js/master-reliquie.js`, aggiunto da solo prima che i capitoli diventino bolle). «📣 Pubblica sul sito» riscrive `dati/reliquie.json` e le immagini in un'unica modifica: il token del Master deve includere anche `careless-journey`.
+
 ## Zona Master privata
 
 I contenuti della Zona Master (testi, segreti, schede di Mael e Maestri) **non stanno più in questo repository**: sono nel repository privato `tcj-master` (`zona-master.html`, `schede.json`).
