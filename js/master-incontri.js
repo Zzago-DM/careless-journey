@@ -276,7 +276,7 @@
     var u = usati(campo); u.forEach(function(x){ h += '<option value="' + esc(x) + '">'; });
     h += '</datalist>';
     var liberi = u.filter(function(x){ return p[campo].indexOf(x) < 0; });
-    if(liberi.length){ h += '<div class="ie-usati"><span>Già usati:</span>'; liberi.forEach(function(x){ h += '<button type="button" class="ie-u" data-usa="' + campo + '" data-v="' + esc(x) + '">' + esc(x) + '</button>'; }); h += '</div>'; }
+    if(liberi.length){ h += '<div class="ie-usati"><span>' + (campo === "fazioni" ? "Tocca per aggiungere:" : "Già usati altrove:") + '</span>'; liberi.forEach(function(x){ h += '<button type="button" class="ie-u" data-usa="' + campo + '" data-v="' + esc(x) + '">' + esc(x) + '</button>'; }); h += '</div>'; }
     return h + '</div>';
   }
 
