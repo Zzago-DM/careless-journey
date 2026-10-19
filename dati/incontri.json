@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-19T07:25:41.462Z",
+ "aggiornato": "2026-10-19T07:30:07.275Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -62,22 +62,6 @@
     "Maestro Minore"
    ],
    "foto": "img/gregorio-flynt.webp",
-   "formati": [
-    "1:1"
-   ]
-  },
-  {
-   "id": "r-il-mediatore",
-   "nome": "Il Mediatore",
-   "continente": "ramsgate",
-   "pres": "Esperto di celle aetheriche.\n\nUn tempo professore di fisica aetherica, fu sfigurato da un esperimento finito male, che gli costò anche il prestigio e il posto nel mondo accademico. Vive nei bassifondi di Ramsgate e continua le sue ricerche sulle celle aetheriche.\n\nSchivo ed enigmatico: rispettato, ma mai del tutto accettato.",
-   "fazioni": [
-    "Gilda degli Slayer"
-   ],
-   "tag": [
-    "Maestro Minore"
-   ],
-   "foto": "img/il-mediatore.webp",
    "formati": [
     "1:1"
    ]
