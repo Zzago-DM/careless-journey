@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-19T07:38:56.746Z",
+ "aggiornato": "2026-10-19T07:40:05.724Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -31,6 +31,15 @@
    "nome": "atreo silver",
    "continente": "glaciale",
    "foto": "img/incontri/pmvexyrhyprg7-1x7b274.webp",
+   "formati": [
+    "3:4"
+   ]
+  },
+  {
+   "id": "pmvey0zdm5a1w",
+   "nome": "Bulvar Rosk",
+   "continente": "ramsgate",
+   "foto": "img/incontri/pmvey0zdm5a1w-tyatti.webp",
    "formati": [
     "3:4"
    ]
