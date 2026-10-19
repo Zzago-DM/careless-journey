@@ -1,4 +1,278 @@
 {
- "aggiornato": null,
- "personaggi": []
+ "aggiornato": "2026-10-19T07:25:41.462Z",
+ "personaggi": [
+  {
+   "id": "r-arkan-drew",
+   "nome": "Arkan Drew",
+   "continente": "ramsgate",
+   "pres": "Inventore e scienziato.\n\nIn passato lavorò con un altro studioso delle celle, ma ruppe con lui quando si accorse dei rischi dei suoi esperimenti, e da allora prosegue da solo. Studia celle, contenitori e meccanismi, e sperimenta prototipi di mecha per gli Slayer, tra cui il Ravengard. È lui ad aver costruito l'occhio aetherico di Lady Luck.\n\nGeniale ma goffo nei rapporti sociali, strambo e dai modi poco convenzionali.",
+   "fazioni": [
+    "Gilda degli Slayer"
+   ],
+   "tag": [
+    "Maestro Minore"
+   ],
+   "foto": "img/arkan-drew.webp",
+   "formati": [
+    "1:1"
+   ]
+  },
+  {
+   "id": "r-ernest-ozz-honest",
+   "nome": "Ernest “Ozz” Honest",
+   "continente": "ramsgate",
+   "pres": "Messaggero.\n\nConosciuto anche come «Ozz l'Onesto».\n\nOrfano cresciuto da solo a Ramsgate, imparò a viaggiare di nascosto sulle navi degli Slayer. Quando lo scoprirono, invece di punirlo gli affidarono un ruolo ufficiale. Porta informazioni e materiali da uno Slayer all'altro: conosce Ramsgate come le sue tasche.\n\nAllegro, esplosivo, instancabile.",
+   "fazioni": [
+    "Gilda degli Slayer"
+   ],
+   "tag": [
+    "Maestro Minore"
+   ],
+   "foto": "img/ernest-ozz-honest.webp",
+   "formati": [
+    "1:1"
+   ]
+  },
+  {
+   "id": "r-estarossa",
+   "nome": "Estarossa",
+   "continente": "ramsgate",
+   "pres": "Mael dell'Aether Terrestre — Governatore di Ramsgate.\n\nUno dei sei Mael, gli Slayer leggendari che strinsero il patto con il Maelstrom. Guidò la ricostruzione di Ramsgate sopra le rovine della città antica, pietra dopo pietra, e da allora ne custodisce la neutralità fra gli Slayer di ogni terra. È la massima autorità di Ramsgate e guida la Gilda degli Slayer: rilascia il titolo ufficiale, sceglie a chi affidare le spedizioni più delicate e segue da vicino gli Slayer più promettenti, a cui ha confidato la ricerca degli artefatti dei Mael.\n\nAttento, risoluto e gentile. Ascolta tutti prima di decidere, ma una volta presa una decisione non torna indietro. Chi lo incontra ricorda soprattutto la sua calma: parla piano, e la sala si ferma ad ascoltarlo.",
+   "fazioni": [
+    "Gilda degli Slayer"
+   ],
+   "tag": [
+    "Governatore",
+    "Mael"
+   ],
+   "foto": "img/estarossa.webp",
+   "formati": [
+    "1:1"
+   ]
+  },
+  {
+   "id": "r-gregorio-flynt",
+   "nome": "Gregorio Flynt",
+   "continente": "ramsgate",
+   "pres": "Materiali rari.\n\nConosciuto anche come «Il Gregario».\n\nNato a Ramsgate, ha sempre avuto un animo eccentrico e creativo. Aiuta gli Slayer a procurarsi materiali rari, soprattutto estetici e ornamentali: per lui l'apparenza conta moltissimo.\n\nEccentrico e creativo, segue molto il suo istinto. Nel suo campo è una garanzia.",
+   "fazioni": [
+    "Gilda degli Slayer"
+   ],
+   "tag": [
+    "Maestro Minore"
+   ],
+   "foto": "img/gregorio-flynt.webp",
+   "formati": [
+    "1:1"
+   ]
+  },
+  {
+   "id": "r-il-mediatore",
+   "nome": "Il Mediatore",
+   "continente": "ramsgate",
+   "pres": "Esperto di celle aetheriche.\n\nUn tempo professore di fisica aetherica, fu sfigurato da un esperimento finito male, che gli costò anche il prestigio e il posto nel mondo accademico. Vive nei bassifondi di Ramsgate e continua le sue ricerche sulle celle aetheriche.\n\nSchivo ed enigmatico: rispettato, ma mai del tutto accettato.",
+   "fazioni": [
+    "Gilda degli Slayer"
+   ],
+   "tag": [
+    "Maestro Minore"
+   ],
+   "foto": "img/il-mediatore.webp",
+   "formati": [
+    "1:1"
+   ]
+  },
+  {
+   "id": "r-janek-zai",
+   "nome": "Janek Zai",
+   "continente": "ramsgate",
+   "pres": "Esperto di armi da fuoco.\n\nConosciuto anche come «Ammiraglio Zai».\n\nEx Guardia Ostiense, si ritirò quando l'ordine divenne troppo bellicoso. Addestra gli Slayer alle armi da fuoco e introduce nuove tecnologie, dalle pistole agli archi aetherici. Ha progettato le Armi di Supporto.\n\nRigoroso come un ufficiale, ma empatico e comprensivo.",
+   "fazioni": [
+    "Gilda degli Slayer"
+   ],
+   "tag": [
+    "Maestro Minore"
+   ],
+   "foto": "img/janek-zai.webp",
+   "formati": [
+    "1:1"
+   ]
+  },
+  {
+   "id": "r-katerin-sorrel",
+   "nome": "Katerin Sorrel",
+   "continente": "ramsgate",
+   "pres": "Maestra della spada.\n\nDa sempre legata alla via della spada, ha scelto di insegnarla ai nuovi Slayer. Si dice che a Ramsgate non esista duellante migliore. Allena gli Slayer che scelgono la spada e coordina anche alcuni aspetti burocratici delle missioni.\n\nSeria e autorevole, guida con equilibrio tra rigore e sostegno.",
+   "fazioni": [
+    "Gilda degli Slayer"
+   ],
+   "tag": [
+    "Alto Maestro"
+   ],
+   "foto": "img/katerin-sorrel.webp",
+   "formati": [
+    "1:1"
+   ]
+  },
+  {
+   "id": "r-la-maestra-sfregiata",
+   "nome": "La Maestra Sfregiata",
+   "continente": "ramsgate",
+   "pres": "Maestra dei pugni aetherici.\n\nCresciuta nei templi aetherici delle Isole Elettriche, le lasciò quando Ostia divenne una potenza militarista. Deve il suo nome all'aver vinto l'attacco di uno Stormclaw Rombotuono infuriato. Viaggiò di isola in isola per capire il senso della lotta oltre la guerra, poi portò a Ramsgate l'insegnamento dei Monaci del Pugno. Insegna la via dei pugni aetherici, unendo disciplina del corpo e filosofia di vita.\n\nAustera e severa, segnata nel corpo e nello spirito: trasforma il dolore in insegnamento.",
+   "fazioni": [
+    "Gilda degli Slayer"
+   ],
+   "tag": [
+    "Alto Maestro"
+   ],
+   "foto": "img/la-maestra-sfregiata.webp",
+   "formati": [
+    "1:1"
+   ]
+  },
+  {
+   "id": "r-lady-luck",
+   "nome": "Lady Luck",
+   "continente": "ramsgate",
+   "pres": "Maestra della catena — economia degli Slayer.\n\nConosciuta anche come «Lady Fortuna».\n\nEx piratessa delle zone Radianti, cambiò vita dopo aver incontrato Markus Boher, allora giovane Slayer. Negli anni da pirata perse un occhio, oggi sostituito da un occhio aetherico costruito da Arkan Drew e Markus. Insegna le lame a catena e gestisce l'economia tra gli Slayer: giusti compensi e qualche sfida extra, non sempre del tutto legale, utile per prestigio e guadagno.\n\nPragmatica, carismatica e scaltra, con il fascino di chi ha vissuto dall'altra parte della legge.",
+   "fazioni": [
+    "Gilda degli Slayer"
+   ],
+   "tag": [
+    "Alto Maestro"
+   ],
+   "foto": "img/lady-luck.webp",
+   "formati": [
+    "1:1"
+   ]
+  },
+  {
+   "id": "r-linnea-silver",
+   "nome": "Linnea Silver",
+   "continente": "ramsgate",
+   "pres": "Maestra dell'ascia.\n\nOriginaria delle Isole Glaciali, si è allontanata dalla famiglia Silver, nota per la sua brutalità. Ripudiata dai suoi, è rispettata dagli altri popoli per aver scelto una via pacifica. Insegna l'ascia a Ramsgate. Fisicamente è la più forte fra gli Alti Maestri.\n\nFredda nelle apparenze, ma profondamente empatica verso chi sceglie di proteggere e non di distruggere.",
+   "fazioni": [
+    "Gilda degli Slayer"
+   ],
+   "tag": [
+    "Alto Maestro"
+   ],
+   "foto": "img/linnea-silver.webp",
+   "formati": [
+    "1:1"
+   ]
+  },
+  {
+   "id": "r-markus-boher",
+   "nome": "Markus Boher",
+   "continente": "ramsgate",
+   "pres": "Maestro del martello — navi e porto.\n\nSlayer di lunga esperienza, ha unito la padronanza del martello alla gestione delle flotte. Supervisiona chi sceglie il martello e gestisce le navi degli Slayer, dalla manutenzione alle assegnazioni.\n\nRigoroso, ma con un cuore aperto: unisce pragmatismo e affetto per la comunità.",
+   "fazioni": [
+    "Gilda degli Slayer"
+   ],
+   "tag": [
+    "Alto Maestro"
+   ],
+   "foto": "img/markus-boher.webp",
+   "formati": [
+    "1:1"
+   ]
+  },
+  {
+   "id": "r-moyra-heigsketter",
+   "nome": "Moyra Heigsketter",
+   "continente": "ramsgate",
+   "pres": "Maestra delle armature.\n\nHa perso la madre a causa di un Behemoth. Da quel dolore è nata la sua vocazione: costruire armature per proteggere gli altri da una perdita simile. Lavora al fianco di Wils nella forgia di Ramsgate.\n\nSeria e determinata, con un forte senso di responsabilità e una profonda empatia verso chi rischia la vita contro i Behemoth.",
+   "fazioni": [
+    "Gilda degli Slayer"
+   ],
+   "tag": [
+    "Alto Maestro"
+   ],
+   "foto": "img/moyra-heigsketter.webp",
+   "formati": [
+    "1:1"
+   ]
+  },
+  {
+   "id": "r-nonna-yaga",
+   "nome": "Nonna Yaga",
+   "continente": "ramsgate",
+   "pres": "Esperta di pozioni e botanica.\n\nAnziana ed enigmatica, ha studiato con gli abitanti di Greenshard e viaggiato per le isole per ampliare le sue conoscenze. Prepara pozioni curative e potenzianti. C'è chi la chiama salvatrice e chi strega.\n\nStravagante e apparentemente folle, ma lucida e maestra indiscussa nelle sue arti.",
+   "fazioni": [
+    "Gilda degli Slayer"
+   ],
+   "tag": [
+    "Maestro Minore"
+   ],
+   "foto": "img/nonna-yaga.webp",
+   "formati": [
+    "1:1"
+   ]
+  },
+  {
+   "id": "r-shaed-priyani",
+   "nome": "Shaed Priyani",
+   "continente": "ramsgate",
+   "pres": "Esperta di behemothologia.\n\nÈ la massima esperta dei Behemoth: ne studia le variazioni di comportamento e di aether. Accompagna gli Slayer nelle spedizioni per raccogliere dati, senza assegnare missioni.\n\nCuriosa e brillante, sempre a caccia di nuove conoscenze.",
+   "fazioni": [
+    "Gilda degli Slayer"
+   ],
+   "tag": [
+    "Maestro Minore"
+   ],
+   "foto": "img/shaed-priyani.webp",
+   "formati": [
+    "1:1"
+   ]
+  },
+  {
+   "id": "r-tressa",
+   "nome": "Tressa",
+   "continente": "ramsgate",
+   "pres": "Barista della Coda di Gnasher.\n\nNata a Ramsgate, non ha mai lasciato l'isola, ma attraverso il suo locale ha conosciuto migliaia di Slayer e ha imparato a leggerli come libri aperti. La Coda di Gnasher è un punto di riferimento per tutta la comunità.\n\nAccogliente, ironica e schietta: una confidente naturale per molti Slayer.",
+   "fazioni": [
+    "Gilda degli Slayer"
+   ],
+   "tag": [
+    "Maestro Minore"
+   ],
+   "foto": "img/tressa.webp",
+   "formati": [
+    "1:1"
+   ]
+  },
+  {
+   "id": "r-wils-bormen",
+   "nome": "Wils Bormen",
+   "continente": "ramsgate",
+   "pres": "Maestro d'armi — forgiatore ufficiale.\n\nUno dei pilastri di Ramsgate, ha dedicato la vita alla creazione di armi per gli Slayer. Quando Moyra Heigsketter perse la madre, la prese sotto la sua ala e le insegnò tutto ciò che sapeva. Guida la forgia centrale della città e supervisiona la produzione delle armi.\n\nAllegro, leggero e amichevole: gli Slayer lo adorano per la sua disponibilità e il suo buon cuore.",
+   "fazioni": [
+    "Gilda degli Slayer"
+   ],
+   "tag": [
+    "Alto Maestro"
+   ],
+   "foto": "img/wils-bormen.webp",
+   "formati": [
+    "1:1"
+   ]
+  },
+  {
+   "id": "r-xelya",
+   "nome": "Xelya",
+   "continente": "ramsgate",
+   "pres": "Maestra della lancia.\n\nSlayer di frontiera, ha scelto di rappresentare i suoi compatrioti nei ranghi ufficiali di Ramsgate. Per questo molti di loro non la capiscono e la vedono come una martire politica, pur riconoscendone il valore. Partecipa di rado alla vita pubblica, ma mantiene legami stretti con gli altri maestri.\n\nRiservata e silenziosa: parla poco e osserva tutto. Molti la considerano un ponte tra mondi diversi.",
+   "fazioni": [
+    "Gilda degli Slayer"
+   ],
+   "tag": [
+    "Alto Maestro"
+   ],
+   "foto": "img/xelya.webp",
+   "formati": [
+    "1:1"
+   ]
+  }
+ ]
 }

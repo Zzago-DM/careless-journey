@@ -97,10 +97,37 @@
       if(j){ var d = JSON.parse(b64d(j.content || "")); D = Object.assign({ v: 1, personaggi: [], fazioni: [], tag: [], pubblicato: null }, d); sha = j.sha; }
       D.personaggi = D.personaggi.map(pulisci);
       sporco = false; salvaLocale(); disegna(); stato();
+      return importaDalSito();
     }).catch(function(e){
       try { var c = JSON.parse(localStorage.getItem(LOC) || "null"); if(c && c.d){ D = c.d; sha = c.sha; D.personaggi = D.personaggi.map(pulisci); } } catch(_){}
       disegna(); stato(msgErr(e), true);
     });
+  }
+  /* personaggi già pubblicati sul sito ma assenti da questo elenco (per esempio aggiunti direttamente nel sito):
+     li prende in carico una volta sola, così «Pubblica sul sito» non li cancella */
+  function importaDalSito(){
+    return fetch(P_DATI + "?t=" + Date.now(), { cache: "no-store" }).then(function(r){ return r.ok ? r.json() : null; }).then(function(pub){
+      if(!pub || !Array.isArray(pub.personaggi)) return;
+      if(!Array.isArray(D.importati)) D.importati = [];
+      var nomi = {}; D.personaggi.forEach(function(p){ nomi[norm(p.nome)] = 1; });
+      var nuovi = 0;
+      pub.personaggi.forEach(function(o){
+        if(!o || !o.id || !o.nome || D.importati.indexOf(o.id) >= 0) return;
+        D.importati.push(o.id);
+        if(trova(o.id) || nomi[norm(o.nome)]) return;
+        var p = nuovo(); p.id = o.id; p.nome = o.nome; p.continente = o.continente || "ramsgate";
+        if(o.stato){ p.stato = o.stato; p.vis.stato = true; }
+        if(o.pres){ p.pres = o.pres; p.vis.pres = true; } else p.vis.pres = false;
+        if(o.fazioni && o.fazioni.length){ p.fazioni = o.fazioni.slice(); p.vis.fazioni = true; }
+        if(o.tag && o.tag.length){ p.tag = o.tag.slice(); p.vis.tag = true; }
+        var foti = (o.foti && o.foti.length) ? o.foti : (o.foto ? [o.foto] : []);
+        p.foti = foti.map(function(u, j){ return { file: "sito:" + u, fmt: (o.formati || [])[j] || "1:1" }; });
+        p.vis.foto = p.foti.length > 0; p.vis.mostra = true;
+        D.personaggi.push(pulisci(p)); nomi[norm(o.nome)] = 1; nuovi++;
+      });
+      if(nuovi){ disegna(); cambiato(); avviso("Aggiunti all'elenco " + nuovi + " personaggi già presenti sul sito."); }
+      else if(D.importati.length) { salvaLocale(); }
+    }).catch(function(){});
   }
   function salva(){
     if(occupato || !sporco) return Promise.resolve();
@@ -139,7 +166,17 @@
     return gh(PRIV, "GET", "/contents/" + D_ORIG).then(function(r){ return r.status === 404 ? [] : ok(r).json(); })
       .then(function(l){ originali = (l || []).filter(function(f){ return f.type === "file"; }).map(function(f){ return f.name; }); return originali; });
   }
-  function fonte(fo){ return immagine(fo.file, !!fo.sfondo); }
+  function fonte(fo){ return SITO_F.test(fo.file) ? immagineSito(fo.file.replace(SITO_F, "")) : immagine(fo.file, !!fo.sfondo); }
+  /* foto già presenti nel sito pubblico (es. i ritratti dei Maestri in img/): il nome comincia con «sito:» */
+  var SITO_F = /^sito:/;
+  function immagineSito(percorso){
+    var chiave = "sito:" + percorso;
+    if(immagini[chiave]) return immagini[chiave];
+    var pr = new Promise(function(ris, rif){ var im = new Image(); im.onload = function(){ ris(im); }; im.onerror = rif; im.src = percorso; });
+    immagini[chiave] = pr; pr.catch(function(){ delete immagini[chiave]; });
+    return pr;
+  }
+  function fotoSitoIntatta(f){ return SITO_F.test(f.file) && !f.r && !f.sfondo && Math.abs((f.z || 1) - 1) < 0.001 && !f.ox && !f.oy; }
   function immagine(nome, conSfondo){
     var chiave = (conSfondo ? "s:" : "") + nome;
     if(immagini[chiave]) return immagini[chiave];
@@ -501,12 +538,13 @@
       if(p.vis.tag && p.tag.length) o.tag = p.tag.slice();
       if(p.vis.foto && p.foti.length){
         var percorsi = p.foti.map(function(f){
+          if(fotoSitoIntatta(f)) return f.file.replace(SITO_F, "");   /* foto del sito mai ritoccata: resta quella */
           var nome = p.id + "-" + hash(JSON.stringify([f.file, +(f.z || 1).toFixed(3), +(f.ox || 0).toFixed(4), +(f.oy || 0).toFixed(4)].concat(f.sfondo ? [1] : [], f.r ? [f.r] : []))) + ".webp";
           servono[nome] = f; return P_FOTO + "/" + nome;
         });
         o.foto = percorsi[0];                          /* la prima: elenco e pagine vecchie */
         if(percorsi.length > 1) o.foti = percorsi;     /* tutte, per sfogliarle nella scheda */
-        o.formati = p.foti.map(function(f){ return RAPP[f.r] ? f.r : "4:5"; });   /* la cornice di ogni foto */
+        o.formati = p.foti.map(function(f){ return RAPP[f.r] ? f.r : (fotoSitoIntatta(f) ? (f.fmt || "1:1") : "4:5"); });   /* la cornice di ogni foto */
       }
       dati.personaggi.push(o);
     });
