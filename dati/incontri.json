@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-19T07:36:31.442Z",
+ "aggiornato": "2026-10-19T07:37:09.202Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -183,6 +183,15 @@
    "foto": "img/markus-boher.webp",
    "formati": [
     "1:1"
+   ]
+  },
+  {
+   "id": "pmvexxxuyi2sg",
+   "nome": "Minerva Silver",
+   "continente": "glaciale",
+   "foto": "img/incontri/pmvexxxuyi2sg-r5elnx.webp",
+   "formati": [
+    "3:4"
    ]
   },
   {
