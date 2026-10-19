@@ -156,7 +156,7 @@
   }
   function chiudi(){
     ov.classList.remove("on"); setTimeout(function(){ ov.hidden = true; }, 200);
-    if(!document.querySelector(".cj-overlay.open,.bfs-ov")) document.body.style.overflow = "";
+    if(!document.querySelector(".cj-overlay.open,.bfs-ov,.inc-win.on")) document.body.style.overflow = "";
     disegna();
     if(back) try { var b = lista.querySelector('.inc-card[data-i="' + back + '"]'); if(b) b.focus(); } catch(_){}
   }
@@ -183,7 +183,7 @@
     }
     var b = e.target.closest("[data-pg]");
     if(b && b.classList.contains("inc-chi-b")){ scelto = b.getAttribute("data-pg"); disegnaNote(P[cur]); return; }
-    if(e.target.closest("#inc-vai")){ chiudi(); var s = document.getElementById("scheda"); if(s) s.scrollIntoView({ behavior: "smooth" }); }
+    if(e.target.closest("#inc-vai")){ chiudi(); chiudiReg(); var s = document.getElementById("scheda"); if(s) s.scrollIntoView({ behavior: "smooth" }); }
   });
   var tN = null;
   ov.addEventListener("input", function(e){
@@ -200,6 +200,57 @@
     else if(e.key === "Tab"){ var f = ov.querySelectorAll("button,textarea"), a = f[0], z = f[f.length - 1];
       if(e.shiftKey && document.activeElement === a){ e.preventDefault(); z.focus(); } else if(!e.shiftKey && document.activeElement === z){ e.preventDefault(); a.focus(); } }
   }, true);
+
+  /* ---------- finestra del registro ---------- */
+  var win = document.getElementById("inc-win"), lanc = document.getElementById("inc-apri");
+  document.body.appendChild(win);   /* fuori dalla sezione: così copre davvero tutto lo schermo */
+  /* la ricerca generale del sito cerca solo dentro le sezioni: i personaggi del registro li aggiungo io */
+  try {
+    if(typeof skBuild === "function"){
+      var _skBuild = skBuild;
+      skBuild = function(){
+        _skBuild.apply(this, arguments);
+        try { lista.querySelectorAll(".inc-card .ct").forEach(function(e){ var t = (e.textContent || "").replace(/\s+/g, " ").trim(); if(t) skIdx.push({ e: e, t: t, l: skNorm(t), c: "Incontri" }); }); } catch(_){}
+      };
+    }
+  } catch(_){}
+  function apriReg(){
+    if(win.classList.contains("on")) return;
+    win.hidden = false; document.body.style.overflow = "hidden";
+    requestAnimationFrame(function(){ win.classList.add("on"); });
+    suono("paper"); disegna();
+    setTimeout(function(){ try { if(matchMedia("(hover: hover)").matches) document.getElementById("inc-q").focus(); else document.getElementById("inc-win-x").focus(); } catch(_){} }, 60);
+  }
+  function chiudiReg(){
+    if(!win.classList.contains("on")) return;
+    win.classList.remove("on"); setTimeout(function(){ if(!win.classList.contains("on")) win.hidden = true; }, 220);
+    if(ov.hidden && !document.querySelector(".cj-overlay.open,.bfs-ov")) document.body.style.overflow = "";
+    try { lanc.focus({ preventScroll: true }); } catch(_){}
+  }
+  window.incApri = apriReg;
+  lanc.addEventListener("click", apriReg);
+  document.getElementById("inc-win-x").addEventListener("click", chiudiReg);
+  win.addEventListener("click", function(e){ if(e.target === win) chiudiReg(); });
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape" && !win.hidden && ov.hidden){ e.stopPropagation(); chiudiReg(); } });
+  /* la ricerca generale del sito (⌕ Cerca): un personaggio degli Incontri apre il registro e la sua scheda */
+  try {
+    if(typeof skGo === "function"){
+      var _skGo = skGo;
+      skGo = function(i){
+        var it = (typeof skRes !== "undefined") ? skRes[(i === undefined ? skSel : i)] : null;
+        var c = it && it.e && it.e.closest && it.e.closest("#inc-lista .inc-card");
+        if(c){ try { skClose(); } catch(_){} apriReg(); var k = c.getAttribute("data-i"); setTimeout(function(){ apri(+k, k); }, 120); return; }
+        return _skGo.apply(this, arguments);
+      };
+    }
+  } catch(_){}
+  function lanciatore(){
+    var n = document.getElementById("inc-apri-n"), av = document.getElementById("inc-apri-av"); if(!n || !av) return;
+    n.textContent = P.length ? P.length + (P.length === 1 ? " personaggio conosciuto" : " personaggi conosciuti") + " · cerca, sfoglia, prendi appunti" : "Il registro è ancora vuoto";
+    var conFoto = P.filter(function(p){ return p.foto; }).slice(0, 6);
+    av.innerHTML = conFoto.map(function(p){ return '<img src="' + esc(p.foto) + '" alt="" loading="lazy" decoding="async">'; }).join("")
+      + (P.length > conFoto.length || !conFoto.length ? '<span class="inc-apri-piu">' + (conFoto.length ? "+" + (P.length - conFoto.length) : sole("inc-sole")) + '</span>' : "");
+  }
 
   /* ---------- barra ---------- */
   document.getElementById("inc-q").addEventListener("input", function(){ q = this.value; disegna(); });
@@ -218,9 +269,9 @@
     .then(function(d){
       P = (d.personaggi || []).filter(function(p){ return p && p.nome; });
       P.sort(function(a, b){ return a.nome.localeCompare(b.nome, "it"); });
-      disegna();
+      disegna(); lanciatore();
     })
-    .catch(function(){ lista.innerHTML = '<div class="inc-vuoto"><p>Non riesco ad aprire il registro degli incontri. Ricarica la pagina tra poco.</p></div>'; });
+    .catch(function(){ var n0 = document.getElementById("inc-apri-n"); if(n0) n0.textContent = "Registro non disponibile, riprova tra poco"; lista.innerHTML = '<div class="inc-vuoto"><p>Non riesco ad aprire il registro degli incontri. Ricarica la pagina tra poco.</p></div>'; });
   /* quando un giocatore apre o chiude la sua area, il segno delle note si aggiorna */
   document.addEventListener("visibilitychange", function(){ if(!document.hidden && P.length) disegna(); });
 })();
