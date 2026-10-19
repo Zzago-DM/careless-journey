@@ -61,7 +61,7 @@
 
   /* ---------- dati ---------- */
   var D = { v: 1, personaggi: [], fazioni: [], tag: [], pubblicato: null }, sha = null, sel = null, filtro = "";
-  var sporco = false, timer = null, occupato = false, fi = 0;   /* fi = foto scelta del personaggio aperto */
+  var sporco = false, timer = null, occupato = false, fi = 0, rev = 0;   /* fi = foto scelta del personaggio aperto */
   function nuovo(){
     return { id: uid(), nome: "", continente: "ramsgate", stato: "vivo", fazioni: [], tag: [], pres: "", note: "",
       foti: [], vis: { mostra: false, foto: false, pres: true, stato: false, fazioni: false, tag: false } };
@@ -85,7 +85,7 @@
   }
   function salvaLocale(){ try { localStorage.setItem(LOC, JSON.stringify({ d: D, sha: sha })); } catch(e){} }
   function cambiato(){
-    sporco = true; salvaLocale(); stato();
+    sporco = true; rev++; salvaLocale(); stato();
     clearTimeout(timer); timer = setTimeout(salva, 2500);
   }
   function carica(){
@@ -132,10 +132,13 @@
   function salva(){
     if(occupato || !sporco) return Promise.resolve();
     clearTimeout(timer); occupato = true; stato("Salvo…");
+    var mia = rev;
     var corpo = { message: "Incontri: elenco aggiornato", content: b64e(JSON.stringify(D, null, 1)) };
     if(sha) corpo.sha = sha;
     return gh(PRIV, "PUT", "/contents/" + F_DATI, corpo).then(ok).then(function(r){ return r.json(); }).then(function(j){
-      sha = j.content && j.content.sha; sporco = false; occupato = false; salvaLocale(); stato();
+      sha = j.content && j.content.sha; occupato = false;
+      if(rev !== mia){ salvaLocale(); stato(); return salva(); }   /* modificato mentre salvavo: salvo di nuovo */
+      sporco = false; salvaLocale(); stato();
     }).catch(function(e){
       occupato = false;
       if(e === 409 || e === 422){

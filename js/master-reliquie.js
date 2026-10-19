@@ -60,17 +60,21 @@
   function sole(cls){ return '<svg class="' + cls + '" viewBox="0 0 1739 3364" aria-hidden="true" focusable="false"><use href="#gsun"/></svg>'; }
 
   /* ---------- dati ---------- */
-  var D = { v: 1, reliquie: [], pubblicato: null }, sha = null, sel = null, sporco = false, timer = null, occupato = false;
+  var D = { v: 1, reliquie: [], pubblicato: null }, sha = null, sel = null, sporco = false, timer = null, occupato = false, rev = 0;
   function nuova(nome, foto){ return { id: uid(), nome: nome || "", descr: "", note: "", foto: foto || "", mostra: false }; }
   function pulisci(r){ var n = nuova(); Object.keys(n).forEach(function(k){ if(r[k] === undefined) r[k] = n[k]; }); r.mostra = !!r.mostra; return r; }
   function trova(id){ for(var i = 0; i < D.reliquie.length; i++) if(D.reliquie[i].id === id) return D.reliquie[i]; return null; }
-  function salvaLocale(){ try { localStorage.setItem(LOC, JSON.stringify({ d: D, sha: sha })); } catch(e){} }
-  function cambiato(){ sporco = true; salvaLocale(); stato(); clearTimeout(timer); timer = setTimeout(salva, 2000); }
+  function salvaLocale(){ try { localStorage.setItem(LOC, JSON.stringify({ d: D, sha: sha, sporco: sporco })); } catch(e){} }
+  function cambiato(){ sporco = true; rev++; salvaLocale(); stato(); clearTimeout(timer); timer = setTimeout(salva, 1500); }
   function carica(){
     stato("Scarico l'elenco…");
     return gh(PRIV, "GET", "/contents/" + F_DATI).then(function(r){ if(r.status === 404) return null; return ok(r).json(); })
       .then(function(j){
-        if(j){ D = Object.assign({ v: 1, reliquie: [], pubblicato: null }, JSON.parse(b64d(j.content || ""))); sha = j.sha; }
+        /* modifiche di questo dispositivo non ancora arrivate su GitHub: hanno la precedenza, e si salvano subito */
+        var loc = null; try { loc = JSON.parse(localStorage.getItem(LOC) || "null"); } catch(_){}
+        if(j) sha = j.sha;
+        if(loc && loc.sporco && loc.d){ D = loc.d; D.reliquie = (D.reliquie || []).map(pulisci); sporco = true; rev++; disegna(); stato(); return salva(); }
+        if(j) D = Object.assign({ v: 1, reliquie: [], pubblicato: null }, JSON.parse(b64d(j.content || "")));
         D.reliquie = (D.reliquie || []).map(pulisci);
         sporco = false; salvaLocale(); disegna(); stato();
       }).catch(function(e){
@@ -81,10 +85,13 @@
   function salva(){
     if(occupato || !sporco) return Promise.resolve();
     clearTimeout(timer); occupato = true; stato("Salvo…");
+    var mia = rev;
     var corpo = { message: "Reliquie: elenco aggiornato", content: b64e(JSON.stringify(D, null, 1)) };
     if(sha) corpo.sha = sha;
     return gh(PRIV, "PUT", "/contents/" + F_DATI, corpo).then(ok).then(function(r){ return r.json(); }).then(function(j){
-      sha = j.content && j.content.sha; sporco = false; occupato = false; salvaLocale(); stato();
+      sha = j.content && j.content.sha; occupato = false;
+      if(rev !== mia){ salvaLocale(); stato(); return salva(); }   /* hai scritto mentre salvavo: salvo di nuovo */
+      sporco = false; salvaLocale(); stato();
     }).catch(function(e){
       occupato = false;
       if(e === 409 || e === 422){
@@ -96,12 +103,23 @@
   }
 
   /* ---------- immagini (in tcj-master, si scaricano con il token) ---------- */
-  var imm = {};
+  var imm = {}, coda = [], attive = 0;
+  function prossima(){
+    while(attive < 3 && coda.length){
+      var c = coda.shift(); attive++;
+      (function(c){
+        var prova = function(n){
+          return gh(PRIV, "GET", "/contents/" + D_FOTO + "/" + encodeURIComponent(c.nome), null, true).then(ok).then(function(r){ return r.blob(); })
+            .catch(function(e){ if(n < 3 && e !== 404 && e !== 401) return new Promise(function(ris){ setTimeout(ris, 700 * (n + 1)); }).then(function(){ return prova(n + 1); }); throw e; });
+        };
+        prova(0).then(function(b){ c.ok(URL.createObjectURL(b)); }, c.ko).then(function(){ attive--; prossima(); });
+      })(c);
+    }
+  }
   function immagine(nome){
     if(!nome) return Promise.reject("nessuna");
     if(imm[nome]) return imm[nome];
-    var pr = gh(PRIV, "GET", "/contents/" + D_FOTO + "/" + encodeURIComponent(nome), null, true).then(ok).then(function(r){ return r.blob(); })
-      .then(function(b){ return URL.createObjectURL(b); });
+    var pr = new Promise(function(ok2, ko){ coda.push({ nome: nome, ok: ok2, ko: ko }); prossima(); });
     imm[nome] = pr; pr.catch(function(){ delete imm[nome]; });
     return pr;
   }
@@ -294,7 +312,7 @@
       }).join("");
       if(gObs) gObs.disconnect();
       gObs = new IntersectionObserver(function(es){ es.forEach(function(e){ if(!e.isIntersecting) return; var img = e.target; gObs.unobserve(img);
-        immagine(img.getAttribute("data-src")).then(function(u){ img.src = u; img.classList.add("ok"); }).catch(function(){}); }); }, { root: g, rootMargin: "200px" });
+        immagine(img.getAttribute("data-src")).then(function(u){ img.src = u; img.classList.add("ok"); }).catch(function(){ img.parentNode.classList.add("re-ko"); }); }); }, { root: g, rootMargin: "200px" });
       g.querySelectorAll("img[data-src]").forEach(function(i){ gObs.observe(i); });
     }).catch(function(e){ g.innerHTML = '<div class="ie-vuoto"></div>'; g.firstChild.textContent = msgErr(e); });
   }
