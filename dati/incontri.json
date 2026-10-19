@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-19T07:43:29.643Z",
+ "aggiornato": "2026-10-19T17:51:57.040Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -324,6 +324,11 @@
    "formati": [
     "1:1"
    ]
+  },
+  {
+   "id": "pmvfjwgg5wsrh",
+   "nome": "Valahz soloy",
+   "continente": "ramsgate"
   },
   {
    "id": "r-wils-bormen",
