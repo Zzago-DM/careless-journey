@@ -1,11 +1,17 @@
 {
- "aggiornato": "2026-10-19T08:23:37.470Z",
+ "aggiornato": "2026-10-19T08:23:57.549Z",
  "reliquie": [
   {
    "id": "rmvezhisx4xi5",
    "nome": "Frammento Solcavuoto",
    "descr": "Non credere al vento che sussurra menzogna, \nché guida smarriti nel buio profondo. \nChi piega l’orecchio al sussurro del mondo \nsi trova perduto, nel nulla si pogna.",
    "foto": "img/reliquie/rmvezhisx4xi5-1d945vp.webp"
+  },
+  {
+   "id": "rmvezlf26audn",
+   "nome": "Frammento Solcavuoto",
+   "descr": "Tre segni ti attendono, scolpiti nel cielo: \nla lama che fende l’aurora cadente, \nil cuore che pulsa ma tace silente, \nl’occhio che guarda l’abisso, suo velo.",
+   "foto": "img/reliquie/rmvezlf26audn-1bwj76e.webp"
   }
  ]
 }
