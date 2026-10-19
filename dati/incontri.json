@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-19T07:30:07.275Z",
+ "aggiornato": "2026-10-19T07:31:03.578Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -94,22 +94,6 @@
     "Alto Maestro"
    ],
    "foto": "img/katerin-sorrel.webp",
-   "formati": [
-    "1:1"
-   ]
-  },
-  {
-   "id": "r-la-maestra-sfregiata",
-   "nome": "La Maestra Sfregiata",
-   "continente": "ramsgate",
-   "pres": "Maestra dei pugni aetherici.\n\nCresciuta nei templi aetherici delle Isole Elettriche, le lasciò quando Ostia divenne una potenza militarista. Deve il suo nome all'aver vinto l'attacco di uno Stormclaw Rombotuono infuriato. Viaggiò di isola in isola per capire il senso della lotta oltre la guerra, poi portò a Ramsgate l'insegnamento dei Monaci del Pugno. Insegna la via dei pugni aetherici, unendo disciplina del corpo e filosofia di vita.\n\nAustera e severa, segnata nel corpo e nello spirito: trasforma il dolore in insegnamento.",
-   "fazioni": [
-    "Gilda degli Slayer"
-   ],
-   "tag": [
-    "Alto Maestro"
-   ],
-   "foto": "img/la-maestra-sfregiata.webp",
    "formati": [
     "1:1"
    ]
