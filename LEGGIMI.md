@@ -74,6 +74,7 @@ La sezione **Il Gruppo** (`sezioni/gruppo.js`, `css/22-gruppo.css`, `js/gruppo.j
 - Il sito pubblico legge solo `dati/reliquie.json` e le immagini in `img/reliquie/`: contengono **solo** le reliquie che il Master ha deciso di mostrare.
 - I dati veri stanno in `tcj-master`: `reliquie/reliquie.json` (tutte le reliquie, note del Master, «Mostra ai giocatori») e `reliquie/foto/` (galleria: gli 8 frammenti e armi e artefatti dei Mael).
 - Si lavora dalla Zona Master, capitolo «Reliquie della nave» (`js/master-reliquie.js`, aggiunto da solo prima che i capitoli diventino bolle). «📣 Pubblica sul sito» riscrive `dati/reliquie.json` e le immagini in un'unica modifica: il token del Master deve includere anche `careless-journey`.
+- **Artefatti e oggetti del gruppo.** Sotto i piedistalli c'è una bacheca che scrivono i giocatori (`js/reliquie-bacheca.js`, stili in `css/23-reliquie.css`): ogni voce è solo testo (artefatto o oggetto, nome e descrizione) e la vedono tutti. Accanto a ogni voce compare chi l'ha messa via; il giocatore può togliere la spunta «Mostra il mio nome» e allora compare «una mano ignota» (il Master vede comunque il nome). Sta nel repository privato `gruppo`, file `oggetti.json`, quindi funziona con i token che ci sono già (niente da preparare). Ogni oggetto ricorda chi l'ha aggiunto: può modificarlo o toglierlo solo chi l'ha scritto (con la sua Area aperta) oppure il Master. Mentre la stanza è aperta la bacheca si aggiorna da sola ogni pochi secondi; senza token si vede l'ultima copia salvata sul dispositivo.
 
 ## Zona Master privata
 

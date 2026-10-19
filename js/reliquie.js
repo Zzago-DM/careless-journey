@@ -3,7 +3,8 @@
      e contiene SOLO gli artefatti che ha deciso di mostrare (nome, descrizione, immagine).
    - Ogni artefatto sta su un piedistallo; toccandolo si apre la sua scheda con la descrizione del Master
      e «Le mie note» del giocatore, salvate nel suo pacchetto (chiave tcj-rel-<personaggio>), quindi seguono
-     il suo salvataggio online come la scheda e le note sugli Incontri. */
+     il suo salvataggio online come la scheda e le note sugli Incontri.
+   - Sotto i piedistalli c'è la bacheca «Oggetti del gruppo», scritta dai giocatori e visibile a tutti (js/reliquie-bacheca.js). */
 (function(){
   "use strict";
   var R = [], cur = -1, scelto = null, caricato = false;
@@ -64,6 +65,7 @@
         + '<div class="rel-colonna" aria-hidden="true"><i class="rel-cap"></i><i class="rel-fusto"></i><i class="rel-base"></i></div>'
         + '<div class="rel-targa">Nessuna reliquia</div></div>'
         + '<p class="rel-vuota">La stanza è ancora vuota: qui verranno custoditi gli artefatti che il gruppo recupererà.</p>';
+      bacheca(s);
       return;
     }
     sub.textContent = R.length === 1 ? "Una reliquia custodita" : R.length + " reliquie custodite";
@@ -78,16 +80,25 @@
         + '<div class="rel-colonna" aria-hidden="true"><i class="rel-cap"><b></b></i><i class="rel-fusto"></i><i class="rel-base"></i></div>'
         + '<div class="rel-targa">' + esc(r.nome) + '</div></div>';
     }).join("");
+    bacheca(s);
+  }
+  /* sotto i piedistalli: la bacheca «Oggetti del gruppo», scritta dai giocatori (js/reliquie-bacheca.js) */
+  function bacheca(s){
+    if(!window.relBac) return;
+    var b = document.createElement("section"); b.className = "rel-bac"; b.setAttribute("aria-labelledby", "rel-bac-t");
+    s.appendChild(b); window.relBac.monta(b);
   }
 
   function apriStanza(){
     ov.hidden = false; document.body.style.overflow = "hidden";
     requestAnimationFrame(function(){ ov.classList.add("on"); });
     polvere(); scaffale(); suono("gong");
+    if(window.relBac) window.relBac.apri();
     setTimeout(function(){ try { $("rel-x").focus(); } catch(_){} }, 60);
   }
   function chiudiStanza(){
     if(!det.hidden) chiudiDet(true);
+    if(window.relBac) window.relBac.chiudi();
     ov.classList.remove("on"); setTimeout(function(){ if(!ov.classList.contains("on")) ov.hidden = true; }, 260);
     if(!document.querySelector(".inc-win.on,.cj-overlay.open")) document.body.style.overflow = "";
   }
@@ -154,6 +165,7 @@
   });
   document.addEventListener("keydown", function(e){
     if(ov.hidden) return;
+    if(e.key === "Escape" && e.target.closest && e.target.closest(".rel-bac-mod")) return;   /* Esc nella bacheca annulla la modifica, non chiude la stanza */
     if(e.key === "Escape"){ e.stopPropagation(); if(!det.hidden) chiudiDet(); else chiudiStanza(); }
     else if(!det.hidden && e.target.id !== "rel-ta" && e.key === "ArrowRight") passa(1);
     else if(!det.hidden && e.target.id !== "rel-ta" && e.key === "ArrowLeft") passa(-1);

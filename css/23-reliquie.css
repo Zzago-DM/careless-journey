@@ -88,6 +88,74 @@
   .rel-ov,.rel-sala,.rel-det,.rel-dbox{transition:none}
 }
 
+/* ---------- bacheca «Oggetti del gruppo» (js/reliquie-bacheca.js) — scritta dai giocatori, sotto i piedistalli ---------- */
+.rel-bac{grid-column:1/-1;position:relative;margin-top:.6rem;padding:1.3rem 1.4rem 1.4rem;border:1px solid rgba(168,138,72,.45);border-radius:6px;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,215,150,.07),transparent 70%),
+    repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 2px,transparent 2px 38px),
+    linear-gradient(180deg,#2a2018,#1d1611 60%,#17110d);
+  box-shadow:0 18px 40px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,235,180,.12),inset 0 0 60px rgba(0,0,0,.45)}
+.rel-bac::before,.rel-bac::after{content:"";position:absolute;top:10px;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#e9cf8a,#7a5a22 70%);box-shadow:0 1px 2px rgba(0,0,0,.7)}
+.rel-bac::before{left:10px}
+.rel-bac::after{right:10px}
+.rel-bac-testa{display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap;padding:0 .4rem}
+.rel-bac-k{font-family:"Cinzel",serif;font-size:.54rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold3)}
+.rel-bac-t{font-family:"Cinzel Decorative",serif;font-size:clamp(1.1rem,2.6vw,1.45rem);color:#f3dfae;line-height:1.15;margin-top:.15rem;text-shadow:0 1px 0 rgba(0,0,0,.6)}
+.rel-bac-stato{font-size:.78rem;font-style:italic;color:var(--text2);max-width:420px;text-align:right}
+.rel-bac-stato[data-s="ok"]::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#7fd08a;box-shadow:0 0 8px #7fd08a;margin-right:.45rem;vertical-align:middle}
+.rel-bac-stato[data-s="ko"]{color:#e0a080}
+.rel-bac-intro{margin:.6rem .4rem 1rem;font-size:.92rem;color:var(--text2);font-style:italic}
+.rel-bac-lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.9rem}
+.rel-bac-vuota,.rel-bac-poco{grid-column:1/-1;font-style:italic;color:var(--text2);margin:.2rem .4rem}
+.rel-bac-ogg{position:relative;display:flex;flex-direction:column;min-width:0;padding:.85rem .95rem .7rem;border-radius:3px;color:#2b2116;
+  background:linear-gradient(180deg,#eadbb8,#dcc89c);box-shadow:0 6px 14px rgba(0,0,0,.5),inset 0 0 18px rgba(120,80,30,.18);transform:rotate(-.4deg)}
+.rel-bac-ogg:nth-child(2n){transform:rotate(.5deg)}
+.rel-bac-ogg:nth-child(3n){transform:rotate(-.2deg)}
+.rel-bac-ogg::before{content:"";position:absolute;top:-6px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#d9665a,#7a1f18 70%);box-shadow:0 2px 3px rgba(0,0,0,.6)}
+.rel-bac-ogg.nuovo{animation:relBacNuovo .9s ease-out}
+@keyframes relBacNuovo{0%{box-shadow:0 0 0 3px rgba(255,215,150,.9),0 6px 14px rgba(0,0,0,.5)}100%{box-shadow:0 6px 14px rgba(0,0,0,.5),inset 0 0 18px rgba(120,80,30,.18)}}
+.rel-bac-tipo{align-self:flex-start;font-family:"Cinzel",serif;font-size:.5rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:.18rem .5rem;margin-bottom:.4rem;border-radius:999px;color:#5a4320;border:1px solid rgba(90,60,25,.4);background:rgba(255,250,235,.35)}
+.rel-bac-artefatto{background:linear-gradient(180deg,#e6d6b8,#d2bf9a);box-shadow:0 6px 14px rgba(0,0,0,.5),inset 0 0 18px rgba(120,80,30,.18),inset 0 0 0 2px rgba(150,110,200,.25)}
+.rel-bac-artefatto .rel-bac-tipo{color:#4b2f6e;border-color:rgba(90,50,140,.45);background:rgba(200,170,255,.25)}
+.rel-bac-chi.anon{color:#7a6a58}
+.rel-bac-tipi{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.8rem}
+.rel-bac-mod .rel-bac-tipi .inc-chi-b{color:#5a4320;border-color:rgba(90,60,25,.45)}
+.rel-bac-mod .rel-bac-tipi .inc-chi-b.on{background:rgba(90,60,25,.18);color:#2b2116}
+.rel-bac-firma{display:flex;align-items:center;gap:.5rem;margin-top:.2rem;font-size:.92rem;color:var(--text2);cursor:pointer;min-height:36px}
+.rel-bac-firma input{width:18px;height:18px;accent-color:var(--gold3);flex:none}
+.rel-bac-mod .rel-bac-firma{color:#5a4320;margin-top:.5rem}
+.rel-bac-n{font-family:"Cinzel",serif;font-size:.95rem;font-weight:700;letter-spacing:.03em;color:#3a2a14;margin:0 0 .35rem;overflow-wrap:anywhere}
+.rel-bac-d{font-size:.95rem;line-height:1.5;overflow-wrap:anywhere}
+.rel-bac-d p{margin:0 0 .45rem}
+.rel-bac-piede{margin-top:auto;padding-top:.45rem;border-top:1px dashed rgba(90,60,25,.35);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.3rem .6rem}
+.rel-bac-chi{font-size:.76rem;font-style:italic;color:#6a5434}
+.rel-bac-azioni{display:flex;gap:.3rem}
+.rel-bac-b{font-family:"Cinzel",serif;font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:1px solid rgba(90,60,25,.45);color:#5a4320;border-radius:999px;padding:.3rem .65rem;min-height:32px;cursor:pointer}
+.rel-bac-b:hover,.rel-bac-b:focus-visible{background:rgba(90,60,25,.12);outline:none}
+.rel-bac-via:hover,.rel-bac-via:focus-visible{border-color:#9a3a2a;color:#8a2a1c}
+.rel-bac-mod .inc-lbl{color:#6a5434}
+.rel-bac-mod .rel-bac-in,.rel-bac-mod .inc-ta{background:rgba(255,250,235,.7);border-color:rgba(90,60,25,.4);color:#2b2116}
+.rel-bac-mod .rel-bac-riga{margin-top:.6rem}
+.rel-bac-form{margin-top:1.2rem;padding:1rem 1rem .9rem;border:1px dashed rgba(168,138,72,.45);border-radius:6px;background:rgba(0,0,0,.22)}
+.rel-bac-ft{font-family:"Cinzel",serif;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold2);margin:0 0 .7rem}
+.rel-bac-form .inc-chi{margin-bottom:.7rem}
+.rel-bac-in{display:block;width:100%;margin-bottom:.7rem;background:rgba(0,0,0,.25);border:1px solid var(--border);color:var(--text);font:inherit;font-size:.98rem;padding:.55rem .7rem;border-radius:6px;min-height:42px}
+.rel-bac-in:focus,.rel-bac .inc-ta:focus{outline:none;border-color:var(--gold3);box-shadow:0 0 0 2px rgba(var(--gold-rgb),.15)}
+.rel-bac-riga{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem .9rem;margin-top:.7rem}
+.rel-bac-add{font-family:"Cinzel",serif;font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#f3dfae;padding:.6rem 1.1rem;min-height:42px;background:linear-gradient(180deg,#6b5326,#3e2f15);border:1px solid #a88a48;border-radius:3px;box-shadow:0 3px 8px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,235,180,.3);cursor:pointer}
+.rel-bac-add:hover,.rel-bac-add:focus-visible{filter:brightness(1.15);outline:none}
+.rel-bac-esito{font-size:.82rem;font-style:italic;color:var(--text2)}
+.rel-bac-esito[data-s="ok"]{color:#8fd49a}
+.rel-bac-esito[data-s="ko"]{color:#e0a080}
+@media(max-width:700px){
+  .rel-bac{padding:1.1rem .8rem 1rem}
+  .rel-bac-testa{flex-direction:column;align-items:flex-start;gap:.3rem}
+  .rel-bac-stato{text-align:left}
+  .rel-bac-lista{grid-template-columns:1fr}
+  .rel-bac-add{width:100%}
+}
+@media(prefers-reduced-motion:reduce){.rel-bac-ogg,.rel-bac-ogg:nth-child(n){transform:none;animation:none!important}}
+
 /* ---------- editor del Master (capitolo «Reliquie della nave») — riusa gli stili ie- degli Incontri ---------- */
 #rel-ed{--ie-b:rgba(200,56,56,.22);--ie-b2:rgba(200,56,56,.5);color:var(--text)}
 .rel-ed-intro{font-size:.95rem;color:#c0a0a0;font-style:italic;margin:0 0 1rem}
