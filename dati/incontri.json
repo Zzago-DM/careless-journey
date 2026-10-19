@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-19T07:33:35.353Z",
+ "aggiornato": "2026-10-19T07:33:56.601Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -20,7 +20,15 @@
   {
    "id": "pmvexqygit6c0",
    "nome": "Cendrik Voltz",
-   "continente": "folgorante"
+   "continente": "folgorante",
+   "stato": "vivo",
+   "fazioni": [
+    "Guardie di Ostia"
+   ],
+   "foto": "img/incontri/pmvexqygit6c0-e6wdu3.webp",
+   "formati": [
+    "3:4"
+   ]
   },
   {
    "id": "r-ernest-ozz-honest",
