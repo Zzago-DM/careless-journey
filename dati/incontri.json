@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-19T17:52:32.157Z",
+ "aggiornato": "2026-10-19T17:54:57.221Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -31,6 +31,18 @@
    "nome": "atreo silver",
    "continente": "glaciale",
    "foto": "img/incontri/pmvexyrhyprg7-1x7b274.webp",
+   "formati": [
+    "3:4"
+   ]
+  },
+  {
+   "id": "pmvfjzoxddmq3",
+   "nome": "Bruno",
+   "continente": "glaciale",
+   "fazioni": [
+    "Slayer"
+   ],
+   "foto": "img/incontri/pmvfjzoxddmq3-1oakyep.webp",
    "formati": [
     "3:4"
    ]
