@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-19T07:35:29.898Z",
+ "aggiornato": "2026-10-19T07:36:31.442Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -215,6 +215,19 @@
    "foto": "img/nonna-yaga.webp",
    "formati": [
     "1:1"
+   ]
+  },
+  {
+   "id": "pmvexwjy49ioq",
+   "nome": "rebenek wkor",
+   "continente": "ardente",
+   "stato": "vivo",
+   "fazioni": [
+    "Amorlarien"
+   ],
+   "foto": "img/incontri/pmvexwjy49ioq-4mw7ec.webp",
+   "formati": [
+    "3:4"
    ]
   },
   {
