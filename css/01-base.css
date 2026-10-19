@@ -747,3 +747,6 @@ strong{color:var(--gold2)}
 .pl-add-btn:hover{background:rgba(200,56,56,.2);border-style:solid}
 .pl-sep{border:none;border-top:1px solid rgba(255,255,255,.06);margin:.9rem 0}
 
+.nv-map.v2 .nv-l{font-size:14px;letter-spacing:1.5px;stroke-width:4px}
+.nv-map.v2 .nv-a{stroke-width:1.5}.nv-map.v2 .nv-a.on{stroke-width:2.2}
+@media(max-width:560px){.nv-map.v2 .nv-l{font-size:16px}}
