@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-20T19:53:50.480Z",
+ "aggiornato": "2026-10-20T19:54:21.112Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -65,6 +65,16 @@
     "Guardie di Ostia"
    ],
    "foto": "img/incontri/pmvexqygit6c0-e6wdu3.webp",
+   "formati": [
+    "3:4"
+   ]
+  },
+  {
+   "id": "pmvgx9ecake3s",
+   "nome": "Dott. Chyren Abelor Frenz",
+   "continente": "ramsgate",
+   "stato": "vivo",
+   "foto": "img/incontri/pmvgx9ecake3s-u4b5zz.webp",
    "formati": [
     "3:4"
    ]
