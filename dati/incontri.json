@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-20T17:27:56.141Z",
+ "aggiornato": "2026-10-20T17:28:21.845Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -349,7 +349,11 @@
   {
    "id": "pmvfjwgg5wsrh",
    "nome": "Valahz soloy",
-   "continente": "ramsgate"
+   "continente": "ramsgate",
+   "foto": "img/incontri/pmvfjwgg5wsrh-1jlhhne.webp",
+   "formati": [
+    "3:4"
+   ]
   },
   {
    "id": "r-wils-bormen",
