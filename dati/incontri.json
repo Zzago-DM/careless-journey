@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-20T17:32:48.437Z",
+ "aggiornato": "2026-10-20T19:53:50.480Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -190,6 +190,19 @@
    "foto": "img/lady-luck.webp",
    "formati": [
     "1:1"
+   ]
+  },
+  {
+   "id": "pmvgxaxott23o",
+   "nome": "Laylar Scolar",
+   "continente": "ramsgate",
+   "stato": "vivo",
+   "fazioni": [
+    "Professore"
+   ],
+   "foto": "img/incontri/pmvgxaxott23o-87p6fo.webp",
+   "formati": [
+    "3:4"
    ]
   },
   {
