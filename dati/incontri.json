@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-20T16:55:20.442Z",
+ "aggiornato": "2026-10-20T17:27:56.141Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -286,7 +286,11 @@
   {
    "id": "pmvfjxc3hm7yj",
    "nome": "Railen Krona",
-   "continente": "ramsgate"
+   "continente": "ramsgate",
+   "foto": "img/incontri/pmvfjxc3hm7yj-gg8cni.webp",
+   "formati": [
+    "3:4"
+   ]
   },
   {
    "id": "pmvexwjy49ioq",
