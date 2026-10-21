@@ -80,6 +80,17 @@ La disposizione è salvata nella chiave `tcj-lay-<personaggio>`, che fa parte de
 
 Ogni riquadro in `sezioni/scheda.js` ha un nome nell'attributo `data-pz`. Se aggiungi un riquadro nuovo, dagli un `data-pz` e aggiungilo all'elenco `PZ` in cima a `js/area-modifica.js`: comparirà da solo nella sua posizione originale anche per chi ha già una disposizione salvata.
 
+## Viaggi in nave (Mappa del Mondo · js/viaggi.js + dati/viaggi.js)
+
+In alto a sinistra sulla Mappa del Mondo (sotto la mappa sul telefono) c'è **⛵ Viaggi**: si sceglie partenza, arrivo e condizioni del cielo, e il pannello dice quanti giorni di navigazione servono. **⛵ Salpa** fa partire la nave, **⚓ Siamo arrivati** la ferma alla meta, **↩ Annulla viaggio** la lascia dov'era. La nave non impiega il tempo vero: cambia solo la rotta.
+
+- **Tempi:** in `dati/viaggi.js`, elenco `VG_VIAGGI`. Sono i giorni con **cielo sereno**, da costa a costa (i punti più vicini tra le due terre), e valgono in tutte e due le direzioni. Per cambiarne uno basta cambiare il numero (anche `1.5` per un giorno e mezzo).
+- **Cielo:** `VG_CIELO` — Cielo sereno ×1, Venti contrari ×1,3 (si bordeggia a zig-zag), Burrasca ×1,6 (rotta larga e mossa), Tempesta aetherica ×2 (giro lungo e tortuoso). I giorni si arrotondano per eccesso al mezzo giorno.
+- **Maelstrom:** si aggira sempre. La zona da evitare è `VG_MAELSTROM` (centro e raggi, margine compreso); ogni rotta le gira attorno da sola.
+- **Approdi:** i punti di costa da cui parte e arriva ogni rotta sono in `VG_VIAGGI` (`approdi`), e `nave` in `VG_LUOGHI` è dove la nave resta ferma su ogni terra se non c'è un viaggio.
+
+Ogni player ha la sua nave: lo stato sta nella chiave `tcj-vg-<personaggio>`, dentro il pacchetto online del personaggio (segue il player su ogni dispositivo con «☁ Salva online»). Senza un personaggio attivo la nave resta solo nel browser (`tcj-vg`). Ha sostituito la vecchia rotta fissa da Ramsgate e l'opzione «Rotta della nave» del menu del Master.
+
 ## Reliquie (Nave › Zona Segreta + capitolo del Master)
 
 - Nella Nave, toccando la **Zona Segreta** compare «🗝️ Entra nella stanza delle Reliquie»: una stanza con un piedistallo per ogni artefatto visibile (`js/reliquie.js`, `css/23-reliquie.css`). Toccando un artefatto si apre la sua scheda: descrizione del Master e «Le mie note» del giocatore, salvate nel suo pacchetto (`tcj-rel-<personaggio>`) e quindi nel suo salvataggio online.
