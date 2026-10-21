@@ -68,6 +68,18 @@ La sezione **Il Gruppo** (`sezioni/gruppo.js`, `css/22-gruppo.css`, `js/gruppo.j
 1. Crea il repository privato `gruppo` (spunta "Add a README").
 2. In *Settings → Developer settings → Fine-grained tokens* apri **ognuno dei quattro token** (Athena, Pan Lan, Asonnes, Master) → *Edit* → in *Repository access* aggiungi `gruppo` → salva. I permessi restano *Contents: Read and write*. I giocatori non devono reincollare niente.
 
+## Modifica dell'Area dello Slayer (js/area-modifica.js)
+
+Nella barra in cima a ogni Area dello Slayer c'è **✎ Modifica area**. Si apre una schermata con tutti i riquadri della scheda in versione compatta:
+
+- si trascinano dalla maniglia **⠿** (col mouse anche dal riquadro intero; col dito solo dalla maniglia, così la schermata scorre). Da tastiera: maniglia selezionata + frecce;
+- **◧ Mezza / ▭ Intera** decide se il riquadro occupa mezza riga o tutta la riga (sul telefono stanno comunque uno sotto l'altro);
+- **✓ Salva disposizione** la applica, **Annulla** chiude senza cambiare niente, **↺ Ripristina originale** torna all'ordine del sito.
+
+La disposizione è salvata nella chiave `tcj-lay-<personaggio>`, che fa parte del pacchetto online del personaggio: con «☁ Salva online» segue il player su ogni dispositivo. I riquadri non vengono spostati nella pagina, cambia solo l'ordine con cui si vedono.
+
+Ogni riquadro in `sezioni/scheda.js` ha un nome nell'attributo `data-pz`. Se aggiungi un riquadro nuovo, dagli un `data-pz` e aggiungilo all'elenco `PZ` in cima a `js/area-modifica.js`: comparirà da solo nella sua posizione originale anche per chi ha già una disposizione salvata.
+
 ## Reliquie (Nave › Zona Segreta + capitolo del Master)
 
 - Nella Nave, toccando la **Zona Segreta** compare «🗝️ Entra nella stanza delle Reliquie»: una stanza con un piedistallo per ogni artefatto visibile (`js/reliquie.js`, `css/23-reliquie.css`). Toccando un artefatto si apre la sua scheda: descrizione del Master e «Le mie note» del giocatore, salvate nel suo pacchetto (`tcj-rel-<personaggio>`) e quindi nel suo salvataggio online.

@@ -10,6 +10,7 @@
      tcj-n-<pg>    vecchie note (sezione Note)
      tcj-inc-<pg>  note personali sui personaggi incontrati (sezione Incontri)
      tcj-rel-<pg>  note personali sulle reliquie (Nave › Stanza delle Reliquie)
+     tcj-lay-<pg>  disposizione dei riquadri dell'Area dello Slayer (✎ Modifica area)
    Restano invece in comune o solo locali: nave, note sui Mael, note del Master, preferenze del sito. */
 (function(){
   var OWNER = "Zzago-DM";                 // proprietario dei repository dei giocatori
@@ -20,10 +21,10 @@
   var NOMI = {}; SC_CHARS.forEach(function(c){ NOMI[c.k] = (typeof PA_FULL !== "undefined" && PA_FULL[c.k]) || c.n; });
 
   /* ---------- chiavi di ogni personaggio ---------- */
-  function chiavi(k){ var l = ["tcj-sc4-"+k, "tcj-al-"+k, "tcj_bg_"+k, "tcj-n-"+k, "tcj-inc-"+k, "tcj-rel-"+k]; if(k === CH[0]) l.push("tcj-sc4"); return l; }
+  function chiavi(k){ var l = ["tcj-sc4-"+k, "tcj-al-"+k, "tcj_bg_"+k, "tcj-n-"+k, "tcj-inc-"+k, "tcj-rel-"+k, "tcj-lay-"+k]; if(k === CH[0]) l.push("tcj-sc4"); return l; }
   function diChi(key){
     if(key === "tcj-sc4") return CH[0];
-    var m = /^(?:tcj-sc4-|tcj-al-|tcj_bg_|tcj-n-|tcj-inc-|tcj-rel-)(.+)$/.exec(key);
+    var m = /^(?:tcj-sc4-|tcj-al-|tcj_bg_|tcj-n-|tcj-inc-|tcj-rel-|tcj-lay-)(.+)$/.exec(key);
     return m && CH.indexOf(m[1]) >= 0 ? m[1] : null;
   }
 
@@ -130,6 +131,7 @@
     if(al){ add("Alloggio", "Nome", al.t); (al.notes || []).forEach(function(n, i){ add("Alloggio", txt(n.t) || ("Sezione " + (i+1)), n.b); }); }
     var rn = js(map["tcj-rel-"+k]) || {}; Object.keys(rn).forEach(function(id, i){ add("Note sulle reliquie", "Nota " + (i+1), rn[id]); });
     add("Tema", "Tema e sfondo", map["tcj_bg_"+k] || "", map["tcj_bg_"+k] ? "Personalizzato" : "Predefinito");
+    add("Tema", "Disposizione dei riquadri", map["tcj-lay-"+k] || "", map["tcj-lay-"+k] ? "Personalizzata" : "Originale");
     return R;
   }
   function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
@@ -251,7 +253,7 @@
   var bar = document.querySelector("#pa-body .pa-bar"), box;
   if(bar){
     box = document.createElement("span"); box.className = "gh-box";
-    var lock = document.getElementById("pa-lockbtn"); bar.insertBefore(box, lock);
+    var lock = document.getElementById("am-btn") || document.getElementById("pa-lockbtn"); bar.insertBefore(box, lock);
   }
   var sez = document.getElementById("sv-onl");
   function statoTesto(k, s){
