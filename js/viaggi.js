@@ -49,15 +49,17 @@
     var P = punti(da, a); if(!P || P.length < 2) return null;
     return { pts: P, d: liscia(P), a: P[0], b: P[P.length - 1] };
   }
-  function liscia(Q){                                   /* curve morbide che passano per tutti i punti */
-    if(Q.length === 2) return "M" + Q[0][0] + "," + Q[0][1] + " L" + Q[1][0] + "," + Q[1][1];
-    var d = "M" + Q[0][0].toFixed(1) + "," + Q[0][1].toFixed(1);
-    for(var i = 0; i < Q.length - 1; i++){
-      var p0 = Q[Math.max(0, i - 1)], p1 = Q[i], p2 = Q[i + 1], p3 = Q[Math.min(Q.length - 1, i + 2)];
-      d += " C" + (p1[0] + (p2[0] - p0[0]) / 6).toFixed(1) + "," + (p1[1] + (p2[1] - p0[1]) / 6).toFixed(1) + " " + (p2[0] - (p3[0] - p1[0]) / 6).toFixed(1) + "," + (p2[1] - (p3[1] - p1[1]) / 6).toFixed(1) + " " + p2[0].toFixed(1) + "," + p2[1].toFixed(1);
+  function liscia(Q){                                   /* linee dritte con gli angoli arrotondati: la rotta resta nel cielo libero */
+    var f = function(p){ return p[0].toFixed(1) + "," + p[1].toFixed(1); }, d = "M" + f(Q[0]);
+    for(var i = 1; i < Q.length - 1; i++){
+      var a = Q[i - 1], b = Q[i], c = Q[i + 1], l1 = Math.hypot(b[0] - a[0], b[1] - a[1]), l2 = Math.hypot(c[0] - b[0], c[1] - b[1]);
+      var r = Math.min(40, l1 * .45, l2 * .45);
+      var p1 = [b[0] + (a[0] - b[0]) * r / (l1 || 1), b[1] + (a[1] - b[1]) * r / (l1 || 1)], p2 = [b[0] + (c[0] - b[0]) * r / (l2 || 1), b[1] + (c[1] - b[1]) * r / (l2 || 1)];
+      d += " L" + f(p1) + " Q" + f(b) + " " + f(p2);
     }
-    return d;
+    return d + " L" + f(Q[Q.length - 1]);
   }
+
   window.vgRotta = rotta;   /* per controlli dalla console */
 
   /* ---------------- disegno sulla mappa ---------------- */
