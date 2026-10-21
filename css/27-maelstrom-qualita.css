@@ -1,0 +1,4 @@
+/* Menu in alto a destra: scelta della qualità dell'animazione del Maelstrom (js/maelstrom-qualita.js) */
+.sl-mq{gap:.6rem}
+.sl-mqsel{flex-shrink:0;min-height:32px;background:var(--bg);border:1px solid var(--border);color:var(--gold2);font-family:"Cinzel",serif;font-size:.62rem;letter-spacing:.08em;padding:.2rem .35rem;cursor:pointer;outline:none}
+.sl-mqsel:focus{border-color:var(--gold3)}

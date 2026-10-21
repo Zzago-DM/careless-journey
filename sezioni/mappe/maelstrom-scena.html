@@ -26,10 +26,13 @@ var CFG={
   CLOUDS:22,         // nubi di tempesta
   BOLT:[2.5,7]       // ogni quanti secondi (min, max) cade un lampo
 };
+/* qualità «Media» (menu in alto a destra del sito): stessa scena, molto più leggera */
+var MEDIA=/[?&]q=media\b/.test(location.search);
+if(MEDIA){CFG.PART=550;CFG.ROCKS=14;CFG.CLOUDS=9;}
 var cv=document.getElementById('c'),ctx=cv.getContext('2d');
 var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 var W=0,H=0,cx=0,cy=0,S=1,DPR=1,HH=0,RM=0,R0=0;
-function resize(){DPR=Math.min(window.devicePixelRatio||1,1.5);W=innerWidth;H=innerHeight;cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0);
+function resize(){DPR=MEDIA?1:Math.min(window.devicePixelRatio||1,1.5);W=innerWidth;H=innerHeight;cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0);
   cx=W/2;cy=H/2;S=Math.min(W,H)/800;HH=H*CFG.RIM;RM=Math.max(W*CFG.MOUTH,170*S);R0=CFG.WAIST*S;buildBg();}
 function rand(a,b){return a+Math.random()*(b-a);}
 /* profilo della clessidra: v da -1 (bocca alta) a 0 (strozzatura) a +1 (bocca bassa) */
@@ -177,7 +180,9 @@ function drawBolts(dt){
   ctx.globalCompositeOperation='source-over';
   if(flash>0.01){ctx.fillStyle='rgba(140,190,230,'+(0.13*flash)+')';ctx.fillRect(0,0,W,H);}
 }
-function vignette(){var g=ctx.createRadialGradient(cx,cy,Math.min(W,H)*0.35,cx,cy,Math.max(W,H)*0.75);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,2,5,0.82)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}
+var VIG=null;
+function vignette(){if(MEDIA){if(!VIG||VIG.w!==W||VIG.h!==H){VIG=document.createElement('canvas');VIG.width=Math.round(W);VIG.height=Math.round(H);VIG.w=W;VIG.h=H;var v=VIG.getContext('2d'),gv=v.createRadialGradient(cx,cy,Math.min(W,H)*0.35,cx,cy,Math.max(W,H)*0.75);gv.addColorStop(0,'rgba(0,0,0,0)');gv.addColorStop(1,'rgba(0,2,5,0.82)');v.fillStyle=gv;v.fillRect(0,0,W,H);}ctx.drawImage(VIG,0,0,W,H);return;}
+  var g=ctx.createRadialGradient(cx,cy,Math.min(W,H)*0.35,cx,cy,Math.max(W,H)*0.75);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,2,5,0.82)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}
 
 function visible(){
   if(document.hidden)return false;
@@ -188,6 +193,7 @@ var vis=true,frameN=0;
 function frame(now,once){
   if(!once)requestAnimationFrame(frame);
   if((frameN++%20)===0)vis=visible();
+  if(MEDIA&&!once&&now-last<30){return;}   /* Media: circa 30 fotogrammi al secondo */
   var dt=Math.min(0.05,(now-last)/1000);last=now;if(!vis)return;T+=dt;
   for(var i=0;i<CLOUDS.length;i++){CLOUDS[i].th+=CLOUDS[i].om*dt;}
   for(var i=0;i<ROCKS.length;i++){var R=ROCKS[i],av=Math.abs(R.v);R.th+=(0.12+0.5*(1-Math.min(1,av)))*dt;R.rot+=R.vr*dt;R.v-=Math.sign(R.v)*0.025*dt;R.k+=(1-R.k)*0.08*dt;if(av<0.3){rock(R,false);}}
