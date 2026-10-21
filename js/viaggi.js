@@ -1,6 +1,7 @@
 /* ⛵ Viaggi — pannello sulla Mappa del Mondo: partenza, arrivo e condizioni del cielo.
    Mostra quanti giorni di navigazione servono (tempi in dati/viaggi.js) e disegna la rotta della nave:
-   la nave non impiega il tempo vero, ma la forma della rotta cambia col cielo, e il Maelstrom viene sempre aggirato.
+   la nave non impiega il tempo vero. La rotta è la stessa con ogni cielo (col brutto tempo la nave va solo più piano),
+   passa nel cielo aperto senza sorvolare altri continenti e gira sempre attorno al Maelstrom.
 
    Ogni player gestisce la propria nave: lo stato sta nella chiave tcj-vg-<pg>, che fa parte del pacchetto
    del personaggio (js/sync-giocatori.js) e segue il player su ogni dispositivo con «☁ Salva online».
@@ -13,11 +14,7 @@
   var NS = "http://www.w3.org/2000/svg";
 
   /* ---------------- dati e conti ---------------- */
-  function viaggio(da, a){
-    var v = VG_VIAGGI[da + "|" + a]; if(v) return { giorni: v.giorni, p0: v.approdi[0], p1: v.approdi[1] };
-    v = VG_VIAGGI[a + "|" + da];     if(v) return { giorni: v.giorni, p0: v.approdi[1], p1: v.approdi[0] };
-    return null;
-  }
+  function viaggio(da, a){ return VG_VIAGGI[da + "|" + a] || VG_VIAGGI[a + "|" + da] || null; }
   function giorni(da, a, c){ var v = viaggio(da, a); if(!v) return null; return Math.ceil(v.giorni * (CIELO[c] || VG_CIELO[0]).per * 2 - 1e-9) / 2; }
   function durata(g){
     if(g == null) return "";
@@ -42,78 +39,18 @@
   function scrivi(s){ try { localStorage.setItem(chiave(), JSON.stringify({ pos: s.pos, xy: s.xy, c: s.c, v: s.v || null })); } catch(e){} }
 
   /* ---------------- rotte ---------------- */
-  function nz(p, m){ var dx = (p[0] - M.x) / (M.rx * m), dy = (p[1] - M.y) / (M.ry * m); return dx * dx + dy * dy; }   /* <1 = dentro la zona */
-  function attraversa(a, b, m){ for(var i = 0; i <= 40; i++){ var t = i / 40; if(nz([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t], m) < 1) return true; } return false; }
-  function sulBordo(th, k){ return [M.x + M.rx * k * Math.cos(th), M.y + M.ry * k * Math.sin(th)]; }
-  function ang(p){ return Math.atan2((p[1] - M.y) / M.ry, (p[0] - M.x) / M.rx); }
-  function lungh(pp){ var L = 0; for(var i = 1; i < pp.length; i++) L += Math.hypot(pp[i][0] - pp[i-1][0], pp[i][1] - pp[i-1][1]); return L; }
-
-  /* rotta più corta che gira attorno al Maelstrom (filo teso attorno alla zona) */
-  function base(a, b){
-    if(!attraversa(a, b, 1)) return [a, b];
-    var ta = ang(a), tb = ang(b), best = null;
-    [1, -1].forEach(function(dir){
-      var d = tb - ta; while(dir > 0 ? d <= 0 : d >= 0) d += dir * 2 * Math.PI;
-      var n = Math.max(6, Math.ceil(Math.abs(d) / .12)), pp = [a];
-      for(var i = 0; i <= n; i++) pp.push(sulBordo(ta + d * i / n, 1.1));
-      pp.push(b);
-      for(var cambiato = true; cambiato;){            /* tolgo i punti inutili finché il filo non tocca la zona */
-        cambiato = false;
-        for(var j = 1; j < pp.length - 1; j++){ if(!attraversa(pp[j-1], pp[j+1], 1.02)){ pp.splice(j, 1); cambiato = true; break; } }
-      }
-      var L = lungh(pp); if(!best || L < best.L) best = { pp: pp, L: L };
-    });
-    return best.pp;
+  /* la rotta è sempre la stessa (dati/viaggi.js): il cielo cambia solo quanto va veloce la nave */
+  function punti(da, a){
+    var v = VG_VIAGGI[da + "|" + a]; if(v) return v.rotta.map(function(p){ return p.slice(); });
+    v = VG_VIAGGI[a + "|" + da];     if(v) return v.rotta.map(function(p){ return p.slice(); }).reverse();
+    return null;
   }
-  /* punti a passo regolare lungo la spezzata */
-  function campiona(pp, n){
-    var L = lungh(pp), out = [], seg = 0, fatto = 0;
-    for(var i = 0; i <= n; i++){
-      var s = L * i / n;
-      while(seg < pp.length - 2 && fatto + Math.hypot(pp[seg+1][0] - pp[seg][0], pp[seg+1][1] - pp[seg][1]) < s){ fatto += Math.hypot(pp[seg+1][0] - pp[seg][0], pp[seg+1][1] - pp[seg][1]); seg++; }
-      var l = Math.hypot(pp[seg+1][0] - pp[seg][0], pp[seg+1][1] - pp[seg][1]) || 1, t = Math.min(1, (s - fatto) / l);
-      out.push([pp[seg][0] + (pp[seg+1][0] - pp[seg][0]) * t, pp[seg][1] + (pp[seg+1][1] - pp[seg][1]) * t]);
-    }
-    return out;
+  function rotta(da, a){
+    var P = punti(da, a); if(!P || P.length < 2) return null;
+    return { pts: P, d: liscia(P), a: P[0], b: P[P.length - 1] };
   }
-  function seme(str){ var h = 2166136261; for(var i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return function(){ h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 10000) / 10000; }; }
-
-  /* la rotta vera: la base piegata in modo diverso a seconda del cielo, sempre fuori dal Maelstrom */
-  function rotta(da, a, c){
-    var v = viaggio(da, a); if(!v) return null;
-    var pp = base(v.p0, v.p1), L = lungh(pp), n = Math.max(24, Math.min(160, Math.round(L / 9)));
-    var P = campiona(pp, n), r = seme(da + a + c), f1 = r() * 6.28, f2 = r() * 6.28;
-    /* lato verso cui la rotta si incurva: lontano dal Maelstrom */
-    var mi = P[Math.floor(n / 2)], mj = P[Math.floor(n / 2) + 1] || P[n], tx = mj[0] - mi[0], ty = mj[1] - mi[1], tl = Math.hypot(tx, ty) || 1;
-    var lato = ((-ty / tl) * (mi[0] - M.x) + (tx / tl) * (mi[1] - M.y)) >= 0 ? 1 : -1;
-    var arco, amp, giri;
-    if(c === "sereno"){ arco = Math.min(60, Math.max(16, L * .05)); amp = 0; }
-    else if(c === "venti"){ arco = Math.min(120, Math.max(28, L * .1)); amp = Math.min(30, 7 + L * .04); giri = Math.max(2, Math.round(L / 170)); }
-    else if(c === "burrasca"){ arco = Math.min(170, Math.max(42, L * .15)); amp = Math.min(30, 8 + L * .045); giri = Math.max(2, L / 210); }
-    else { arco = Math.min(240, Math.max(60, L * .22)); amp = Math.min(40, 10 + L * .06); giri = Math.max(2.5, L / 160); }
-    var Q = P.map(function(p, i){
-      var t = i / n, q = P[Math.min(n, i + 1)], o = P[Math.max(0, i - 1)], dx = q[0] - o[0], dy = q[1] - o[1], dl = Math.hypot(dx, dy) || 1;
-      var nx = -dy / dl * lato, ny = dx / dl * lato, inv = Math.pow(Math.sin(Math.PI * t), .7), off = arco * Math.sin(Math.PI * t);
-      if(c === "venti"){ var u = (t * giri * 2) % 2; off += amp * inv * (u < 1 ? u * 2 - 1 : 3 - u * 2); }            /* bordeggio: lati dritti */
-      else if(c === "burrasca") off += amp * inv * (.7 * Math.sin(6.283 * giri * t + f1) + .3 * Math.sin(6.283 * giri * 2.3 * t + f2));
-      else if(c === "tempesta") off += arco * .35 * Math.sin(2 * Math.PI * t) + amp * inv * (.6 * Math.sin(6.283 * giri * t + f1) + .4 * Math.sin(6.283 * giri * 1.9 * t + f2));
-      return [p[0] + nx * off, p[1] + ny * off];
-    });
-    Q[0] = P[0]; Q[n] = P[n];
-    Q = Q.map(function(p){                              /* il Maelstrom si aggira sempre */
-      var d = nz(p, 1); if(d >= 1.03 * 1.03) return p;
-      var k = 1.03 / Math.sqrt(d || .0001); return [M.x + (p[0] - M.x) * k, M.y + (p[1] - M.y) * k];
-    });
-    if(c === "venti"){                                  /* tengo solo gli angoli del bordeggio */
-      var K = [Q[0]], passi = giri * 2;
-      for(var s = 1; s < passi; s++) K.push(Q[Math.round(n * s / passi)]);
-      K.push(Q[n]);
-      var fine = [K[0]]; for(var j = 1; j < K.length; j++){ var pz = campiona([K[j-1], K[j]], 6).slice(1); pz.forEach(function(p){ var d = nz(p, 1); if(d < 1.03 * 1.03){ var k = 1.03 / Math.sqrt(d || .0001); p = [M.x + (p[0] - M.x) * k, M.y + (p[1] - M.y) * k]; } fine.push(p); }); }
-      return { pts: fine, d: "M" + fine.map(function(p){ return p[0].toFixed(1) + "," + p[1].toFixed(1); }).join(" L"), a: v.p0, b: v.p1 };
-    }
-    return { pts: Q, d: liscia(Q), a: v.p0, b: v.p1 };
-  }
-  function liscia(Q){                                   /* Catmull-Rom → curve morbide */
+  function liscia(Q){                                   /* curve morbide che passano per tutti i punti */
+    if(Q.length === 2) return "M" + Q[0][0] + "," + Q[0][1] + " L" + Q[1][0] + "," + Q[1][1];
     var d = "M" + Q[0][0].toFixed(1) + "," + Q[0][1].toFixed(1);
     for(var i = 0; i < Q.length - 1; i++){
       var p0 = Q[Math.max(0, i - 1)], p1 = Q[i], p2 = Q[i + 1], p3 = Q[Math.min(Q.length - 1, i + 2)];
@@ -233,7 +170,7 @@
     if(s.v){
       var c = CIELO[s.v.c];
       h += '<div class="vg-stato vg-incorso"><span class="vg-k">In viaggio</span><div class="vg-tratta"><b>' + VG_LUOGHI[s.v.da].icona + ' ' + VG_LUOGHI[s.v.da].nome + '</b><span class="vg-freccia">↓</span><b>' + VG_LUOGHI[s.v.a].icona + ' ' + VG_LUOGHI[s.v.a].nome + '</b></div></div>' +
-        '<div class="vg-ris"><div class="vg-gg">' + durata(giorni(s.v.da, s.v.a, s.v.c)) + '</div><div class="vg-sub">di navigazione · ' + c.icona + ' ' + c.nome + '</div><div class="vg-nota">' + c.rotta + '</div></div>' +
+        '<div class="vg-ris"><div class="vg-gg">' + durata(giorni(s.v.da, s.v.a, s.v.c)) + '</div><div class="vg-sub">di navigazione · ' + c.icona + ' ' + c.nome + '</div><div class="vg-nota">' + c.nota + '</div></div>' +
         '<div class="vg-btns"><button type="button" class="vg-b vg-prim" data-vg="arrivati">⚓ Siamo arrivati</button><button type="button" class="vg-b" data-vg="annulla">↩ Annulla viaggio</button></div>';
     } else {
       if(!VG_LUOGHI[sel.da]) sel.da = s.pos;
@@ -260,7 +197,7 @@
     var ris = pan.querySelector("#vg-ris"), salpa = pan.querySelector("#vg-salpa");
     if(sel.a && sel.a !== sel.da){
       var g = giorni(sel.da, sel.a, sel.c), g0 = giorni(sel.da, sel.a, "sereno"), c = CIELO[sel.c];
-      ris.innerHTML = '<div class="vg-gg">' + durata(g) + '</div><div class="vg-sub">di navigazione</div><div class="vg-nota">' + c.icona + ' ' + c.rotta + (sel.c !== "sereno" ? ' · con cielo sereno: ' + durata(g0) : '') + '</div>';
+      ris.innerHTML = '<div class="vg-gg">' + durata(g) + '</div><div class="vg-sub">di navigazione</div><div class="vg-nota">' + c.icona + ' ' + c.nota + (sel.c !== "sereno" ? ' · con cielo sereno: ' + durata(g0) : '') + '</div>';
       ris.classList.add("on"); salpa.disabled = false;
       anteprima(sel.da, sel.a, sel.c);
     } else {

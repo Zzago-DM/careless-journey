@@ -82,12 +82,12 @@ Ogni riquadro in `sezioni/scheda.js` ha un nome nell'attributo `data-pz`. Se agg
 
 ## Viaggi in nave (Mappa del Mondo · js/viaggi.js + dati/viaggi.js)
 
-In alto a sinistra sulla Mappa del Mondo (sotto la mappa sul telefono) c'è **⛵ Viaggi**: si sceglie partenza, arrivo e condizioni del cielo, e il pannello dice quanti giorni di navigazione servono. **⛵ Salpa** fa partire la nave, **⚓ Siamo arrivati** la ferma alla meta, **↩ Annulla viaggio** la lascia dov'era. La nave non impiega il tempo vero: cambia solo la rotta.
+In alto a sinistra sulla Mappa del Mondo (sotto la mappa sul telefono) c'è **⛵ Viaggi**: si sceglie partenza, arrivo e condizioni del cielo, e il pannello dice quanti giorni di navigazione servono. **⛵ Salpa** fa partire la nave, **⚓ Siamo arrivati** la ferma alla meta, **↩ Annulla viaggio** la lascia dov'era. La nave non impiega il tempo vero.
 
 - **Tempi:** in `dati/viaggi.js`, elenco `VG_VIAGGI`. Sono i giorni con **cielo sereno**, da costa a costa (i punti più vicini tra le due terre), e valgono in tutte e due le direzioni. Per cambiarne uno basta cambiare il numero (anche `1.5` per un giorno e mezzo).
-- **Cielo:** `VG_CIELO` — Cielo sereno ×1, Venti contrari ×1,3 (si bordeggia a zig-zag), Burrasca ×1,6 (rotta larga e mossa), Tempesta aetherica ×2 (giro lungo e tortuoso). I giorni si arrotondano per eccesso al mezzo giorno.
-- **Maelstrom:** si aggira sempre. La zona da evitare è `VG_MAELSTROM` (centro e raggi, margine compreso); ogni rotta le gira attorno da sola.
-- **Approdi:** i punti di costa da cui parte e arriva ogni rotta sono in `VG_VIAGGI` (`approdi`), e `nave` in `VG_LUOGHI` è dove la nave resta ferma su ogni terra se non c'è un viaggio.
+- **Cielo:** `VG_CIELO` — Cielo sereno ×1, Venti contrari ×1,3, Burrasca ×1,6, Tempesta aetherica ×2, arrotondati per eccesso al mezzo giorno. Il cielo cambia solo la velocità (e il colore della rotta): **la rotta è sempre la stessa**.
+- **Rotte:** in `VG_VIAGGI` (`rotta`), un elenco di punti della mappa. Il primo e l'ultimo sono gli approdi (i punti di costa più vicini). Sono state calcolate per passare nel cielo aperto: non sorvolano continenti diversi da partenza e arrivo e girano sempre attorno al Maelstrom (`VG_MAELSTROM`). Se sposti un punto a mano, controlla sulla mappa che la rotta resti nel vuoto.
+- **Nave ferma:** `nave` in `VG_LUOGHI` è dove la nave resta su ogni terra se non c'è un viaggio.
 
 Ogni player ha la sua nave: lo stato sta nella chiave `tcj-vg-<personaggio>`, dentro il pacchetto online del personaggio (segue il player su ogni dispositivo con «☁ Salva online»). Senza un personaggio attivo la nave resta solo nel browser (`tcj-vg`). Ha sostituito la vecchia rotta fissa da Ramsgate e l'opzione «Rotta della nave» del menu del Master.
 
