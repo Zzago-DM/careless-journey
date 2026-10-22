@@ -70,15 +70,16 @@ La sezione **Il Gruppo** (`sezioni/gruppo.js`, `css/22-gruppo.css`, `js/gruppo.j
 
 ## Modifica dell'Area dello Slayer (js/area-modifica.js)
 
-Nella barra in cima a ogni Area dello Slayer c'è **✎ Modifica area**. Si apre una schermata con tutti i riquadri della scheda in versione compatta:
+Nella barra in cima a ogni Area dello Slayer c'è **✎ Modifica area**. Si apre una schermata a widget, come la home di un telefono, con un widget per ogni sezione della scheda:
 
-- si trascinano dalla maniglia **⠿** (col mouse anche dal riquadro intero; col dito solo dalla maniglia, così la schermata scorre). Da tastiera: maniglia selezionata + frecce;
-- **◧ Mezza / ▭ Intera** decide se il riquadro occupa mezza riga o tutta la riga (sul telefono stanno comunque uno sotto l'altro);
-- **✓ Salva disposizione** la applica, **Annulla** chiude senza cambiare niente, **↺ Ripristina originale** torna all'ordine del sito.
+- **spostare:** si trascinano col mouse da tutto il widget, col dito dalla maniglia **⠿** (così la schermata scorre). Da tastiera: maniglia selezionata + frecce;
+- **grandezza:** la maniglia **⤡** nell'angolo, trascinata a destra/sinistra, sceglie mezza riga o riga intera; in su/giù sceglie l'altezza fino a chiudere il widget. Toccando un widget si apre lo stesso menu a pulsanti;
+- **altezza:** *Intera* (tutto il contenuto), *Media* e *Compatta* (altezza fissa, si scorre dentro il riquadro: solo per le sezioni che possono diventare lunghe), *Chiusa* (solo il titolo, si apre col tocco). Sul telefono i riquadri stanno comunque uno sotto l'altro: lì contano ordine e altezza;
+- **Conferma →** mostra la scheda **prima e dopo**, con **← Continua a modificare**, **Annulla** e **✓ Salva** (attivo dopo 3 secondi). **↺ Originale** torna alla disposizione del sito.
 
-La disposizione è salvata nella chiave `tcj-lay-<personaggio>`, che fa parte del pacchetto online del personaggio: con «☁ Salva online» segue il player su ogni dispositivo. I riquadri non vengono spostati nella pagina, cambia solo l'ordine con cui si vedono.
+La disposizione è salvata nella chiave `tcj-lay-<personaggio>`, dentro il pacchetto online del personaggio. Dopo «Salva» viene caricata online subito, se su quel dispositivo c'è il token del player (o del Master); se nel frattempo un altro dispositivo ha salvato, compare il confronto delle due versioni invece di sovrascrivere. Senza token resta su quel dispositivo finché non si collega il salvataggio online.
 
-Ogni riquadro in `sezioni/scheda.js` ha un nome nell'attributo `data-pz`. Se aggiungi un riquadro nuovo, dagli un `data-pz` e aggiungilo all'elenco `PZ` in cima a `js/area-modifica.js`: comparirà da solo nella sua posizione originale anche per chi ha già una disposizione salvata.
+Ogni riquadro in `sezioni/scheda.js` ha un nome nell'attributo `data-pz`. Se aggiungi un riquadro nuovo, dagli un `data-pz` e aggiungilo all'elenco `PZ` in cima a `js/area-modifica.js` (l'ultimo valore dice se si può accorciare): comparirà nella sua posizione originale anche per chi ha già una disposizione salvata.
 
 ## Viaggi in nave (Mappa del Mondo · js/viaggi.js + dati/viaggi.js)
 

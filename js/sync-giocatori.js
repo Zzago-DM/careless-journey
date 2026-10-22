@@ -354,7 +354,23 @@
     var da = CH.filter(function(k){ var s = stato(k); return cred(k) && s.dirty; });
     if(da.length){ e.preventDefault(); e.returnValue = ""; }
   });
-  window.ghSync = { scarica: scaricaAll, scaricaOra: scaricaManuale, salva: caricaOnline, stato: stato };
+  /* salva online subito (per esempio dopo «✎ Modifica area»), ma solo se la versione online è quella che questo
+     dispositivo conosce già: se un altro dispositivo ha salvato nel frattempo, mostra il confronto invece di sovrascrivere.
+     Restituisce "nessuno" (nessun token collegato), "occupato", "errore", "conflitto" oppure "ok". */
+  function salvaSeLibero(k){
+    var c = cred(k); if(!c) return Promise.resolve("nessuno"); if(occupato[k]) return Promise.resolve("occupato");
+    try { if(typeof paFlush === "function") paFlush(); } catch(e){}
+    occupato[k] = 1; disegna();
+    return scarica(c).then(function(res){
+      occupato[k] = 0; disegna();
+      if(res.stato === "errore"){ avviso(res.msg, true); return "errore"; }
+      var s2 = stato(k);
+      if(res.stato === "vuoto" || (res.dati && res.dati.salvato === s2.at)){ caricaOnline(k, true); return "ok"; }
+      confronto(k, "salva", res.dati, res.sha, "⚠ La versione online è stata salvata <b>da un altro dispositivo</b> dopo l'ultima volta che questo l'ha scaricata. Scegli quale tenere.");
+      return "conflitto";
+    });
+  }
+  window.ghSync = { scarica: scaricaAll, scaricaOra: scaricaManuale, salva: caricaOnline, salvaSeLibero: salvaSeLibero, stato: stato, collegato: function(k){ return !!cred(k); } };
   /* ---------- Zona Master: token del Master e quadro delle tre aree ---------- */
   var mb = document.getElementById("mgh-body");
   function disegnaMaster(){
