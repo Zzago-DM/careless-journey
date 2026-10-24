@@ -1,9 +1,11 @@
 /* Tema «Oro del Master» (js/tema-oro.js): le parti fatte a mano.
-   Il resto dei colori della Zona Master è in css/29-tema-oro-auto.css, generato da strumenti/tema-oro.js. */
+   Due interruttori separati, nel menu ⚔ Slayer › Zona Master:
+   - «Colore del sito» = ☀ Oro del Master → html[data-el=oro]: solo sfondo e colori del sito (qui sotto, prima parte);
+   - «Colore della Zona Master» = Oro → html[data-zm=oro]: solo la Zona Master e i suoi strumenti (il resto del file,
+     più css/29-tema-oro-auto.css generato da strumenti/tema-oro.js). */
 
 /* ---------- colori del sito ---------- */
 html[data-el=oro],#scheda[data-el=oro]{--gold-rgb:242,180,40;--bg:#0c0803;--bg2:#150e04;--bg3:#1d1406;--gold:#f2b428;--gold2:#ffd970;--gold3:#b07d12;--border:rgba(242,180,40,.28);--pa-glow:rgba(255,190,40,.17)}
-html[data-el=oro]{--master:#e0a422;--master2:#ffd25e;--master-bg:#120b02}
 html[data-el=oro] nav{background:rgba(13,9,3,.95)}
 #scheda[data-el=oro]{background-image:radial-gradient(ellipse 90% 45% at 50% 0%,rgba(255,190,40,.16),transparent 70%),radial-gradient(ellipse 70% 40% at 50% 100%,rgba(180,110,0,.14),transparent 70%)!important}
 html[data-el=oro] body,html[data-pg=master][data-el=oro] body{background-image:radial-gradient(ellipse 60% 42% at 0% 50%,rgba(255,180,30,.11),transparent 70%),radial-gradient(ellipse 60% 42% at 100% 50%,rgba(255,180,30,.11),transparent 70%),radial-gradient(ellipse 80% 30% at 50% 0%,rgba(255,210,110,.05),transparent 70%)}
@@ -11,9 +13,13 @@ html[data-el=oro] .sl-mh{color:#ffd25e}
 html[data-el=oro] .sl-msw[aria-checked=true]{background:rgba(242,180,40,.3);border-color:#e0a422}
 html[data-el=oro] .sl-msw[aria-checked=true]::after{background:#ffd25e}
 
+/* ---------- Zona Master in oro: i colori del Master solo dentro la Zona e nelle sue finestre ---------- */
+html[data-zm=oro] #ms,html[data-zm=oro] .dv-ov,html[data-zm=oro] .mv-ov,html[data-zm=oro] .lb-volo,html[data-zm=oro] .plp-ov,html[data-zm=oro] .ie-gov{--master:#e0a422;--master2:#ffd25e;--master-bg:#120b02}
+html[data-zm=oro] #ms{background:radial-gradient(ellipse 80% 30% at 50% 0%,rgba(255,190,40,.10),transparent 70%),var(--master-bg)}
+
 /* ---------- il Golden Sun (#gsun) al posto dell'anello runico ---------- */
 #ms .ms-sole,.lb-sole{display:none}
-html[data-el=oro] #ms .ms-ring{display:none}
+html[data-zm=oro] #ms .ms-ring{display:none}
 .ms-sole,.lb-sole{position:relative;aspect-ratio:1739/3364}
 .ms-sole svg,.lb-sole svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .so-pieno{fill:url(#soOroGr);stroke:none}
@@ -22,63 +28,63 @@ html[data-el=oro] #ms .ms-ring{display:none}
 .so-anelli i{position:absolute;left:47%;top:40%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%)}
 .so-anelli i:nth-child(1){width:170%;border:1px dashed rgba(255,214,110,.55)}
 .so-anelli i:nth-child(2){width:230%;border:2px dotted rgba(255,214,110,.35)}
-html[data-el=oro] #ms .ms-sole{display:block;position:absolute;left:50%;top:50%;height:92%;max-height:250px;transform:translate(-50%,-50%);z-index:-1;pointer-events:none;opacity:.55}
-html[data-el=oro] .ms-sole .so-pieno{filter:drop-shadow(0 0 10px rgba(255,190,50,.8));animation:soBattito 4.8s ease-in-out infinite}
-html[data-el=oro] .ms-sole .so-scia{animation:soScia 5s linear infinite}
-html[data-el=oro] .ms-sole .so-alone{animation:soRespira 4.8s ease-in-out infinite}
-html[data-el=oro] .ms-sole .so-anelli i:nth-child(1){animation:soGira 40s linear infinite}
-html[data-el=oro] .ms-sole .so-anelli i:nth-child(2){animation:soGira 70s linear infinite reverse}
+html[data-zm=oro] #ms .ms-sole{display:block;position:absolute;left:50%;top:50%;height:92%;max-height:250px;transform:translate(-50%,-50%);z-index:-1;pointer-events:none;opacity:.55}
+html[data-zm=oro] .ms-sole .so-pieno{filter:drop-shadow(0 0 10px rgba(255,190,50,.8));animation:soBattito 4.8s ease-in-out infinite}
+html[data-zm=oro] .ms-sole .so-scia{animation:soScia 5s linear infinite}
+html[data-zm=oro] .ms-sole .so-alone{animation:soRespira 4.8s ease-in-out infinite}
+html[data-zm=oro] .ms-sole .so-anelli i:nth-child(1){animation:soGira 40s linear infinite}
+html[data-zm=oro] .ms-sole .so-anelli i:nth-child(2){animation:soGira 70s linear infinite reverse}
 @keyframes soGira{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
 @keyframes soRespira{0%,100%{opacity:.55;transform:translate(-50%,-50%) scale(.92)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}}
 @keyframes soBattito{0%,100%{filter:drop-shadow(0 0 6px rgba(255,190,50,.6))}50%{filter:drop-shadow(0 0 22px rgba(255,210,90,1))}}
 @keyframes soScia{to{stroke-dashoffset:0}}
 
 /* titolo, scintille, citazioni e twist in oro */
-html[data-el=oro] #ms .mstit{background:linear-gradient(100deg,#c98a12 0%,#ffcf4a 35%,#fff4c8 50%,#ffcf4a 65%,#c98a12 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 16px rgba(255,190,40,.45))}
-html[data-el=oro] #ms .ms-embers i{background:radial-gradient(circle,#fffbe8,rgba(255,206,80,.95) 35%,rgba(240,170,20,0) 70%)}
-html[data-el=oro] #ms .ms-embers i:nth-child(3n){animation-name:soScintilla}
+html[data-zm=oro] #ms .mstit{background:linear-gradient(100deg,#c98a12 0%,#ffcf4a 35%,#fff4c8 50%,#ffcf4a 65%,#c98a12 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 16px rgba(255,190,40,.45))}
+html[data-zm=oro] #ms .ms-embers i{background:radial-gradient(circle,#fffbe8,rgba(255,206,80,.95) 35%,rgba(240,170,20,0) 70%)}
+html[data-zm=oro] #ms .ms-embers i:nth-child(3n){animation-name:soScintilla}
 @keyframes soScintilla{0%{transform:translate(0,0) scale(1) rotate(0);opacity:0}10%{opacity:var(--o)}50%{transform:translate(calc(var(--dx) * .5),-55vh) scale(.8) rotate(180deg)}70%{opacity:var(--o)}100%{transform:translate(var(--dx),-105vh) scale(.3) rotate(360deg);opacity:0}}
-html[data-el=oro] #ms .mq{animation-name:soCitazione}
+html[data-zm=oro] #ms .mq{animation-name:soCitazione}
 @keyframes soCitazione{0%,100%{border-left-color:var(--master);box-shadow:inset 3px 0 0 rgba(255,200,70,0)}50%{border-left-color:var(--master2);box-shadow:inset 3px 0 14px rgba(255,200,70,.14)}}
-html[data-el=oro] #ms .sc.tw{animation-name:soTwist}
+html[data-zm=oro] #ms .sc.tw{animation-name:soTwist}
 @keyframes soTwist{0%,100%{box-shadow:inset 2px 0 0 rgba(255,200,70,.35)}50%{box-shadow:inset 2px 0 0 rgba(255,200,70,.9),0 0 18px rgba(240,170,20,.14)}}
-html[data-el=oro] #ms .tw-head span{animation-name:soGlitch;text-shadow:0 0 8px rgba(255,200,70,.6)}
+html[data-zm=oro] #ms .tw-head span{animation-name:soGlitch;text-shadow:0 0 8px rgba(255,200,70,.6)}
 @keyframes soGlitch{0%,86%,100%{transform:none;opacity:1;text-shadow:0 0 8px rgba(255,200,70,.6)}88%{transform:translate(-2px,1px) skewX(-8deg);text-shadow:2px 0 #fff2b0,-2px 0 #b06a00;opacity:.75}90%{transform:translate(2px,-1px);opacity:1}92%{transform:translate(-1px,0) skewX(6deg);text-shadow:-2px 0 #fff2b0,2px 0 #b06a00}94%{transform:none;opacity:.6}}
-html[data-el=oro] #ms .msec-head:hover .msec-chev{animation-name:soChev}
+html[data-zm=oro] #ms .msec-head:hover .msec-chev{animation-name:soChev}
 @keyframes soChev{0%,100%{box-shadow:0 0 0 0 rgba(255,200,70,0)}50%{box-shadow:0 0 0 6px rgba(255,200,70,.14)}}
-html[data-el=oro] #ms .msec-head::before{background:linear-gradient(100deg,transparent 30%,rgba(255,210,100,.12) 50%,transparent 70%)}
-html[data-el=oro] #ms .msec-head:hover .msect{text-shadow:0 0 18px rgba(255,200,70,.5)}
-html[data-el=oro] #ms .sc::after{background:linear-gradient(100deg,transparent,rgba(255,220,130,.09),transparent)}
-html[data-el=oro] #ms .sc:hover{border-color:rgba(255,200,70,.5);box-shadow:0 10px 26px rgba(0,0,0,.35),0 0 18px rgba(240,170,20,.2)}
-html[data-el=oro] #ms .mbcard:hover{box-shadow:0 8px 22px rgba(0,0,0,.35),0 0 14px rgba(240,170,20,.18)}
-html[data-el=oro] #ms .msnav a.cur{box-shadow:0 0 12px rgba(255,200,70,.25),inset 0 0 8px rgba(255,200,70,.12)}
-html[data-el=oro] #ms .pl-card:hover{box-shadow:0 0 22px rgba(240,170,20,.16)}
+html[data-zm=oro] #ms .msec-head::before{background:linear-gradient(100deg,transparent 30%,rgba(255,210,100,.12) 50%,transparent 70%)}
+html[data-zm=oro] #ms .msec-head:hover .msect{text-shadow:0 0 18px rgba(255,200,70,.5)}
+html[data-zm=oro] #ms .sc::after{background:linear-gradient(100deg,transparent,rgba(255,220,130,.09),transparent)}
+html[data-zm=oro] #ms .sc:hover{border-color:rgba(255,200,70,.5);box-shadow:0 10px 26px rgba(0,0,0,.35),0 0 18px rgba(240,170,20,.2)}
+html[data-zm=oro] #ms .mbcard:hover{box-shadow:0 8px 22px rgba(0,0,0,.35),0 0 14px rgba(240,170,20,.18)}
+html[data-zm=oro] #ms .msnav a.cur{box-shadow:0 0 12px rgba(255,200,70,.25),inset 0 0 8px rgba(255,200,70,.12)}
+html[data-zm=oro] #ms .pl-card:hover{box-shadow:0 0 22px rgba(240,170,20,.16)}
 /* i pochi colori scritti direttamente nel testo della Zona Master (tcj-master/zona-master.html) */
-html[data-el=oro] #ms [style*="200,56,56,.1"]{border-color:rgba(242,180,40,.14)!important}
-html[data-el=oro] #ms [style*="color:#c08080"]{color:#d6b46a!important}
-html[data-el=oro] #ms [style*="background:rgba(200,56,56"]{background:rgba(242,180,40,.13)!important}
+html[data-zm=oro] #ms [style*="200,56,56,.1"]{border-color:rgba(242,180,40,.14)!important}
+html[data-zm=oro] #ms [style*="color:#c08080"]{color:#d6b46a!important}
+html[data-zm=oro] #ms [style*="background:rgba(200,56,56"]{background:rgba(242,180,40,.13)!important}
 
 /* ---------- la libreria in cuoio scuro e foglia d'oro ---------- */
-html[data-el=oro] .lb-box,html[data-el=oro] .lb-volo{
+html[data-zm=oro] .lb-box,html[data-zm=oro] .lb-volo{
   --legno1:#2b1a08;--legno2:#47290c;--legno3:#160c03;--fondo:#0a0703;
   --fregio:#ffc844;--fregio2:#fff0b8;--alone:rgba(255,190,50,.6);--targa:#f0bc3c;
   --k0a:#14301f;--k0b:#05120b;--k1a:#122040;--k1b:#060b1a;--k2a:#3a0d0f;--k2b:#160304;
   --k3a:#1c1712;--k3b:#080605;--k4a:#2b1636;--k4b:#0f0614;--k5a:#5a3a0c;--k5b:#241503}
-html[data-el=oro] .lb-mobile{background:radial-gradient(ellipse 70% 55% at 50% 40%,rgba(255,190,50,.14),transparent 75%),repeating-linear-gradient(90deg,rgba(255,230,160,.014) 0 2px,transparent 2px 9px),linear-gradient(180deg,#0f0a04,var(--fondo))}
-html[data-el=oro] .lb-tit b{color:#ffd86e;text-shadow:0 1px 0 #000,0 0 8px rgba(255,190,50,.35)}
-html[data-el=oro] .lb-fascia{border-width:2px;box-shadow:0 0 6px rgba(255,200,70,.35)}
+html[data-zm=oro] .lb-mobile{background:radial-gradient(ellipse 70% 55% at 50% 40%,rgba(255,190,50,.14),transparent 75%),repeating-linear-gradient(90deg,rgba(255,230,160,.014) 0 2px,transparent 2px 9px),linear-gradient(180deg,#0f0a04,var(--fondo))}
+html[data-zm=oro] .lb-tit b{color:#ffd86e;text-shadow:0 1px 0 #000,0 0 8px rgba(255,190,50,.35)}
+html[data-zm=oro] .lb-fascia{border-width:2px;box-shadow:0 0 6px rgba(255,200,70,.35)}
 /* riflesso della foglia d'oro che scorre sul dorso */
-html[data-el=oro] .lb-dorso::after{content:"";position:absolute;inset:-20% 0;background:linear-gradient(170deg,transparent 35%,rgba(255,236,170,.32) 48%,transparent 60%);transform:translateY(-70%);pointer-events:none;animation:soLuccica 7s ease-in-out infinite;animation-delay:calc(var(--i,0) * -.47s)}
+html[data-zm=oro] .lb-dorso::after{content:"";position:absolute;inset:-20% 0;background:linear-gradient(170deg,transparent 35%,rgba(255,236,170,.32) 48%,transparent 60%);transform:translateY(-70%);pointer-events:none;animation:soLuccica 7s ease-in-out infinite;animation-delay:calc(var(--i,0) * -.47s)}
 @keyframes soLuccica{0%,72%{transform:translateY(-70%)}92%,100%{transform:translateY(70%)}}
-html[data-el=oro] .lb-libro:hover .lb-dorso::after,html[data-el=oro] .lb-libro:focus-visible .lb-dorso::after{animation-duration:1.3s}
-html[data-el=oro] .lb-cop-tit{color:#ffd86e;text-shadow:0 1px 0 #000,0 0 10px rgba(255,190,50,.4)}
-html[data-el=oro] .lb-sole{display:block;flex:none;height:42px;filter:drop-shadow(0 0 8px rgba(255,190,50,.6))}
+html[data-zm=oro] .lb-libro:hover .lb-dorso::after,html[data-zm=oro] .lb-libro:focus-visible .lb-dorso::after{animation-duration:1.3s}
+html[data-zm=oro] .lb-cop-tit{color:#ffd86e;text-shadow:0 1px 0 #000,0 0 10px rgba(255,190,50,.4)}
+html[data-zm=oro] .lb-sole{display:block;flex:none;height:42px;filter:drop-shadow(0 0 8px rgba(255,190,50,.6))}
 .lb-sole .so-anelli{display:none}
 .lb-sole .so-alone{width:200%}
-html[data-el=oro] .lb-sole .so-scia{stroke-width:1000;animation:soScia 4s linear infinite}
-html[data-el=oro] .lb-cresta-t{color:#ffd25e}
+html[data-zm=oro] .lb-sole .so-scia{stroke-width:1000;animation:soScia 4s linear infinite}
+html[data-zm=oro] .lb-cresta-t{color:#ffd25e}
 
 @media (prefers-reduced-motion:reduce){
-  html[data-el=oro] .ms-sole *,html[data-el=oro] .lb-dorso::after,html[data-el=oro] .lb-sole *{animation:none!important}
+  html[data-zm=oro] .ms-sole *,html[data-zm=oro] .lb-dorso::after,html[data-zm=oro] .lb-sole *{animation:none!important}
   .so-scia{display:none}
 }

@@ -23,7 +23,7 @@ const FILE = [
   ["css/23-reliquie.css", /\.mr-|#mr|master/],
   ["css/24-master-mael.css", null],
 ];
-const ESCLUDI = /morto|data-el|:root|@keyframes/;
+const ESCLUDI = /morto|data-el|:root|@keyframes|master-btn|\.pw|\.lock|tcj-conf|pa-gate|gh-toast/;
 
 /* ---------- colori ---------- */
 function rgb2hsl(r, g, b){
@@ -88,7 +88,7 @@ function regole(css, filtro, media){
     const nuove = [];
     dich.forEach(d => { const prima = cambi, n = converti(d); if(cambi !== prima) nuove.push(n); });
     if(!nuove.length) return;
-    out += (media ? "  " : "") + scelti.map(s => "html[data-el=oro] " + s.replace(/^html\s*/, "")).join(",") + "{" + nuove.join(";") + "}\n";
+    out += (media ? "  " : "") + scelti.map(s => "html[data-zm=oro] " + s.replace(/^html\s*/, "")).join(",") + "{" + nuove.join(";") + "}\n";
   });
   return out;
 }

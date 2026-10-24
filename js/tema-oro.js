@@ -1,10 +1,11 @@
 /* Tema «Oro del Master» — scelta esclusiva del Master (menu ⚔ Slayer › Zona Master › Colore del sito / Effetti laterali).
 
    Il protagonista è il Golden Sun, il simbolo accanto a «The Careless Journey» (#gsun in sezioni/simboli-svg.js).
-   - Colore del sito «☀ Oro del Master»: html[data-el=oro]. Sfondo, menu, Zona Master, libreria e strumenti diventano
-     oro intenso (css/30-tema-oro.css a mano, css/29-tema-oro-auto.css generato da strumenti/tema-oro.js).
-     Nella Zona Master il Golden Sun prende il posto dell'anello runico dietro il titolo: respira, e una scia di luce
-     ne ripercorre i contorni.
+   - Colore della Zona Master «☀ Oro · Golden Sun»: html[data-zm=oro]. Solo la Zona Master e le sue finestre
+     diventano oro intenso (libreria, strumenti, schede in diretta); lo sfondo del sito resta com'è.
+     Dietro il titolo della Zona Master il Golden Sun prende il posto dell'anello runico: respira, e una scia di luce
+     ne ripercorre i contorni. Stili: css/30-tema-oro.css a mano, css/29-tema-oro-auto.css generato da strumenti/tema-oro.js.
+   - Colore del sito «☀ Oro del Master»: html[data-el=oro]. Solo sfondo e colori del resto del sito.
    - Effetti laterali «☀ Oro del Master», il «Sigillo Aureo»: ai due bordi dello schermo il Golden Sun d'oro, con aloni
      che girano attorno alla spirale, fasci di luce, onde che partono dalla spirale, un riflesso che lo attraversa,
      una scia luminosa che corre lungo i contorni, scintille che si staccano dalle punte, pulviscolo d'oro e scaglie

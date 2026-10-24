@@ -139,11 +139,12 @@ Il capitolo «Aree dei giocatori online» è diviso in tre colonne, una per Slay
 
 ## Tema «Oro del Master» (js/tema-oro.js)
 
-Nel menu **⚔ Slayer › Zona Master**, sia in «Colore del sito» sia in «Effetti laterali» c'è **☀ Oro del Master**, visibile solo al Master.
+Nel menu **⚔ Slayer › Zona Master** ci sono tre scelte d'oro, indipendenti tra loro e visibili solo al Master:
 
-- **Colore del sito:** `html[data-el=oro]`. Sfondo, menu, Zona Master, libreria (cuoio scuro e foglia d'oro con un riflesso che scorre sui dorsi) e strumenti del Master diventano oro intenso. Dietro il titolo della Zona Master, al posto dell'anello runico, c'è il **Golden Sun** (il simbolo accanto a «The Careless Journey», `#gsun` in `sezioni/simboli-svg.js`): respira, gli girano attorno due aloni e una scia di luce ne ripercorre i contorni. Le parti fatte a mano sono in `css/30-tema-oro.css`.
+- **Colore della Zona Master** (🩸 Cremisi / ☀ Oro · Golden Sun) → `html[data-zm=oro]`. Cambia **solo la Zona Master** e le sue finestre (libreria, strumenti, schede in diretta), non lo sfondo del sito. Funziona anche con «Sfondo del Master» spento. Libri in cuoio scuro e foglia d'oro con un riflesso che scorre sui dorsi; dietro il titolo, al posto dell'anello runico, il **Golden Sun** (il simbolo accanto a «The Careless Journey», `#gsun` in `sezioni/simboli-svg.js`): respira, gli girano attorno due aloni e una scia di luce ne ripercorre i contorni. La scelta sta in `tcj_bg_master` → `zm`.
+- **Colore del sito** «☀ Oro del Master» → `html[data-el=oro]`: solo sfondo e colori del resto del sito; la Zona Master segue la sua scelta.
 - **Effetti laterali «Sigillo Aureo»:** ai due bordi dello schermo il Golden Sun d'oro (sul lato destro non viene specchiato), con un alone che respira, due cerchi tratteggiati che girano attorno alla spirale, fasci di luce, onde di luce che partono dalla spirale, un riflesso che lo attraversa dall'alto in basso, una scia luminosa lungo i contorni e scintille che si staccano dalle punte; intorno pulviscolo d'oro e scaglie di foglia d'oro che cadono girando. Il simbolo viene letto da `#gsun`, quindi se un giorno cambi il disegno lì cambia anche qui. Il disegno è in `js/tema-oro.js` (OFX); il motore degli effetti laterali resta in `js/area-giocatori.js`.
-- `css/29-tema-oro-auto.css` è **generato**: `node strumenti/tema-oro.js` prende le regole cremisi della Zona Master e degli strumenti del Master e ne scrive la versione dorata. Rilancialo se aggiungi stili rossi in quei file (l'elenco è in cima allo strumento), poi `node strumenti/versiona.js`.
+- `css/29-tema-oro-auto.css` è **generato**: `node strumenti/tema-oro.js` prende le regole cremisi della Zona Master e degli strumenti del Master e ne scrive la versione dorata (`html[data-zm=oro]`). Rilancialo se aggiungi stili rossi in quei file (l'elenco è in cima allo strumento), poi `node strumenti/versiona.js`.
 
 ## Codici delle aree dei giocatori
 
