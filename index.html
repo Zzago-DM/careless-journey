@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<script>try{(function(){var L=localStorage,k=L.getItem("tcj-pa-theme"),last=parseInt(L.getItem("tcj-pa-seen")||"0",10),o=JSON.parse(L.getItem("tcj-pa-open")||"[]");if(!k||k!==L.getItem("tcj-sc-cur")||o.indexOf(k)<0||(last&&Date.now()-last>259200000))return;var d={athena:"glaciale",panlan:"oscuro",asonnes:"terrestre"}[k],b=JSON.parse(L.getItem("tcj_bg_"+k)||"{}");document.documentElement.setAttribute("data-pg",k);document.documentElement.setAttribute("data-el",(b&&b.c)||d);})()}catch(e){}</script>
+<script>try{(function(){var t=localStorage.getItem("tcj-tema");if(t==="dauntless"||t==="pergamena")document.documentElement.setAttribute("data-tema",t);})()}catch(e){}</script>
+<script>try{(function(){var L=localStorage,k=L.getItem("tcj-pa-theme"),last=parseInt(L.getItem("tcj-pa-seen")||"0",10),o=JSON.parse(L.getItem("tcj-pa-open")||"[]");if(!k||k!==L.getItem("tcj-sc-cur")||o.indexOf(k)<0||(last&&Date.now()-last>259200000))return;var d={athena:"glaciale",panlan:"oscuro",asonnes:"terrestre"}[k],b=JSON.parse(L.getItem("tcj_bg_"+k)||"{}");document.documentElement.setAttribute("data-pg",k);document.documentElement.setAttribute("data-el",(b&&b.c)||d);if(b&&(b.t==="dauntless"||b.t==="pergamena"))document.documentElement.setAttribute("data-tema",b.t);else if(b&&b.t==="attuale")document.documentElement.removeAttribute("data-tema");})()}catch(e){}</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Careless Journey — Manuale del Mondo</title>
@@ -11,7 +12,7 @@ function tcjSezione(h){var s=document.currentScript;s.insertAdjacentHTML("before
 <script>/* Versione della pagina: la scrive strumenti/versiona.js a ogni pubblicazione.
    Se il browser ha aperto una copia vecchia rimasta in memoria, il sito se ne accorge:
    nei primi secondi si aggiorna da solo, più tardi propone «Aggiorna» (senza mai interrompere chi sta scrivendo). */
-var TCJ_VERSIONE="53725647";
+var TCJ_VERSIONE="6e5d785e";
 (function(){
   var nascita=Date.now(),ultimo=0;
   function nuova(v){location.replace(location.pathname+"?v="+v+location.hash);}
@@ -36,7 +37,7 @@ var TCJ_VERSIONE="53725647";
   controlla();
   document.addEventListener("visibilitychange",function(){if(!document.hidden)controlla();});
 })();</script>
-<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap&family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap&family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Barlow+Condensed:wght@500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/01-base.css?v=8663311a">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/02-mappe-continenti.css?v=2f981e86" id="cj-styles">
@@ -134,7 +135,7 @@ var TCJ_VERSIONE="53725647";
 <link rel="stylesheet" href="css/22-gruppo.css?v=8a082ba9">
 <script src="sezioni/gruppo.js?v=a0b16cb3"></script>
 <script src="sezioni/scheda.js?v=5f007efd"></script>
-<script src="js/area-giocatori.js?v=e434715f"></script>
+<script src="js/area-giocatori.js?v=5aa5d691"></script>
 <script src="js/sblocco-zone.js?v=c8c202a6"></script>
 <script src="js/maelstrom-qualita.js?v=ee117d2b"></script>
 <link rel="stylesheet" href="css/27-maelstrom-qualita.css?v=0ded168d">
@@ -225,7 +226,7 @@ var TCJ_VERSIONE="53725647";
 <script src="js/plancia-galleria.js?v=785c3d6a" id="plp-js"></script>
 <script src="js/master-animazioni.js?v=c6491196" id="ms-anim-js"></script>
 <script src="js/conferma.js?v=3974277a"></script>
-<script src="js/sync-giocatori.js?v=2b6ff462"></script>
+<script src="js/sync-giocatori.js?v=1eb5fe18"></script>
 <script src="js/gruppo.js?v=df939f64"></script>
 <link rel="stylesheet" href="css/28-diretta-schede.css?v=c8fa7e22">
 <script src="js/diretta-schede.js?v=1856ac20"></script>
@@ -251,5 +252,10 @@ var TCJ_VERSIONE="53725647";
 <script src="js/incontri.js?v=fea1ffd4"></script>
 <script src="js/master-incontri.js?v=b1e147dd"></script>
 <script src="js/particelle-sfondo.js?v=134912a7"></script>
+<link rel="stylesheet" href="css/31-tema-dauntless.css?v=61c2f60b">
+<link rel="stylesheet" href="css/32-tema-pergamena.css?v=c2467d87">
+<script src="js/tema-sito.js?v=bc04a3c4"></script>
+<link rel="stylesheet" href="css/33-area-aspetto.css?v=c6c3b7b6">
+<script src="js/area-aspetto.js?v=686cfa9b"></script>
 </body>
 </html>

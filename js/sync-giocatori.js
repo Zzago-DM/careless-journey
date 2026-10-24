@@ -12,6 +12,7 @@
      tcj-rel-<pg>  note personali sulle reliquie (Nave › Stanza delle Reliquie)
      tcj-lay-<pg>  disposizione dei riquadri dell'Area dello Slayer (✎ Modifica area)
      tcj-vg-<pg>   la nave sulla Mappa del Mondo: dove si trova e il viaggio in corso (⛵ Viaggi)
+     tcj-asp-<pg>  aspetto dell'Area dello Slayer: libri, ampolle, cassettiera… e le ampolle personalizzate (js/area-aspetto.js)
    Restano invece in comune o solo locali: nave, note sui Mael, note del Master, preferenze del sito. */
 (function(){
   var OWNER = "Zzago-DM";                 // proprietario dei repository dei giocatori
@@ -22,10 +23,10 @@
   var NOMI = {}; SC_CHARS.forEach(function(c){ NOMI[c.k] = (typeof PA_FULL !== "undefined" && PA_FULL[c.k]) || c.n; });
 
   /* ---------- chiavi di ogni personaggio ---------- */
-  function chiavi(k){ var l = ["tcj-sc4-"+k, "tcj-al-"+k, "tcj_bg_"+k, "tcj-n-"+k, "tcj-inc-"+k, "tcj-rel-"+k, "tcj-lay-"+k, "tcj-vg-"+k]; if(k === CH[0]) l.push("tcj-sc4"); return l; }
+  function chiavi(k){ var l = ["tcj-sc4-"+k, "tcj-al-"+k, "tcj_bg_"+k, "tcj-n-"+k, "tcj-inc-"+k, "tcj-rel-"+k, "tcj-lay-"+k, "tcj-vg-"+k, "tcj-asp-"+k]; if(k === CH[0]) l.push("tcj-sc4"); return l; }
   function diChi(key){
     if(key === "tcj-sc4") return CH[0];
-    var m = /^(?:tcj-sc4-|tcj-al-|tcj_bg_|tcj-n-|tcj-inc-|tcj-rel-|tcj-lay-|tcj-vg-)(.+)$/.exec(key);
+    var m = /^(?:tcj-sc4-|tcj-al-|tcj_bg_|tcj-n-|tcj-inc-|tcj-rel-|tcj-lay-|tcj-vg-|tcj-asp-)(.+)$/.exec(key);
     return m && CH.indexOf(m[1]) >= 0 ? m[1] : null;
   }
 
@@ -139,6 +140,7 @@
     var vg = js(map["tcj-vg-"+k]); if(vg){ var VL = (typeof VG_LUOGHI !== "undefined") ? VG_LUOGHI : {}; var nm = function(x){ return (VL[x] && VL[x].nome) || x || ""; };
       add("Viaggi", "Posizione della nave", nm(vg.pos)); add("Viaggi", "Viaggio in corso", vg.v ? nm(vg.v.da) + " → " + nm(vg.v.a) : ""); }
     add("Tema", "Disposizione dei riquadri", map["tcj-lay-"+k] || "", map["tcj-lay-"+k] ? "Personalizzata" : "Originale");
+    var asp = js(map["tcj-asp-"+k]); add("Tema", "Aspetto dell'area", map["tcj-asp-"+k] || "", asp && asp.s && asp.s !== "scheda" ? asp.s : "Scheda classica");
     return R;
   }
   function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }

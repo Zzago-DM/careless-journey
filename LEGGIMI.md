@@ -146,6 +146,26 @@ Nel menu **⚔ Slayer › Zona Master** ci sono tre scelte d'oro, indipendenti t
 - **Effetti laterali «Sigillo Aureo»:** ai due bordi dello schermo il Golden Sun d'oro (sul lato destro non viene specchiato), con un alone che respira, due cerchi tratteggiati che girano attorno alla spirale, fasci di luce, onde di luce che partono dalla spirale, un riflesso che lo attraversa dall'alto in basso, una scia luminosa lungo i contorni e scintille che si staccano dalle punte; intorno pulviscolo d'oro e scaglie di foglia d'oro che cadono girando. Il simbolo viene letto da `#gsun`, quindi se un giorno cambi il disegno lì cambia anche qui. Il disegno è in `js/tema-oro.js` (OFX); il motore degli effetti laterali resta in `js/area-giocatori.js`.
 - `css/29-tema-oro-auto.css` è **generato**: `node strumenti/tema-oro.js` prende le regole cremisi della Zona Master e degli strumenti del Master e ne scrive la versione dorata (`html[data-zm=oro]`). Rilancialo se aggiungi stili rossi in quei file (l'elenco è in cima allo strumento), poi `node strumenti/versiona.js`.
 
+## Tema del sito: Attuale / Dauntless / Pergamena (js/tema-sito.js)
+
+Si sceglie nel menu in alto a destra (⚔ Slayer ▾ → «Tema del sito»). Di base resta **Attuale**.
+
+- **Dauntless** (`css/31-tema-dauntless.css`): cielo con isole sospese ai lati, nuvole, alianti, una nave e un Behemoth volante che passano; pannelli blu notte con cornici d'acciaio, schede blu e pulsante principale dorato, come nei menu del gioco.
+- **Pergamena** (`css/32-tema-pergamena.css`): carta invecchiata, inchiostro scuro e titoli rossi, come un manuale di D&D classico.
+- Tutti e due seguono il **colore Aether** scelto (Impostazioni sfondo): in Dauntless cambia il cielo (Glaciale = bianco sporco invernale, Oscuro = notte viola…), in Pergamena si tinge il foglio.
+- **Non cambiano mai**: la Zona Master (e le sue finestre), l'animazione iniziale e la mappa del mondo con le mappe dei continenti. L'elenco di ciò che resta escluso è in cima ai due file CSS (`:is(#ms,#pwo,…)`).
+- La scelta resta nel browser (`tcj-tema`); se un personaggio è attivo finisce anche nel suo pacchetto (`tcj_bg_<pg>`, campo `t`) e lo segue su ogni dispositivo.
+
+## Aspetto dell'Area dello Slayer (js/area-aspetto.js + css/33-area-aspetto.css)
+
+Opzionale, solo per l'area del singolo player: di base resta la **scheda classica**. Dalla barra «Aspetto dell'area» il player può trasformare le sezioni in 📚 libri, ⚗ ampolle, 🗄 cassettiera, 🃏 tavolo pirata, 🔨 attrezzi, 📖 capitoli o 📌 bacheca. Toccando un oggetto si apre sotto solo quella sezione, con gli stessi dati della scheda.
+
+- Misure, forme e inclinazioni partono a caso e restano uguali finché il player non preme «↻ Mescola».
+- Con le ampolle, «✎ Personalizza ampolle» permette di scegliere forma e colore di ognuna («↺ Come prima» torna a quella casuale).
+- L'ordine degli oggetti segue la disposizione di «✎ Modifica area».
+- Si salva nella chiave `tcj-asp-<pg>`, dentro il pacchetto online del personaggio.
+- Per una sezione nuova della scheda basta il suo `data-pz`: compare da sola. Nome, icona e attrezzo si aggiungono in `NOMI` e `ATTREZZI` in cima al file.
+
 ## Codici delle aree dei giocatori
 
 Nel sito non c'è più nessun codice in chiaro: in `js/area-giocatori.js` (PA_HASH) c'è solo l'«impronta» di ogni codice, da cui non si risale al codice vero. Per cambiare il codice di un personaggio:
