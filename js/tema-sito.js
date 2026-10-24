@@ -1,12 +1,12 @@
-/* Tema del sito: Attuale (di base), Dauntless o Pergamena — scelto nel menu in alto a destra (⚔ Slayer ▾).
+/* Tema del sito: Attuale (di base), Dauntless, Pergamena, Monster Hunter, Osteria (Brancalonia) o Reami Dimenticati — scelto nel menu in alto a destra (⚔ Slayer ▾).
 
    - Cambia l'aspetto generale di tutto il sito (sfondo, cornici, pulsanti, caratteri) e segue il colore Aether già scelto.
-   - Non tocca la Zona Master, l'animazione iniziale e la mappa (vedi css/31-tema-dauntless.css e css/32-tema-pergamena.css).
+   - Non tocca la Zona Master, l'animazione iniziale e la mappa (vedi i file css/31…36-tema-*.css).
    - La scelta resta in questo browser (chiave tcj-tema). Se un personaggio è attivo viene salvata anche nel suo
      pacchetto (campo t di tcj_bg_<pg>), così lo segue su ogni dispositivo dove apre la sua area.
    - Il primo script in <head> la applica subito, prima che la pagina compaia, per non vedere il tema sbagliato per un attimo. */
 (function(){
-  var TEMI = [["attuale","Attuale"],["dauntless","Dauntless"],["pergamena","Pergamena"]];
+  var TEMI = [["attuale","Attuale"],["dauntless","Dauntless"],["pergamena","Pergamena"],["mh","Monster Hunter"],["osteria","Osteria · Brancalonia"],["reami","Reami Dimenticati"]];
   function valido(v){ return TEMI.some(function(t){ return t[0] === v; }); }
   function attivo(){ try { return typeof paActive === "function" ? paActive() : null; } catch(e){ return null; } }
   window.temaSito = function(){
@@ -30,7 +30,7 @@
   /* riga del menu (la inserisce slRender in js/area-giocatori.js) */
   window.temaRiga = function(){
     var v = temaSito();
-    return '<div class="sl-row sl-mq"><div><span>Tema del sito</span><small>Attuale, Dauntless o Pergamena</small></div>' +
+    return '<div class="sl-row sl-mq"><div><span>Tema del sito</span><small>Cambia l\'aspetto di tutto il sito</small></div>' +
       '<select class="sl-mqsel" aria-label="Tema del sito" onchange="temaSet(this.value)">' +
       TEMI.map(function(t){ return '<option value="' + t[0] + '"' + (t[0] === v ? ' selected' : '') + '>' + t[1] + '</option>'; }).join("") + '</select></div>';
   };

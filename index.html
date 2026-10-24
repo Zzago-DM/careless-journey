@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<script>try{(function(){var t=localStorage.getItem("tcj-tema");if(t==="dauntless"||t==="pergamena")document.documentElement.setAttribute("data-tema",t);})()}catch(e){}</script>
-<script>try{(function(){var L=localStorage,k=L.getItem("tcj-pa-theme"),last=parseInt(L.getItem("tcj-pa-seen")||"0",10),o=JSON.parse(L.getItem("tcj-pa-open")||"[]");if(!k||k!==L.getItem("tcj-sc-cur")||o.indexOf(k)<0||(last&&Date.now()-last>259200000))return;var d={athena:"glaciale",panlan:"oscuro",asonnes:"terrestre"}[k],b=JSON.parse(L.getItem("tcj_bg_"+k)||"{}");document.documentElement.setAttribute("data-pg",k);document.documentElement.setAttribute("data-el",(b&&b.c)||d);if(b&&(b.t==="dauntless"||b.t==="pergamena"))document.documentElement.setAttribute("data-tema",b.t);else if(b&&b.t==="attuale")document.documentElement.removeAttribute("data-tema");})()}catch(e){}</script>
+<script>try{(function(){var t=localStorage.getItem("tcj-tema");if(["dauntless","pergamena","mh","osteria","reami"].indexOf(t)>=0)document.documentElement.setAttribute("data-tema",t);})()}catch(e){}</script>
+<script>try{(function(){var L=localStorage,k=L.getItem("tcj-pa-theme"),last=parseInt(L.getItem("tcj-pa-seen")||"0",10),o=JSON.parse(L.getItem("tcj-pa-open")||"[]");if(!k||k!==L.getItem("tcj-sc-cur")||o.indexOf(k)<0||(last&&Date.now()-last>259200000))return;var d={athena:"glaciale",panlan:"oscuro",asonnes:"terrestre"}[k],b=JSON.parse(L.getItem("tcj_bg_"+k)||"{}");document.documentElement.setAttribute("data-pg",k);document.documentElement.setAttribute("data-el",(b&&b.c)||d);if(b&&["dauntless","pergamena","mh","osteria","reami"].indexOf(b.t)>=0)document.documentElement.setAttribute("data-tema",b.t);else if(b&&b.t==="attuale")document.documentElement.removeAttribute("data-tema");})()}catch(e){}</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Careless Journey — Manuale del Mondo</title>
@@ -12,7 +12,7 @@ function tcjSezione(h){var s=document.currentScript;s.insertAdjacentHTML("before
 <script>/* Versione della pagina: la scrive strumenti/versiona.js a ogni pubblicazione.
    Se il browser ha aperto una copia vecchia rimasta in memoria, il sito se ne accorge:
    nei primi secondi si aggiorna da solo, più tardi propone «Aggiorna» (senza mai interrompere chi sta scrivendo). */
-var TCJ_VERSIONE="764c8d58";
+var TCJ_VERSIONE="27bec136";
 (function(){
   var nascita=Date.now(),ultimo=0;
   function nuova(v){location.replace(location.pathname+"?v="+v+location.hash);}
@@ -37,7 +37,7 @@ var TCJ_VERSIONE="764c8d58";
   controlla();
   document.addEventListener("visibilitychange",function(){if(!document.hidden)controlla();});
 })();</script>
-<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap&family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Barlow+Condensed:wght@500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap&family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Barlow+Condensed:wght@500;600;700&family=Marcellus&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Cabin+Sketch:wght@400;700&family=Metamorphous&family=Uncial+Antiqua&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/01-base.css?v=8663311a">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/02-mappe-continenti.css?v=2f981e86" id="cj-styles">
@@ -254,7 +254,10 @@ var TCJ_VERSIONE="764c8d58";
 <script src="js/particelle-sfondo.js?v=134912a7"></script>
 <link rel="stylesheet" href="css/31-tema-dauntless.css?v=5a9f5013">
 <link rel="stylesheet" href="css/32-tema-pergamena.css?v=7239f021">
-<script src="js/tema-sito.js?v=bc04a3c4"></script>
+<link rel="stylesheet" href="css/34-tema-monster-hunter.css?v=1abf4f98">
+<link rel="stylesheet" href="css/35-tema-osteria.css?v=e8af9552">
+<link rel="stylesheet" href="css/36-tema-reami.css?v=04474f54">
+<script src="js/tema-sito.js?v=86ca0a7e"></script>
 <link rel="stylesheet" href="css/33-area-aspetto.css?v=b5644c6e">
 <script src="js/area-aspetto.js?v=80928e98"></script>
 </body>
