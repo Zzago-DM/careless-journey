@@ -158,67 +158,106 @@ function asoDraw(G,p,t){
   c.fillStyle=gr;c.beginPath();c.arc(x,y,f[2]*5,0,TAU);c.fill();});}
 
 /* ============================================================
-   ATHENA — ghiaccio a strattoni
+   ATHENA — lastra di lago ghiacciato che si crepa a strattoni
 ============================================================ */
 function athGeo(W,H){
- const cx=W/2,cy=H/2,M=Math.min(W,H),k=Math.max(.6,Math.min(1.1,M/850)),dens=Math.max(.75,Math.min(1,W*H/(1366*850)));
- const segs=[];let maxD=0;const A60=Math.PI/3;
- /* dendrite: asse principale con rami simmetrici a 60°, come un cristallo di ghiaccio vero */
- const dend=function(x,y,ang,len,w,d,dep){const st=11*k,n=Math.max(2,Math.round(len/st));let a=ang;
-  for(let i=0;i<n;i++){a+=rnd(-.05,.05);const x2=x+Math.cos(a)*st,y2=y+Math.sin(a)*st;segs.push([x,y,x2,y2,d,d+st,w*(1-i/n*.65)]);
-   if(dep>0&&i>0&&i%2===0&&Math.random()<(dep>1?.9:.7)){const rem=(n-i)/n,bl=len*(dep>1?.3:.38)*rem*rnd(.7,1.15)+5*k;
-    dend(x2,y2,a+A60+rnd(-.06,.06),bl,w*.6,d+st,dep-1);if(Math.random()<.9)dend(x2,y2,a-A60+rnd(-.06,.06),bl*rnd(.75,1),w*.6,d+st,dep-1);}
-   x=x2;y=y2;d+=st;}
+ const cx=W/2,cy=H/2,M=Math.min(W,H),k=Math.max(.6,Math.min(1.1,M/850)),dens=Math.max(.7,Math.min(1,W*H/(1366*850)));
+ const segs=[];let maxD=0;
+ /* una frattura: tratti dritti con piccole deviazioni e ogni tanto una svolta secca; si dirama di rado, come il ghiaccio vero */
+ const crack=function(x,y,ang,len,w,d,lvl){let a=ang,run=0;
+  while(run<len){const st=rnd(18,58)*k;
+   a+=Math.random()<.16?rnd(-.6,.6):rnd(-.035,.035);              // quasi dritta, ogni tanto uno spigolo netto
+   const x2=x+Math.cos(a)*st,y2=y+Math.sin(a)*st;
+   segs.push([x,y,x2,y2,d,d+st,w*(1-run/len*.55),lvl]);
+   if(lvl<2){const nt=lvl?1:3;for(let j=0;j<nt;j++)if(Math.random()<.22){const f=Math.random(),px=x+(x2-x)*f,py=y+(y2-y)*f,ta=a+(Math.random()<.5?1:-1)*rnd(1.1,1.9),tl=rnd(2,lvl?5:8)*k;
+     segs.push([px,py,px+Math.cos(ta)*tl,py+Math.sin(ta)*tl,d+st*f,d+st*f+tl,.5,3]);}}  // scaglie laterali della frattura
+   if(lvl<2&&run>30*k&&Math.random()<(lvl?.06:.12)){const s=Math.random()<.5?1:-1;crack(x2,y2,a+s*rnd(.3,.75),(len-run)*rnd(.3,.65),w*.6,d+st,lvl+1);}
+   x=x2;y=y2;d+=st;run+=st;
+   if(x<-40||y<-40||x>W+40||y>H+40)break;}
   if(d>maxD)maxD=d;};
- /* nascita dai bordi */
- const per=[],step=72*Math.max(.55,Math.min(1,M/850));
- for(let x=step/2;x<W;x+=step){per.push([x,0]);per.push([x,H]);}for(let y=step/2;y<H;y+=step){per.push([0,y]);per.push([W,y]);}
- per.forEach(q=>{if(Math.random()>dens*.7)return;const ang=Math.atan2(cy-q[1],cx-q[0])+rnd(-.45,.45),dist=Math.hypot(cx-q[0],cy-q[1]);dend(q[0],q[1],ang,dist*rnd(.4,.78),rnd(1.6,2.4),rnd(0,40),2);});
- /* alcuni nuclei sparsi: stelle a sei braccia che nascono un po' dopo */
- const nn=Math.round(rnd(3,6)*dens);for(let i=0;i<nn;i++){const x=rnd(.12,.88)*W,y=rnd(.12,.88)*H,a0=rnd(0,A60),d0=rnd(60,M*.45),L=rnd(.12,.22)*M;
-  for(let j=0;j<6;j++)dend(x,y,a0+j*A60,L*rnd(.8,1.1),rnd(1.4,1.9),d0,2);}
- /* riflessi di brina sulle punte già ghiacciate */
- const sp=[];segs.forEach(s=>{if(Math.random()<.07)sp.push([s[2],s[3],s[5],rnd(.7,1.9),rnd(0,6.28)]);});
- /* calendario degli strattoni: avanzate rapide seguite da pause irregolari */
- const n=Math.round(rnd(7,10)),tw=[],am=[];for(let i=0;i<n;i++){tw.push(rnd(.6,1.5));am.push(i===0?rnd(.5,.8):rnd(.45,1.7));}
+ /* grandi spaccature che attraversano il lago da una riva all'altra */
+ const edgePt=()=>{const e=Math.floor(Math.random()*4);return e===0?[rnd(0,W),-2]:e===1?[rnd(0,W),H+2]:e===2?[-2,rnd(0,H)]:[W+2,rnd(0,H)];};
+ for(let i=0;i<Math.round(3*dens);i++){const q=edgePt(),a=Math.atan2(cy-q[1],cx-q[0])+rnd(-.5,.5);crack(q[0],q[1],a,Math.hypot(W,H)*rnd(.7,1.1),rnd(2.2,2.8),rnd(0,30),0);}
+ /* crepe più corte che partono dalle rive */
+ for(let i=0;i<Math.round(7*dens);i++){const q=edgePt(),a=Math.atan2(cy-q[1],cx-q[0])+rnd(-.7,.7);crack(q[0],q[1],a,Math.hypot(cx-q[0],cy-q[1])*rnd(.4,.9),rnd(1.6,2.3),rnd(20,140),1);}
+ /* punti d'urto: raggiera di crepe e anelli che le collegano */
+ const ni=Math.random()<.5?1:2;for(let i=0;i<ni;i++){const x=rnd(.18,.82)*W,y=rnd(.2,.8)*H,d0=rnd(40,M*.5),nr=Math.round(rnd(4,6)),a0=rnd(0,TAU),ang=[];
+  for(let j=0;j<nr;j++){const a=a0+j*TAU/nr+rnd(-.25,.25);ang.push(a);crack(x,y,a,M*rnd(.25,.6),rnd(1.8,2.4),d0,j%3===0?0:1);}
+  [rnd(.05,.09),rnd(.13,.2)].forEach((rr,ri)=>{const r=rr*M;ang.forEach((a,j)=>{if(Math.random()<(ri?.45:.7)){const b=ang[(j+1)%nr]+(j===nr-1?TAU:0),x1=x+Math.cos(a)*r,y1=y+Math.sin(a)*r,x2=x+Math.cos(b)*r,y2=y+Math.sin(b)*r;
+   crack(x1,y1,Math.atan2(y2-y1,x2-x1),Math.hypot(x2-x1,y2-y1)*rnd(.8,1),1.1,d0+r,2);}});});}
+ /* la lastra di ghiaccio, preparata una volta: blu profondo, venature, bolle d'aria intrappolate */
+ const sh=layer(W,H),x=sh.x;
+ const bg=x.createLinearGradient(0,0,0,H);bg.addColorStop(0,"#123049");bg.addColorStop(.55,"#0c2438");bg.addColorStop(1,"#0a1d2e");x.fillStyle=bg;x.fillRect(0,0,W,H);
+ try{x.filter="blur(14px)";}catch(e){}
+ for(let i=0;i<34*dens;i++){const px=rnd(0,W),py=rnd(0,H),r=rnd(60,260),gr=x.createRadialGradient(px,py,0,px,py,r),col=Math.random()<.6?"110,170,210":"20,50,80";
+  gr.addColorStop(0,"rgba("+col+","+rnd(.06,.16).toFixed(3)+")");gr.addColorStop(1,"rgba("+col+",0)");x.fillStyle=gr;x.fillRect(px-r,py-r,r*2,r*2);}
+ try{x.filter="blur(1.2px)";}catch(e){}
+ const a0=rnd(-.4,.4);
+ for(let i=0;i<50*dens;i++){const px=rnd(-100,W),py=rnd(0,H),L=rnd(120,460),a=a0+rnd(-.12,.12);
+  x.strokeStyle="rgba(200,230,250,"+rnd(.025,.07).toFixed(3)+")";x.lineWidth=rnd(.6,2);x.beginPath();x.moveTo(px,py);x.lineTo(px+Math.cos(a)*L,py+Math.sin(a)*L);x.stroke();}
+ try{x.filter="none";}catch(e){}
+ const bubble=(px,py,r)=>{x.fillStyle="rgba(215,238,255,"+rnd(.18,.4).toFixed(3)+")";x.beginPath();x.ellipse(px,py,r,r*rnd(.7,1),rnd(0,3),0,TAU);x.fill();
+  x.fillStyle="rgba(255,255,255,.55)";x.beginPath();x.arc(px-r*.3,py-r*.3,r*.3,0,TAU);x.fill();};
+ for(let i=0;i<14*dens;i++){let px=rnd(0,W),py=rnd(0,H);const a=rnd(-1.9,-1.2),n=Math.round(rnd(6,15));let r=rnd(2,4);
+  for(let j=0;j<n;j++){bubble(px,py,r);px+=Math.cos(a)*r*2.6+rnd(-2,2);py+=Math.sin(a)*r*2.6;r*=rnd(.82,.97);if(r<.6)break;}}
+ for(let i=0;i<170*dens;i++)bubble(rnd(0,W),rnd(0,H),rnd(.6,2.6));
+ const fr=x.createRadialGradient(cx,cy,Math.min(W,H)*.35,cx,cy,Math.hypot(cx,cy));fr.addColorStop(0,"rgba(220,240,255,0)");fr.addColorStop(1,"rgba(220,240,255,.16)");x.fillStyle=fr;x.fillRect(0,0,W,H);
+ /* calendario degli strattoni: scatti fulminei separati da pause irregolari */
+ const n=Math.round(rnd(6,9)),tw=[],am=[];for(let i=0;i<n;i++){tw.push(rnd(.6,1.6));am.push(i===0?rnd(.4,.7):rnd(.4,1.8));}
  const sT=tw.reduce((a,b)=>a+b,0),sA=am.reduce((a,b)=>a+b,0),T=[0],A=[0];
  for(let i=0;i<n;i++){T.push(T[i]+tw[i]/sT);A.push(A[i]+am[i]/sA);}
- return {segs:segs,maxD:maxD,sp:sp,T:T,A:A,n:n,last:-1,k:k};}
+ const mp=[[3,rnd(0,TAU),.07],[5,rnd(0,TAU),.05],[9,rnd(0,TAU),.03],[14,rnd(0,TAU),.015]];
+ return {segs:segs,maxD:maxD,sheet:sh,T:T,A:A,n:n,last:-1,k:k,chips:[],lt:null,mp:mp};}
 function athJerk(g,u){if(u<=0)return {v:0,fl:0,i:-1,band:0};if(u>=1)return {v:1,fl:0,i:g.n,band:0};
  let i=0;while(i<g.n-1&&u>=g.T[i+1])i++;
- const f=(u-g.T[i])/(g.T[i+1]-g.T[i]),a=g.A[i+1]-g.A[i],SN=.24,qq=Math.min(1,f/SN);
- const v=g.A[i]+a*(.97*(1-Math.pow(1-qq,3))+.03*f);            // scatto rapido + leggero assestamento
- const fl=f<SN?1:Math.max(0,1-(f-SN)/.3);
+ const f=(u-g.T[i])/(g.T[i+1]-g.T[i]),a=g.A[i+1]-g.A[i],SN=.13,qq=Math.min(1,f/SN);
+ const v=g.A[i]+a*(.98*(1-Math.pow(1-qq,4))+.02*f);            // la crepa corre di colpo, poi quasi si ferma
+ const fl=f<SN?1:Math.max(0,1-(f-SN)/.22);
  return {v:v,fl:fl,i:i,band:a};}
 function athDraw(G,p,t){
  const c=G.ctx,W=G.W,H=G.H,g=G.geo,cx=W/2,cy=H/2,R=Math.hypot(cx,cy);
- const growing=t<5,u=cl01((t-.8)/2.4);
- let P,fl=0,band=0,J=null;
- if(growing){J=athJerk(g,u);P=J.v*g.maxD*1.02;fl=J.fl;band=J.band*g.maxD*1.02;
-  if(J.i!==g.last&&J.i>=0&&J.i<g.n){g.last=J.i;if(J.band>.09)try{sfxPlay("crack");}catch(e){}}}
- else P=p*g.maxD*1.02;
- const cover=growing?(J?J.v:0):p;
+ const growing=t<5,u=cl01((t-.8)/2.4),dt=g.lt==null?0:Math.max(0,Math.min(.05,t-g.lt));g.lt=t;
+ const sp=growing?easeOut(u/.4):1;                               // il lago gela dalle rive verso il centro
+ const cu=cl01((u-.3)/.7);
+ let P,fl=0,band=0;
+ if(growing){const J=athJerk(g,cu);P=J.v*g.maxD*1.02;fl=cu>0?J.fl:0;band=J.band*g.maxD*1.02;
+  if(cu>0&&J.i!==g.last&&J.i>=0&&J.i<g.n){g.last=J.i;if(J.band>.08)try{sfxPlay("crack");}catch(e){}
+   let m=0;for(let i=0;i<g.segs.length&&m<14;i++){const s=g.segs[i];if(s[7]<3&&s[4]<P&&s[5]>=P&&Math.random()<.5){m++;
+    for(let j=0;j<3;j++)g.chips.push({x:s[2],y:s[3],vx:rnd(-90,90),vy:rnd(-140,-30),l:1,s:rnd(.8,2.2),r:rnd(0,3)});}}}}
+ else P=g.maxD*1.1;
  c.clearRect(0,0,W,H);
- c.fillStyle="rgba(8,24,40,"+(cover*.85).toFixed(3)+")";c.fillRect(0,0,W,H);
- const r0=R*(1.08-cover),vg=c.createRadialGradient(cx,cy,Math.max(0,r0),cx,cy,r0+R*.45);vg.addColorStop(0,"rgba(150,205,235,0)");vg.addColorStop(1,"rgba(150,205,235,.42)");c.fillStyle=vg;c.fillRect(0,0,W,H);
- /* scossone a ogni strattone */
- c.save();if(growing&&fl>0){const a=2.4*fl*fl;c.translate(rnd(-a,a),rnd(-a,a));}
- c.lineCap="round";
- const pass=function(w,col,filter){c.strokeStyle=col;c.lineWidth=w;c.beginPath();
-  g.segs.forEach(s=>{if(s[4]>=P||(filter&&!filter(s)))return;const f=Math.min(1,(P-s[4])/(s[5]-s[4]));c.moveTo(s[0],s[1]);c.lineTo(s[0]+(s[2]-s[0])*f,s[1]+(s[3]-s[1])*f);});c.stroke();};
- pass(18*g.k,"rgba(185,225,250,.045)");                         // velo di brina attorno ai cristalli
- pass(4,"rgba(150,205,240,.12)");
- pass(1.3,"rgba(200,235,255,.4)");
- pass(.7,"rgba(240,252,255,.85)");
- pass(1.5,"rgba(248,254,255,.75)",s=>s[6]>1.25);                 // assi principali più marcati
- /* lampo bianco sul tratto appena ghiacciato */
- if(fl>.02&&band>0){const lo=P-band;pass(2.2,"rgba(255,255,255,"+(fl*.85).toFixed(3)+")",s=>s[5]>lo);}
- /* punte vive del fronte */
- c.fillStyle="rgba(245,253,255,"+(growing?.55+.45*fl:.5).toFixed(3)+")";
- g.segs.forEach(s=>{if(s[4]<P&&s[5]>=P&&s[6]>1){const f=(P-s[4])/(s[5]-s[4]),x=s[0]+(s[2]-s[0])*f,y=s[1]+(s[3]-s[1])*f;c.fillRect(x-1,y-1,2,2);}});
- g.sp.forEach(s=>{if(s[2]>P)return;const a=.3+.45*Math.sin(t*3+s[4]*4);if(a<=0)return;c.fillStyle="rgba(235,250,255,"+a.toFixed(3)+")";c.fillRect(s[0],s[1],s[3],s[3]);
-  if(s[3]>1.5&&a>.6){c.strokeStyle="rgba(255,255,255,"+((a-.6)*1.6).toFixed(3)+")";c.lineWidth=.6;const L=s[3]*2.4;c.beginPath();c.moveTo(s[0]-L,s[1]);c.lineTo(s[0]+L,s[1]);c.moveTo(s[0],s[1]-L);c.lineTo(s[0],s[1]+L);c.stroke();}});
- c.restore();}
+ c.save();if(growing&&fl>0){const a=3*fl*fl;c.translate(rnd(-a,a),rnd(-a,a));}
+ /* la lastra */
+ c.drawImage(g.sheet.c,-4,-4,W+8,H+8);
+ if(sp<1){c.save();c.globalCompositeOperation="destination-out";const rh=R*(1-sp)*1.15,gr=c.createRadialGradient(cx,cy,Math.max(0,rh-90),cx,cy,rh+1);
+  gr.addColorStop(0,"rgba(0,0,0,1)");gr.addColorStop(1,"rgba(0,0,0,0)");c.fillStyle=gr;c.fillRect(-10,-10,W+20,H+20);c.restore();}
+ const bx=((t*.11)%1.5-.25)*(W+H),gl=c.createLinearGradient(bx-300,0,bx+300,H*.7);
+ gl.addColorStop(0,"rgba(220,240,255,0)");gl.addColorStop(.5,"rgba(220,240,255,"+(.06*sp).toFixed(3)+")");gl.addColorStop(1,"rgba(220,240,255,0)");c.fillStyle=gl;c.fillRect(0,0,W,H);
+ /* le crepe: ombra nello spessore, alone azzurro, piano di frattura e filo bianco */
+ c.lineCap="round";c.lineJoin="round";
+ const pass=function(w,col,filt,ox,oy){c.strokeStyle=col;c.lineWidth=w;c.beginPath();
+  g.segs.forEach(s=>{if(s[4]>=P||(filt&&!filt(s)))return;const f=Math.min(1,(P-s[4])/(s[5]-s[4]));c.moveTo(s[0]+ox,s[1]+oy);c.lineTo(s[0]+(s[2]-s[0])*f+ox,s[1]+(s[3]-s[1])*f+oy);});c.stroke();};
+ pass(2.4,"rgba(2,10,22,.6)",null,1.3,1.6);
+ pass(9,"rgba(215,238,255,.06)",s=>s[7]===0,3,3.5);
+ pass(3,"rgba(225,242,255,.16)",s=>s[7]===0,2.2,2.8);              // il piano della frattura visto attraverso il ghiaccio
+ pass(.7,"rgba(225,242,255,.55)",s=>s[7]===3,0,0);
+ pass(4,"rgba(140,205,250,.18)",s=>s[7]<2,0,0);
+ pass(1.7,"rgba(240,250,255,.95)",s=>s[7]===0,0,0);
+ pass(1.1,"rgba(232,247,255,.9)",s=>s[7]===1,0,0);
+ pass(.6,"rgba(225,242,255,.75)",s=>s[7]===2,0,0);
+ if(fl>.02&&band>0){const lo=P-band;pass(2.6,"rgba(255,255,255,"+(fl*.9).toFixed(3)+")",s=>s[5]>lo,0,0);}
+ if(growing&&cu>0&&cu<1){c.fillStyle="rgba(255,255,255,"+(.9*fl).toFixed(3)+")";
+  if(fl>.05)g.segs.forEach(s=>{if(s[7]<3&&s[4]<P&&s[5]>=P){const f=(P-s[4])/(s[5]-s[4]),x=s[0]+(s[2]-s[0])*f,y=s[1]+(s[3]-s[1])*f;c.beginPath();c.arc(x,y,.8+1.2*fl,0,TAU);c.fill();}});}
+ /* schegge che saltano a ogni strattone */
+ g.chips=g.chips.filter(q=>{q.l-=dt*2.2;if(q.l<=0)return false;q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=420*dt;q.r+=dt*8;
+  c.save();c.translate(q.x,q.y);c.rotate(q.r);c.fillStyle="rgba(235,248,255,"+q.l.toFixed(3)+")";c.fillRect(-q.s,-q.s*.6,q.s*2,q.s*1.2);c.restore();return true;});
+ c.restore();
+ /* alla fine il ghiaccio si scioglie dal centro verso le rive */
+ if(t>=5){const q=easeIO((t-5)/1.8),rq=q*R*1.2,N=160,hole=new Path2D();
+  for(let i=0;i<=N;i++){const a=i/N*TAU;let w=1;g.mp.forEach(m=>{w+=m[2]*Math.sin(m[0]*a+m[1]+t*.8);});const r=rq*w;const px=cx+Math.cos(a)*r,py=cy+Math.sin(a)*r;if(i)hole.lineTo(px,py);else hole.moveTo(px,py);}
+  hole.closePath();
+  c.save();c.globalCompositeOperation="destination-out";c.fill(hole);c.globalAlpha=.5;c.lineWidth=26;c.stroke(hole);c.restore();
+  if(rq>2){c.strokeStyle="rgba(150,210,250,"+(.18*(1-q)).toFixed(3)+")";c.lineWidth=10;c.stroke(hole);c.strokeStyle="rgba(225,245,255,"+(.45*(1-q)).toFixed(3)+")";c.lineWidth=1.6;c.stroke(hole);}}}
 
 /* ============================================================
    PAN LAN — catrame che dilaga e si ritira
@@ -229,14 +268,16 @@ function panGeo(W,H){
  const fin=[];const nf=Math.round(rnd(7,11));for(let i=0;i<nf;i++)fin.push({th:rnd(0,TAU),w:rnd(.1,.26),lead:rnd(.08,.2)*(Math.random()<.25?-1:1)});
  /* superficie del catrame preparata una volta: nero violaceo con riflessi oleosi */
  const pad=40,tx=layer(W+pad*2,H+pad*2),x=tx.x;
- x.fillStyle="#07030c";x.fillRect(0,0,W+pad*2,H+pad*2);
+ x.fillStyle="#1a0a2b";x.fillRect(0,0,W+pad*2,H+pad*2);
  try{x.filter="blur(10px)";}catch(e){}
- for(let i=0;i<70*dens;i++){const cx=rnd(0,W+pad*2),cy=rnd(0,H+pad*2),r=rnd(50,240),col=[["44,18,74",.14],["18,8,34",.22],["78,44,130",.08],["10,14,40",.14]][Math.floor(Math.random()*4)];
+ for(let i=0;i<70*dens;i++){const cx=rnd(0,W+pad*2),cy=rnd(0,H+pad*2),r=rnd(50,240),col=[["70,30,115",.2],["32,12,58",.26],["120,70,175",.1],["58,44,130",.14],["130,60,140",.08]][Math.floor(Math.random()*5)];
   const gr=x.createRadialGradient(cx,cy,0,cx,cy,r);gr.addColorStop(0,"rgba("+col[0]+","+(col[1]*rnd(.5,1)).toFixed(3)+")");gr.addColorStop(1,"rgba("+col[0]+",0)");x.fillStyle=gr;x.fillRect(cx-r,cy-r,r*2,r*2);}
  try{x.filter="blur(2px)";}catch(e){}
  for(let i=0;i<26*dens;i++){const x0=rnd(0,W+pad*2),y0=rnd(0,H+pad*2),L=rnd(60,220),a=rnd(-.6,.6);
-  x.strokeStyle="rgba(205,175,255,"+rnd(.04,.11).toFixed(3)+")";x.lineWidth=rnd(1,3.2);x.lineCap="round";x.beginPath();x.moveTo(x0,y0);
+  x.strokeStyle="hsla("+Math.round(rnd(250,320))+",70%,86%,"+rnd(.05,.13).toFixed(3)+")";x.lineWidth=rnd(1,3.2);x.lineCap="round";x.beginPath();x.moveTo(x0,y0);
   x.quadraticCurveTo(x0+Math.cos(a)*L*.5+rnd(-30,30),y0+Math.sin(a)*L*.5+rnd(-30,30),x0+Math.cos(a)*L,y0+Math.sin(a)*L);x.stroke();}
+ try{x.filter="blur(5px)";}catch(e){}
+ for(let i=0;i<160*dens;i++){const px=rnd(0,W+pad*2),py=rnd(0,H+pad*2);x.fillStyle="hsla("+Math.round(rnd(240,330))+",65%,78%,"+rnd(.03,.07).toFixed(3)+")";x.beginPath();x.ellipse(px,py,rnd(10,46),rnd(4,16),rnd(0,3),0,TAU);x.fill();}   // madreperla
  try{x.filter="none";}catch(e){}
  const bub=[];for(let i=0;i<34*dens;i++)bub.push({x:rnd(.04,.96)*W,y:rnd(.04,.96)*H,r:rnd(4,13)*Math.max(.7,M/850),per:rnd(1.6,3.4),ph:rnd(0,4)});
  return {N:N,har:har,fin:fin,tex:tx,pad:pad,bub:bub,h:new Float32Array(N),tmp:new Float32Array(N)};}
@@ -260,26 +301,28 @@ function panDraw(G,p,t){
  const tar=new Path2D();tar.rect(-2,-2,W+4,H+4);tar.addPath(hole);
  const maxH=Math.max.apply(null,h);
  c.clearRect(0,0,W,H);
- c.fillStyle="rgba(6,2,12,"+(p*.3).toFixed(3)+")";c.fillRect(0,0,W,H);          // la pagina si oscura un poco
+ c.fillStyle="rgba(14,5,24,"+(p*.3).toFixed(3)+")";c.fillRect(0,0,W,H);          // la pagina si oscura un poco
  /* ombra che il catrame getta sulla superficie davanti a sé */
  if(maxH>1){[[48,.08],[28,.1],[14,.14]].forEach(s=>{c.strokeStyle="rgba(0,0,0,"+s[1]+")";c.lineWidth=s[0];c.stroke(hole);});}
  c.save();c.clip(tar,"evenodd");
  c.drawImage(g.tex.c,-g.pad+Math.sin(t*.23)*14,-g.pad+Math.cos(t*.19)*10,W+g.pad*2,H+g.pad*2);
  /* riflesso lucido che scorre lento sulla superficie */
  const bx=((t*.09)%1.6-.3)*(W+H),gl=c.createLinearGradient(bx-260,0,bx+260,H*.6);
- gl.addColorStop(0,"rgba(170,120,255,0)");gl.addColorStop(.5,"rgba(170,120,255,.07)");gl.addColorStop(1,"rgba(170,120,255,0)");c.fillStyle=gl;c.fillRect(0,0,W,H);
+ gl.addColorStop(0,"hsla(275,70%,80%,0)");gl.addColorStop(.35,"hsla(300,65%,84%,.1)");gl.addColorStop(.6,"hsla(225,70%,84%,.08)");gl.addColorStop(1,"hsla(275,70%,80%,0)");c.fillStyle=gl;c.fillRect(0,0,W,H);
+ const b2=((t*.06+.7)%1.7-.35)*(W+H),g2=c.createLinearGradient(W,b2-200,W-b2*.4,b2+240);
+ g2.addColorStop(0,"hsla(320,60%,82%,0)");g2.addColorStop(.5,"hsla(265,70%,86%,.07)");g2.addColorStop(1,"hsla(190,60%,82%,0)");c.fillStyle=g2;c.fillRect(0,0,W,H);
  /* bolle che si gonfiano e scoppiano */
  g.bub.forEach(b=>{const dx=b.x-cx,dy=b.y-cy,th=(Math.atan2(dy,dx)+TAU)%TAU,hi=h[Math.floor(th/TAU*N)%N];if(Math.hypot(dx,dy)<hi+b.r*2+8)return;
   const life=((t+b.ph)/b.per)%1;
   if(life<.82){const r=b.r*easeOut(life/.82);if(r<.6)return;
-   const gr=c.createRadialGradient(b.x-r*.35,b.y-r*.45,r*.05,b.x,b.y,r);gr.addColorStop(0,"rgba(190,150,255,.5)");gr.addColorStop(.35,"rgba(40,18,70,.9)");gr.addColorStop(1,"rgba(8,3,14,.95)");
+   const gr=c.createRadialGradient(b.x-r*.35,b.y-r*.45,r*.05,b.x,b.y,r);gr.addColorStop(0,"rgba(240,220,255,.65)");gr.addColorStop(.3,"rgba(95,50,140,.92)");gr.addColorStop(1,"rgba(30,10,50,.96)");
    c.fillStyle=gr;c.beginPath();c.arc(b.x,b.y,r,0,TAU);c.fill();c.strokeStyle="rgba(0,0,0,.55)";c.lineWidth=1.2;c.stroke();}
-  else{const q=(life-.82)/.18;c.strokeStyle="rgba(170,130,240,"+(.45*(1-q)).toFixed(3)+")";c.lineWidth=1.4*(1-q)+.3;c.beginPath();c.arc(b.x,b.y,b.r*(1+q*.9),0,TAU);c.stroke();}});
+  else{const q=(life-.82)/.18;c.strokeStyle="rgba(215,190,255,"+(.45*(1-q)).toFixed(3)+")";c.lineWidth=1.4*(1-q)+.3;c.beginPath();c.arc(b.x,b.y,b.r*(1+q*.9),0,TAU);c.stroke();}});
  /* labbro arrotondato sul fronte: alone violaceo e filo di luce dall'alto a sinistra */
- if(maxH>1){c.strokeStyle="rgba(120,80,200,.16)";c.lineWidth=12;c.stroke(hole);
+ if(maxH>1){c.strokeStyle="rgba(170,120,230,.22)";c.lineWidth=12;c.stroke(hole);
   c.strokeStyle="rgba(0,0,0,.55)";c.lineWidth=3;c.stroke(hole);
-  c.save();c.translate(-1.6,-2.2);c.strokeStyle="rgba(228,205,255,.55)";c.lineWidth=1.6;c.stroke(hole);c.restore();
-  c.save();c.translate(-3.5,-4.5);c.strokeStyle="rgba(200,170,255,.14)";c.lineWidth=3;c.stroke(hole);c.restore();}
+  c.save();c.translate(-1.6,-2.2);c.strokeStyle="rgba(244,232,255,.7)";c.lineWidth=1.6;c.stroke(hole);c.restore();
+  c.save();c.translate(-3.5,-4.5);c.strokeStyle="rgba(210,190,255,.2)";c.lineWidth=3;c.stroke(hole);c.restore();}
  c.restore();}
 
 /* ============================================================

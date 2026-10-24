@@ -84,7 +84,7 @@ html[data-pg=master] body{background-image:radial-gradient(ellipse 60% 40% at 0%
 /* ==== Animazione di sblocco del personaggio ==== */
 #pgun{position:fixed;left:0;top:0;width:100vw;height:100vh;height:100dvh;z-index:3500;background:#000;display:none;opacity:0;cursor:pointer;overflow:hidden}
 #pgun.show{display:block}
-#pgun.pg-panlan,#pgun.pg-asonnes{background:transparent} /* catrame e liane si stendono sopra la pagina vera */
+#pgun.pg-panlan,#pgun.pg-asonnes,#pgun.pg-athena{background:transparent} /* catrame, liane e ghiaccio si stendono sopra la pagina vera */
 #pgun-cv{position:absolute;inset:0;width:100%;height:100%}
 #pgun-wp{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.62);opacity:0;filter:drop-shadow(0 0 26px rgba(255,216,107,.9)) drop-shadow(0 0 70px rgba(232,200,112,.5));pointer-events:none;will-change:transform,opacity}
 #pgun-wp svg{height:min(50vh,368px);max-width:69vw;width:auto;display:block}
