@@ -1,0 +1,203 @@
+/* GENERATO da strumenti/tema-oro.js — non modificare a mano: rilancia lo strumento.
+   Tema «Oro del Master»: i rossi della Zona Master diventano oro. */
+
+/* da css/01-base.css */
+html[data-el=oro] .master-btn{background:rgba(242,177,27,.1);border:1px solid rgba(242,177,27,.35);color:#ffdb87}
+html[data-el=oro] .master-btn:hover{background:rgba(242,177,27,.2)}
+html[data-el=oro] .master-btn.unlocked{border-color:rgba(242,177,27,.6)}
+html[data-el=oro] .npc-pv-l{color:#c29e4b}
+html[data-el=oro] .npc-max{color:#a0874c}
+html[data-el=oro] .npc-dmg{border:1px solid rgba(242,177,27,.35)}
+html[data-el=oro] .npc-dmg input::placeholder{color:#a1823a}
+html[data-el=oro] .npc-dmg button{background:rgba(242,177,27,.15);border-left:1px solid rgba(242,177,27,.35)}
+html[data-el=oro] .npc-dmg button:hover,html[data-el=oro] .npc-dmg button:focus-visible{background:rgba(242,177,27,.3)}
+html[data-el=oro] .sc.npc-down .npc-cur{color:#a0874c}
+html[data-el=oro] .pwbox{border:1px solid rgba(242,177,27,.3)}
+html[data-el=oro] .pwinp{border:1px solid rgba(242,177,27,.3)}
+html[data-el=oro] .pwbtn{background:rgba(242,177,27,.1)}
+html[data-el=oro] .pwbtn:hover{background:rgba(242,177,27,.2)}
+html[data-el=oro] #ms{border-top:2px solid rgba(242,177,27,.4)}
+html[data-el=oro] .mshdr{border-bottom:1px solid rgba(242,177,27,.15)}
+html[data-el=oro] .mssub{color:#bca671}
+html[data-el=oro] .msnav{border-bottom:1px solid rgba(242,177,27,.1)}
+html[data-el=oro] .msnav a{color:#bca671;border:1px solid rgba(242,177,27,.2)}
+html[data-el=oro] .msecsub{color:#c29e4b}
+html[data-el=oro] .sc{background:rgba(242,177,27,.05);border:1px solid rgba(242,177,27,.15)}
+html[data-el=oro] .scl{color:#dcbc73}
+html[data-el=oro] .mq{color:#cab585;background:rgba(242,177,27,.04)}
+html[data-el=oro] .mmc{background:rgba(242,177,27,.04);border:1px solid rgba(242,177,27,.12)}
+html[data-el=oro] .mms{color:#c29e4b}
+html[data-el=oro] .mms::after{background:rgba(242,177,27,.15)}
+html[data-el=oro] .bmc{background:rgba(242,177,27,.04);border:1px solid rgba(242,177,27,.12)}
+html[data-el=oro] .fmb{border:1px solid rgba(242,177,27,.25);color:#bca671}
+html[data-el=oro] .fmb:hover,html[data-el=oro] .fmb.active{background:rgba(242,177,27,.12);border-color:rgba(242,177,27,.55);color:#dcbc73}
+html[data-el=oro] .mbcard{background:rgba(242,177,27,.04);border:1px solid rgba(242,177,27,.14)}
+html[data-el=oro] .mbcard:hover{border-color:rgba(242,177,27,.4)}
+html[data-el=oro] .pwo{background:radial-gradient(circle at 50% 42%,rgba(100,70,0,.93),rgba(12,3,3,.97) 72%)}
+html[data-el=oro] .lock-shackle{border:13px solid #9b761f;box-shadow:inset 0 3px 0 rgba(255,219,136,.22),0 0 22px rgba(242,177,27,.3)}
+html[data-el=oro] .lock .pwbox{border:1px solid rgba(255,193,49,.45);background:linear-gradient(180deg,#271d05,#1b1403);box-shadow:0 0 46px rgba(242,177,27,.22),inset 0 0 34px rgba(0,0,0,.45)}
+html[data-el=oro] .lock .pwbox::before{background:linear-gradient(90deg,transparent,rgba(255,219,136,.5),transparent)}
+html[data-el=oro] .pl-card{border:1px solid rgba(242,177,27,.2)}
+html[data-el=oro] .pl-card select,html[data-el=oro] .pl-card input,html[data-el=oro] .pl-card textarea{background:#241c0a;border:1px solid rgba(242,177,27,.3);color:#f2ebd9}
+html[data-el=oro] .pl-del{background:rgba(242,177,27,.12);border:1px solid rgba(237,183,57,.35);color:#ecc874}
+html[data-el=oro] .pl-del:hover{background:rgba(237,183,57,.25)}
+html[data-el=oro] .pl-lbl{color:#bca671}
+html[data-el=oro] .pl-stat .sk{color:#bca671}
+html[data-el=oro] .pl-stat .sv{color:#f2ebd9}
+html[data-el=oro] .pl-pvmax{border:1px solid rgba(242,177,27,.3);background:rgba(242,177,27,.05)}
+html[data-el=oro] .pl-pvmax .l{color:#bca671}
+html[data-el=oro] .pl-part.broken{border-color:rgba(237,183,57,.5);background:rgba(237,183,57,.12);color:#e9cb87}
+html[data-el=oro] .pl-add-btn{background:rgba(242,177,27,.1);border:1px dashed rgba(242,177,27,.4)}
+html[data-el=oro] .pl-add-btn:hover{background:rgba(242,177,27,.2)}
+
+/* da css/04-master-icone.css */
+html[data-el=oro] #ms .msec-head:focus-visible{box-shadow:0 0 0 2px rgba(242,177,27,.45)}
+html[data-el=oro] #ms .msec-chev{border:1px solid rgba(242,177,27,.35);color:#dcbc73}
+html[data-el=oro] .mbh .mico.mae{background:radial-gradient(circle at 50% 35%,rgba(242,177,27,.18),rgba(0,0,0,.25));border:1px solid rgba(242,177,27,.3)}
+html[data-el=oro] .tw-head span{border:1px solid rgba(242,177,27,.45);color:#f9d581}
+html[data-el=oro] .sc.tw{border-left:2px solid rgba(242,177,27,.55);background:rgba(242,177,27,.05)}
+
+/* da css/05-plancia-galleria.css */
+html[data-el=oro] .plp-box{background:#1d1606;border:1px solid rgba(242,177,27,.35)}
+html[data-el=oro] .plp-x{border:1px solid rgba(242,177,27,.4);color:#f8d688}
+html[data-el=oro] .plp-q{border:1px solid rgba(242,177,27,.3)}
+html[data-el=oro] .plp-f button{border:1px solid rgba(242,177,27,.25);color:#d9c086}
+html[data-el=oro] .plp-f button.on{background:rgba(242,177,27,.18)}
+html[data-el=oro] .plp-it{background:rgba(242,177,27,.04);border:1px solid rgba(242,177,27,.15)}
+html[data-el=oro] .plp-it:hover,html[data-el=oro] .plp-it:focus-visible{background:rgba(242,177,27,.1)}
+html[data-el=oro] .plp-it .tg{color:#bca671}
+html[data-el=oro] .plp-none{color:#bca671}
+
+/* da css/06-master-animazioni.css */
+html[data-el=oro] #ms .mstit{background:linear-gradient(100deg,#eeb52f 0%,#ffd470 35%,#ffd0c0 50%,#ffd470 65%,#eeb52f 100%);filter:drop-shadow(0 0 14px rgba(255,204,85,.35))}
+html[data-el=oro] #ms .ms-embers i{background:radial-gradient(circle,#ffe0c8,rgba(255,201,75,.95) 35%,rgba(252,177,0,0) 70%)}
+html[data-el=oro] #ms .msnav a.cur{box-shadow:0 0 12px rgba(255,204,85,.25),inset 0 0 8px rgba(255,204,85,.12)}
+html[data-el=oro] #ms .msec-head::before{background:linear-gradient(100deg,transparent 30%,rgba(255,207,95,.10) 50%,transparent 70%)}
+html[data-el=oro] #ms .msec-head:hover .msect{text-shadow:0 0 18px rgba(255,207,95,.45)}
+html[data-el=oro] #ms .msec.open .msec-chev{box-shadow:0 0 12px rgba(255,207,95,.4)}
+html[data-el=oro] #ms .sc:hover{border-color:rgba(255,207,95,.45);box-shadow:0 10px 26px rgba(0,0,0,.35),0 0 18px rgba(242,177,27,.18)}
+html[data-el=oro] #ms .sc::after{background:linear-gradient(100deg,transparent,rgba(255,216,126,.07),transparent)}
+html[data-el=oro] #ms .mbcard:hover{box-shadow:0 8px 22px rgba(0,0,0,.35),0 0 14px rgba(242,177,27,.16)}
+html[data-el=oro] #ms .pl-card:hover{box-shadow:0 0 22px rgba(242,177,27,.14)}
+html[data-el=oro] #ms .tw-head span{text-shadow:0 0 8px rgba(255,207,95,.6)}
+html[data-el=oro] #ms .tw-hint{color:#bfa25e}
+
+/* da css/11-plancia-drop.css */
+html[data-el=oro] .pl-dcpart{border-bottom:1px solid rgba(242,177,27,.07)}
+html[data-el=oro] .pl-dcchk{border:2px solid rgba(242,177,27,.4)}
+html[data-el=oro] .pl-dcstep{border:1px solid rgba(242,177,27,.3)}
+html[data-el=oro] .pl-dcstep button{background:rgba(242,177,27,.12)}
+html[data-el=oro] .pl-dcstep button:hover{background:rgba(242,177,27,.28)}
+html[data-el=oro] .pl-dcsub{color:#bca671}
+html[data-el=oro] .pl-dcmats{background:rgba(242,177,27,.05);border:1px solid rgba(242,177,27,.2)}
+html[data-el=oro] .pl-dcmat{border-bottom:1px solid rgba(242,177,27,.08)}
+html[data-el=oro] .pl-dckill{border-bottom:1px solid rgba(242,177,27,.07)}
+html[data-el=oro] .pl-dcnotes{border-left:2px solid rgba(242,177,27,.3)}
+html[data-el=oro] .pl-dcreset{border:1px solid rgba(242,177,27,.3);color:#e6c77d}
+html[data-el=oro] .pl-dcreset:hover{background:rgba(242,177,27,.15)}
+
+/* da css/18-sync-giocatori.css */
+html[data-el=oro] .gh-err{color:#ffdc8a}
+html[data-el=oro] .gh-toast.err{border-color:rgba(255,213,116,.6)}
+html[data-el=oro] .gh-st.gh-m{color:#f9d581}
+html[data-el=oro] #mgh-body .sv-p{color:#cfbf99}
+html[data-el=oro] .mgh-row input{border:1px solid rgba(242,177,27,.3)}
+html[data-el=oro] .mgh-it{border:1px solid rgba(242,177,27,.18);background:rgba(242,177,27,.04)}
+html[data-el=oro] .mgh-n small{color:#bca671}
+html[data-el=oro] .mst-st{color:#dcbc73}
+html[data-el=oro] .mdat-st{color:#bca671}
+html[data-el=oro] .mdat-st.ok{color:#e6cf9a}
+html[data-el=oro] .mn-item{border:1px solid rgba(242,177,27,.18);background:rgba(242,177,27,.035)}
+html[data-el=oro] .mn-t{border-bottom:1px solid rgba(242,177,27,.2);color:#f2deaf}
+html[data-el=oro] .mn-b{border:1px solid rgba(242,177,27,.25);color:#dcbc73}
+html[data-el=oro] .mn-b:hover:not(:disabled){background:rgba(242,177,27,.15)}
+html[data-el=oro] .mn-b.mn-del:hover{color:#ffdc8a;border-color:rgba(255,213,116,.5)}
+html[data-el=oro] .mn-x{border:1px solid rgba(242,177,27,.12)}
+html[data-el=oro] .mn-x:focus{border-color:rgba(242,177,27,.45)}
+html[data-el=oro] .mn-vuoto{color:#bca671}
+html[data-el=oro] .npc-tools{color:#bca671}
+html[data-el=oro] .npc-clear{border:1px solid rgba(242,177,27,.3);color:#dcbc73}
+html[data-el=oro] .npc-clear:hover{background:rgba(242,177,27,.15)}
+html[data-el=oro] .npc-x{border:1px solid rgba(242,177,27,.25);color:#bca671}
+html[data-el=oro] .npc-x:hover{color:#ffdc8a;border-color:rgba(255,213,116,.5)}
+html[data-el=oro] .pa-gate-mbtn{background:rgba(238,181,47,.12)!important;border-color:rgba(255,212,112,.45)!important;color:#ffedc2!important}
+html[data-el=oro] .tcj-conf-box{border:1px solid rgba(255,212,112,.45);box-shadow:0 18px 60px rgba(0,0,0,.6),0 0 0 1px rgba(238,181,47,.15) inset}
+html[data-el=oro] .tcj-conf-ic{border:1px solid rgba(255,212,112,.55);color:#ffde91}
+html[data-el=oro] .tcj-conf-t{color:#ffedc2}
+html[data-el=oro] .tcj-conf-si{background:rgba(238,181,47,.18);border:1px solid rgba(255,212,112,.6);color:#ffedc2}
+html[data-el=oro] .tcj-conf-si:hover:not(:disabled){background:rgba(238,181,47,.32)}
+
+/* da css/21-incontri.css */
+html[data-el=oro] #inc-ed{--ie-b:rgba(242,177,27,.22);--ie-b2:rgba(242,177,27,.5)}
+html[data-el=oro] .ie-st{color:#d7c499}
+html[data-el=oro] .ie-st.err{color:#ffe19b}
+html[data-el=oro] .ie-btn{color:#f6eacf;background:rgba(242,177,27,.07)}
+html[data-el=oro] .ie-btn:hover,html[data-el=oro] .ie-btn:focus-visible{border-color:#ffd470;box-shadow:0 0 12px rgba(255,201,75,.25)}
+html[data-el=oro] .ie-pub{background:rgba(242,177,27,.16)}
+html[data-el=oro] .ie-del{color:#ecc874}
+html[data-el=oro] .ie-lbl{color:#c29e4b}
+html[data-el=oro] .ie-lbl span{color:#af975e}
+html[data-el=oro] .ie-lbl-m{color:#ffd980}
+html[data-el=oro] .ie-note{border-color:rgba(242,177,27,.4);background:rgba(75,53,0,.3)}
+html[data-el=oro] .ie-conta{color:#af975e}
+html[data-el=oro] .ie-it:hover,html[data-el=oro] .ie-it:focus-visible{background:rgba(242,177,27,.05)}
+html[data-el=oro] .ie-it.on{background:rgba(242,177,27,.1)}
+html[data-el=oro] .ie-av{background:#1b1404}
+html[data-el=oro] .ie-it-n{color:#f8edd3}
+html[data-el=oro] .ie-it-c{color:#af975e}
+html[data-el=oro] .ie-occhio{color:#8d753e}
+html[data-el=oro] .ie-occhio.on{color:#ffe3a1}
+html[data-el=oro] .ie-vuoto{color:#af975e}
+html[data-el=oro] .ie-col-foto input[type=range]{accent-color:#eeb52f}
+html[data-el=oro] .ie-nota{color:#af975e}
+html[data-el=oro] .ie-th{color:#f6eacf}
+html[data-el=oro] .ie-th:hover,html[data-el=oro] .ie-th:focus-visible{border-color:#ffd470}
+html[data-el=oro] .ie-sf-b{color:#d7c499}
+html[data-el=oro] .ie-sf-b.on{background:rgba(242,177,27,.22)}
+html[data-el=oro] .ie-sf-b:hover:not(:disabled),html[data-el=oro] .ie-sf-b:focus-visible{box-shadow:inset 0 0 0 1px #ffd470}
+html[data-el=oro] .ie-pill{color:#d7c499}
+html[data-el=oro] .ie-chip{color:#f8edd3;background:rgba(242,177,27,.14)}
+html[data-el=oro] .ie-chip button{color:#ffedc2}
+html[data-el=oro] .ie-chip button:hover,html[data-el=oro] .ie-chip button:focus-visible{background:rgba(255,207,95,.25)}
+html[data-el=oro] .ie-nessuno{color:#a0874c}
+html[data-el=oro] .ie-usati span{color:#a0874c}
+html[data-el=oro] .ie-u{color:#d7c499}
+html[data-el=oro] .ie-vis{background:rgba(242,177,27,.04)}
+html[data-el=oro] .ie-sw em{color:#af975e}
+html[data-el=oro] .ie-sw span{background:#382b0d}
+html[data-el=oro] .ie-sw span::after{background:#bfa25e}
+html[data-el=oro] .ie-sw input:checked+span{background:#9d6f03}
+html[data-el=oro] .ie-sw input:checked+span::after{background:#fff0cc}
+html[data-el=oro] .ie-sw input:focus-visible+span{box-shadow:0 0 0 2px #ffde91}
+html[data-el=oro] .ie-sw-main{color:#f8edd3}
+html[data-el=oro] .ie-gbox{border:1px solid rgba(242,177,27,.4)}
+html[data-el=oro] .ie-gtop{border-bottom:1px solid rgba(242,177,27,.25);color:#ffedc2}
+html[data-el=oro] .ie-x{border:1px solid rgba(242,177,27,.45);color:#ffedc2}
+html[data-el=oro] .ie-gfil{border:1px solid rgba(242,177,27,.35)}
+html[data-el=oro] .ie-gfil button{color:#d7c499}
+html[data-el=oro] .ie-gfil button+button{border-left:1px solid rgba(242,177,27,.35)}
+html[data-el=oro] .ie-gfil button.on{background:rgba(242,177,27,.22)}
+html[data-el=oro] .ie-gsub{color:#cab585;border-bottom:1px solid rgba(242,177,27,.15)}
+html[data-el=oro] .ie-gbadge{color:#fff0cc;background:rgba(52,37,0,.88);border:1px solid rgba(255,210,105,.6)}
+html[data-el=oro] .ie-gi.usata{border-color:rgba(255,210,105,.45)}
+html[data-el=oro] .ie-cornice-vuota{color:#bca671}
+html[data-el=oro] .ie-cornice-vuota:hover,html[data-el=oro] .ie-cornice-vuota:focus-visible{border-color:#ffd470}
+html[data-el=oro] .ie-gal-b{background:rgba(242,177,27,.16)}
+html[data-el=oro] .ie-gi{border:1px solid rgba(242,177,27,.2)}
+html[data-el=oro] .ie-gi:hover,html[data-el=oro] .ie-gi:focus-visible{border-color:#ffd470}
+html[data-el=oro] .ie-gimg{background:#1d1605}
+html[data-el=oro] .ie-gn{color:#d7c499}
+
+/* da css/24-master-mael.css */
+html[data-el=oro] .ml-card{--c:#f2b11b;border:1px solid color-mix(in srgb,var(--c) 28%,rgba(242,177,27,.12))}
+html[data-el=oro] .ml-nome{color:var(--master2,#fdecc5)}
+html[data-el=oro] .ml-ruolo{color:#bca671}
+html[data-el=oro] .ml-hp small{color:#c29e4b}
+html[data-el=oro] .ml-pos b{color:var(--text,#f1eada)}
+html[data-el=oro] .ml-pos p{color:var(--text2,#d4c6a4)}
+html[data-el=oro] .ml-s span{color:#c29e4b}
+html[data-el=oro] .ml-s b{color:var(--text,#f1eada)}
+html[data-el=oro] .ml-s b i{color:#b49448}
+html[data-el=oro] .ml-s em{background:rgba(242,177,27,.1)}
+html[data-el=oro] .ml-o small{color:#c29e4b}
+html[data-el=oro] .ml-o span{color:var(--text2,#d4c6a4)}

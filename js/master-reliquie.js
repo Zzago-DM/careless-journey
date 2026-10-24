@@ -6,7 +6,7 @@
    - «Pubblica sul sito» copia nel sito pubblico SOLO le reliquie segnate «Mostra ai giocatori»:
        dati/reliquie.json (nome, descrizione, immagine) e le immagini in img/reliquie/, in un'unica modifica.
      Le note del Master non lasciano mai tcj-master.
-   Il capitolo viene aggiunto qui alla Zona Master (prima che diventi «bolle»), solo dove c'è il token del Master. */
+   Il capitolo viene aggiunto qui alla Zona Master (prima che i capitoli diventino libri della libreria), solo dove c'è il token del Master. */
 (function(){
   "use strict";
   var ms = document.getElementById("ms");

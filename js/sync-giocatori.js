@@ -48,7 +48,10 @@
     var k = diChi(key); if(!k) return;
     var s = stato(k); s.dirty = true; s.loc = new Date().toISOString(); salvaStato(k, s);
     if(k === scCur) disegna();
+    annuncia(k, "modifica");
   }
+  /* avvisa gli altri script (es. js/diretta-schede.js) che l'area di un personaggio è cambiata */
+  function annuncia(k, motivo){ try { document.dispatchEvent(new CustomEvent("tcj-area", { detail: { k: k, motivo: motivo } })); } catch(e){} }
   Storage.prototype.setItem = function(key, val){
     var prima = (this === localStorage) ? this.getItem(key) : null;
     _orig.setItem.call(this, key, val);
@@ -104,6 +107,7 @@
     try { if(typeof alCur !== "undefined" && alCur === k && typeof alRender === "function") alRender(); } catch(e){}
     try { if(k === scCur && typeof paTheme === "function") paTheme(); } catch(e){}
     disegna();
+    annuncia(k, "scaricata");
   }
 
   /* ---------- confronto tra due versioni di un'area ---------- */
@@ -247,7 +251,7 @@
         return scarica(c).then(function(res){ if(res.stato === "ok") confronto(k, "conflitto", res.dati, res.sha); else avviso(res.msg || errore(r), true); disegna(); });
       }
       if(!r.ok){ avviso(errore(r), true); disegna(); return; }
-      return r.json().then(function(j){ var s2 = stato(k); s2.sha = j.content && j.content.sha; s2.at = p.salvato; s2.dirty = false; salvaStato(k, s2); disegna(); avviso(c.chi === "master" ? "Area di "+NOMI[k]+" salvata online (Master) ✓" : "Salvato online ✓"); try{ sfxPlay("seal"); }catch(e){} });
+      return r.json().then(function(j){ var s2 = stato(k); s2.sha = j.content && j.content.sha; s2.at = p.salvato; s2.dirty = false; salvaStato(k, s2); disegna(); annuncia(k, "salvata"); avviso(c.chi === "master" ? "Area di "+NOMI[k]+" salvata online (Master) ✓" : "Salvato online ✓"); try{ sfxPlay("seal"); }catch(e){} });
     }).catch(function(){ occupato[k] = 0; avviso(errore(null), true); disegna(); });
   }
 
@@ -370,28 +374,37 @@
       return "conflitto";
     });
   }
-  window.ghSync = { scarica: scaricaAll, scaricaOra: scaricaManuale, salva: caricaOnline, salvaSeLibero: salvaSeLibero, stato: stato, collegato: function(k){ return !!cred(k); } };
+  window.ghSync = { scarica: scaricaAll, scaricaOra: scaricaManuale, salva: caricaOnline, salvaSeLibero: salvaSeLibero, stato: stato, collegato: function(k){ return !!cred(k); },
+    credenziali: function(k){ var c = cred(k); return c ? { token: c.token, repo: c.repo, chi: c.chi } : null; }, quando: quando };
   /* ---------- Zona Master: token del Master e quadro delle tre aree ---------- */
   var mb = document.getElementById("mgh-body");
   function disegnaMaster(){
     if(!mb) return;
     var m = master();
     if(!m.token){
+      mb.classList.remove("mgh-on");
       mb.innerHTML = '<div class="mgh-set"><p class="sv-p">Incolla il token del Master: un token fine-grained valido per <b>tcj-athena</b>, <b>tcj-panlan</b> e <b>tcj-asonnes</b>, con <b>Contents: Read and write</b>. Resta solo su questo dispositivo.</p>'
         + '<div class="mgh-row"><input type="password" id="mgh-tok" autocomplete="off" spellcheck="false" placeholder="github_pat_…"><button type="button" class="bk-btn" data-mg="collega">☁ Collega</button></div><div class="gh-err" id="mgh-err"></div></div>';
       return;
     }
-    var h = '<div class="mgh-list">';
+    /* tre colonne, una per Slayer: in cima lo stato del salvataggio online, sotto la scheda in diretta (js/diretta-schede.js).
+       La struttura si crea una volta sola: dopo si aggiornano solo le righe dello stato, così la scheda in diretta non si ridisegna. */
+    if(!mb.classList.contains("mgh-on")){
+      var h0 = '<div class="mgh-top" id="mgh-top"></div><div class="mgh-cols" id="mgh-cols">';
+      CH.forEach(function(k){ h0 += '<div class="mgh-col" role="group" data-k="'+k+'" aria-label="'+NOMI[k]+'"><div class="mgh-it"></div><div class="dv-slot" data-dv="'+k+'"></div></div>'; });
+      h0 += '</div><div class="mgh-row mgh-foot"><button type="button" class="bk-btn" data-mg="tutte">⬇ Scarica tutte</button><button type="button" class="bk-btn" data-mg="scollega">Scollega il token del Master</button></div>';
+      mb.innerHTML = h0; mb.classList.add("mgh-on");
+      try { document.dispatchEvent(new CustomEvent("tcj-mgh-pronto")); } catch(e){}
+    }
     CH.forEach(function(k){
+      var it = mb.querySelector('.mgh-col[data-k="'+k+'"] .mgh-it'); if(!it) return;
       var s = stato(k), dis = occupato[k] ? ' disabled' : '', proprio = !!(s.token && s.repo);
-      h += '<div class="mgh-it"><div class="mgh-n">'+NOMI[k]+'<small>'+OWNER+'/tcj-'+k+(proprio?' · su questo dispositivo usa il token del giocatore':'')+'</small></div>'
-        + '<div class="mgh-s">'+statoTesto(k, s)+'</div>'
+      it.innerHTML = '<div class="mgh-n">'+NOMI[k]+'<small>'+OWNER+'/tcj-'+k+(proprio?' · su questo dispositivo usa il token del giocatore':'')+'</small></div>'
+        + '<div class="mgh-s"><span class="mgh-sl">Su questo dispositivo</span>'+statoTesto(k, s)+'</div>'
         + '<div class="mgh-b"><button type="button" class="bk-btn" data-mg="apri" data-k="'+k+'">Apri l\'area</button>'
         + '<button type="button" class="bk-btn" data-mg="scarica" data-k="'+k+'"'+dis+'>⬇ Scarica</button>'
-        + '<button type="button" class="bk-btn gh-save" data-mg="salva" data-k="'+k+'"'+dis+'>⬆ Salva online</button></div></div>';
+        + '<button type="button" class="bk-btn gh-save" data-mg="salva" data-k="'+k+'"'+dis+'>⬆ Salva online</button></div>';
     });
-    h += '</div><div class="mgh-row mgh-foot"><button type="button" class="bk-btn" data-mg="tutte">⬇ Scarica tutte</button><button type="button" class="bk-btn" data-mg="scollega">Scollega il token del Master</button></div>';
-    mb.innerHTML = h;
   }
   if(mb) mb.addEventListener("click", function(e){
     var b = e.target.closest("[data-mg]"); if(!b || b.disabled) return;

@@ -107,7 +107,7 @@ La scelta resta nel browser di ognuno (chiave `tcj_mael`). Se nessuno ha scelto,
 - Nella Nave, toccando la **Zona Segreta** compare «🗝️ Entra nella stanza delle Reliquie»: una stanza con un piedistallo per ogni artefatto visibile (`js/reliquie.js`, `css/23-reliquie.css`). Toccando un artefatto si apre la sua scheda: descrizione del Master e «Le mie note» del giocatore, salvate nel suo pacchetto (`tcj-rel-<personaggio>`) e quindi nel suo salvataggio online.
 - Il sito pubblico legge solo `dati/reliquie.json` e le immagini in `img/reliquie/`: contengono **solo** le reliquie che il Master ha deciso di mostrare.
 - I dati veri stanno in `tcj-master`: `reliquie/reliquie.json` (tutte le reliquie, note del Master, «Mostra ai giocatori») e `reliquie/foto/` (galleria: gli 8 frammenti e armi e artefatti dei Mael).
-- Si lavora dalla Zona Master, capitolo «Reliquie della nave» (`js/master-reliquie.js`, aggiunto da solo prima che i capitoli diventino bolle). «📣 Pubblica sul sito» riscrive `dati/reliquie.json` e le immagini in un'unica modifica: il token del Master deve includere anche `careless-journey`.
+- Si lavora dalla Zona Master, capitolo «Reliquie della nave» (`js/master-reliquie.js`, aggiunto da solo prima che i capitoli diventino libri della libreria). «📣 Pubblica sul sito» riscrive `dati/reliquie.json` e le immagini in un'unica modifica: il token del Master deve includere anche `careless-journey`.
 - **Artefatti e oggetti del gruppo.** Sotto i piedistalli c'è una bacheca che scrivono i giocatori (`js/reliquie-bacheca.js`, stili in `css/23-reliquie.css`): ogni voce è solo testo (artefatto o oggetto, nome e descrizione) e la vedono tutti. Accanto a ogni voce compare chi l'ha messa via; il giocatore può togliere la spunta «Mostra il mio nome» e allora compare «una mano ignota» (il Master vede comunque il nome). Sta nel repository privato `gruppo`, file `oggetti.json`, quindi funziona con i token che ci sono già (niente da preparare). Ogni oggetto ricorda chi l'ha aggiunto: può modificarlo o toglierlo solo chi l'ha scritto (con la sua Area aperta) oppure il Master. Mentre la stanza è aperta la bacheca si aggiorna da sola ogni pochi secondi; senza token si vede l'ultima copia salvata sul dispositivo.
 
 ## Zona Master privata
@@ -118,6 +118,32 @@ I contenuti della Zona Master (testi, segreti, schede di Mael e Maestri) **non s
 - Il dispositivo tiene una copia dei contenuti e da lì in poi apre la Zona Master da solo. In cima alla Zona ci sono «🔒 Chiudi» e «Scollega questo dispositivo».
 - Per modificare la Zona Master si modificano i file di `tcj-master`; i dispositivi con il token propongono «Ricarica» quando trovano la versione nuova.
 - Le versioni precedenti di questo sito, nella cronologia di GitHub, contengono ancora i vecchi contenuti della Zona Master.
+
+## La libreria della Zona Master (js/master-libreria.js)
+
+I capitoli della Zona Master sono **volumi su una libreria a scaffali**: il titolo sta sul dorso (i titoli con «—» mettono la seconda parte in corsivo), il numero romano in cima segue l'ordine dei capitoli. Passando sopra un libro esce un poco dallo scaffale e la targa d'ottone sotto la libreria mostra titolo e sottotitolo; toccandolo il libro viene estratto, si gira mostrando la copertina, si apre e compare solo quel capitolo. «◂ Torna alla libreria» rimette tutto a posto.
+
+- Altezza, spessore e colore di ogni volume si ricavano dal titolo, quindi restano sempre uguali. Sul computer al massimo 8 volumi per ripiano; sul telefono quanti ne stanno. Negli spazi liberi compaiono candele e pile di libri coricati.
+- Un capitolo nuovo in `tcj-master/zona-master.html` (un `.msec` con `.msect` e `.msecsub`) diventa da solo un nuovo volume.
+- Nello stesso file c'è la finestra delle Schede dei Mael.
+
+## Schede in diretta (Zona Master › Aree dei giocatori online · js/diretta-schede.js)
+
+Il capitolo «Aree dei giocatori online» è diviso in tre colonne, una per Slayer: in cima lo stato del salvataggio online **su questo dispositivo** (Apri l'area / Scarica / Salva online, come prima), sotto la **scheda in sola lettura**, aggiornata a ogni modifica del giocatore.
+
+- **Dal giocatore:** quando la sua Area dello Slayer è aperta e collegata con il **suo** token, ogni modifica della scheda viene copiata nel file `diretta.json` del suo repository (`tcj-athena`, `tcj-panlan`, `tcj-asonnes`), dopo un paio di secondi; più modifiche di fila diventano un solo invio e tra due invii passano almeno 12 secondi. `dati.json` e il «☁ Salva online» del giocatore non cambiano. Il ritratto viaggia come miniatura. Gli altri giocatori non possono leggerlo: il repository lo aprono solo il token del personaggio e quello del Master.
+- **Dal Master:** mentre il capitolo è aperto (o a schermo intero) il sito rilegge i tre `diretta.json` ogni 3 secondi (se nulla è cambiato GitHub risponde «uguale» e non costa niente). Ciò che è appena cambiato si illumina (un tocco lo spegne) e finisce in «Ultime modifiche». In cima a ogni scheda: «In diretta · adesso» se il giocatore ha modificato negli ultimi 2 minuti, e se ha modifiche non ancora salvate online.
+- Finché un giocatore non ha mai mandato la diretta, la colonna mostra la copia di questo dispositivo e poi l'ultimo «Salva online» del giocatore.
+- **⛶ Schermo intero** mette le tre schede sopra il sito, ognuna con il suo scorrimento; sul telefono si scorre da una scheda all'altra di lato (i tre nomi in cima portano alla scheda).
+- Non serve preparare niente: bastano i token che ci sono già.
+
+## Tema «Oro del Master» (js/tema-oro.js)
+
+Nel menu **⚔ Slayer › Zona Master**, sia in «Colore del sito» sia in «Effetti laterali» c'è **☀ Oro del Master**, visibile solo al Master.
+
+- **Colore del sito:** `html[data-el=oro]`. Sfondo, menu, Zona Master, libreria (cuoio scuro e foglia d'oro con un riflesso che scorre sui dorsi) e strumenti del Master diventano oro intenso. Dietro il titolo della Zona Master il sole dorato prende il posto dell'anello runico. Le parti fatte a mano sono in `css/30-tema-oro.css`.
+- **Effetti laterali «Sole Aureo»:** ai bordi dello schermo un sole per metà oltre il bordo, con raggi diritti e raggi a fiamma che girano piano, l'occhio al centro che si apre e si chiude, fasci di luce, onde di luce che partono dal sole, pulviscolo d'oro e scaglie di foglia d'oro che cadono girando. Il disegno è in `js/tema-oro.js` (OFX); il motore degli effetti laterali resta in `js/area-giocatori.js`.
+- `css/29-tema-oro-auto.css` è **generato**: `node strumenti/tema-oro.js` prende le regole cremisi della Zona Master e degli strumenti del Master e ne scrive la versione dorata. Rilancialo se aggiungi stili rossi in quei file (l'elenco è in cima allo strumento), poi `node strumenti/versiona.js`.
 
 ## Codici delle aree dei giocatori
 
