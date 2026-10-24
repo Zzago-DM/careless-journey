@@ -1,6 +1,6 @@
 /* Zona Master › I Mael — un solo capitolo al posto di tre (Posizioni, Schede, Stat).
    Ogni carta è l'anteprima: dove si trova oggi, statistiche, arma e artefatto.
-   Toccando la carta si apre la scheda illustrata completa (finestra delle Schede dei Mael, in master-bolle.js).
+   Toccando la carta si apre la scheda illustrata completa (finestra delle Schede dei Mael, in master-libreria.js).
    I dati arrivano da schede.json (MD, con id e pos) nel repository privato tcj-master;
    ritratti, armi e artefatti da tcj-master/mael/img, scaricati con il token del Master. */
 (function(){

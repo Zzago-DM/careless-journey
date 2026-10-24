@@ -449,13 +449,13 @@ function fxParts2(k,bw,H){const mob=FX.mob,a=[];const n=function(d,m){return mob
  else if(k==="folgorante"){for(let i=0;i<n(10,3);i++)a.push({t:"zap",x0:Math.random()*bw*.8,y:Math.random()*H,vy:fxRnd(-4,4),amp:0,ph:fxRnd(0,6.28),s:fxRnd(3,mob?4:7),a:fxRnd(.6,1)});}
  else if(k==="radiante"){for(let i=0;i<n(18,5);i++)a.push({t:"glint",x0:Math.pow(Math.random(),1.2)*bw*.85,y:Math.random()*H,vy:-fxRnd(2,7),amp:fxRnd(2,6),ph:fxRnd(0,6.28),s:fxRnd(1.2,2.6),r:fxRnd(1.5,mob?2.5:4)});}
  return a;}
-function fxPre(c,S,t,bw,H){if(FX.k==="master"){mfxPre(c,S,t,bw,H);return;}if(FX.k!=="radiante")return;const g=c.createLinearGradient(0,0,0,H);for(let i=0;i<=6;i++)g.addColorStop(i/6,"hsla("+((i*60+t*25)%360)+",95%,72%,"+(FX.mob?.24:.2)+")");
+function fxPre(c,S,t,bw,H){if(FX.k==="master"){mfxPre(c,S,t,bw,H);return;}if(FX.k==="oro"){if(window.OFX)OFX.pre(c,S,t,bw,H,FX.mob);return;}if(FX.k!=="radiante")return;const g=c.createLinearGradient(0,0,0,H);for(let i=0;i<=6;i++)g.addColorStop(i/6,"hsla("+((i*60+t*25)%360)+",95%,72%,"+(FX.mob?.24:.2)+")");
  c.save();c.fillStyle=g;c.fillRect(0,0,bw,H);c.globalCompositeOperation="destination-in";const f=c.createLinearGradient(0,0,bw,0);f.addColorStop(0,"rgba(0,0,0,1)");f.addColorStop(.75,"rgba(0,0,0,0)");c.fillStyle=f;c.fillRect(0,0,bw,H);c.restore();}
-function fxPost(c,S,t,dt,bw,H){if(FX.k==="master"){mfxPost(c,S,t,dt,bw,H);return;}if(FX.k!=="folgorante")return;S.bolts=S.bolts||[];
+function fxPost(c,S,t,dt,bw,H){if(FX.k==="master"){mfxPost(c,S,t,dt,bw,H);return;}if(FX.k==="oro"){if(window.OFX)OFX.post(c,S,t,dt,bw,H,FX.mob);return;}if(FX.k!=="folgorante")return;S.bolts=S.bolts||[];
  if(Math.random()<dt*(FX.mob?.7:1.1)){const pts=[];let x=0,y=fxRnd(0,H),ang=fxRnd(-.5,.5);const L=bw*fxRnd(.6,1.05);let d=0;pts.push([x,y]);while(d<L){const st=fxRnd(6,13);ang+=fxRnd(-.7,.7);ang=Math.max(-1.1,Math.min(1.1,ang));x+=Math.cos(ang)*st;y+=Math.sin(ang)*st+fxRnd(-4,4);d+=st;pts.push([x,y]);}S.bolts.push({pts:pts,life:1});}
  S.bolts=S.bolts.filter(function(b){b.life-=dt*5.5;return b.life>0;});
  S.bolts.forEach(function(b){const a=b.life*(.6+.4*Math.random());[[4,"rgba(245,225,120,"+(a*.25)+")"],[1.3,"rgba(255,252,220,"+a+")"]].forEach(function(st){c.strokeStyle=st[1];c.lineWidth=st[0];c.beginPath();b.pts.forEach(function(q,i){if(i===0)c.moveTo(q[0],q[1]);else c.lineTo(q[0],q[1]);});c.stroke();});});}
-function fxDrawP(c,p,x,fade,t){if(mfxDrawP(c,p,x,fade,t))return;
+function fxDrawP(c,p,x,fade,t){if(mfxDrawP(c,p,x,fade,t))return;if(window.OFX&&OFX.disegna(c,p,x,fade,t))return;
  if(p.t==="ember"){const fl=.6+.4*Math.sin(t*p.fl+p.ph);const g=c.createRadialGradient(x,p.y,0,x,p.y,p.r*4);g.addColorStop(0,"rgba(255,170,60,"+(p.a*fl*fade*.5)+")");g.addColorStop(1,"rgba(255,90,20,0)");c.fillStyle=g;c.beginPath();c.arc(x,p.y,p.r*4,0,6.283);c.fill();c.fillStyle="rgba(255,225,150,"+(p.a*fl*fade)+")";c.beginPath();c.arc(x,p.y,p.r,0,6.283);c.fill();}
  else if(p.t==="spark"){c.strokeStyle="rgba(255,210,120,"+(p.a*fade)+")";c.lineWidth=1;c.beginPath();c.moveTo(x,p.y);c.lineTo(x-p.vx*.05,p.y-p.vy*.05);c.stroke();}
  else if(p.t==="zap"){if(Math.sin(t*9+p.ph*5)<.55)return;const s=p.s;c.strokeStyle="rgba(255,248,190,"+(p.a*fade)+")";c.lineWidth=1;c.beginPath();c.moveTo(x,p.y);c.lineTo(x+s*.6,p.y+s*.5);c.lineTo(x+s*.2,p.y+s*.9);c.lineTo(x+s,p.y+s*1.5);c.stroke();}
@@ -632,12 +632,16 @@ function mfxDrawP(c,p,x,fade,t){
  return false;}
 
 /* --- sfondo e tema del Master --- */
-const M_ELS=[["master","🩸 Cremisi del Master"]].concat(typeof PA_ELS!=="undefined"?PA_ELS:[]);
+const M_ELS=[["master","🩸 Cremisi del Master"],["oro","☀ Oro del Master"]].concat(typeof PA_ELS!=="undefined"?PA_ELS:[]);
 function mPref(){let o={};try{o=JSON.parse(localStorage.getItem("tcj_bg_master")||"{}")||{}}catch(e){}const ok=function(v){return M_ELS.some(function(e){return e[0]===v})};
  return {on:o.on!==false,c:ok(o.c)?o.c:"master",fx:ok(o.fx)?o.fx:"master",custom:ok(o.c)&&o.c!=="master"||ok(o.fx)&&o.fx!=="master"};}
 function mSetPref(k,v){if(k==="on"&&v)sfxPlay("gong");let o={};try{o=JSON.parse(localStorage.getItem("tcj_bg_master")||"{}")||{}}catch(e){}o[k]=v;try{localStorage.setItem("tcj_bg_master",JSON.stringify(o))}catch(e){}paTheme();slRender();}
 function mResetPref(){let o={};try{o=JSON.parse(localStorage.getItem("tcj_bg_master")||"{}")||{}}catch(e){}delete o.c;delete o.fx;try{localStorage.setItem("tcj_bg_master",JSON.stringify(o))}catch(e){}paTheme();slRender();}
 function mThemeActive(){return paMaster()&&mPref().on;}
+/* colore della sola Zona Master (Cremisi / Oro): indipendente dallo sfondo del sito, vedi js/tema-oro.js */
+function mZm(){try{return (JSON.parse(localStorage.getItem("tcj_bg_master")||"{}")||{}).zm==="oro"?"oro":"cremisi"}catch(e){return "cremisi"}}
+function mSetZm(v){let o={};try{o=JSON.parse(localStorage.getItem("tcj_bg_master")||"{}")||{}}catch(e){}o.zm=v==="oro"?"oro":"cremisi";try{localStorage.setItem("tcj_bg_master",JSON.stringify(o))}catch(e){}document.documentElement.setAttribute("data-zm",o.zm);sfxPlay(o.zm==="oro"?"gong":"swish");slRender();}
+document.documentElement.setAttribute("data-zm",mZm());
 /* ==== Suoni: interruttore ==== */
 function sfxOn(){try{return localStorage.getItem("tcj_sfx")!=="0"}catch(e){return true}}
 function sfxToggle(){try{localStorage.setItem("tcj_sfx",sfxOn()?"0":"1")}catch(e){}slRender();if(sfxOn())sfxPlay("on");}
@@ -899,7 +903,8 @@ function slRender(){const b=document.getElementById("sl-btn"),m=document.getElem
   if(slBg)h+='<div class="sl-bg"><label>Colore del sito<select onchange="paSetPref(\'c\',this.value)">'+opt(pf.c)+'</select></label><label>Effetti laterali<select onchange="paSetPref(\'fx\',this.value)">'+opt(pf.fx)+'</select></label>'+(pf.custom?'<button type="button" class="sl-act" onclick="paResetPref()">\u21BA Torna ai colori di '+ac.n+'</button>':'<small>Colori di base di '+ac.n+'</small>')+'</div>';}
  if(paMaster()){const mp=mPref(),mopt=function(v){return M_ELS.map(function(e){return '<option value="'+e[0]+'"'+(e[0]===v?' selected':'')+'>'+e[1]+'</option>'}).join("")};
   h+='<div class="sl-sep"></div><div class="sl-h sl-mh">👑 Zona Master</div><div class="sl-row"><div><span>Sfondo del Master</span><small>Ha la precedenza sui colori dei personaggi</small></div><button type="button" class="sl-sw sl-msw" role="switch" aria-checked="'+mp.on+'" aria-label="Sfondo del Master" onclick="mSetPref(\'on\','+(!mp.on)+')"></button></div>';
-  if(mp.on)h+='<div class="sl-bg"><label>Colore del sito<select onchange="mSetPref(\'c\',this.value)">'+mopt(mp.c)+'</select></label><label>Effetti laterali<select onchange="mSetPref(\'fx\',this.value)">'+mopt(mp.fx)+'</select></label>'+(mp.custom?'<button type="button" class="sl-act" onclick="mResetPref()">\u21BA Torna al Cremisi del Master</button>':'<small>Cremisi del Master, con il Sigillo Cremisi ai lati</small>')+'</div>';}
+  if(mp.on)h+='<div class="sl-bg"><label>Colore del sito<select onchange="mSetPref(\'c\',this.value)">'+mopt(mp.c)+'</select></label><label>Effetti laterali<select onchange="mSetPref(\'fx\',this.value)">'+mopt(mp.fx)+'</select></label>'+(mp.custom?'<button type="button" class="sl-act" onclick="mResetPref()">\u21BA Torna al Cremisi del Master</button>':'<small>Cremisi del Master, con il Sigillo Cremisi ai lati</small>')+'</div>';
+  const zm=mZm();h+='<div class="sl-bg sl-zm"><label>Colore della Zona Master<select onchange="mSetZm(this.value)"><option value="cremisi"'+(zm==="cremisi"?' selected':'')+'>🩸 Cremisi</option><option value="oro"'+(zm==="oro"?' selected':'')+'>☀ Oro · Golden Sun</option></select></label><small>Cambia solo la Zona Master, non lo sfondo del sito</small></div>';}
  h+='<div class="sl-sep"></div><a class="sl-act" href="#scheda" onclick="slClose()">↓ Vai all\'Area Slayer</a>';
  if(ac)h+=`<button type="button" class="sl-act" onclick="slClose();paNeutral()">◆ Torna al colore neutro</button>`;
  if(ac&&(paOpenList().indexOf(act)>=0||paMaster()))h+=`<button type="button" class="sl-act" onclick="slClose();paLock()">🔒 Chiudi l'area di ${ac.n}</button>`;
@@ -930,7 +935,7 @@ function fxInit(){const W=window.innerWidth,H=window.innerHeight;FX.mob=W<700;FX
   fxDeco(dc,FX.k,FX.bw,H,si);
   return {cv:cv,ctx:cv.getContext("2d"),deco:deco,mir:si===1,p:fxParts(FX.k,FX.bw,H)};}).filter(Boolean);}
 function fxEdge(c,bw,H,rgb,a){const g=c.createLinearGradient(0,0,bw,0);g.addColorStop(0,"rgba("+rgb+","+a+")");g.addColorStop(1,"rgba("+rgb+",0)");c.fillStyle=g;c.fillRect(0,0,bw,H);}
-function fxDeco(c,k,bw,H,si){const mob=FX.mob;if(k==="master"){mfxDeco(c,bw,H);return;}if(k==="ardente"||k==="folgorante"||k==="radiante"){fxDeco2(c,k,bw,H,si);return;}
+function fxDeco(c,k,bw,H,si){const mob=FX.mob;if(k==="master"){mfxDeco(c,bw,H);return;}if(k==="oro"){if(window.OFX)OFX.deco(c,bw,H,mob);return;}if(k==="ardente"||k==="folgorante"||k==="radiante"){fxDeco2(c,k,bw,H,si);return;}
  if(k==="glaciale"){fxEdge(c,bw,H,"150,210,240",mob?.16:.13);
   const branch=function(x,y,ang,len,w,d){if(d<0||len<2)return;const x2=x+Math.cos(ang)*len,y2=y+Math.sin(ang)*len;c.strokeStyle="rgba(205,238,255,"+(0.16+d*0.09)+")";c.lineWidth=w;c.beginPath();c.moveTo(x,y);c.lineTo(x2,y2);c.stroke();
    const n=2;for(let i=1;i<=n;i++){const t=i/(n+1),bx=x+(x2-x)*t,by=y+(y2-y)*t,sl=len*fxRnd(.3,.5);branch(bx,by,ang-fxRnd(.6,1),sl,w*.7,d-1);branch(bx,by,ang+fxRnd(.6,1),sl,w*.7,d-1);}};
@@ -944,7 +949,7 @@ function fxDeco(c,k,bw,H,si){const mob=FX.mob;if(k==="master"){mfxDeco(c,bw,H);r
   const stems=mob?1:2;for(let s=0;s<stems;s++){const base=bw*(mob?.45:(.16+s*.14)),amp=bw*(mob?.25:.09),fr=fxRnd(.006,.011),ph=fxRnd(0,6.28);
    c.strokeStyle="rgba(95,145,70,"+(mob?.45:.55)+")";c.lineWidth=mob?1:1.8;c.beginPath();for(let y=H;y>=0;y-=6){const x=base+Math.sin(y*fr+ph)*amp;if(y===H)c.moveTo(x,y);else c.lineTo(x,y);}c.stroke();
    let side=1;for(let y=H-fxRnd(10,30);y>0;y-=mob?fxRnd(40,60):fxRnd(26,44)){const x=base+Math.sin(y*fr+ph)*amp;const L=mob?4:fxRnd(6,10);c.save();c.translate(x,y);c.rotate(side*fxRnd(.6,1.1)-.25);c.fillStyle="rgba("+Math.round(fxRnd(110,160))+","+Math.round(fxRnd(170,205))+",90,"+fxRnd(.4,.6)+")";c.beginPath();c.ellipse(side*L*.6,0,L*.6,L*.28,0,0,Math.PI*2);c.fill();c.restore();side=-side;}}}}
-function fxParts(k,bw,H){if(k==="master")return mfxParts(bw,H);if(k==="ardente"||k==="folgorante"||k==="radiante")return fxParts2(k,bw,H);const mob=FX.mob,a=[];const n=function(d,m){return mob?m:d};
+function fxParts(k,bw,H){if(k==="master")return mfxParts(bw,H);if(k==="oro")return window.OFX?OFX.parts(bw,H,FX.mob):[];if(k==="ardente"||k==="folgorante"||k==="radiante")return fxParts2(k,bw,H);const mob=FX.mob,a=[];const n=function(d,m){return mob?m:d};
  if(k==="glaciale"){for(let i=0;i<n(30,6);i++)a.push({t:"snow",x0:Math.pow(Math.random(),1.3)*bw*.92,y:Math.random()*H,r:fxRnd(.7,mob?1.8:2.9),vy:fxRnd(12,30),amp:fxRnd(3,mob?3:12),ph:fxRnd(0,6.28),a:fxRnd(.35,.85)});}
  else if(k==="oscuro"){for(let i=0;i<n(16,4);i++)a.push({t:"smoke",x:Math.random()*bw*.55,y:Math.random()*H,r:fxRnd(mob?6:14,mob?10:32),vy:-fxRnd(7,16),vx:fxRnd(-3,4),a:fxRnd(.06,.14)});
   for(let i=0;i<n(16,4);i++)a.push({t:"spark",x0:Math.random()*bw*.8,y:Math.random()*H,r:fxRnd(.6,1.7),vy:-fxRnd(16,40),amp:fxRnd(2,8),ph:fxRnd(0,6.28),a:fxRnd(.4,.9),fl:fxRnd(4,11)});}
