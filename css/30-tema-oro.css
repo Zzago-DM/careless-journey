@@ -11,20 +11,27 @@ html[data-el=oro] .sl-mh{color:#ffd25e}
 html[data-el=oro] .sl-msw[aria-checked=true]{background:rgba(242,180,40,.3);border-color:#e0a422}
 html[data-el=oro] .sl-msw[aria-checked=true]::after{background:#ffd25e}
 
-/* ---------- Zona Master: il sole al posto dell'anello runico ---------- */
-#ms .ms-sole{display:none}
+/* ---------- il Golden Sun (#gsun) al posto dell'anello runico ---------- */
+#ms .ms-sole,.lb-sole{display:none}
 html[data-el=oro] #ms .ms-ring{display:none}
-html[data-el=oro] #ms .ms-sole{display:block;position:absolute;left:50%;top:50%;height:112%;max-height:300px;width:auto;aspect-ratio:1;transform:translate(-50%,-50%);z-index:-1;pointer-events:none;opacity:.3;filter:drop-shadow(0 0 24px rgba(255,180,40,.45))}
-.ms-sole .so-raggi,.ms-sole .so-anello,.ms-sole .so-raggi2,.ms-sole .so-stella,.lb-sole .so-raggi{transform-origin:200px 200px;transform-box:view-box}
-html[data-el=oro] .ms-sole .so-raggi{animation:soGira 90s linear infinite}
-html[data-el=oro] .ms-sole .so-anello{animation:soGira 160s linear infinite reverse}
-html[data-el=oro] .ms-sole .so-raggi2{animation:soGira 50s linear infinite reverse}
-html[data-el=oro] .ms-sole .so-stella{animation:soGira 70s linear infinite}
-html[data-el=oro] .ms-sole .so-alone{animation:soRespira 5.5s ease-in-out infinite;transform-origin:200px 200px;transform-box:view-box}
-html[data-el=oro] .ms-sole .so-pupilla{animation:soPupilla 9s ease-in-out infinite;transform-origin:200px 200px;transform-box:view-box}
-@keyframes soGira{to{transform:rotate(360deg)}}
-@keyframes soRespira{0%,100%{opacity:.55;transform:scale(.96)}50%{opacity:1;transform:scale(1.05)}}
-@keyframes soPupilla{0%,40%,100%{transform:none}50%{transform:translateX(-6px)}70%{transform:translateX(6px)}}
+.ms-sole,.lb-sole{position:relative;aspect-ratio:1739/3364}
+.ms-sole svg,.lb-sole svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.so-pieno{fill:url(#soOroGr);stroke:none}
+.so-scia{fill:none;stroke:#fff6d8;stroke-width:420;stroke-linecap:round;stroke-dasharray:.12 .88;stroke-dashoffset:1;filter:drop-shadow(0 0 6px #fff1b0)}
+.so-alone{position:absolute;left:50%;top:40%;width:260%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,206,90,.5),rgba(255,170,30,.14) 45%,transparent 70%)}
+.so-anelli i{position:absolute;left:47%;top:40%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%)}
+.so-anelli i:nth-child(1){width:170%;border:1px dashed rgba(255,214,110,.55)}
+.so-anelli i:nth-child(2){width:230%;border:2px dotted rgba(255,214,110,.35)}
+html[data-el=oro] #ms .ms-sole{display:block;position:absolute;left:50%;top:50%;height:92%;max-height:250px;transform:translate(-50%,-50%);z-index:-1;pointer-events:none;opacity:.55}
+html[data-el=oro] .ms-sole .so-pieno{filter:drop-shadow(0 0 10px rgba(255,190,50,.8));animation:soBattito 4.8s ease-in-out infinite}
+html[data-el=oro] .ms-sole .so-scia{animation:soScia 5s linear infinite}
+html[data-el=oro] .ms-sole .so-alone{animation:soRespira 4.8s ease-in-out infinite}
+html[data-el=oro] .ms-sole .so-anelli i:nth-child(1){animation:soGira 40s linear infinite}
+html[data-el=oro] .ms-sole .so-anelli i:nth-child(2){animation:soGira 70s linear infinite reverse}
+@keyframes soGira{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes soRespira{0%,100%{opacity:.55;transform:translate(-50%,-50%) scale(.92)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}}
+@keyframes soBattito{0%,100%{filter:drop-shadow(0 0 6px rgba(255,190,50,.6))}50%{filter:drop-shadow(0 0 22px rgba(255,210,90,1))}}
+@keyframes soScia{to{stroke-dashoffset:0}}
 
 /* titolo, scintille, citazioni e twist in oro */
 html[data-el=oro] #ms .mstit{background:linear-gradient(100deg,#c98a12 0%,#ffcf4a 35%,#fff4c8 50%,#ffcf4a 65%,#c98a12 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 16px rgba(255,190,40,.45))}
@@ -65,11 +72,13 @@ html[data-el=oro] .lb-dorso::after{content:"";position:absolute;inset:-20% 0;bac
 @keyframes soLuccica{0%,72%{transform:translateY(-70%)}92%,100%{transform:translateY(70%)}}
 html[data-el=oro] .lb-libro:hover .lb-dorso::after,html[data-el=oro] .lb-libro:focus-visible .lb-dorso::after{animation-duration:1.3s}
 html[data-el=oro] .lb-cop-tit{color:#ffd86e;text-shadow:0 1px 0 #000,0 0 10px rgba(255,190,50,.4)}
-.lb-sole{display:none;width:30px;height:30px;flex:none}
-html[data-el=oro] .lb-sole{display:block;filter:drop-shadow(0 0 8px rgba(255,190,50,.6))}
-html[data-el=oro] .lb-sole .so-raggi{animation:soGira 24s linear infinite}
+html[data-el=oro] .lb-sole{display:block;flex:none;height:42px;filter:drop-shadow(0 0 8px rgba(255,190,50,.6))}
+.lb-sole .so-anelli{display:none}
+.lb-sole .so-alone{width:200%}
+html[data-el=oro] .lb-sole .so-scia{stroke-width:1000;animation:soScia 4s linear infinite}
 html[data-el=oro] .lb-cresta-t{color:#ffd25e}
 
 @media (prefers-reduced-motion:reduce){
   html[data-el=oro] .ms-sole *,html[data-el=oro] .lb-dorso::after,html[data-el=oro] .lb-sole *{animation:none!important}
+  .so-scia{display:none}
 }
