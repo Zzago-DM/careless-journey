@@ -388,55 +388,7 @@ function pgLoop(now){const G=PG;if(!G)return;const t=(now-G.t0)/1000;
  pgDraw(G,p,t);
  if(t>=8){pgEnd();return;}
  G.raf=requestAnimationFrame(pgLoop);}
-/* --- geometria precalcolata: la ritirata è la crescita al contrario --- */
-function pgGeo(k,W,H){const cx=W/2,cy=H/2,M=Math.min(W,H),dens=Math.max(.8,Math.min(1,W*H/(1366*850)));
- const per=[];const step=(k==="asonnes"?80:72)*Math.max(.55,Math.min(1,M/850));for(let x=step/2;x<W;x+=step){per.push([x,0]);per.push([x,H]);}for(let y=step/2;y<H;y+=step){per.push([0,y]);per.push([W,y]);}
- if(k==="athena"){const segs=[];let maxD=0;
-  const fern=function(x,y,ang,len,w,d0,dep){const st=13,n=Math.max(2,Math.round(len/st));let a=ang,d=d0,side=1;
-   for(let i=0;i<n;i++){a+=pgR(-.08,.08);const x2=x+Math.cos(a)*st,y2=y+Math.sin(a)*st;segs.push([x,y,x2,y2,d,d+st,w*(1-i/n*.6)]);
-    if(dep>0&&i>0&&i%2===0){const rem=(n-i)/n,bl=len*.34*rem+8;fern(x2,y2,a+side*pgR(.95,1.15),bl,w*.55,d+st,dep-1);fern(x2,y2,a-side*pgR(.95,1.15),bl*.8,w*.55,d+st,dep-1);side=-side;}
-    x=x2;y=y2;d+=st;}
-   if(d>maxD)maxD=d;};
-  per.forEach(function(q){if(Math.random()>dens*.72)return;const ang=Math.atan2(cy-q[1],cx-q[0])+pgR(-.5,.5);const dist=Math.hypot(cx-q[0],cy-q[1]);fern(q[0],q[1],ang,dist*pgR(.4,.75),pgR(1.4,2.2),pgR(0,50),1);});
-  const sp=[];for(let i=0;i<260*dens;i++)sp.push([Math.random()*W,Math.random()*H,Math.random(),pgR(.6,1.8)]);
-  return {segs:segs,maxD:maxD,sp:sp};}
- if(k==="panlan"){const dr=[];const n=Math.round(14+12*dens);for(let i=0;i<n;i++)dr.push([Math.random()*W,pgR(18,46),pgR(.12,.42)*H,pgR(0,6.28)]);
-  const bub=[];for(let i=0;i<50*dens;i++)bub.push([Math.random()*W,Math.random(),pgR(1.5,5),pgR(.3,1)]);
-  return {dr:dr,bub:bub};}
- /* asonnes: viticci */
- const vines=[];const add=function(x,y,ang,len,w,d0,dep){const pts=[[x,y]];let a=ang,cur=pgR(-.02,.02);const n=Math.max(4,Math.round(len/9));
-  for(let i=0;i<n;i++){cur+=pgR(-.012,.012);cur=Math.max(-.05,Math.min(.05,cur));a+=cur+Math.sin(i*.25+d0)*.02;x+=Math.cos(a)*9;y+=Math.sin(a)*9;pts.push([x,y]);}
-  const leaves=[];for(let i=4;i<pts.length-2;i+=Math.round(pgR(4,7)))leaves.push([i,(leaves.length%2?1:-1),pgR(8,16)]);
-  const curl=[];const cs=Math.sign(cur)||1;let ca=a,cx2=x,cy2=y,cr=7;for(let i=0;i<14;i++){ca+=cs*.45;cr*=.9;cx2+=Math.cos(ca)*cr;cy2+=Math.sin(ca)*cr;curl.push([cx2,cy2]);}
-  vines.push({pts:pts.concat(curl),body:pts.length,w:w,d0:d0,leaves:leaves});
-  if(dep>0)for(let j=0;j<2;j++){const i=Math.round(pts.length*pgR(.25,.7));const q=pts[i];add(q[0],q[1],a+(j?1:-1)*pgR(.5,1.1),len*pgR(.3,.5),w*.55,d0+i*9,dep-1);}};
- per.forEach(function(q){if(Math.random()>dens*1.05)return;const ang=Math.atan2(cy-q[1],cx-q[0])+pgR(-.5,.5);const dist=Math.hypot(cx-q[0],cy-q[1]);add(q[0],q[1],ang,dist*pgR(.6,1.1),pgR(6,11),pgR(0,60),1);});
- let maxD=0;vines.forEach(function(v){v.len=v.pts.length*9;maxD=Math.max(maxD,v.d0+v.len);});
- return {vines:vines,maxD:maxD};}
-function pgDraw(G,p,t){const c=G.ctx,W=G.W,H=G.H,g=G.geo,cx=W/2,cy=H/2,R=Math.hypot(cx,cy);
- c.clearRect(0,0,W,H);if(p<=0)return;
- const vign=function(rgb,a){const r0=R*(1.08-p),gr=c.createRadialGradient(cx,cy,Math.max(0,r0),cx,cy,r0+R*.45);gr.addColorStop(0,"rgba("+rgb+",0)");gr.addColorStop(1,"rgba("+rgb+","+a+")");c.fillStyle=gr;c.fillRect(0,0,W,H);};
- if(G.k==="athena"){c.fillStyle="rgba(8,24,40,"+(p*.85)+")";c.fillRect(0,0,W,H);vign("150,205,235",.42);
-  const P=p*g.maxD*1.02;c.lineCap="round";
-  [[4,"rgba(150,205,240,.14)"],[1.6,"rgba(200,235,255,.45)"],[.8,"rgba(240,252,255,.9)"]].forEach(function(st){c.strokeStyle=st[1];c.beginPath();
-   g.segs.forEach(function(s){if(s[4]>=P)return;const f=Math.min(1,(P-s[4])/(s[5]-s[4]));c.moveTo(s[0],s[1]);c.lineTo(s[0]+(s[2]-s[0])*f,s[1]+(s[3]-s[1])*f);});
-   c.lineWidth=st[0];c.stroke();});
-  g.sp.forEach(function(s){if(s[2]>p)return;c.fillStyle="rgba(235,250,255,"+(.35+.4*Math.sin(t*3+s[2]*20))+")";c.fillRect(s[0],s[1],s[3],s[3]);});}
- else if(G.k==="panlan"){const base=p*H*1.12;
-  const yAt=function(x){let y=base+Math.sin(x*.012+t*1.4)*9+Math.sin(x*.031-t)*5;g.dr.forEach(function(d){const dx=(x-d[0])/d[1];y+=d[2]*p*Math.exp(-dx*dx)*(1-p*.3);});return y;};
-  const gr=c.createLinearGradient(0,0,0,Math.max(1,base+H*.3));gr.addColorStop(0,"#12061f");gr.addColorStop(.65,"#3a1764");gr.addColorStop(1,"#6b34a8");
-  c.beginPath();c.moveTo(0,0);c.lineTo(W,0);for(let x=W;x>=-8;x-=8)c.lineTo(x,yAt(x));c.closePath();c.fillStyle=gr;c.fill();
-  c.beginPath();for(let x=0;x<=W;x+=8){const y=yAt(x);if(x===0)c.moveTo(x,y);else c.lineTo(x,y);}c.strokeStyle="rgba(205,165,255,.55)";c.lineWidth=2;c.stroke();
-  g.dr.forEach(function(d){const ty=yAt(d[0]);if(ty<H){const fy=ty+((t*140+d[3]*40)%120);c.fillStyle="rgba(120,70,190,.75)";c.beginPath();c.arc(d[0],fy,3.2,0,6.283);c.fill();}});
-  g.bub.forEach(function(b){const y=(1-((b[1]+t*.08*b[3])%1))*base;if(y<base-6){c.strokeStyle="rgba(200,160,255,"+(.18*b[3])+")";c.lineWidth=1;c.beginPath();c.arc(b[0],y,b[2],0,6.283);c.stroke();}});}
- else{c.fillStyle="rgba(6,16,6,"+(p*.88)+")";c.fillRect(0,0,W,H);vign("60,95,40",.5);
-  const P=p*g.maxD*1.02;c.lineCap="round";c.lineJoin="round";
-  g.vines.forEach(function(v){if(v.d0>=P)return;const n=Math.min(v.pts.length,Math.floor((P-v.d0)/9)+1);if(n<2)return;
-   const parts=3;for(let s=0;s<parts;s++){const i0=Math.floor((n-1)*s/parts),i1=Math.floor((n-1)*(s+1)/parts);if(i1<=i0)continue;c.beginPath();c.moveTo(v.pts[i0][0],v.pts[i0][1]);for(let i=i0+1;i<=i1;i++)c.lineTo(v.pts[i][0],v.pts[i][1]);
-    c.strokeStyle=s===0?"#4a3a22":"#3f6a2c";c.lineWidth=Math.max(1,v.w*(1-s/parts*.75));c.stroke();}
-   c.beginPath();for(let i=1;i<n;i+=3){const q=v.pts[i];c.moveTo(q[0],q[1]);c.lineTo(v.pts[Math.min(n-1,i+1)][0],v.pts[Math.min(n-1,i+1)][1]);}c.strokeStyle="rgba(150,200,110,.35)";c.lineWidth=1;c.stroke();
-   v.leaves.forEach(function(l){if(l[0]>=n-1)return;const q=v.pts[l[0]],q2=v.pts[l[0]+1];const an=Math.atan2(q2[1]-q[1],q2[0]-q[0])+l[1]*1.0;const grow=Math.min(1,(n-1-l[0])/6),L=l[2]*grow;
-    c.save();c.translate(q[0],q[1]);c.rotate(an);c.fillStyle="rgba(110,170,80,.92)";c.beginPath();c.ellipse(L*.55,0,L*.6,L*.27,0,0,6.283);c.fill();c.strokeStyle="rgba(40,70,30,.8)";c.lineWidth=.8;c.beginPath();c.moveTo(0,0);c.lineTo(L,0);c.stroke();c.restore();});});}}
+/* pgGeo e pgDraw (disegno delle tre animazioni di sblocco) stanno in js/sblocco-zone.js */
 
 /* --- effetti laterali: elementi aggiuntivi (Ardente, Folgorante, Radiante) --- */
 function fxDeco2(c,k,bw,H,si){const mob=FX.mob;
