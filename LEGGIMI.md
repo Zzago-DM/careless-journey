@@ -152,6 +152,7 @@ Si sceglie nel menu in alto a destra (⚔ Slayer ▾ → «Tema del sito»). Di 
 
 - **Dauntless** (`css/31-tema-dauntless.css`): cielo con isole sospese ai lati, nuvole, alianti, una nave e un Behemoth volante che passano; pannelli blu notte con cornici d'acciaio, schede blu e pulsante principale dorato, come nei menu del gioco.
 - **Pergamena** (`css/32-tema-pergamena.css`): carta invecchiata, inchiostro scuro e titoli rossi, come un manuale di D&D classico.
+- Gli effetti laterali e le particelle di sfondo restano in tutti e due i temi (in Pergamena diventano scuri come inchiostro, per vedersi sulla carta).
 - Tutti e due seguono il **colore Aether** scelto (Impostazioni sfondo): in Dauntless cambia il cielo (Glaciale = bianco sporco invernale, Oscuro = notte viola…), in Pergamena si tinge il foglio.
 - **Non cambiano mai**: la Zona Master (e le sue finestre), l'animazione iniziale e la mappa del mondo con le mappe dei continenti. L'elenco di ciò che resta escluso è in cima ai due file CSS (`:is(#ms,#pwo,…)`).
 - La scelta resta nel browser (`tcj-tema`); se un personaggio è attivo finisce anche nel suo pacchetto (`tcj_bg_<pg>`, campo `t`) e lo segue su ogni dispositivo.
@@ -160,6 +161,8 @@ Si sceglie nel menu in alto a destra (⚔ Slayer ▾ → «Tema del sito»). Di 
 
 Opzionale, solo per l'area del singolo player: di base resta la **scheda classica**. Dalla barra «Aspetto dell'area» il player può trasformare le sezioni in 📚 libri, ⚗ ampolle, 🗄 cassettiera, 🃏 tavolo pirata, 🔨 attrezzi, 📖 capitoli o 📌 bacheca. Toccando un oggetto si apre sotto solo quella sezione, con gli stessi dati della scheda.
 
+- Gli oggetti sono disegnati realistici: i libri sono gli stessi volumi della libreria della Zona Master (stili di `css/20-master-libreria.css`), le ampolle sono di vetro con liquido, menisco, bolle e tappo di sughero, il tavolo ha assi di legno, candela accesa, monete, dadi e carte illustrate. Le trame (legno, carta, sughero) sono piccole immagini SVG in cima a `css/33-area-aspetto.css`.
+- Sul telefono ampolle, carte, cassetti e attrezzi si rimpiccioliscono e stanno in più per riga.
 - Misure, forme e inclinazioni partono a caso e restano uguali finché il player non preme «↻ Mescola».
 - Con le ampolle, «✎ Personalizza ampolle» permette di scegliere forma e colore di ognuna («↺ Come prima» torna a quella casuale).
 - L'ordine degli oggetti segue la disposizione di «✎ Modifica area».

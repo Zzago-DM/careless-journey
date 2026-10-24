@@ -15,8 +15,7 @@ html[data-tema=pergamena] .stars{background:url("data:image/svg+xml,%3Csvg%20xml
 html[data-tema=pergamena] body::before,html[data-tema=pergamena] body::after{content:"";position:fixed;top:0;bottom:0;width:34px;z-index:3;pointer-events:none}
 html[data-tema=pergamena] body::before{left:0;background:linear-gradient(90deg,rgba(90,50,15,.35),transparent)}
 html[data-tema=pergamena] body::after{right:0;background:linear-gradient(-90deg,rgba(90,50,15,.35),transparent)}
-html[data-tema=pergamena] #bgfx{opacity:.25;mix-blend-mode:multiply}
-html[data-tema=pergamena] .fx-side{display:none}
+html[data-tema=pergamena] #bgfx,html[data-tema=pergamena] .fx-side{filter:invert(1) hue-rotate(180deg) brightness(.75) saturate(1.6) contrast(1.2)}
 html[data-tema=pergamena] nav{background:rgba(238,224,192,.97)!important;border-bottom:3px double #9a7230;backdrop-filter:none;box-shadow:0 4px 14px rgba(90,50,15,.18)}
 html[data-tema=pergamena] .nav-logo{color:#7a200d}
 html[data-tema=pergamena] .nav-links li a{color:#5a4630;font-weight:600}

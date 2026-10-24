@@ -21,7 +21,8 @@ html[data-tema=dauntless] body::after{content:"";position:fixed;left:0;top:16vh;
 @keyframes tcjVolo{from{transform:translateX(-760px)}to{transform:translateX(110vw)}}
 @media(prefers-reduced-motion:reduce){html[data-tema=dauntless] body::before,html[data-tema=dauntless] body::after{animation:none}}
 @media(max-width:700px){html[data-tema=dauntless] .stars{background-size:44vw auto,44vw auto;background-position:left 14vh,right 58vh} html[data-tema=dauntless] body::after{transform:scale(.6)}}
-html[data-tema=dauntless] #bgfx{opacity:.35}
+html[data-tema=dauntless] .fx-side{filter:brightness(.55) saturate(1.5) contrast(1.3) drop-shadow(0 0 2px rgba(0,25,60,.6))}
+html[data-tema=dauntless][data-el=oscuro] .fx-side,html[data-tema=dauntless][data-el=master] .fx-side{filter:none}
 html[data-tema=dauntless] nav{background:rgba(12,16,24,.95)!important;border-bottom:2px solid #7f9bb8;backdrop-filter:none}
 html[data-tema=dauntless] .nav-logo{color:#fff}
 html[data-tema=dauntless] .nav-links li a{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:.92rem;letter-spacing:.04em;color:#dfe8f2;padding:0 .6rem}
