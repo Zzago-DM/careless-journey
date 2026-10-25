@@ -1,4 +1,4 @@
-/* Tema del sito: Attuale (di base), Dauntless, Pergamena, Monster Hunter, Osteria (Brancalonia) o Reami Dimenticati — scelto nel menu in alto a destra (⚔ Slayer ▾).
+/* Tema del sito: Attuale (di base), Cieli Tersi, Manuale classico, Cacciatore, Gastrocomiche o Reami Dimenticati — scelto nel menu in alto a destra (⚔ Slayer ▾).
 
    - Cambia l'aspetto generale di tutto il sito (sfondo, cornici, pulsanti, caratteri) e segue il colore Aether già scelto.
    - Non tocca la Zona Master, l'animazione iniziale e la mappa (vedi i file css/31…36-tema-*.css).
@@ -6,7 +6,8 @@
      pacchetto (campo t di tcj_bg_<pg>), così lo segue su ogni dispositivo dove apre la sua area.
    - Il primo script in <head> la applica subito, prima che la pagina compaia, per non vedere il tema sbagliato per un attimo. */
 (function(){
-  var TEMI = [["attuale","Attuale"],["dauntless","Dauntless"],["pergamena","Pergamena"],["mh","Monster Hunter"],["osteria","Osteria · Brancalonia"],["reami","Reami Dimenticati"]];
+  /* [chiave salvata, nome nel menu] — le chiavi restano quelle di prima, così chi aveva già scelto un tema lo ritrova */
+  var TEMI = [["attuale","Attuale"],["dauntless","Cieli Tersi"],["pergamena","Manuale classico"],["mh","Cacciatore"],["osteria","Gastrocomiche"],["reami","Reami Dimenticati"]];
   function valido(v){ return TEMI.some(function(t){ return t[0] === v; }); }
   function attivo(){ try { return typeof paActive === "function" ? paActive() : null; } catch(e){ return null; } }
   window.temaSito = function(){

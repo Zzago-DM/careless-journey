@@ -1,4 +1,4 @@
-/* Tema del sito «Osteria» — ispirato a Brancalonia e alle Gastrocomiche: muro d'osteria intonacato, carta macchiata di vino,
+/* Tema del sito «Gastrocomiche» (chiave osteria) — ispirato a Brancalonia e alle Gastrocomiche: muro d'osteria intonacato, carta macchiata di vino,
    lavagne col menù scritto col gesso e tovaglia a quadri. Non tocca Zona Master, animazione iniziale e mappa. */
 html[data-tema=osteria]{--gold-rgb:184,50,30;--bg:#f3e8d0;--bg2:#f8efdc;--bg3:rgba(250,243,226,.7);--gold:#8a1e12;--gold2:#a8261a;--gold3:#3f6b2a;--text:#2a1c10;--text2:#5a4430;--border:rgba(110,70,30,.35);--ice:#2a7aa0;--fire:#b4400e;--lightning:#8f7200;--earth:#2f6e28;--radiant:#7f50b4;--dark:#55358f;--neutral:#55556a;--pa-glow:transparent;--muro:#c88a5c}
 html[data-tema=osteria][data-el=glaciale]{--gold-rgb:184,50,30;--bg:#f3e8d0;--bg2:#f8efdc;--bg3:rgba(250,243,226,.7);--gold:#8a1e12;--gold2:#a8261a;--gold3:#3f6b2a;--text:#2a1c10;--text2:#5a4430;--border:rgba(110,70,30,.35);--ice:#2a7aa0;--fire:#b4400e;--lightning:#8f7200;--earth:#2f6e28;--radiant:#7f50b4;--dark:#55358f;--neutral:#55556a;--pa-glow:transparent;--muro:#c88a5c;--muro:#a8a8a0}

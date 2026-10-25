@@ -1,4 +1,4 @@
-/* Tema del sito «Dauntless» — cielo con isole sospese e menu nello stile del gioco.
+/* Tema del sito «Cieli Tersi» (chiave dauntless) — ispirato a Dauntless: cielo con isole sospese e menu nello stile del gioco.
    Si attiva con <html data-tema="dauntless"> (js/tema-sito.js). Non tocca la Zona Master, l'animazione iniziale e la mappa.
    Il cielo prende la sfumatura del colore Aether scelto (data-el). */
 html[data-tema=dauntless]{--sky1:#1d4f9a;--sky2:#8fcbee;--gold-rgb:120,175,230;--bg:#0e1a2c;--bg2:#13213a;--bg3:rgba(14,24,42,.92);--gold:#ffffff;--gold2:#b4dcff;--gold3:#5b9be0;--text:#e6edf4;--text2:#b3c2d1;--border:rgba(127,155,184,.55);--pa-glow:rgba(79,208,255,.15)}

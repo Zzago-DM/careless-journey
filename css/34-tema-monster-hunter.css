@@ -1,4 +1,4 @@
-/* Tema del sito «Monster Hunter» — campo di caccia al tramonto: montagne, alberi giganti, una viverna in volo e le lucciole guida verdi.
+/* Tema del sito «Cacciatore» (chiave mh) — ispirato a Monster Hunter — campo di caccia al tramonto: montagne, alberi giganti, una viverna in volo e le lucciole guida verdi.
    Pannelli scuri con filetti color osso, accenti arancio braci. Non tocca Zona Master, animazione iniziale e mappa. */
 html[data-tema=mh]{--gold-rgb:232,144,42;--bg:#14110d;--bg2:#1e1913;--bg3:rgba(32,27,21,.94);--gold:#ecdcb8;--gold2:#f4a64a;--gold3:#c8a26a;--text:#e6dcc6;--text2:#b4a688;--border:rgba(200,172,120,.38);--pa-glow:rgba(232,144,42,.15);--s1:#1c2236;--s2:#4a3a52;--s3:#d07a3e}
 html[data-tema=mh][data-el=glaciale]{--gold-rgb:232,144,42;--bg:#14110d;--bg2:#1e1913;--bg3:rgba(32,27,21,.94);--gold:#ecdcb8;--gold2:#f4a64a;--gold3:#c8a26a;--text:#e6dcc6;--text2:#b4a688;--border:rgba(200,172,120,.38);--pa-glow:rgba(232,144,42,.15);--s1:#1c2236;--s2:#4a3a52;--s3:#d07a3e;--s1:#3a4a5c;--s2:#8a9aa6;--s3:#d8dcd8}
