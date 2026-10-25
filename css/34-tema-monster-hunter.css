@@ -25,6 +25,9 @@ html[data-tema=mh] body::after{content:"";position:fixed;inset:0;z-index:0;point
 #mh-cielo .cr-volo{animation:crQuota 7s ease-in-out infinite alternate}
 #mh-cielo .cr-svg{display:block;width:100%;height:auto;overflow:visible;filter:drop-shadow(0 0 1px rgba(255,180,110,.75)) drop-shadow(0 0 12px rgba(255,140,70,.3))}
 #mh-cielo .cr-lontano{opacity:.62;filter:blur(.6px) saturate(.75)}
+#mh-cielo .cr-campo{position:absolute;right:1.5vw;bottom:-2px;width:clamp(190px,24vw,420px)}
+#mh-cielo .campo-svg{filter:none}
+@media(max-width:700px){#mh-cielo .cr-campo{width:150px;right:0}}
 #mh-cielo .cr-ala{transform-box:view-box;transform-origin:225px 138px;animation:crBatti 1.25s ease-in-out infinite}
 #mh-cielo .cr-ala.lontana{animation-delay:-.08s;opacity:.85}
 #mh-cielo .piccolo .cr-ala{animation-duration:.8s}
