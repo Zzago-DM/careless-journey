@@ -2,14 +2,14 @@
    Alta  = la scena attuale a clessidra (sezioni/mappe/maelstrom-scena.html), la più pesante.
    Media = la stessa scena alleggerita (meno scie, nubi e rocce, 30 fotogrammi al secondo, risoluzione normale).
    Bassa = la vista originale del Maelstrom in SVG (sezioni/mappe/maelstrom-scena-originale.html), la più leggera.
-   La scelta resta in questo browser (chiave tcj_mael). Se nessuno ha scelto: Media su telefoni e tablet, Alta sul computer. */
+   La scelta resta in questo browser (chiave tcj_mael). Se nessuno ha scelto: Bassa su telefoni e tablet, Alta sul computer. */
 (function(){
   var LIVELLI = [["alta","Alta"],["media","Media"],["bassa","Bassa"]];
   function predefinita(){
     var tocco = false, poca = false;
     try { tocco = matchMedia("(pointer: coarse)").matches || Math.min(screen.width, screen.height) < 820; } catch(e){}
     try { poca = navigator.deviceMemory && navigator.deviceMemory <= 4; } catch(e){}
-    return (tocco || poca) ? "media" : "alta";
+    return (tocco || poca) ? "bassa" : "alta";
   }
   window.maelQ = function(){
     var v = null; try { v = localStorage.getItem("tcj_mael"); } catch(e){}

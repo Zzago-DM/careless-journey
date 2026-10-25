@@ -873,7 +873,9 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape"&&slMenuOpen(
 
 /* --- effetti laterali (canvas ai due bordi) --- */
 const FX={k:"",raf:0,bw:0,H:0,dpr:1,t:0,last:0,mob:false,still:false,side:[]};
-function fxOn(){try{return localStorage.getItem("tcj_fx")!=="0"}catch(e){return true}}
+/* Effetti laterali: accesi di base sul computer, spenti di base sul telefono (chi vuole li accende dal menu ⚔ Slayer) */
+function fxTel(){try{return matchMedia("(pointer: coarse)").matches||Math.min(screen.width,screen.height)<820}catch(e){return false}}
+function fxOn(){try{var v=localStorage.getItem("tcj_fx");return v===null?!fxTel():v!=="0"}catch(e){return !fxTel()}}
 function fxToggle(){try{localStorage.setItem("tcj_fx",fxOn()?"0":"1")}catch(e){}fxSet(paFxEl());slRender();}
 function fxRnd(a,b){return a+Math.random()*(b-a)}
 function fxSet(k){const on=!!k&&fxOn();document.documentElement.classList.toggle("fx-on",on);cancelAnimationFrame(FX.raf);FX.raf=0;

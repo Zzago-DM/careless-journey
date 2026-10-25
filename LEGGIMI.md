@@ -92,6 +92,10 @@ In alto a sinistra sulla Mappa del Mondo (sotto la mappa sul telefono) c'è **�
 
 Ogni player ha la sua nave: lo stato sta nella chiave `tcj-vg-<personaggio>`, dentro il pacchetto online del personaggio (segue il player su ogni dispositivo con «☁ Salva online»). Senza un personaggio attivo la nave resta solo nel browser (`tcj-vg`). Ha sostituito la vecchia rotta fissa da Ramsgate e l'opzione «Rotta della nave» del menu del Master.
 
+## Effetti laterali sul telefono
+
+Sul telefono e sul tablet gli effetti laterali partono **spenti** (il sito è più leggero); chi li vuole li accende dal menu ⚔ Slayer → «Effetti laterali», e la scelta resta su quel dispositivo (chiave `tcj_fx`). Sul computer partono accesi come prima.
+
 ## Animazione del Maelstrom: Alta / Media / Bassa (js/maelstrom-qualita.js)
 
 Nel menu in alto a destra (⚔ Slayer ▾) c'è **Animazione del Maelstrom**, che decide quale vista si apre cliccando il Maelstrom sulla mappa:
@@ -100,7 +104,7 @@ Nel menu in alto a destra (⚔ Slayer ▾) c'è **Animazione del Maelstrom**, ch
 - **Media**: la stessa scena alleggerita (`…maelstrom-scena.html?q=media`): circa un terzo delle scie, metà delle rocce e delle nubi, 30 fotogrammi al secondo e risoluzione normale invece che alta.
 - **Bassa**: la vista originale del Maelstrom in SVG (`sezioni/mappe/maelstrom-scena-originale.html`), recuperata dalla versione del sito prima della clessidra.
 
-La scelta resta nel browser di ognuno (chiave `tcj_mael`). Se nessuno ha scelto, i telefoni e i tablet partono da **Media** e i computer da **Alta**.
+La scelta resta nel browser di ognuno (chiave `tcj_mael`). Se nessuno ha scelto, i telefoni e i tablet partono da **Bassa** e i computer da **Alta**.
 
 ## Reliquie (Nave › Zona Segreta + capitolo del Master)
 
