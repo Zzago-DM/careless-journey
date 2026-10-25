@@ -16,7 +16,13 @@
     }).join("") + '<div class="cr-campo">' + CAMPO + '</div>';
     document.body.appendChild(strato);
   }
+  /* bordo ruvido e scheggiato per i titoli del tema (filter:url(#tcj-ruvido) in css/37-temi-caratteri.css) */
+  function filtro(){
+    if(document.getElementById("tcj-filtri")) return;
+    document.body.insertAdjacentHTML("beforeend", '<svg id="tcj-filtri" width="0" height="0" style="position:absolute;width:0;height:0" aria-hidden="true" focusable="false"><filter id="tcj-ruvido" x="-5%" y="-10%" width="110%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G"/></filter></svg>');
+  }
   function aggiorna(){
+    filtro();
     var on = document.documentElement.getAttribute("data-tema") === "mh";
     var poco = false; try { poco = matchMedia("(prefers-reduced-motion: reduce)").matches; } catch(e){}
     if(on && !poco){ if(!strato) crea(); strato.hidden = false; }

@@ -160,6 +160,20 @@ Si sceglie nel menu in alto a destra (⚔ Slayer ▾ → «Tema del sito»). Di 
 - **Non cambiano mai**: la Zona Master (e le sue finestre), l'animazione iniziale e la mappa del mondo con le mappe dei continenti. L'elenco di ciò che resta escluso è in cima ai file CSS dei temi (`:is(#ms,#pwo,…)`).
 - La scelta resta nel browser (`tcj-tema`); se un personaggio è attivo finisce anche nel suo pacchetto (`tcj_bg_<pg>`, campo `t`) e lo segue su ogni dispositivo.
 
+### Caratteri dei temi (css/37-temi-caratteri.css)
+
+Ogni tema ha i suoi caratteri (dai Google Fonts), applicati a titoli, etichette e testo; Zona Master, mappa e Aspetto dell'area restano come sono.
+
+| Tema | Titoli | Etichette e pulsanti | Testo |
+|---|---|---|---|
+| Cieli Tersi | Cinzel grassetto, maiuscolo | come prima (Barlow Condensed) | come prima |
+| Cacciatore | Cinzel nerissimo con bordi ruvidi (filtro `#tcj-ruvido`) | Oswald | come prima |
+| Gastrocomiche | Gloria Hallelujah (gesso sulla lavagna) | Patrick Hand | Patrick Hand |
+| Reami Dimenticati | Cinzel inciso | Cinzel | EB Garamond |
+| Manuale classico | Great Vibes (calligrafia) | Dancing Script | Dancing Script |
+
+Le regole sono generate partendo dagli stili che usano Cinzel Decorative (titoli), Cinzel (etichette) e Crimson Pro (testo): se si aggiunge una sezione nuova con questi caratteri, conviene aggiungere i suoi selettori al file.
+
 ## Aspetto dell'Area dello Slayer (js/area-aspetto.js + css/33-area-aspetto.css)
 
 Opzionale, solo per l'area del singolo player: di base resta la **scheda classica**. Dalla barra «Aspetto dell'area» il player può trasformare le sezioni in 📚 libri, ⚗ ampolle, 🗄 cassettiera, 🃏 tavolo pirata, 🔨 attrezzi, 📖 capitoli o 📌 bacheca. Toccando un oggetto si apre sotto solo quella sezione, con gli stessi dati della scheda.
