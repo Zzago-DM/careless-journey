@@ -158,6 +158,7 @@ Si sceglie nel menu in alto a destra (⚔ Slayer ▾ → «Tema del sito»). Di 
 - Gli effetti laterali e le particelle di sfondo restano in tutti i temi (nei temi chiari diventano scuri come inchiostro, per vedersi sulla carta).
 - Tutti seguono il **colore Aether** scelto (Impostazioni sfondo): in Cieli Tersi cambia il cielo (Glaciale = bianco sporco invernale, Oscuro = notte viola…), nel Manuale classico si tinge il foglio.
 - **Non cambiano mai**: la Zona Master (e le sue finestre), l'animazione iniziale e la mappa del mondo con le mappe dei continenti. L'elenco di ciò che resta escluso è in cima ai file CSS dei temi (`:is(#ms,#pwo,…)`).
+- **Leggerezza:** si scaricano solo gli stili del tema scelto (elenco `TCJ_TEMI_CSS` in `index.html`, caricato da `js/tema-sito.js`). Sul telefono `css/38-temi-telefono.css` spegne da solo gli effetti più pesanti (strati di colore fusi, bordi ruvidi dei titoli, aloni e due delle creature, nuvole che scorrono).
 - La scelta resta nel browser (`tcj-tema`); se un personaggio è attivo finisce anche nel suo pacchetto (`tcj_bg_<pg>`, campo `t`) e lo segue su ogni dispositivo.
 
 ### Caratteri dei temi (css/37-temi-caratteri.css)

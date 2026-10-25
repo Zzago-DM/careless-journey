@@ -1,7 +1,8 @@
 /* Tema del sito: Attuale (di base), Cieli Tersi, Manuale classico, Cacciatore, Gastrocomiche o Reami Dimenticati — scelto nel menu in alto a destra (⚔ Slayer ▾).
 
    - Cambia l'aspetto generale di tutto il sito (sfondo, cornici, pulsanti, caratteri) e segue il colore Aether già scelto.
-   - Non tocca la Zona Master, l'animazione iniziale e la mappa (vedi i file css/31…36-tema-*.css).
+   - Non tocca la Zona Master, l'animazione iniziale e la mappa (vedi i file css/31…36-tema-*.css e css/37-caratteri-*.css).
+   - Si scaricano solo gli stili del tema scelto; sul telefono gli effetti più pesanti si spengono da soli (css/38-temi-telefono.css).
    - La scelta resta in questo browser (chiave tcj-tema). Se un personaggio è attivo viene salvata anche nel suo
      pacchetto (campo t di tcj_bg_<pg>), così lo segue su ogni dispositivo dove apre la sua area.
    - Il primo script in <head> la applica subito, prima che la pagina compaia, per non vedere il tema sbagliato per un attimo. */
@@ -16,8 +17,14 @@
     if(!v){ try { v = localStorage.getItem("tcj-tema"); } catch(e){} }
     return valido(v) ? v : "attuale";
   };
+  /* scarica gli stili del tema solo quando serve (elenco in TCJ_TEMI_CSS, dentro index.html) */
+  function caricaCss(v){
+    var l = (window.TCJ_TEMI_CSS || {})[v]; if(!l || document.querySelector('link[data-tema-css="' + v + '"]')) return;
+    l.forEach(function(u){ var k = document.createElement("link"); k.rel = "stylesheet"; k.href = u; k.setAttribute("data-tema-css", v); document.body.appendChild(k); });
+  }
   window.temaApplica = function(){
     var v = temaSito(), h = document.documentElement;
+    caricaCss(v);
     if(v === "attuale") h.removeAttribute("data-tema"); else h.setAttribute("data-tema", v);
   };
   window.temaSet = function(v){

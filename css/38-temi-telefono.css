@@ -1,0 +1,22 @@
+/* Temi del sito più leggeri sul telefono (e sui dispositivi touch).
+   Spegne gli effetti più costosi da disegnare, che su un telefono rallentano lo scorrimento:
+   strati di colore fusi su tutto lo schermo, bordi ruvidi dei titoli, aloni sulle creature, nuvole giganti in movimento,
+   trame a più strati dei fogli. L'aspetto resta lo stesso, cambia solo qualche dettaglio. */
+@media (max-width:700px),(pointer:coarse){
+  /* strati di colore Aether fusi sopra lo sfondo: troppo costosi da ricalcolare a ogni fotogramma */
+  html[data-tema=mh] body::after,html[data-tema=reami] body::after{display:none}
+  /* sfondi «moltiplicati» sulla carta: stessa trama, fusione normale */
+  html[data-tema=pergamena] .stars,html[data-tema=osteria] .stars{mix-blend-mode:normal;opacity:.75}
+  html[data-tema=pergamena] #bgfx,html[data-tema=pergamena] .fx-side,html[data-tema=osteria] #bgfx,html[data-tema=osteria] .fx-side,html[data-tema=reami] #bgfx,html[data-tema=reami] .fx-side{mix-blend-mode:normal}
+  /* Cieli Tersi: nuvole ferme e larghe quanto lo schermo invece di uno strato enorme che scorre */
+  html[data-tema=dauntless] body::before{width:100%;animation:none}
+  /* Cacciatore: titoli senza bordo ruvido, creature senza alone, solo tre creature */
+  html[data-tema=mh] [style],html[data-tema=mh] .st,html[data-tema=mh] .hero-title,html[data-tema=mh] h1,html[data-tema=mh] h2,html[data-tema=mh] h3,html[data-tema=mh] .tlet{filter:none!important}
+  #mh-cielo .cr-svg{filter:none}
+  #mh-cielo .cr-lontano{filter:none}
+  #mh-cielo .cr-orientale,#mh-cielo .cr-viverna{display:none}
+  /* Manuale classico: niente strato «moltiplicato» sopra i fogli */
+  html[data-tema=pergamena] section:not(#hero)>.si::after{display:none}
+  /* Reami Dimenticati: luce del portale ferma */
+  html[data-tema=reami] .stars::before{animation:none}
+}

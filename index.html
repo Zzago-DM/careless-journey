@@ -12,7 +12,7 @@ function tcjSezione(h){var s=document.currentScript;s.insertAdjacentHTML("before
 <script>/* Versione della pagina: la scrive strumenti/versiona.js a ogni pubblicazione.
    Se il browser ha aperto una copia vecchia rimasta in memoria, il sito se ne accorge:
    nei primi secondi si aggiorna da solo, più tardi propone «Aggiorna» (senza mai interrompere chi sta scrivendo). */
-var TCJ_VERSIONE="85efd64e";
+var TCJ_VERSIONE="252934bc";
 (function(){
   var nascita=Date.now(),ultimo=0;
   function nuova(v){location.replace(location.pathname+"?v="+v+location.hash);}
@@ -252,13 +252,12 @@ var TCJ_VERSIONE="85efd64e";
 <script src="js/incontri.js?v=fea1ffd4"></script>
 <script src="js/master-incontri.js?v=b1e147dd"></script>
 <script src="js/particelle-sfondo.js?v=134912a7"></script>
-<link rel="stylesheet" href="css/31-tema-dauntless.css?v=418e607a">
-<link rel="stylesheet" href="css/32-tema-pergamena.css?v=07d7ed1b">
-<link rel="stylesheet" href="css/34-tema-monster-hunter.css?v=1ae882f7">
-<link rel="stylesheet" href="css/35-tema-osteria.css?v=f9bbd1ef">
-<link rel="stylesheet" href="css/36-tema-reami.css?v=51102953">
-<link rel="stylesheet" href="css/37-temi-caratteri.css?v=f30abd3b">
-<script src="js/tema-sito.js?v=b90ceab7"></script>
+<script>/* Stili dei temi del sito: si scarica solo quello del tema scelto (gli altri non pesano sulla pagina).
+   Qui viene caricato subito, nello stesso punto di sempre; se si cambia tema, js/tema-sito.js aggiunge quello nuovo. */
+var TCJ_TEMI_CSS={dauntless:["css/31-tema-dauntless.css?v=418e607a","css/37-caratteri-dauntless.css?v=3a26b787"],pergamena:["css/32-tema-pergamena.css?v=07d7ed1b","css/37-caratteri-pergamena.css?v=ab15bc95"],mh:["css/34-tema-monster-hunter.css?v=1ae882f7","css/37-caratteri-mh.css?v=7705bd27"],osteria:["css/35-tema-osteria.css?v=f9bbd1ef","css/37-caratteri-osteria.css?v=1bf8b6fc"],reami:["css/36-tema-reami.css?v=51102953","css/37-caratteri-reami.css?v=82be8aff"]};
+(function(){var t=document.documentElement.getAttribute("data-tema"),l=TCJ_TEMI_CSS[t];if(l)document.write(l.map(function(u){return '<link rel="stylesheet" href="'+u+'" data-tema-css="'+t+'">';}).join(""));})();</script>
+<link rel="stylesheet" href="css/38-temi-telefono.css?v=6abddda5">
+<script src="js/tema-sito.js?v=5cf2019d"></script>
 <script src="js/tema-creature.js?v=199ba883"></script>
 <link rel="stylesheet" href="css/33-area-aspetto.css?v=b5644c6e">
 <script src="js/area-aspetto.js?v=80928e98"></script>
