@@ -31,6 +31,7 @@ html[data-tema=truasilia] .hero-sigil{left:28%;opacity:.12;filter:brightness(3) 
 html[data-tema=truasilia] .hero-eyebrow{color:#fbf8f1;text-shadow:0 1px 6px rgba(15,36,89,.8)}
 html[data-tema=truasilia] .hero-title{color:#fffdf8!important;text-shadow:0 3px 0 #1f3f95,0 6px 22px rgba(15,36,89,.7)}
 html[data-tema=truasilia] .hero-title span,html[data-tema=truasilia] .hero-title .ch{color:#fffdf8}
+html[data-tema=truasilia] .hero-title{white-space:nowrap;font-size:clamp(2rem,5.2vw,5.4rem);letter-spacing:.03em!important}
 html[data-tema=truasilia] .hero-title .j{color:#fffdf8!important}
 html[data-tema=truasilia] .hero-sub,html[data-tema=truasilia] .hero-tag{color:#fbf8f1;text-shadow:0 2px 8px rgba(15,36,89,.85)}
 html[data-tema=truasilia] .hero-div{height:10px;width:220px;background:linear-gradient(#fbf8f1,#fbf8f1) 0 50%/100% 2px no-repeat;position:relative}
