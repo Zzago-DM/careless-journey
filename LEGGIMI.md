@@ -177,7 +177,7 @@ Nel menu **⚔ Slayer › Zona Master** ci sono tre scelte d'oro, indipendenti t
 - **Effetti laterali «Sigillo Aureo»:** ai due bordi dello schermo il Golden Sun d'oro (sul lato destro non viene specchiato), con un alone che respira, due cerchi tratteggiati che girano attorno alla spirale, fasci di luce, onde di luce che partono dalla spirale, un riflesso che lo attraversa dall'alto in basso, una scia luminosa lungo i contorni e scintille che si staccano dalle punte; intorno pulviscolo d'oro e scaglie di foglia d'oro che cadono girando. Il simbolo viene letto da `#gsun`, quindi se un giorno cambi il disegno lì cambia anche qui. Il disegno è in `js/tema-oro.js` (OFX); il motore degli effetti laterali resta in `js/area-giocatori.js`.
 - `css/29-tema-oro-auto.css` è **generato**: `node strumenti/tema-oro.js` prende le regole cremisi della Zona Master e degli strumenti del Master e ne scrive la versione dorata (`html[data-zm=oro]`). Rilancialo se aggiungi stili rossi in quei file (l'elenco è in cima allo strumento), poi `node strumenti/versiona.js`.
 
-## Tema del sito: Attuale / Cieli Tersi / Manuale classico / Cacciatore / Gastrocomiche / Reami Dimenticati (js/tema-sito.js)
+## Tema del sito: Attuale / Cieli Tersi / Manuale classico / Cacciatore / Gastrocomiche / Reami Dimenticati / Arena (js/tema-sito.js)
 
 Si sceglie nel menu in alto a destra (⚔ Slayer ▾ → «Tema del sito»). Di base resta **Attuale**. Nel codice i temi hanno ancora le chiavi di prima (`dauntless`, `pergamena`, `mh`, `osteria`, `reami`): cambiano solo i nomi nel menu.
 
@@ -186,6 +186,7 @@ Si sceglie nel menu in alto a destra (⚔ Slayer ▾ → «Tema del sito»). Di 
 - **Cacciatore** (`css/34-tema-monster-hunter.css`, ispirato a Monster Hunter): valle al tramonto (`media/cacciatore-valle.webp`, disegno originale) con montagne, alberi giganti, fiume e nebbia; lucciole guida verdi e creature mitologiche che attraversano il cielo a turno, da sinistra a destra o al contrario (`js/tema-creature.js`: drago occidentale, drago orientale, fenice, viverna, stormo); in basso a destra un piccolo accampamento su una collinetta, con tenda, falò, carne sullo spiedo che gira e un gatto che gira la manovella. Il colore Aether tinge la luce della valle.
 - **Gastrocomiche** (`css/35-tema-osteria.css`): muro d'osteria, carta macchiata di vino, tovaglia a quadri e titoli scritti col gesso su lavagna (ispirato a Brancalonia e alle Gastrocomiche di InnTale).
 - **Reami Dimenticati** (`css/36-tema-reami.css`, ispirato ai Forgotten Realms): sullo sfondo un tempio sotterraneo illuminato dal fuoco (`media/reami-tempio.webp`, disegno originale) con braci che salgono e luce che tremola; il colore Aether tinge la luce del tempio. I riquadri di testo sono muri di pietra scura a blocchi (texture SVG nel blocco «Pietra» in fondo al file) con le scritte incise in oro caldo e la luce delle torce dall'alto; barra del menu in cuoio rosso e oro.
+- **Arena** (`css/41-tema-arena.css` + `js/tema-arena.js`, ispirato ai menu di Ratchet & Clank 3, Ratchet: Gladiator e Jak 2, senza nulla di originale dei giochi): sullo sfondo una stazione spaziale disegnata da zero (`media/arena-stazione.webp`) con due anelli che girano in versi opposti (fasce a spicchi che scorrono, mascherate sulla curva), navicelle, una scia e luci che lampeggiano; riquadri di metallo canna di fucile con cornice d'acciaio, staffe agli angoli e filo arancione; targa del titolo arancione semitrasparente con un leggero disturbo televisivo e asta d'acciaio sotto; filetti ambra. Sul telefono la stazione è ferma. Caratteri: Michroma (titoli), Rajdhani (etichette), Exo 2 (testo).
 - Gli effetti laterali e le particelle di sfondo restano in tutti i temi (nei temi chiari diventano scuri come inchiostro, per vedersi sulla carta).
 - Tutti seguono il **colore Aether** scelto (Impostazioni sfondo): in Cieli Tersi cambia il cielo (Glaciale = bianco sporco invernale, Oscuro = notte viola…), nel Manuale classico si tinge il foglio.
 - **Non cambiano mai**: la Zona Master (e le sue finestre), l'animazione iniziale e la mappa del mondo con le mappe dei continenti. L'elenco di ciò che resta escluso è in cima ai file CSS dei temi (`:is(#ms,#pwo,…)`).
@@ -202,6 +203,7 @@ Ogni tema ha i suoi caratteri (dai Google Fonts), applicati a titoli, etichette 
 | Cacciatore | Cinzel nerissimo con bordi ruvidi (filtro `#tcj-ruvido`) | Oswald | come prima |
 | Gastrocomiche | Gloria Hallelujah (gesso sulla lavagna) | Patrick Hand | Patrick Hand |
 | Reami Dimenticati | Cinzel inciso | Cinzel | EB Garamond |
+| Arena | Michroma | Rajdhani | Exo 2 |
 | Manuale classico | Great Vibes (calligrafia) | Dancing Script | Dancing Script |
 
 Le regole sono generate partendo dagli stili che usano Cinzel Decorative (titoli), Cinzel (etichette) e Crimson Pro (testo): se si aggiunge una sezione nuova con questi caratteri, conviene aggiungere i suoi selettori al file.

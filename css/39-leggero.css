@@ -14,5 +14,6 @@ html[data-leggero] .fx-side,
 html[data-leggero] #bgfx,
 html[data-leggero] #pgun,
 html[data-leggero] #mh-cielo,
+html[data-leggero] #ar-stazione,
 html[data-leggero] .hero-motes,
 html[data-leggero] .ar-bar,html[data-leggero] .ar-ed,html[data-leggero] .ar-v,html[data-leggero] .ar-testa{display:none!important}

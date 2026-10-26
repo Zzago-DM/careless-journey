@@ -49,6 +49,11 @@
       "Nel tema <b>Reami Dimenticati</b> i riquadri di testo non sono più di pergamena: sono <b>muri di pietra scura</b>, a blocchi, con le scritte incise e illuminate dalla luce delle torce del tempio.",
       "Il tema si sceglie dal menu <b>⚔ Slayer ▾ → «Tema del sito»</b> (solo nella versione completa)."
     ]},
+    { id: "2026-10-tema-arena", i: "🚀", t: "Nuovo tema: Arena", p: [
+      "C'è un nuovo tema del sito, <b>Arena</b>, ispirato ai menu dei vecchi giochi di fantascienza per PS2.",
+      "Sullo sfondo una <b>stazione spaziale</b> con due grandi anelli che girano in versi opposti, luci che lampeggiano e navicelle che passano. I riquadri sono pannelli di metallo con la cornice d'acciaio, i titoli stanno in una targa arancione semitrasparente con un leggero disturbo da vecchio televisore.",
+      "Si sceglie dal menu <b>⚔ Slayer ▾ → «Tema del sito»</b> (solo nella versione completa). Sul telefono la stazione resta ferma, per non appesantire il sito."
+    ]},
     { id: "2026-10-leggera", i: "📱", t: "Versione leggera per il telefono", p: [
       "Da oggi il sito ha due versioni.",
       "La <b>versione completa</b>, pensata per il computer, ha tutto: l'animazione d'apertura, i temi, gli aspetti dell'area, gli effetti laterali, le particelle e i suoni.",
