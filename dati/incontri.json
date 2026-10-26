@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-26T11:50:56.353Z",
+ "aggiornato": "2026-10-26T11:51:31.085Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -146,6 +146,15 @@
    "nome": "Hellcrew",
    "continente": "ramsgate",
    "foto": "img/incontri/pmvp703qaz9jt-fp4ja7.webp",
+   "formati": [
+    "16:9"
+   ]
+  },
+  {
+   "id": "pmvp74109y2lw",
+   "nome": "I Senza Nome",
+   "continente": "ramsgate",
+   "foto": "img/incontri/pmvp74109y2lw-y7zq47.webp",
    "formati": [
     "16:9"
    ]
