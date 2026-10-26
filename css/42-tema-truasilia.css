@@ -1,5 +1,5 @@
-/* Tema del sito «Truasilia» — tributo a un'altra campagna: un castello bianco dai tetti blu e dagli stendardi cremisi
-   su uno sperone di roccia, in una valle ampia con fiume, campi, villaggio e montagne (media/truasilia-castello.webp, disegno originale).
+/* Tema del sito «Truasilia» — tributo a un'altra campagna: un castello ottagonale di pietra chiara ispirato a Castel del Monte,
+   con stendardi e bandiere rossi e blu, su un colle erboso tra i campi e gli uliveti (media/truasilia-castel-del-monte.webp, render originale).
    Riquadri di marmo bianco con bordo blu e filo cremisi, titoli a stendardo, stemma come separatore.
    Non segue il colore Aether: resta sempre bianco, blu e rosso. Non tocca Zona Master, animazione iniziale e mappa. */
 html[data-tema=truasilia]{--gold-rgb:31,63,149;--bg:#f7f3ea;--bg2:#fbf8f1;--bg3:rgba(251,248,241,.94);--gold:#1f3f95;--gold2:#a3162b;--gold3:#8a6a2a;--text:#1b2342;--text2:#4a5272;--border:rgba(31,63,149,.32);--ice:#2a7aa0;--fire:#b4400e;--lightning:#8f7200;--earth:#2f6e28;--radiant:#7f50b4;--dark:#55358f;--neutral:#55556a;--pa-glow:transparent}
@@ -14,7 +14,7 @@ html[data-tema=truasilia] :is(#ms,#pwo,#munlock,#intro,.map-wrap,.cj-overlay,.ie
 html[data-tema=truasilia] #hero,html[data-tema=truasilia] #gruppo,html[data-tema=truasilia] #scheda,html[data-tema=truasilia] #scheda[data-el]{background:transparent!important;background-image:none!important}
 html[data-tema=truasilia] #scheda,html[data-tema=truasilia] #scheda[data-el]{--gold-rgb:31,63,149;--bg:#f7f3ea;--bg2:#fbf8f1;--bg3:rgba(251,248,241,.94);--gold:#1f3f95;--gold2:#a3162b;--gold3:#8a6a2a;--text:#1b2342;--text2:#4a5272;--border:rgba(31,63,149,.32);--ice:#2a7aa0;--fire:#b4400e;--lightning:#8f7200;--earth:#2f6e28;--radiant:#7f50b4;--dark:#55358f;--neutral:#55556a;--pa-glow:transparent}
 html[data-tema=truasilia] body{background:#a9bfe2;color:var(--text)}
-html[data-tema=truasilia] .stars{background:url("../media/truasilia-castello.webp") 74% 62%/cover no-repeat,#a9bfe2;opacity:1;mix-blend-mode:normal}
+html[data-tema=truasilia] .stars{background:url("../media/truasilia-castel-del-monte.webp") 74% 62%/cover no-repeat,#a9bfe2;opacity:1;mix-blend-mode:normal}
 html[data-tema=truasilia] section{background:transparent!important}
 html[data-tema=truasilia] #bgfx,html[data-tema=truasilia] .fx-side{filter:grayscale(1) sepia(1) hue-rotate(185deg) saturate(2.6) brightness(.85);mix-blend-mode:normal}
 html[data-tema=truasilia] #bgfx{opacity:.35}

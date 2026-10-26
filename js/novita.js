@@ -56,7 +56,7 @@
     ]},
     { id: "2026-10-tema-truasilia", i: "🏰", t: "Nuovo tema: Truasilia", p: [
       "C'è un nuovo tema del sito, <b>Truasilia</b>: un omaggio a un'altra campagna.",
-      "Sullo sfondo un grande <b>castello bianco</b> dai tetti blu e dagli stendardi cremisi, su uno sperone di roccia sopra una valle ampia, con il fiume, i campi, un villaggio e le montagne innevate. I riquadri sono lastre di <b>marmo bianco</b> con il bordo blu e un filo rosso, i titoli dei capitoli sono stendardi e i separatori portano uno stemma.",
+      "Sullo sfondo un grande <b>castello ottagonale</b> di pietra chiara, con otto torri e stendardi e bandiere rossi e blu, su un colle erboso in mezzo ai campi di grano e agli uliveti. I riquadri sono lastre di <b>marmo bianco</b> con il bordo blu e un filo rosso, i titoli dei capitoli sono stendardi e i separatori portano uno stemma.",
       "Questo tema non cambia colore con l'Aether: resta sempre bianco, blu e rosso. Si sceglie dal menu <b>⚔ Slayer ▾ → «Tema del sito»</b> (solo nella versione completa)."
     ]},
     { id: "2026-10-tressa", i: "🍺", t: "Un nuovo ritratto per Tressa", p: [
