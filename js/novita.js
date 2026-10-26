@@ -47,26 +47,35 @@
     ]},
     { id: "2026-10-reami-pietra", i: "🏛", t: "Reami Dimenticati in pietra", p: [
       "Nel tema <b>Reami Dimenticati</b> i riquadri di testo non sono più di pergamena: sono <b>muri di pietra scura</b>, a blocchi, con le scritte incise e illuminate dalla luce delle torce del tempio.",
-      "Il tema si sceglie dal menu <b>⚔ Slayer ▾ → «Tema del sito»</b> (solo nella versione completa)."
+      "Il tema si sceglie dal menu <b>⚔ Slayer ▾ → «Tema del sito»</b>."
     ]},
     { id: "2026-10-tema-arena", i: "🚀", t: "Nuovo tema: Arena", p: [
       "C'è un nuovo tema del sito, <b>Arena</b>, ispirato ai menu dei vecchi giochi di fantascienza per PS2.",
       "Sullo sfondo una <b>stazione spaziale</b> con due grandi anelli che girano in versi opposti, luci che lampeggiano e navicelle che passano. I riquadri sono pannelli di metallo con la cornice d'acciaio, i titoli stanno in una targa arancione semitrasparente con un leggero disturbo da vecchio televisore.",
-      "Si sceglie dal menu <b>⚔ Slayer ▾ → «Tema del sito»</b> (solo nella versione completa). Sul telefono la stazione resta ferma, per non appesantire il sito."
+      "Si sceglie dal menu <b>⚔ Slayer ▾ → «Tema del sito»</b>. Sul telefono la stazione resta ferma, per non appesantire il sito."
     ]},
     { id: "2026-10-tema-truasilia", i: "🏰", t: "Nuovo tema: Truasilia", p: [
       "C'è un nuovo tema del sito, <b>Truasilia</b>: un omaggio a un'altra campagna.",
       "Sullo sfondo un grande <b>castello ottagonale</b> di pietra chiara, con otto torri e stendardi e bandiere rossi e blu, su un colle erboso in mezzo ai campi di grano e agli uliveti. I riquadri sono lastre di <b>marmo bianco</b> con il bordo blu e un filo rosso, i titoli dei capitoli sono stendardi e i separatori portano uno stemma.",
-      "Questo tema non cambia colore con l'Aether: resta sempre bianco, blu e rosso. Si sceglie dal menu <b>⚔ Slayer ▾ → «Tema del sito»</b> (solo nella versione completa)."
+      "Questo tema non cambia colore con l'Aether: resta sempre bianco, blu e rosso. Si sceglie dal menu <b>⚔ Slayer ▾ → «Tema del sito»</b>."
     ]},
     { id: "2026-10-tressa", i: "🍺", t: "Un nuovo ritratto per Tressa", p: [
       "Tressa, la barista della <b>Coda di Gnasher</b>, ha un ritratto tutto nuovo: boccale in mano, come sempre, pronta a brindare con chiunque passi dal bancone.",
       "Lo trovate nella sua scheda tra i personaggi di Ramsgate e negli <b>Incontri</b>."
     ]},
+    { id: "2026-10-monete-cassa", i: "💰", t: "Le monete stanno nella Cassa", p: [
+      "Dalla <b>scheda</b> del personaggio è sparita la sezione <b>Monete</b>: il denaro ora si tiene tutto nella <b>Cassa di squadra</b>, nella sezione <b>Il Gruppo</b>.",
+      "Nella Cassa la valuta <b>«Oro Ramsgate»</b> ora si chiama semplicemente <b>«Oro»</b>."
+    ]},
+    { id: "2026-10-tema-telefono", i: "🎨", t: "Il tema vi segue sul telefono", p: [
+      "Il <b>tema del sito</b> che avete scelto sul computer ora resta anche sul telefono, nella versione leggera: niente più ritorno all'aspetto di base.",
+      "Sul telefono il tema è fermo, senza animazioni, per non appesantire il sito. Si può cambiare anche da lì, dal menu <b>⚔ Slayer ▾ → «Tema del sito»</b>.",
+      "Se avete un personaggio attivo, il tema lo segue su ogni dispositivo dove aprite la sua area."
+    ]},
     { id: "2026-10-leggera", i: "📱", t: "Versione leggera per il telefono", p: [
       "Da oggi il sito ha due versioni.",
-      "La <b>versione completa</b>, pensata per il computer, ha tutto: l'animazione d'apertura, i temi, gli aspetti dell'area, gli effetti laterali, le particelle e i suoni.",
-      "La <b>versione leggera</b>, pensata per il telefono, toglie animazioni, temi, effetti e suoni: il sito è più veloce e consuma meno batteria. Tutti i contenuti e tutte le funzioni restano: scheda, Gruppo, mappe, viaggi, incontri. Anche il colore del vostro Aether resta.",
+      "La <b>versione completa</b>, pensata per il computer, ha tutto: l'animazione d'apertura, gli aspetti dell'area, gli effetti laterali, le particelle e i suoni.",
+      "La <b>versione leggera</b>, pensata per il telefono, toglie animazioni, effetti e suoni: il sito è più veloce e consuma meno batteria. Tutti i contenuti e tutte le funzioni restano: scheda, Gruppo, mappe, viaggi, incontri. Anche il colore del vostro Aether e il tema del sito restano (fermi, senza animazioni).",
       "Nella prossima schermata scegliete quale usare su questo dispositivo. Potete cambiarla quando volete dal menu <b>⚔ Slayer → «Dispositivo»</b>."
     ]}
   ];

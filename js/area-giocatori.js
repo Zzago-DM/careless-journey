@@ -846,13 +846,13 @@ function slRender(){const b=document.getElementById("sl-btn"),m=document.getElem
  SC_CHARS.forEach(c=>{const open=paIsOpen(c.k),on=c.k===act;
   h+=`<button type="button" class="sl-item${on?" on":""}" onclick="slPick('${c.k}')"><span class="sl-e">${c.e}</span><span class="sl-nm">${c.n}</span><span class="sl-st">${on?"✓ attivo":open?"aperta":(paMaster()?"🔒 chiusa":"🔒")}</span></button>`;
   if(slAsk===c.k)h+=`<div class="sl-code"><input type="password" id="sl-code-in" placeholder="Password" aria-label="Password di ${c.n}" autocomplete="off" onkeydown="if(event.key==='Enter')slTry()"><button type="button" onclick="slTry()">Apri</button></div><div class="sl-err" id="sl-err" style="display:none">Password errata. Riprova.</div>`;});
- const LG=!!window.TCJ_LEGGERO; /* versione leggera: niente suoni, effetti, particelle, temi e qualità del Maelstrom */
+ const LG=!!window.TCJ_LEGGERO; /* versione leggera: niente suoni, effetti, particelle e qualità del Maelstrom (il tema del sito invece resta) */
  h+='<div class="sl-sep"></div>';if(typeof tcjDispositivoRiga==="function")h+=tcjDispositivoRiga();
  if(!LG)h+=`<div class="sl-row"><div><span>Suoni</span><small>Effetti sonori del sito</small></div><button type="button" class="sl-sw" role="switch" aria-checked="${sfxOn()}" aria-label="Suoni" onclick="sfxToggle()"></button></div>`;
  if(!LG)h+=`<div class="sl-row"><div><span>Effetti laterali</span><small>${(act||mThemeActive())?"Particelle animate ai lati della pagina":"Visibili quando un personaggio è attivo"}</small></div><button type="button" class="sl-sw" role="switch" aria-checked="${fxOn()}" aria-label="Effetti laterali" onclick="fxToggle()"></button></div>`;
  if(!LG&&typeof bgfxOn==="function")h+=`<div class="sl-row"><div><span>Particelle di sfondo</span><small>Scintille che scendono lungo la pagina</small></div><button type="button" class="sl-sw" role="switch" aria-checked="${bgfxOn()}" aria-label="Particelle di sfondo" onclick="bgfxToggle()"></button></div>`;
  if(!LG&&typeof maelQRiga==="function")h+=maelQRiga();
- if(!LG&&typeof temaRiga==="function")h+=temaRiga();
+ if(typeof temaRiga==="function")h+=temaRiga(); /* il tema del sito si sceglie anche nella versione leggera */
  if(act){const pf=paPref(act),opt=function(v){return PA_ELS.map(function(e){return '<option value="'+e[0]+'"'+(e[0]===v?' selected':'')+'>'+e[1]+'</option>'}).join("")};
   h+='<button type="button" class="sl-row sl-bgt" onclick="slBg=!slBg;slRender()" aria-expanded="'+slBg+'"><span>Impostazioni sfondo</span><span class="sl-car">'+(slBg?'\u25B4':'\u25BE')+'</span></button>';
   if(slBg)h+='<div class="sl-bg"><label>Colore del sito<select onchange="paSetPref(\'c\',this.value)">'+opt(pf.c)+'</select></label>'+(LG?'':'<label>Effetti laterali<select onchange="paSetPref(\'fx\',this.value)">'+opt(pf.fx)+'</select></label>')+(pf.custom?'<button type="button" class="sl-act" onclick="paResetPref()">\u21BA Torna ai colori di '+ac.n+'</button>':'<small>Colori di base di '+ac.n+'</small>')+'</div>';}

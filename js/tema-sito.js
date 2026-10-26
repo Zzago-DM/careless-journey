@@ -3,6 +3,7 @@
    - Cambia l'aspetto generale di tutto il sito (sfondo, cornici, pulsanti, caratteri) e segue il colore Aether già scelto.
    - Non tocca la Zona Master, l'animazione iniziale e la mappa (vedi i file css/31…36-tema-*.css e css/37-caratteri-*.css).
    - Si scaricano solo gli stili del tema scelto; sul telefono gli effetti più pesanti si spengono da soli (css/38-temi-telefono.css).
+   - Nella versione leggera il tema già scelto resta (chi passa dal computer al telefono non lo perde) e si può cambiare dal menu; gli effetti animati restano spenti.
    - La scelta resta in questo browser (chiave tcj-tema). Se un personaggio è attivo viene salvata anche nel suo
      pacchetto (campo t di tcj_bg_<pg>), così lo segue su ogni dispositivo dove apre la sua area.
    - Il primo script in <head> la applica subito, prima che la pagina compaia, per non vedere il tema sbagliato per un attimo. */
@@ -24,7 +25,7 @@
   }
   window.temaApplica = function(){
     var v = temaSito(), h = document.documentElement;
-    if(window.TCJ_LEGGERO){ h.removeAttribute("data-tema"); return; }   /* versione leggera: niente temi */
+    /* versione leggera (telefono): il tema scelto resta, fermo; gli effetti pesanti li spengono css/38-temi-telefono.css e css/39-leggero.css */
     caricaCss(v);
     if(v === "attuale") h.removeAttribute("data-tema"); else h.setAttribute("data-tema", v);
   };

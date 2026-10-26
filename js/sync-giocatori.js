@@ -128,8 +128,6 @@
     add("Competenze", "Competenze attive", comp.join(", "));
     (sc.eq_txt || []).forEach(function(e, i){ if(txt(e) || txt((sc.eq_cnt||[])[i])) add("Equipaggiamento", "Oggetto " + (i+1), txt(e) + (txt((sc.eq_cnt||[])[i]) ? " ×" + txt(sc.eq_cnt[i]) : "")); });
     (sc.celle || []).forEach(function(c, i){ if(txt(c)) add("Equipaggiamento", "Cella " + (i+1), c); });
-    add("Monete", "Fondo di squadra", sc.coin_team); add("Monete", "Monete personali", sc.coin_personal);
-    (sc.coins || []).forEach(function(c, i){ add("Monete", "Valuta " + (i+1), txt(c.a) + " " + txt(c.c)); });
     var cr = (typeof CROWNS !== "undefined" ? CROWNS : []).filter(function(_, i){ return (sc.crowns || [])[i]; }).map(function(c){ return c.n; });
     add("Corone", "Corone ottenute", cr.join(", "));
     (sc.notes || []).forEach(function(n, i){ add("Note personali", txt(n.t) || ("Sezione " + (i+1)), n.b); });

@@ -182,8 +182,6 @@
     for(var i = 0; i < 4; i++){ var et = txt((sc.eq_txt || [])[i]), n = txt((sc.eq_cnt || [])[i]); c("eq." + i, "Equipaggiamento " + (i + 1), et ? et + (n && n !== "0" ? " ×" + n : "") : ""); }
     c("equip", "Inventario", sc.equip);
     for(var j = 0; j < 6; j++) c("cella." + j, "Cella " + (j + 1), (sc.celle || [])[j]);
-    c("coin_team", "Fondo di squadra", sc.coin_team); c("coin_personal", "Monete personali", sc.coin_personal);
-    (sc.coins || []).forEach(function(x, i){ c("coin." + i, "Valuta " + (i + 1), txt(x.a) + (txt(x.c) ? " " + txt(x.c) : "")); });
     var cr = (typeof CROWNS !== "undefined" ? CROWNS : []).filter(function(_, i){ return (sc.crowns || [])[i]; }).map(function(x){ return x.n; });
     c("corone", "Corone", cr.join(", "));
     (sc.notes || []).forEach(function(n, i){ c("nota." + i, "Nota «" + (txt(n.t) || ("Sezione " + (i + 1))) + "»", txt(n.t) + "\n" + txt(n.b)); });
@@ -239,10 +237,7 @@
     h += blocco("🎒", "Equipaggiamento", (eq ? '<ul class="dv-ul">' + eq + '</ul>' : '<i class="dv-vuoto">Niente equipaggiato</i>')
       + (M.equip.v ? '<div class="dv-sub">Inventario</div><div class="dv-txt" data-f="equip">' + esc(M.equip.v) + '</div>' : '')
       + (ce ? '<div class="dv-sub">Celle</div><ul class="dv-ul dv-celle">' + ce + '</ul>' : ''));
-    /* monete e corone */
-    var mo = riga(M, "coin_team", "Fondo di squadra", "0") + riga(M, "coin_personal", "Monete personali", "0");
-    (sc.coins || []).forEach(function(_, i){ if(M["coin." + i] && M["coin." + i].v) mo += riga(M, "coin." + i, "Valuta " + (i + 1)); });
-    h += blocco("💰", "Monete", mo);
+    /* corone (le monete stanno nella Cassa di squadra, sezione Il Gruppo) */
     h += blocco("👑", "Corone", '<div class="dv-txt" data-f="corone">' + val(M, "corone", "Nessuna") + '</div>');
     /* licenza */
     var li = "";

@@ -1,7 +1,7 @@
 /* Versione leggera del sito (telefono): html[data-leggero], scelta in js/novita.js o dal menu ⚔ Slayer → Dispositivo.
    Tutto resta com'è, ma fermo: le animazioni e le transizioni finiscono subito (le cose si aggiornano senza movimento).
    Fa eccezione solo l'isola che compare nella vista del Maelstrom (e la sua mappa), che resta animata.
-   Niente temi, aspetti dell'area, effetti laterali, particelle, creature e animazione d'apertura. */
+   Niente aspetti dell'area, effetti laterali, particelle, creature e animazione d'apertura. Il tema del sito già scelto resta, ma fermo. */
 html[data-leggero]{scroll-behavior:auto!important}
 html[data-leggero] :not(#cj-maelstrom .vr-isle, #cj-maelstrom .vr-isle *, #cj-maelstrom .vr-flash, #cj-vecchia, #cj-vecchia *),
 html[data-leggero] :not(#cj-maelstrom .vr-isle, #cj-maelstrom .vr-isle *, #cj-maelstrom .vr-flash, #cj-vecchia, #cj-vecchia *)::before,
