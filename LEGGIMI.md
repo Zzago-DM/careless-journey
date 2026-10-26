@@ -64,6 +64,13 @@ La sezione **Il Gruppo** (`sezioni/gruppo.js`, `css/22-gruppo.css`, `js/gruppo.j
 - Si usa il token del personaggio (se manca, quello del Master).
 - **Turni.** Il giocatore preme «✓ Ho concluso l'azione» (con conferma; può tornare indietro con «↩ Riprendi l'azione» finché il turno è aperto) e sul quadro compare «Azione conclusa». Solo chi ha il **token del Master** può premere «⏭ Fine turno» nella sezione Il Gruppo: per ogni personaggio toglie i PV degli stati che fanno danno a turno (Scottato −2, Bruciato −5, Elettrificato −1, Fulminato −3, Corrotto −5, Abbagliato −5), toglie un turno a ogni stato e azzera le azioni concluse. Le schede dei giocatori si aggiornano da sole e partono gli effetti visivi. «↺» riporta il contatore a 1 per un nuovo scontro. Sanguinante ed Emorragia non tolgono PV in automatico (dipendono da quando ci si muove o si agisce). Senza token il quadro mostra solo ciò che è salvato su quel dispositivo.
 
+**Cassa di squadra** (riquadro «💰 Cassa di squadra» sotto le schede del Gruppo). Le monete non stanno più nell'Area dello Slayer: stanno in `stato.json`, campo `cassa` = `{ val: [{n: nome valuta, q: monete}], mov: [ultimi 10 movimenti] }`.
+- Il **totale del gruppo** non si scrive: è la somma delle valute (tutte monete d'oro, senza cambio).
+- Si sceglie la valuta (anche toccandola nell'elenco), si scrive quante monete e «− Togli» / «+ Aggiungi». Nessuna valuta scende sotto zero. «+ Nuova valuta» la può creare chiunque; la × per eliminarla compare solo quando la valuta è a zero.
+- Ogni movimento arriva agli altri dispositivi alla lettura successiva (3 secondi se il Gruppo o la scheda sono sullo schermo, 6 altrimenti) con un avviso «chi e quanto», senza motivo; sotto la cassa restano gli ultimi 10 movimenti.
+- Serve un token: quello del personaggio con l'area aperta, oppure quello del Master (che compare come «Il Master»).
+- **Passaggio dalle schede:** finché la cassa non è mai stata creata, il dispositivo di Athena ci porta da solo le valute della sua scheda; il Master può anche premere «🔍 Controlla le schede» (legge le schede online dei tre Slayer, mostra le monete di ciascuno e porta nella cassa quelle di Athena). Le vecchie monete restano salvate nelle schede, solo non si vedono più. La quota personale è stata tolta (le monete personali si scrivono nell'inventario).
+
 **Preparazione (una volta sola, la fa il Master):**
 1. Crea il repository privato `gruppo` (spunta "Add a README").
 2. In *Settings → Developer settings → Fine-grained tokens* apri **ognuno dei quattro token** (Athena, Pan Lan, Asonnes, Master) → *Edit* → in *Repository access* aggiungi `gruppo` → salva. I permessi restano *Contents: Read and write*. I giocatori non devono reincollare niente.
