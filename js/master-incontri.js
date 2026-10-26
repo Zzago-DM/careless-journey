@@ -386,7 +386,8 @@
 
   /* galleria: tutte le foto, con quelle già usate segnate; riusarne una chiede conferma */
   var gOv = null, gSolo = "tutte", gObs = null, gModo = "cambia";   /* gModo: "cambia" la foto scelta o "aggiungi" una nuova */
-  function haFoto(x, nome){ return x.foti.some(function(f){ return f.file === nome; }); }
+  /* una foto della galleria conta come usata anche quando il personaggio usa la copia omonima del sito (img/<nome>) */
+  function haFoto(x, nome){ return x.foti.some(function(f){ return f.file === nome || f.file === "sito:img/" + nome; }); }
   function chiLaUsa(nome){ return D.personaggi.filter(function(x){ return haFoto(x, nome); }); }
   function apriGalleria(modo){
     var p = trova(sel); if(!p) return;
