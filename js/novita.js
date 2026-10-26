@@ -45,6 +45,10 @@
       "Con <b>«+ Nuova valuta»</b> chiunque può aggiungerne una; una valuta si elimina con la × solo quando è a zero.",
       "Ogni movimento compare subito a tutti con un avviso (per esempio «Athena ha tolto 40 …») e resta negli <b>ultimi 10 movimenti</b>, sotto la cassa."
     ]},
+    { id: "2026-10-reami-pietra", i: "🏛", t: "Reami Dimenticati in pietra", p: [
+      "Nel tema <b>Reami Dimenticati</b> i riquadri di testo non sono più di pergamena: sono <b>muri di pietra scura</b>, a blocchi, con le scritte incise e illuminate dalla luce delle torce del tempio.",
+      "Il tema si sceglie dal menu <b>⚔ Slayer ▾ → «Tema del sito»</b> (solo nella versione completa)."
+    ]},
     { id: "2026-10-leggera", i: "📱", t: "Versione leggera per il telefono", p: [
       "Da oggi il sito ha due versioni.",
       "La <b>versione completa</b>, pensata per il computer, ha tutto: l'animazione d'apertura, i temi, gli aspetti dell'area, gli effetti laterali, le particelle e i suoni.",
