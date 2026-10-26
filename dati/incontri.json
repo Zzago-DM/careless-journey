@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-26T11:50:09.154Z",
+ "aggiornato": "2026-10-26T11:50:56.353Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -378,6 +378,15 @@
    "foto": "img/shaed-priyani.webp",
    "formati": [
     "1:1"
+   ]
+  },
+  {
+   "id": "pmvp737mpdbmu",
+   "nome": "Sharpy Blinkers",
+   "continente": "ramsgate",
+   "foto": "img/incontri/pmvp737mpdbmu-1b0tal9.webp",
+   "formati": [
+    "16:9"
    ]
   },
   {
