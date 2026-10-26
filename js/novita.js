@@ -54,6 +54,11 @@
       "Sullo sfondo una <b>stazione spaziale</b> con due grandi anelli che girano in versi opposti, luci che lampeggiano e navicelle che passano. I riquadri sono pannelli di metallo con la cornice d'acciaio, i titoli stanno in una targa arancione semitrasparente con un leggero disturbo da vecchio televisore.",
       "Si sceglie dal menu <b>⚔ Slayer ▾ → «Tema del sito»</b> (solo nella versione completa). Sul telefono la stazione resta ferma, per non appesantire il sito."
     ]},
+    { id: "2026-10-tema-truasilia", i: "🏰", t: "Nuovo tema: Truasilia", p: [
+      "C'è un nuovo tema del sito, <b>Truasilia</b>: un omaggio a un'altra campagna.",
+      "Sullo sfondo un grande <b>castello bianco</b> dai tetti blu e dagli stendardi cremisi, su uno sperone di roccia sopra una valle ampia, con il fiume, i campi, un villaggio e le montagne innevate. I riquadri sono lastre di <b>marmo bianco</b> con il bordo blu e un filo rosso, i titoli dei capitoli sono stendardi e i separatori portano uno stemma.",
+      "Questo tema non cambia colore con l'Aether: resta sempre bianco, blu e rosso. Si sceglie dal menu <b>⚔ Slayer ▾ → «Tema del sito»</b> (solo nella versione completa)."
+    ]},
     { id: "2026-10-tressa", i: "🍺", t: "Un nuovo ritratto per Tressa", p: [
       "Tressa, la barista della <b>Coda di Gnasher</b>, ha un ritratto tutto nuovo: boccale in mano, come sempre, pronta a brindare con chiunque passi dal bancone.",
       "Lo trovate nella sua scheda tra i personaggi di Ramsgate e negli <b>Incontri</b>."

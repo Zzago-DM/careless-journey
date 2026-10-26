@@ -22,6 +22,8 @@
   #ar-stazione *{animation:none!important}
   #ar-stazione .ar-nv,#ar-stazione .ar-cometa{display:none}
   html[data-tema=arena] section:not(#hero) .sh::before{animation:none}
+  /* Truasilia: marmo dei riquadri senza venature (trama in meno da disegnare) */
+  html[data-tema=truasilia] section:not(#hero)>.si{background:linear-gradient(180deg,#fffdf8,#f6f2ea)}
   /* Reami Dimenticati: luce del portale ferma */
   html[data-tema=reami] .stars::before{animation:none}
 }
