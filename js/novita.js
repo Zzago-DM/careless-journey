@@ -40,11 +40,10 @@
       "Così anche un colpo da 23 si segna con un tocco solo, e il Gruppo riceve un unico aggiornamento invece di tanti di fila."
     ]},
     { id: "2026-10-cassa", i: "💰", t: "La cassa di squadra", p: [
-      "Le monete non stanno più nell'Area dello Slayer: nella sezione <b>Il Gruppo</b> c'è la <b>«💰 Cassa di squadra»</b>, uguale per tutti e aggiornata in diretta, come i Punti Vita.",
+      "Nella sezione <b>Il Gruppo</b> c'è la nuova <b>«💰 Cassa di squadra»</b>: le monete del gruppo, uguali per tutti e aggiornate in diretta, come i Punti Vita.",
       "In alto c'è il <b>totale del gruppo</b>, che si calcola da solo; sotto, le monete divise per <b>valuta</b>. Per spendere o incassare scegliete la valuta (oppure toccatela nell'elenco), scrivete quante monete e premete <b>«− Togli»</b> o <b>«+ Aggiungi»</b>.",
       "Con <b>«+ Nuova valuta»</b> chiunque può aggiungerne una; una valuta si elimina con la × solo quando è a zero.",
-      "Ogni movimento compare subito a tutti con un avviso (per esempio «Athena ha tolto 40 …») e resta negli <b>ultimi 10 movimenti</b>, sotto la cassa.",
-      "La quota personale non c'è più: le monete vostre potete scriverle nell'inventario."
+      "Ogni movimento compare subito a tutti con un avviso (per esempio «Athena ha tolto 40 …») e resta negli <b>ultimi 10 movimenti</b>, sotto la cassa."
     ]},
     { id: "2026-10-leggera", i: "📱", t: "Versione leggera per il telefono", p: [
       "Da oggi il sito ha due versioni.",

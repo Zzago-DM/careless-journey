@@ -48,6 +48,23 @@ tcjSezione(`<section id="scheda" style="background:var(--bg2)">
     <div style="display:flex;align-items:center;gap:.4rem"><button class="sc-cnt-btn" onclick="scEqCnt(3,-1)">−</button><input class="sc-cnt-val" id="sc-eq-cnt-3" type="number" value="0" min="0" style="width:44px"><button class="sc-cnt-btn" onclick="scEqCnt(3,1)">+</button><input class="sc-in" id="sc-eq-txt-3" placeholder="Tonico / Pilone..." style="flex:1;font-size:.85rem"></div>
   </div></div>
   <div data-pz="inventario" class="sc-card sc-full"><span class="sc-lbl">Inventario</span><textarea class="sc-in" id="sc-equip" rows="3" style="resize:vertical;font-size:.88rem" placeholder="Oggetti, pozioni, strumenti..."></textarea></div>
+  <div data-pz="monete" class="sc-card sc-full"><span class="sc-lbl">💰 Monete</span>
+    <div style="display:flex;flex-direction:column;gap:1rem;margin-top:.2rem">
+      <div>
+        <span class="sc-coin-sub">Monete di Squadra · Totale</span>
+        <input class="sc-in" id="sc-coin-team" type="text" inputmode="numeric" placeholder="0" style="text-align:center;font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--gold2)">
+      </div>
+      <div>
+        <span class="sc-coin-sub">Valute</span>
+        <div id="sc-coin-rows" style="display:flex;flex-direction:column;gap:.4rem"></div>
+        <button class="sc-coin-add" type="button" onclick="sfxPlay('coin');scCoinAdd()">+ Aggiungi valuta</button>
+      </div>
+      <div>
+        <span class="sc-coin-sub">Quota Personale del Personaggio</span>
+        <input class="sc-in" id="sc-coin-personal" type="text" inputmode="numeric" placeholder="0" style="text-align:center;font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--gold2)">
+      </div>
+    </div>
+  </div>
   <div data-pz="celle" class="sc-card sc-full"><span class="sc-lbl">Celle Equipaggiate</span><div class="sc-celle-grid" id="sc-celle"></div></div>
   <div data-pz="corone" class="sc-card sc-full"><div class="cr-head"><span class="sc-lbl" style="margin:0">Corone Aetheriche</span><span class="cr-meta">Possedute <b id="cr-count">0</b> / 12 &middot; Introito <b id="cr-mult">&mdash;</b></span></div><div class="cr-grid" id="cr-grid"></div><div style="font-size:.74rem;color:var(--text2);margin-top:.6rem;font-style:italic">Clicca una Corona per aprirne la scheda; il quadratino in alto a destra segna il possesso.</div></div>
   <div data-pz="note" class="sc-card sc-full"><div class="pa-notes-head"><span class="sc-lbl">Note personali</span><span class="pa-hint">Titoli modificabili · sezioni da aggiungere, spostare, eliminare</span></div><div id="pa-notes"></div><button class="sc-coin-add" type="button" onclick="paNoteAdd()">+ Aggiungi sezione</button></div>
