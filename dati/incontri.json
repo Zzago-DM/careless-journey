@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-20T19:54:21.112Z",
+ "aggiornato": "2026-10-26T11:49:17.041Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -139,6 +139,15 @@
    "foto": "img/gregorio-flynt.webp",
    "formati": [
     "1:1"
+   ]
+  },
+  {
+   "id": "pmvp703qaz9jt",
+   "nome": "Hellcrew",
+   "continente": "ramsgate",
+   "foto": "img/incontri/pmvp703qaz9jt-fp4ja7.webp",
+   "formati": [
+    "16:9"
    ]
   },
   {
