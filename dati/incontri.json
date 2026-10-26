@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-26T11:49:17.041Z",
+ "aggiornato": "2026-10-26T11:50:09.154Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -164,6 +164,24 @@
    "foto": "img/janek-zai.webp",
    "formati": [
     "1:1"
+   ]
+  },
+  {
+   "id": "pmvp71x6puj7d",
+   "nome": "JoJo",
+   "continente": "ramsgate",
+   "foto": "img/incontri/pmvp71x6puj7d-1a7hd9f.webp",
+   "foti": [
+    "img/incontri/pmvp71x6puj7d-1a7hd9f.webp",
+    "img/incontri/pmvp71x6puj7d-18zhp7d.webp",
+    "img/incontri/pmvp71x6puj7d-7hbajj.webp",
+    "img/incontri/pmvp71x6puj7d-qxsmu0.webp"
+   ],
+   "formati": [
+    "3:4",
+    "3:4",
+    "3:4",
+    "3:4"
    ]
   },
   {
