@@ -294,3 +294,66 @@
   .gr-tb-h{text-align:center}
 }
 @media(prefers-reduced-motion:reduce){.gr-fx-p,.gr-fx-flash,.gr-fx-bolt,.gr-fx-bloom{display:none}.gr-scossa,.gr-barcolla,.gr-tb-n b.cambia{animation:none}}
+
+/* =================== Cassa di squadra (js/gruppo.js · rendiCassa) =================== */
+.gc-cassa{max-width:1100px;margin:1.4rem auto 0;padding:1.05rem 1.15rem 1rem;background:linear-gradient(160deg,rgba(var(--gold-rgb),.09),var(--bg3) 50%);border:1px solid rgba(var(--gold-rgb),.32);box-shadow:0 10px 30px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.03)}
+.gc-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;padding-bottom:.8rem;margin-bottom:.85rem;border-bottom:1px solid var(--border)}
+.gc-tit{font-family:"Cinzel",serif;font-weight:700;font-size:1rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold2)}
+.gc-tot{display:flex;align-items:baseline;gap:.45rem;line-height:1}
+.gc-tot small{font-family:"Cinzel",serif;font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text2)}
+.gc-tot b{font-family:"Cinzel Decorative",serif;font-size:2rem;color:var(--gold2);font-variant-numeric:tabular-nums;text-shadow:0 0 18px rgba(var(--gold-rgb),.35)}
+.gc-tot b.giu{animation:gcGiu .9s ease-out}
+.gc-tot b.su{animation:gcSu .9s ease-out}
+@keyframes gcGiu{0%{color:#ff7a66;transform:scale(1.08)}100%{color:var(--gold2);transform:none}}
+@keyframes gcSu{0%{color:#8ef0b0;transform:scale(1.08)}100%{color:var(--gold2);transform:none}}
+.gc-val{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.5rem;margin-bottom:.85rem}
+.gc-v{display:flex;align-items:stretch;gap:0;border:1px solid var(--border);background:rgba(0,0,0,.22)}
+.gc-v.giu{animation:gcRigaGiu 1.1s ease-out}
+.gc-v.su{animation:gcRigaSu 1.1s ease-out}
+@keyframes gcRigaGiu{0%{border-color:rgba(255,90,72,.8);background:rgba(255,90,72,.14)}100%{}}
+@keyframes gcRigaSu{0%{border-color:rgba(110,240,150,.7);background:rgba(110,240,150,.12)}100%{}}
+.gc-vb{flex:1;display:flex;align-items:center;justify-content:space-between;gap:.6rem;min-width:0;padding:.55rem .75rem;background:none;border:0;color:var(--text);cursor:pointer;text-align:left;font:inherit}
+.gc-vb:hover{background:rgba(var(--gold-rgb),.06)}
+.gc-vn{font-size:.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gc-vb b{font-family:"Cinzel",serif;font-size:1.1rem;color:var(--gold2);font-variant-numeric:tabular-nums}
+.gc-vx{padding:0 .7rem;background:none;border:0;border-left:1px solid var(--border);color:var(--text2);font-size:1.1rem;cursor:pointer}
+.gc-vx:hover{color:#ff8a78}
+.gc-vuota{grid-column:1/-1;margin:.2rem 0;font-style:italic;color:var(--text2)}
+.gc-mov{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) auto auto;gap:.4rem;align-items:stretch}
+.gc-sel,.gc-q,.gc-nn,.gc-nq{min-width:0;width:100%;box-sizing:border-box;min-height:40px;padding:.4rem .6rem;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:"Cinzel",serif;font-size:.8rem;border-radius:0;outline:none}
+.gc-q,.gc-nq{text-align:center;font-weight:700}
+.gc-sel:focus,.gc-q:focus,.gc-nn:focus,.gc-nq:focus{border-color:rgba(var(--gold-rgb),.6)}
+.gc-b{font-family:"Cinzel",serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;white-space:nowrap;padding:.45rem .85rem;min-height:40px;background:var(--bg);border:1px solid var(--border);color:var(--text);cursor:pointer;transition:border-color .2s,color .2s}
+.gc-togli:hover{border-color:rgba(255,90,72,.6);color:#ff8a78}
+.gc-agg:hover{border-color:rgba(110,240,150,.55);color:#8ef0b0}
+.gc-b:disabled,.gc-vx:disabled{opacity:.45;cursor:not-allowed}
+.gc-no{border-color:rgba(255,90,72,.75)!important;animation:grColpo .35s}
+.gc-nuova{margin-top:.6rem}
+.gc-nuova summary{display:inline-block;cursor:pointer;font-family:"Cinzel",serif;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);padding:.3rem 0;list-style:none}
+.gc-nuova summary::-webkit-details-marker{display:none}
+.gc-nrow{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) auto;gap:.4rem;margin-top:.35rem}
+.gc-imp{margin-top:.8rem;padding:.7rem .85rem;border:1px dashed rgba(var(--gold-rgb),.4);background:rgba(var(--gold-rgb),.05);font-size:.92rem}
+.gc-imp p{margin:.1rem 0 .5rem}
+.gc-imp ul{margin:.2rem 0 .7rem;padding-left:1.1rem}
+.gc-imp li{margin:.2rem 0}
+.gc-imp small{color:var(--text2)}
+.gc-msg{margin-top:.6rem;font-size:.85rem;font-style:italic;color:var(--text2)}
+.gc-cassa.gc-lavora .gc-mov{opacity:.7}
+.gc-sto{margin-top:1rem}
+.gc-sub{font-family:"Cinzel",serif;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text2);margin-bottom:.4rem}
+.gc-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--border)}
+.gc-list li{display:grid;grid-template-columns:4.6rem 1fr auto;gap:.6rem;align-items:baseline;padding:.4rem .2rem;border-bottom:1px solid rgba(var(--gold-rgb),.08);font-size:.9rem}
+.gc-q2{font-family:"Cinzel",serif;font-weight:700;text-align:right;font-variant-numeric:tabular-nums;color:var(--gold2)}
+.gc-list li.giu .gc-q2{color:#ff8a78}
+.gc-list li.su .gc-q2{color:#8ef0b0}
+.gc-list time{font-size:.75rem;color:var(--text2);white-space:nowrap}
+.gc-list .gc-nessuno{display:block;color:var(--text2);font-style:italic}
+@media (max-width:560px){
+  .gc-mov{grid-template-columns:1fr 1fr}
+  .gc-sel,.gc-q{grid-column:1/-1}
+  .gc-nrow{grid-template-columns:1fr 5.5rem}
+  .gc-nrow .gc-b{grid-column:1/-1}
+  .gc-tot b{font-size:1.7rem}
+  .gc-list li{grid-template-columns:3.8rem 1fr;font-size:.86rem}
+  .gc-list time{grid-column:2}
+}

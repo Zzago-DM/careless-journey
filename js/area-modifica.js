@@ -29,7 +29,6 @@
     ["arma2","🏹","Arma secondaria",false],
     ["equip","🎒","Equipaggiamento",true],
     ["inventario","📦","Inventario",true],
-    ["monete","💰","Monete",true],
     ["celle","💎","Celle equipaggiate",true],
     ["corone","👑","Corone Aetheriche",true],
     ["note","📜","Note personali",true],

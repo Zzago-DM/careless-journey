@@ -139,6 +139,7 @@
     d.pg = d.pg && typeof d.pg === "object" ? d.pg : {};
     doc = d; salvaCache();
     try { controllaTurno(); } catch(e){ console.error(e); }
+    try { controllaCassa(); } catch(e){ console.error(e); }
     rendiBoard();
   }
 
@@ -160,7 +161,7 @@
   function prossimo(){
     clearTimeout(timer);
     if(document.hidden) return;
-    var ms = !tokLettura() ? 120000 : (accesso === "noaccesso" || accesso === "tokenko") ? 20000 : inVista ? 3000 : 12000;
+    var ms = !tokLettura() ? 120000 : (accesso === "noaccesso" || accesso === "tokenko") ? 20000 : inVista ? 3000 : 6000;
     timer = setTimeout(function(){ leggi().then(prossimo); }, ms);
   }
   document.addEventListener("visibilitychange", function(){ if(!document.hidden){ leggi().then(prossimo); } else clearTimeout(timer); });
@@ -264,7 +265,7 @@
     errore: "GitHub non risponde: riprovo tra poco."
   };
   function segnala(s){
-    accesso = s; if(s === "ok"){ ultimoOk = Date.now(); primoInvio(); }
+    accesso = s; if(s === "ok"){ ultimoOk = Date.now(); primoInvio(); if(gcVisti === null){ gcVisti = {}; var cz = cassaDi(doc); ((cz && cz.mov) || []).forEach(function(m){ if(m && m.id) gcVisti[m.id] = 1; }); } try { autoImport(); } catch(e){ console.error(e); } }
     var w = $("gr-live"), t = $("gr-live-t"); if(!w || !t) return;
     w.setAttribute("data-s", s === "ok" ? "ok" : (s === "notoken" ? "loc" : "ko"));
     t.textContent = MSG[s] || MSG.errore;
@@ -445,6 +446,7 @@
       if(!c){ c = creaCard(k); b.appendChild(c); }
       aggiornaCard(c, k, datiDi(k));
     });
+    try { rendiCassa(); } catch(e){ console.error(e); }
   }
   setInterval(function(){ if(!document.hidden) rendiBoard(); }, 30000);
 
@@ -770,6 +772,208 @@
       return out;
     };
   }
+
+  /* =================== Cassa di squadra (in stato.json, campo «cassa») ===================
+     cassa = { val: [{ n: "Corone di Ramsgate", q: 120 }, …], mov: [ultimi 10 movimenti, il più recente per primo] }
+     - Il totale del gruppo non si scrive mai: è la somma delle valute.
+     - Ogni movimento (togli, aggiungi, nuova valuta, valuta eliminata) passa da modifica(): rilegge stato.json, applica,
+       salva; se nel frattempo qualcun altro ha salvato, riprova sui dati nuovi (così due spese insieme non si cancellano).
+     - Gli altri dispositivi vedono il movimento alla lettura successiva (pochi secondi) con un avviso «chi e quanto».
+     - Le monete scritte prima nelle schede: le porta nella cassa il dispositivo di Athena da solo (se la cassa non è mai
+       stata creata), oppure il Master con «🔍 Controlla le schede» (legge le schede online dei tre Slayer). */
+  function CORTO(k){ var c = SC_CHARS.find(function(x){ return x.k === k; }); return (c && c.n) || NOME[k].split(" ")[0]; }
+  var GC_ORO = "Monete d'oro", GC_FONTE = "athena";
+  var gcVisti = null, gcMiei = {}, gcPrima = null, gcOccupato = false;
+  function intero(v){ var s = String(v == null ? "" : v).replace(/[^0-9]/g, ""); return s ? Math.min(9999999, parseInt(s, 10)) : 0; }
+  function fmt(n){ return String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
+  function cassaDi(d){ var c = d && d.cassa; return c && Array.isArray(c.val) ? c : null; }
+  function totaleDi(c){ return c ? c.val.reduce(function(a, v){ return a + (v.q || 0); }, 0) : 0; }
+  function trova(c, n){ var m = String(n || "").trim().toLowerCase(); for(var i = 0; i < c.val.length; i++) if(String(c.val[i].n).toLowerCase() === m) return c.val[i]; return null; }
+  function rid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  /* chi sta facendo il movimento su questo dispositivo, e con quale token */
+  function autore(){
+    var k = null;
+    try { if(typeof scCur !== "undefined" && paIsOpen(scCur)) k = scCur; } catch(e){}
+    if(k && tokPg(k)) return { chi: CORTO(k), tok: tokPg(k) };
+    if(tokMaster()) return { chi: "Il Master", tok: tokMaster() };
+    if(k && tokScrittura(k)) return { chi: CORTO(k), tok: tokScrittura(k) };
+    return { chi: null, tok: "" };
+  }
+  function testoMov(m, html){
+    var b = html ? function(x){ return "<b>" + esc(x) + "</b>"; } : function(x){ return x; };
+    var chi = b(m.chi || "Qualcuno");
+    if(m.k === "n") return chi + " ha creato la valuta " + b(m.v) + (m.d ? " con " + fmt(m.d) + " monete" : "");
+    if(m.k === "x") return chi + " ha eliminato la valuta " + b(m.v);
+    if(m.k === "i") return chi + " ha portato nella cassa le monete della scheda di " + esc(m.da || "Athena") + " (" + fmt(m.d) + " monete)";
+    return chi + (m.d < 0 ? " ha tolto " : " ha aggiunto ") + b(fmt(Math.abs(m.d))) + " " + (html ? esc(m.v) : m.v);
+  }
+  function gcErr(msg){ avvisa(msg, true); }
+  function operazione(fn, aut){
+    var a = aut || autore();
+    if(!a.tok){ gcErr("Per muovere le monete collega il salvataggio online nella tua Area dello Slayer."); return Promise.resolve(false); }
+    if(gcOccupato) return Promise.resolve(false);
+    gcOccupato = true; rendiCassa();
+    var errore = null, mio = null;
+    return modifica(a.tok, function(d){
+      var c = cassaDi(d) || (d.cassa = { val: [], mov: [] });
+      if(!Array.isArray(c.mov)) c.mov = [];
+      var r = fn(c);
+      if(!r || r.err){ errore = r && r.err; return false; }
+      mio = Object.assign({ id: rid(), t: new Date().toISOString(), chi: a.chi }, r);
+      gcMiei[mio.id] = 1;
+      c.mov.unshift(mio); c.mov = c.mov.slice(0, 10);
+      return "Cassa · " + testoMov(mio, false);
+    }).then(function(){
+      gcOccupato = false;
+      if(errore){ gcErr(errore); rendiCassa(); return false; }
+      if(mio){ suono("coin"); avvisa("✓ " + testoMov(mio, true).replace(/^<b>[^<]*<\/b> ha /, "Hai ")); }
+      rendiCassa(); return true;
+    }).catch(function(e){ gcOccupato = false; rendiCassa(); gcErr("Non salvato: " + errMsg(e) + ". Riprova."); return false; });
+  }
+  function scosso(el){ if(!el) return; el.classList.remove("gc-no"); void el.offsetWidth; el.classList.add("gc-no"); el.focus(); }
+  window.gcMuovi = function(seg){
+    var q = $("gc-q"), sel = $("gc-sel"); if(!q || !sel) return;
+    var n = intero(q.value), v = sel.value;
+    if(!v){ scosso($("gc-nuova")); avvisa("Prima crea una valuta con «+ Nuova valuta»."); return; }
+    if(!n){ scosso(q); return; }
+    operazione(function(c){
+      var x = trova(c, v); if(!x) return { err: "La valuta «" + v + "» non c'è più nella cassa." };
+      if(seg < 0 && n > (x.q || 0)) return { err: "Nella cassa ci sono solo " + fmt(x.q || 0) + " " + x.n + "." };
+      x.q = (x.q || 0) + (seg < 0 ? -n : n);
+      return { k: "m", v: x.n, d: seg < 0 ? -n : n };
+    }).then(function(ok){ if(ok) q.value = ""; });
+  };
+  window.gcNuova = function(){
+    var nn = $("gc-nn"), nq = $("gc-nq"); if(!nn) return;
+    var nome = String(nn.value || "").replace(/\s+/g, " ").trim(), q = intero(nq && nq.value);
+    if(!nome){ scosso(nn); return; }
+    operazione(function(c){
+      if(trova(c, nome)) return { err: "La valuta «" + nome + "» c'è già." };
+      c.val.push({ n: nome, q: q });
+      return { k: "n", v: nome, d: q };
+    }).then(function(ok){ if(ok){ nn.value = ""; if(nq) nq.value = ""; var det = $("gc-nuova"); if(det) det.open = false; var s = $("gc-sel"); if(s) s.value = nome; } });
+  };
+  window.gcElimina = function(nome){
+    var vai = function(){ operazione(function(c){
+      var x = trova(c, nome); if(!x) return false;
+      if(x.q) return { err: "Si può eliminare solo una valuta a zero (ora ne ha " + fmt(x.q) + ")." };
+      c.val.splice(c.val.indexOf(x), 1);
+      return { k: "x", v: x.n, d: 0 };
+    }); };
+    if(typeof tcjConferma === "function") tcjConferma({ titolo: "Eliminare la valuta?", testo: "«" + esc(nome) + "» sparirà dalla cassa di squadra, per tutti.", si: "Sì, elimina", attesa: 0 }).then(function(ok){ if(ok) vai(); });
+    else vai();
+  };
+
+  /* valute scritte in una scheda → righe della cassa (stessi nomi sommati; senza nome = «Monete d'oro») */
+  function valuteDaScheda(sc){
+    var out = [], somma = {};
+    (Array.isArray(sc && sc.coins) ? sc.coins : []).forEach(function(r){
+      var q = intero(r && r.a), n = String((r && r.c) || "").replace(/\s+/g, " ").trim() || GC_ORO;
+      if(!q && !(r && String(r.c || "").trim())) return;
+      var k = n.toLowerCase(); if(somma[k]) somma[k].q += q; else { somma[k] = { n: n, q: q }; out.push(somma[k]); }
+    });
+    if(!out.length && intero(sc && sc.coin_team)) out.push({ n: GC_ORO, q: intero(sc.coin_team) });
+    return out;
+  }
+  function importa(val, daChi, aut){
+    var tot = val.reduce(function(a, v){ return a + v.q; }, 0);
+    return operazione(function(c){
+      if(c.val.length || c.mov.length) return false;          /* la cassa nel frattempo è già stata creata: non sovrascrivo */
+      c.val = val.map(function(v){ return { n: v.n, q: v.q }; });
+      return { k: "i", v: "", d: tot, da: daChi };
+    }, aut);
+  }
+  /* dispositivo di Athena: se la cassa non è mai stata creata, ci porta da solo le monete della sua scheda */
+  var autoFatto = false;
+  function autoImport(){
+    if(autoFatto || accesso !== "ok" || doc.cassa || !tokPg(GC_FONTE)) return;
+    var val = valuteDaScheda(scheda(GC_FONTE)); if(!val.length) return;
+    autoFatto = true;
+    var nm = CORTO(GC_FONTE);
+    importa(val, nm, { chi: nm, tok: tokPg(GC_FONTE) });
+  }
+  /* Master: legge le schede online dei tre Slayer (diretta.json, se no dati.json) e mostra le monete di ciascuno */
+  function schedaOnline(k){
+    var tok = tokMaster(), repo = OWNER + "/tcj-" + k;
+    function leggiF(f){
+      return fetch(API + repo + "/contents/" + f + "?_=" + rid(), { headers: { "Authorization": "Bearer " + tok, "Accept": "application/vnd.github.raw+json", "X-GitHub-Api-Version": "2022-11-28" }, cache: "no-store" })
+        .then(function(r){ return r.ok ? r.text().then(function(t){ try { return JSON.parse(t); } catch(e){ return null; } }) : null; }).catch(function(){ return null; });
+    }
+    return leggiF("diretta.json").then(function(dj){
+      if(dj && dj.sc) return { sc: dj.sc, da: "scheda in diretta" };
+      return leggiF("dati.json").then(function(p){
+        var s = p && p.data && (p.data["tcj-sc4-" + k] || (k === CH[0] ? p.data["tcj-sc4"] : null));
+        try { return s ? { sc: JSON.parse(s), da: "salvataggio online" } : null; } catch(e){ return null; }
+      });
+    });
+  }
+  window.gcControlla = function(){
+    var box = $("gc-imp"); if(!box || !tokMaster()) return;
+    box.innerHTML = "<p>Leggo le schede online dei tre Slayer…</p>";
+    Promise.all(CH.map(schedaOnline)).then(function(ris){
+      var h = "<ul>", fonte = null;
+      CH.forEach(function(k, i){
+        var r = ris[i], nm = esc(CORTO(k));
+        if(!r){ h += "<li><b>" + nm + "</b>: scheda online non trovata</li>"; return; }
+        var val = valuteDaScheda(r.sc), tot = val.reduce(function(a, v){ return a + v.q; }, 0), ft = intero(r.sc.coin_team);
+        h += "<li><b>" + nm + "</b> <small>(" + r.da + ")</small>: " + (val.length ? val.map(function(v){ return fmt(v.q) + " " + esc(v.n); }).join(" · ") + " — <b>" + fmt(tot) + "</b> monete" : "nessuna valuta")
+          + (ft && ft !== tot ? " <small>· nel campo «Monete di Squadra · Totale» c'era scritto " + fmt(ft) + "</small>" : "") + "</li>";
+        if(k === GC_FONTE && val.length) fonte = val;
+      });
+      h += "</ul>";
+      if(fonte){ h += '<button type="button" class="gc-b gc-agg" id="gc-imp-b">Porta nella cassa le monete di ' + esc(CORTO(GC_FONTE)) + "</button>"; }
+      else h += "<p>Nella scheda online di " + esc(CORTO(GC_FONTE)) + " non ci sono monete: create le valute a mano con «+ Nuova valuta».</p>";
+      box.innerHTML = h;
+      var b = $("gc-imp-b"); if(b) b.onclick = function(){ b.disabled = true; importa(fonte, CORTO(GC_FONTE)).then(function(ok){ if(!ok) b.disabled = false; }); };
+    });
+  };
+
+  /* movimenti arrivati da altri dispositivi → avviso a tutti */
+  function controllaCassa(){
+    var c = cassaDi(doc), mov = c && Array.isArray(c.mov) ? c.mov : [];
+    if(gcVisti === null){ gcVisti = {}; mov.forEach(function(m){ gcVisti[m.id] = 1; }); return; }
+    var nuovi = mov.filter(function(m){ return m && m.id && !gcVisti[m.id]; }).reverse();
+    nuovi.forEach(function(m){ gcVisti[m.id] = 1; });
+    nuovi = nuovi.filter(function(m){ return !gcMiei[m.id]; });
+    if(!nuovi.length) return;
+    suono("coin");
+    avvisa("💰 " + nuovi.slice(-3).map(function(m){ return testoMov(m, true); }).join("<br>💰 "));
+  }
+  function rendiCassa(){
+    var box = $("gc-cassa"); if(!box) return;
+    var c = cassaDi(doc), val = c ? c.val : [], tot = totaleDi(c), a = autore();
+    var tEl = $("gc-tot"), nuovoT = c ? fmt(tot) : "—";
+    if(tEl.textContent !== nuovoT){ if(gcPrima !== null && c){ tEl.classList.remove("su", "giu"); void tEl.offsetWidth; tEl.classList.add(tot < gcPrima.tot ? "giu" : "su"); } tEl.textContent = nuovoT; }
+    var prima = gcPrima ? gcPrima.q : {};
+    var vl = $("gc-val"), hv = val.length ? val.map(function(v){
+      var k = String(v.n).toLowerCase(), cam = prima[k] !== undefined && prima[k] !== v.q ? (v.q < prima[k] ? " giu" : " su") : "";
+      return '<div class="gc-v' + cam + '"><button type="button" class="gc-vb" data-n="' + esc(v.n) + '" title="Scegli questa valuta"><span class="gc-vn">' + esc(v.n) + '</span><b>' + fmt(v.q) + '</b></button>'
+        + (v.q ? "" : '<button type="button" class="gc-vx" data-x="' + esc(v.n) + '" title="Elimina la valuta" aria-label="Elimina ' + esc(v.n) + '">×</button>') + "</div>";
+    }).join("") : '<p class="gc-vuota">' + (c ? "Nessuna valuta: creane una con «+ Nuova valuta»." : accesso === "ok" ? "La cassa non è ancora stata creata." : "La cassa compare appena il quadro è collegato.") + "</p>";
+    if(vl._h !== hv){ vl._h = hv; vl.innerHTML = hv; }
+    var q = {}; val.forEach(function(v){ q[String(v.n).toLowerCase()] = v.q; }); gcPrima = { tot: tot, q: q };
+    var sel = $("gc-sel"), scelto = sel.value, ho = val.length ? val.map(function(v){ return '<option value="' + esc(v.n) + '">' + esc(v.n) + "</option>"; }).join("") : '<option value="">— nessuna valuta —</option>';
+    if(sel._h !== ho){ sel._h = ho; sel.innerHTML = ho; if(scelto && trova({ val: val }, scelto)) sel.value = trova({ val: val }, scelto).n; }
+    var puo = !!a.tok && accesso === "ok";
+    box.classList.toggle("gc-off", !puo); box.classList.toggle("gc-lavora", gcOccupato);
+    [].forEach.call(box.querySelectorAll(".gc-mov button,.gc-nuova button,.gc-vx"), function(b){ b.disabled = !puo || gcOccupato; });
+    var msg = $("gc-msg");
+    msg.hidden = !!a.tok;
+    msg.textContent = "Per togliere o aggiungere monete collega il salvataggio online nella tua Area dello Slayer.";
+    var imp = $("gc-imp"), mostra = accesso === "ok" && !doc.cassa && sonoMaster();
+    if(imp){ if(mostra && imp.hidden){ imp.hidden = false; imp.innerHTML = "<p>Le monete sono ancora scritte nelle schede degli Slayer.</p><button type=\"button\" class=\"gc-b\" onclick=\"gcControlla()\">🔍 Controlla le schede</button>"; } else if(!mostra && !imp.hidden && doc.cassa){ imp.hidden = true; imp.innerHTML = ""; } }
+    var mov = c && Array.isArray(c.mov) ? c.mov : [], sto = $("gc-sto");
+    var hs = mov.length ? mov.map(function(m){
+      var cl = m.k === "m" ? (m.d < 0 ? "giu" : "su") : "info";
+      return '<li class="' + cl + '"><span class="gc-q2">' + (m.k === "m" ? (m.d < 0 ? "−" : "+") + fmt(Math.abs(m.d)) : m.k === "i" ? "+" + fmt(m.d) : m.k === "n" ? "✦" : "×") + "</span><span class=\"gc-tx\">" + testoMov(m, true) + '</span><time>' + esc(fa(m.t)) + "</time></li>";
+    }).join("") : '<li class="gc-nessuno">Ancora nessun movimento.</li>';
+    if(sto._h !== hs){ sto._h = hs; sto.innerHTML = hs; }
+  }
+  document.addEventListener("click", function(e){
+    var t = e.target; if(!t || !t.closest) return;
+    var v = t.closest("#gc-val .gc-vb"); if(v){ var s = $("gc-sel"); if(s){ s.value = v.getAttribute("data-n"); } var q = $("gc-q"); if(q) q.focus(); return; }
+    var x = t.closest("#gc-val .gc-vx"); if(x && !x.disabled) gcElimina(x.getAttribute("data-x"));
+  });
 
   /* ---------- avvio ---------- */
   CH.forEach(function(k){ base[k] = firma(daScheda(k)); });
