@@ -1,0 +1,28 @@
+/* Schermate iniziali: novità del sito e scelta del dispositivo (js/novita.js). Restano sopra tutto, anche sopra l'animazione d'apertura. */
+#nov-ov{position:fixed;inset:0;z-index:100002;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(ellipse at center,rgba(13,16,24,.97),rgba(5,6,9,.99));color:var(--text);font-family:'EB Garamond',Georgia,serif}
+#nov-ov .nov-box{position:relative;width:100%;max-width:560px;max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);display:flex;flex-direction:column;background:linear-gradient(180deg,var(--bg3),var(--bg2));border:1px solid rgba(var(--gold-rgb),.45);box-shadow:0 0 0 1px rgba(0,0,0,.6),0 20px 60px rgba(0,0,0,.7),inset 0 0 40px rgba(var(--gold-rgb),.05)}
+#nov-ov .nov-box::before{content:"";position:absolute;inset:5px;border:1px solid rgba(var(--gold-rgb),.14);pointer-events:none}
+#nov-ov .nov-cap{display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.8rem 1.2rem .2rem;font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+#nov-ov .nov-pt{display:flex;gap:5px}
+#nov-ov .nov-pt i{width:7px;height:7px;border-radius:50%;background:rgba(var(--gold-rgb),.22)}
+#nov-ov .nov-pt i.on{background:var(--gold2);box-shadow:0 0 6px rgba(var(--gold-rgb),.7)}
+#nov-ov .nov-corpo{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:.4rem 1.4rem .6rem;font-size:1.08rem;line-height:1.55}
+#nov-ov .nov-ic{font-size:2.3rem;line-height:1;text-align:center;margin:.5rem 0 .3rem;color:var(--gold2)}
+#nov-ov .nov-t{font-family:'Cinzel',serif;font-weight:700;font-size:1.28rem;line-height:1.25;letter-spacing:.04em;text-align:center;color:var(--gold2);margin:.2rem 0 .8rem}
+#nov-ov .nov-corpo p{margin:0 0 .7rem}
+#nov-ov .nov-corpo b{color:var(--gold2);font-weight:600}
+#nov-ov .nov-corpo small{font-size:.86rem;color:var(--text2)}
+#nov-ov .nov-el{display:block;padding:.5rem .8rem;border-left:2px solid rgba(var(--gold-rgb),.35);background:rgba(var(--gold-rgb),.04);line-height:1.6}
+#nov-ov .nov-pie{display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.7rem 1.2rem 1rem;border-top:1px solid rgba(var(--gold-rgb),.15)}
+#nov-ov .nov-b{font-family:'Cinzel',serif;font-weight:700;font-size:.8rem;letter-spacing:.1em;padding:.65rem 1.1rem;cursor:pointer;border:1px solid rgba(var(--gold-rgb),.45);background:transparent;color:var(--gold);min-height:44px}
+#nov-ov .nov-ok{background:linear-gradient(180deg,var(--gold2),var(--gold3));color:#140f05;border-color:var(--gold2)}
+#nov-ov .nov-b:hover,#nov-ov .nov-b:focus-visible{filter:brightness(1.12);outline:none;box-shadow:0 0 0 2px rgba(var(--gold-rgb),.4)}
+#nov-ov .nov-ops{display:grid;gap:.6rem;margin:.4rem 0 .8rem}
+#nov-ov .nov-op{display:flex;align-items:center;gap:.9rem;width:100%;text-align:left;padding:.85rem 1rem;cursor:pointer;background:rgba(0,0,0,.25);border:1px solid rgba(var(--gold-rgb),.25);color:var(--text);font:inherit}
+#nov-ov .nov-op.on{border-color:var(--gold2);background:rgba(var(--gold-rgb),.1);box-shadow:inset 0 0 0 1px rgba(var(--gold-rgb),.5)}
+#nov-ov .nov-opi{font-size:1.9rem;line-height:1}
+#nov-ov .nov-opt{display:flex;flex-direction:column;gap:.15rem}
+#nov-ov .nov-opt b{font-family:'Cinzel',serif;font-size:.92rem;letter-spacing:.03em;color:var(--gold2)}
+#nov-ov .nov-opt small{font-size:.92rem;line-height:1.35;color:var(--text2)}
+#nov-ov .nov-opt em{font-style:normal;font-family:'Cinzel',serif;font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#8ef0b0;margin-top:.15rem}
+@media (max-width:480px){#nov-ov{padding:10px}#nov-ov .nov-box{max-height:calc(100dvh - 20px)}#nov-ov .nov-corpo{padding:.3rem 1rem .5rem;font-size:1.02rem}#nov-ov .nov-t{font-size:1.12rem}#nov-ov .nov-pie{padding:.6rem 1rem .85rem}}

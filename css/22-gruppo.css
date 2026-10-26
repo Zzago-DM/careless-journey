@@ -116,6 +116,13 @@
 .gr-pvbtns button:nth-child(-n+2):hover{border-color:rgba(255,90,72,.6);color:#ff8a78}
 .gr-pvbtns button:nth-child(n+3):hover{border-color:rgba(110,240,150,.55);color:#8ef0b0}
 .gr-pvbtns button:active{transform:scale(.94)}
+/* danno o cura a piacere */
+.gr-pvx{margin-top:.35rem}
+.gr-pvx .gr-pvq{grid-column:span 2;min-width:0;width:100%;box-sizing:border-box;font-family:"Cinzel",serif;font-size:.78rem;font-weight:700;text-align:center;padding:.32rem .4rem;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:0;outline:none}
+.gr-pvx .gr-pvq::placeholder{color:var(--text2);font-weight:400;letter-spacing:.04em}
+.gr-pvx .gr-pvq:focus{border-color:rgba(var(--gold-rgb),.6)}
+.gr-pvx .gr-pvq.gr-pvq-no{border-color:rgba(255,90,72,.7);animation:grColpo .35s}
+.gr-pvx button{font-size:.66rem;letter-spacing:.02em;white-space:nowrap}
 .gr-pvcard{position:relative;overflow:hidden}
 .gr-pvcard.colpo{animation:grColpo .45s cubic-bezier(.36,.07,.19,.97)}
 .gr-pvcard.colpo::after,.gr-pvcard.cura::after{content:"";position:absolute;inset:0;pointer-events:none;animation:grLampo .6s ease-out forwards}

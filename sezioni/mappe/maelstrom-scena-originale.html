@@ -172,4 +172,7 @@
 </svg>
   <div class="vignette"></div>
   </div>
+<script>/* versione leggera del sito (…?fermo=1): la scena resta ferma */
+if(/[?&]fermo=1/.test(location.search)){var st=document.createElement("style");st.textContent="*{animation:none!important;transition:none!important}";document.head.appendChild(st);
+document.querySelectorAll("svg").forEach(function(s){try{s.pauseAnimations();s.setCurrentTime(1.2);}catch(e){}});}</script>
 </body></html>

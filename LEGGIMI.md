@@ -58,7 +58,7 @@ Se un token si perde: revocalo su GitHub e creane uno nuovo; ogni versione salva
 
 ## Il Gruppo — PV e stati in diretta (js/gruppo.js)
 
-La sezione **Il Gruppo** (`sezioni/gruppo.js`, `css/22-gruppo.css`, `js/gruppo.js`), subito sopra l'Area dello Slayer, mostra a tutti i Punti Vita (con la barra) e gli stati alterati di ogni personaggio. Nella scheda ci sono i PV attuali / massimi con i pulsanti ±1 e ±5 e il riquadro «Stati alterati» (un tocco: forma lieve, due: grave, tre: via; «⏭ Fine turno» toglie un turno a tutti).
+La sezione **Il Gruppo** (`sezioni/gruppo.js`, `css/22-gruppo.css`, `js/gruppo.js`), subito sopra l'Area dello Slayer, mostra a tutti i Punti Vita (con la barra) e gli stati alterati di ogni personaggio. Nella scheda ci sono i PV attuali / massimi con i pulsanti ±1 e ±5, una casella «Quanti PV?» con «− Danno» e «+ Cura» per qualunque importo (un solo cambio e un solo invio al Gruppo, `grPvX` in `js/gruppo.js`) e il riquadro «Stati alterati» (un tocco: forma lieve, due: grave, tre: via; «⏭ Fine turno» toglie un turno a tutti).
 
 - I dati stanno nel repository **privato** `gruppo`, file `stato.json`. Quando un giocatore cambia PV o stati, dopo un paio di secondi il sito invia la sua riga; gli altri dispositivi la rileggono ogni pochi secondi mentre la pagina è aperta.
 - Si usa il token del personaggio (se manca, quello del Master).
@@ -91,6 +91,26 @@ In alto a sinistra sulla Mappa del Mondo (sotto la mappa sul telefono) c'è **�
 - **Nave ferma:** `nave` in `VG_LUOGHI` è dove la nave resta su ogni terra se non c'è un viaggio.
 
 Ogni player ha la sua nave: lo stato sta nella chiave `tcj-vg-<personaggio>`, dentro il pacchetto online del personaggio (segue il player su ogni dispositivo con «☁ Salva online»). Senza un personaggio attivo la nave resta solo nel browser (`tcj-vg`). Ha sostituito la vecchia rotta fissa da Ramsgate e l'opzione «Rotta della nave» del menu del Master.
+
+## Schermate delle novità e scelta del dispositivo (js/novita.js + css/40-novita.css)
+
+Prima di tutto il resto (anche dell'animazione d'apertura, che aspetta) compaiono:
+1. **Le novità**: una schermata per ogni aggiornamento («Novità · 1 di 6», «Ho capito →», «← Indietro»). Ognuna si vede **una volta sola per dispositivo** (chiave `tcj-novita-viste`).
+   Per annunciarne una nuova: aggiungerla in fondo all'elenco `NOVITA` in `js/novita.js` con un `id` mai usato.
+   **Regola:** a ogni modifica che i giocatori vedono si aggiunge subito la sua schermata. Mai Zona Master, segreti, lore nascosta o sorprese (per esempio le animazioni di sblocco delle zone); nel dubbio, chiedere al Master.
+2. **Il dispositivo** (solo la prima volta, chiave `tcj-dispositivo`): «📱 Telefono — versione leggera» o «💻 Computer — versione completa», con già segnata quella adatta. Si cambia quando si vuole dal menu ⚔ Slayer → «Dispositivo» (la pagina si ricarica allo stesso punto, senza animazione d'apertura).
+
+## Versione leggera (telefono) — html[data-leggero], css/39-leggero.css
+
+Il primo script di `index.html` decide la versione (la scelta salvata, altrimenti quella adatta al dispositivo) e mette `data-leggero` sulla pagina. Nella versione leggera:
+- **tutto resta com'è ma fermo**: le animazioni e le transizioni CSS finiscono subito, i disegni SVG animati (bagliori della mappa, nuvole, rotta della nave) vengono fermati, e il sito risponde «sì» alla domanda «riduci il movimento», che tutti gli script animati rispettano già (niente animazioni a canvas);
+- **unica eccezione: l'isola che compare dopo un minuto nella vista del Maelstrom** (e la sua mappa), che resta animata;
+- niente animazione d'apertura (`js/intro.js` non si scarica), temi del sito, aspetti dell'area (solo la scheda classica), effetti laterali, particelle di sfondo, creature e suoni; il Maelstrom è sempre «Bassa» e fermo (`…?fermo=1`); i ritratti dell'animazione di sblocco (`dati/ritratti-giocatori.js`, 500 KB) non si scaricano;
+- restano il colore del sito scelto per ogni personaggio (Impostazioni sfondo → Colore del sito) e, per il Master, il colore della Zona Master (Cremisi/Oro);
+- il Gruppo mostra tutto (barre, stati, Fine turno con i danni) senza effetti: i valori si aggiornano e basta;
+- nel menu ⚔ Slayer spariscono le righe Suoni, Effetti laterali, Particelle, Animazione del Maelstrom e Tema del sito.
+
+Misure su un iPhone simulato (pagina ferma 5 s / 120 scatti di scorrimento): completa 1,9 s / 2,7 s di lavoro, leggera 0,02 s / 0,35 s.
 
 ## Effetti laterali sul telefono
 

@@ -31,6 +31,7 @@
   }
 
   window.tcjGruppo = function(nome, file){
+    if(window.TCJ_LEGGERO && nome === "ritratti") file = [];   /* versione leggera: niente animazione di sblocco, i ritratti non servono */
     var g = gruppi[nome] = { file: file, posto: document.currentScript, pronto: false, promessa: null };
     if(aperta) setTimeout(function(){ avvia(g); }, 0);
     return g;

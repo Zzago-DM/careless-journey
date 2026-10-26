@@ -7,7 +7,7 @@
   var AREA = 16000;          // una particella ogni tanti pixel quadrati di schermo
   var VEL = [12, 50];        // velocità di caduta (pixel al secondo): lontane, vicine
 
-  function on(){ try { return localStorage.getItem(KEY) !== "0"; } catch(e){ return true; } }
+  function on(){ if(window.TCJ_LEGGERO) return false; try { return localStorage.getItem(KEY) !== "0"; } catch(e){ return true; } }
   var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   var cv = document.createElement("canvas");

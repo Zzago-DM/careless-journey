@@ -608,7 +608,7 @@
   /* ---------- effetti visivi della fine del turno ---------- */
   var FX = { fuoco:{n:22, s:"🔥"}, ghiaccio:{n:16, s:"❄"}, fulmine:{n:0}, terra:{n:18}, oscurita:{n:9}, luce:{n:10}, sanguinante:{n:12}, emorragia:{n:16}, stordito:{n:6, s:"✦"}, frenesia:{n:0} };
   function effetto(card, u, schermo){
-    if(!u) return;
+    if(!u || window.TCJ_LEGGERO) return;   /* versione leggera: niente effetti, l'avviso e i PV si aggiornano comunque */
     var eff = (u.eff || []).filter(function(f, i, a){ return a.indexOf(f) === i && FX[f]; }).slice(0, 4);
     var bersaglio = schermo ? document.querySelector("#pa-body .sc-wrap") : card;
     if(schermo){
@@ -700,6 +700,14 @@
     p.value = nv; tocca(p);
     suono(d < 0 ? "crack" : "mend");
     var c = p.closest(".sc-card"); if(c){ var cls = d < 0 ? "colpo" : "cura"; c.classList.remove("colpo", "cura"); void c.offsetWidth; c.classList.add(cls); }
+  };
+  /* danno o cura a piacere: un solo cambio di PV (e un solo invio al Gruppo) invece di tanti tocchi su −1/+1 */
+  window.grPvX = function(seg){
+    var q = $("gr-pvq"); if(!q) return;
+    var n = parseInt(String(q.value).replace(/[^0-9]/g, ""), 10);
+    if(!n){ q.focus(); q.classList.remove("gr-pvq-no"); void q.offsetWidth; q.classList.add("gr-pvq-no"); return; }
+    q.value = ""; q.classList.remove("gr-pvq-no");
+    grPv(seg < 0 ? -n : n);
   };
   function rendiTiles(){
     var ae = $("gr-ae"), di = $("gr-di"); if(!ae || !di) return;

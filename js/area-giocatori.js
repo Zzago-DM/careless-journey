@@ -595,7 +595,7 @@ function mZm(){try{return (JSON.parse(localStorage.getItem("tcj_bg_master")||"{}
 function mSetZm(v){let o={};try{o=JSON.parse(localStorage.getItem("tcj_bg_master")||"{}")||{}}catch(e){}o.zm=v==="oro"?"oro":"cremisi";try{localStorage.setItem("tcj_bg_master",JSON.stringify(o))}catch(e){}document.documentElement.setAttribute("data-zm",o.zm);sfxPlay(o.zm==="oro"?"gong":"swish");slRender();}
 document.documentElement.setAttribute("data-zm",mZm());
 /* ==== Suoni: interruttore ==== */
-function sfxOn(){try{return localStorage.getItem("tcj_sfx")!=="0"}catch(e){return true}}
+function sfxOn(){if(window.TCJ_LEGGERO)return false;try{return localStorage.getItem("tcj_sfx")!=="0"}catch(e){return true}} /* versione leggera: niente suoni */
 function sfxToggle(){try{localStorage.setItem("tcj_sfx",sfxOn()?"0":"1")}catch(e){}slRender();if(sfxOn())sfxPlay("on");}
 function sfxPlay(n,a){try{if(window.__sfx&&window.__sfx[n])window.__sfx[n](a)}catch(e){}}
 
@@ -846,17 +846,19 @@ function slRender(){const b=document.getElementById("sl-btn"),m=document.getElem
  SC_CHARS.forEach(c=>{const open=paIsOpen(c.k),on=c.k===act;
   h+=`<button type="button" class="sl-item${on?" on":""}" onclick="slPick('${c.k}')"><span class="sl-e">${c.e}</span><span class="sl-nm">${c.n}</span><span class="sl-st">${on?"✓ attivo":open?"aperta":(paMaster()?"🔒 chiusa":"🔒")}</span></button>`;
   if(slAsk===c.k)h+=`<div class="sl-code"><input type="password" id="sl-code-in" placeholder="Password" aria-label="Password di ${c.n}" autocomplete="off" onkeydown="if(event.key==='Enter')slTry()"><button type="button" onclick="slTry()">Apri</button></div><div class="sl-err" id="sl-err" style="display:none">Password errata. Riprova.</div>`;});
- h+=`<div class="sl-sep"></div><div class="sl-row"><div><span>Suoni</span><small>Effetti sonori del sito</small></div><button type="button" class="sl-sw" role="switch" aria-checked="${sfxOn()}" aria-label="Suoni" onclick="sfxToggle()"></button></div>`;
- h+=`<div class="sl-row"><div><span>Effetti laterali</span><small>${(act||mThemeActive())?"Particelle animate ai lati della pagina":"Visibili quando un personaggio è attivo"}</small></div><button type="button" class="sl-sw" role="switch" aria-checked="${fxOn()}" aria-label="Effetti laterali" onclick="fxToggle()"></button></div>`;
- if(typeof bgfxOn==="function")h+=`<div class="sl-row"><div><span>Particelle di sfondo</span><small>Scintille che scendono lungo la pagina</small></div><button type="button" class="sl-sw" role="switch" aria-checked="${bgfxOn()}" aria-label="Particelle di sfondo" onclick="bgfxToggle()"></button></div>`;
- if(typeof maelQRiga==="function")h+=maelQRiga();
- if(typeof temaRiga==="function")h+=temaRiga();
+ const LG=!!window.TCJ_LEGGERO; /* versione leggera: niente suoni, effetti, particelle, temi e qualità del Maelstrom */
+ h+='<div class="sl-sep"></div>';if(typeof tcjDispositivoRiga==="function")h+=tcjDispositivoRiga();
+ if(!LG)h+=`<div class="sl-row"><div><span>Suoni</span><small>Effetti sonori del sito</small></div><button type="button" class="sl-sw" role="switch" aria-checked="${sfxOn()}" aria-label="Suoni" onclick="sfxToggle()"></button></div>`;
+ if(!LG)h+=`<div class="sl-row"><div><span>Effetti laterali</span><small>${(act||mThemeActive())?"Particelle animate ai lati della pagina":"Visibili quando un personaggio è attivo"}</small></div><button type="button" class="sl-sw" role="switch" aria-checked="${fxOn()}" aria-label="Effetti laterali" onclick="fxToggle()"></button></div>`;
+ if(!LG&&typeof bgfxOn==="function")h+=`<div class="sl-row"><div><span>Particelle di sfondo</span><small>Scintille che scendono lungo la pagina</small></div><button type="button" class="sl-sw" role="switch" aria-checked="${bgfxOn()}" aria-label="Particelle di sfondo" onclick="bgfxToggle()"></button></div>`;
+ if(!LG&&typeof maelQRiga==="function")h+=maelQRiga();
+ if(!LG&&typeof temaRiga==="function")h+=temaRiga();
  if(act){const pf=paPref(act),opt=function(v){return PA_ELS.map(function(e){return '<option value="'+e[0]+'"'+(e[0]===v?' selected':'')+'>'+e[1]+'</option>'}).join("")};
   h+='<button type="button" class="sl-row sl-bgt" onclick="slBg=!slBg;slRender()" aria-expanded="'+slBg+'"><span>Impostazioni sfondo</span><span class="sl-car">'+(slBg?'\u25B4':'\u25BE')+'</span></button>';
-  if(slBg)h+='<div class="sl-bg"><label>Colore del sito<select onchange="paSetPref(\'c\',this.value)">'+opt(pf.c)+'</select></label><label>Effetti laterali<select onchange="paSetPref(\'fx\',this.value)">'+opt(pf.fx)+'</select></label>'+(pf.custom?'<button type="button" class="sl-act" onclick="paResetPref()">\u21BA Torna ai colori di '+ac.n+'</button>':'<small>Colori di base di '+ac.n+'</small>')+'</div>';}
+  if(slBg)h+='<div class="sl-bg"><label>Colore del sito<select onchange="paSetPref(\'c\',this.value)">'+opt(pf.c)+'</select></label>'+(LG?'':'<label>Effetti laterali<select onchange="paSetPref(\'fx\',this.value)">'+opt(pf.fx)+'</select></label>')+(pf.custom?'<button type="button" class="sl-act" onclick="paResetPref()">\u21BA Torna ai colori di '+ac.n+'</button>':'<small>Colori di base di '+ac.n+'</small>')+'</div>';}
  if(paMaster()){const mp=mPref(),mopt=function(v){return M_ELS.map(function(e){return '<option value="'+e[0]+'"'+(e[0]===v?' selected':'')+'>'+e[1]+'</option>'}).join("")};
   h+='<div class="sl-sep"></div><div class="sl-h sl-mh">👑 Zona Master</div><div class="sl-row"><div><span>Sfondo del Master</span><small>Ha la precedenza sui colori dei personaggi</small></div><button type="button" class="sl-sw sl-msw" role="switch" aria-checked="'+mp.on+'" aria-label="Sfondo del Master" onclick="mSetPref(\'on\','+(!mp.on)+')"></button></div>';
-  if(mp.on)h+='<div class="sl-bg"><label>Colore del sito<select onchange="mSetPref(\'c\',this.value)">'+mopt(mp.c)+'</select></label><label>Effetti laterali<select onchange="mSetPref(\'fx\',this.value)">'+mopt(mp.fx)+'</select></label>'+(mp.custom?'<button type="button" class="sl-act" onclick="mResetPref()">\u21BA Torna al Cremisi del Master</button>':'<small>Cremisi del Master, con il Sigillo Cremisi ai lati</small>')+'</div>';
+  if(mp.on)h+='<div class="sl-bg"><label>Colore del sito<select onchange="mSetPref(\'c\',this.value)">'+mopt(mp.c)+'</select></label>'+(LG?'':'<label>Effetti laterali<select onchange="mSetPref(\'fx\',this.value)">'+mopt(mp.fx)+'</select></label>')+(mp.custom?'<button type="button" class="sl-act" onclick="mResetPref()">\u21BA Torna al Cremisi del Master</button>':'<small>Cremisi del Master, con il Sigillo Cremisi ai lati</small>')+'</div>';
   const zm=mZm();h+='<div class="sl-bg sl-zm"><label>Colore della Zona Master<select onchange="mSetZm(this.value)"><option value="cremisi"'+(zm==="cremisi"?' selected':'')+'>🩸 Cremisi</option><option value="oro"'+(zm==="oro"?' selected':'')+'>☀ Oro · Golden Sun</option></select></label><small>Cambia solo la Zona Master, non lo sfondo del sito</small></div>';}
  h+='<div class="sl-sep"></div><a class="sl-act" href="#scheda" onclick="slClose()">↓ Vai all\'Area Slayer</a>';
  if(ac)h+=`<button type="button" class="sl-act" onclick="slClose();paNeutral()">◆ Torna al colore neutro</button>`;
@@ -875,7 +877,7 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape"&&slMenuOpen(
 const FX={k:"",raf:0,bw:0,H:0,dpr:1,t:0,last:0,mob:false,still:false,side:[]};
 /* Effetti laterali: accesi di base sul computer, spenti di base sul telefono (chi vuole li accende dal menu ⚔ Slayer) */
 function fxTel(){try{return matchMedia("(pointer: coarse)").matches||Math.min(screen.width,screen.height)<820}catch(e){return false}}
-function fxOn(){try{var v=localStorage.getItem("tcj_fx");return v===null?!fxTel():v!=="0"}catch(e){return !fxTel()}}
+function fxOn(){if(window.TCJ_LEGGERO)return false;try{var v=localStorage.getItem("tcj_fx");return v===null?!fxTel():v!=="0"}catch(e){return !fxTel()}}
 function fxToggle(){try{localStorage.setItem("tcj_fx",fxOn()?"0":"1")}catch(e){}fxSet(paFxEl());slRender();}
 function fxRnd(a,b){return a+Math.random()*(b-a)}
 function fxSet(k){const on=!!k&&fxOn();document.documentElement.classList.toggle("fx-on",on);cancelAnimationFrame(FX.raf);FX.raf=0;

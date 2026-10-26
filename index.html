@@ -1,18 +1,28 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<script>try{(function(){var t=localStorage.getItem("tcj-tema");if(["dauntless","pergamena","mh","osteria","reami"].indexOf(t)>=0)document.documentElement.setAttribute("data-tema",t);})()}catch(e){}</script>
-<script>try{(function(){var L=localStorage,k=L.getItem("tcj-pa-theme"),last=parseInt(L.getItem("tcj-pa-seen")||"0",10),o=JSON.parse(L.getItem("tcj-pa-open")||"[]");if(!k||k!==L.getItem("tcj-sc-cur")||o.indexOf(k)<0||(last&&Date.now()-last>259200000))return;var d={athena:"glaciale",panlan:"oscuro",asonnes:"terrestre"}[k],b=JSON.parse(L.getItem("tcj_bg_"+k)||"{}");document.documentElement.setAttribute("data-pg",k);document.documentElement.setAttribute("data-el",(b&&b.c)||d);if(b&&["dauntless","pergamena","mh","osteria","reami"].indexOf(b.t)>=0)document.documentElement.setAttribute("data-tema",b.t);else if(b&&b.t==="attuale")document.documentElement.removeAttribute("data-tema");})()}catch(e){}</script>
+<script>/* Versione leggera (telefono) o completa (computer): la scelta è in tcj-dispositivo (schermata iniziale o menu ⚔ Slayer → Dispositivo).
+   Se nessuno ha ancora scelto, vale quella adatta al dispositivo. Nella leggera: niente animazioni, temi, effetti e suoni (vedi js/novita.js e css/39-leggero.css). */
+try{(function(){var L=localStorage,h=document.documentElement,d=L.getItem("tcj-dispositivo"),tel=false;
+try{tel=matchMedia("(pointer: coarse)").matches||Math.min(screen.width,screen.height)<820}catch(e){}
+var lg=d?d==="telefono":tel;window.TCJ_TEL=tel;window.TCJ_LEGGERO=lg;
+if(lg){h.setAttribute("data-leggero","");
+ /* tutte le animazioni del sito rispettano già «riduci il movimento»: nella versione leggera lo chiedo io */
+ var mm=window.matchMedia;if(mm)window.matchMedia=function(q){if(/prefers-reduced-motion\s*:\s*reduce/.test(q)){var f=function(){};return{matches:true,media:q,onchange:null,addListener:f,removeListener:f,addEventListener:f,removeEventListener:f,dispatchEvent:function(){return false}};}return mm.call(window,q);};
+}else{var t=L.getItem("tcj-tema");if(["dauntless","pergamena","mh","osteria","reami"].indexOf(t)>=0)h.setAttribute("data-tema",t);}
+})()}catch(e){}
+function tcjLeggero(){return !!window.TCJ_LEGGERO;}</script>
+<script>try{(function(){var L=localStorage,k=L.getItem("tcj-pa-theme"),last=parseInt(L.getItem("tcj-pa-seen")||"0",10),o=JSON.parse(L.getItem("tcj-pa-open")||"[]");if(!k||k!==L.getItem("tcj-sc-cur")||o.indexOf(k)<0||(last&&Date.now()-last>259200000))return;var d={athena:"glaciale",panlan:"oscuro",asonnes:"terrestre"}[k],b=JSON.parse(L.getItem("tcj_bg_"+k)||"{}");document.documentElement.setAttribute("data-pg",k);document.documentElement.setAttribute("data-el",(b&&b.c)||d);if(window.TCJ_LEGGERO){}else if(b&&["dauntless","pergamena","mh","osteria","reami"].indexOf(b.t)>=0)document.documentElement.setAttribute("data-tema",b.t);else if(b&&b.t==="attuale")document.documentElement.removeAttribute("data-tema");})()}catch(e){}</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Careless Journey — Manuale del Mondo</title>
 <script>/* Inserisce nella pagina il contenuto di un file della cartella sezioni/, nel punto esatto in cui viene richiamato */
 function tcjSezione(h){var s=document.currentScript;s.insertAdjacentHTML("beforebegin",h);s.remove();}</script>
-<script src="js/caricamento.js?v=e6ef2034"></script>
+<script src="js/caricamento.js?v=47560b65"></script>
 <script>/* Versione della pagina: la scrive strumenti/versiona.js a ogni pubblicazione.
    Se il browser ha aperto una copia vecchia rimasta in memoria, il sito se ne accorge:
    nei primi secondi si aggiorna da solo, più tardi propone «Aggiorna» (senza mai interrompere chi sta scrivendo). */
-var TCJ_VERSIONE="b43a0138";
+var TCJ_VERSIONE="cd2950e3";
 (function(){
   var nascita=Date.now(),ultimo=0;
   function nuova(v){location.replace(location.pathname+"?v="+v+location.hash);}
@@ -46,6 +56,8 @@ var TCJ_VERSIONE="b43a0138";
 <link rel="stylesheet" href="css/05-plancia-galleria.css?v=3b462e3a" id="plp-css">
 <link rel="stylesheet" href="css/06-master-animazioni.css?v=66458e0d" id="ms-anim-css">
 <link rel="stylesheet" href="css/19-manuale.css?v=00cafc51">
+<link rel="stylesheet" href="css/39-leggero.css?v=b3479a60">
+<link rel="stylesheet" href="css/40-novita.css?v=aa0ba69e">
 <!-- Dati del sito (solo valori: statistiche, testi, tabelle) -->
 <script src="dati/corone-immagini.js?v=65836a22"></script>
 <script>tcjGruppo("ritratti", ["dati/ritratti-giocatori.js?v=30d3f434"])</script>
@@ -70,7 +82,9 @@ var TCJ_VERSIONE="b43a0138";
   <div id="introHint">Clicca per entrare</div>
   <button id="introSkip" type="button">Salta ›</button>
 </div>
-<script src="js/intro.js?v=65933142"></script>
+<script src="js/novita.js?v=8eb9457d"></script>
+<script>/* nella versione leggera l'animazione d'apertura non si scarica nemmeno */
+if(!window.TCJ_LEGGERO)document.write('<script src="js/intro.js?v=fdb394c0"><\/script>');</script>
 
 <div class="stars"></div>
 <div class="pwo" id="pwo">
@@ -132,12 +146,12 @@ var TCJ_VERSIONE="b43a0138";
 <script src="js/nave-riserve.js?v=78a3bc4e"></script>
 
 
-<link rel="stylesheet" href="css/22-gruppo.css?v=8a082ba9">
+<link rel="stylesheet" href="css/22-gruppo.css?v=024a385b">
 <script src="sezioni/gruppo.js?v=a0b16cb3"></script>
-<script src="sezioni/scheda.js?v=5f007efd"></script>
-<script src="js/area-giocatori.js?v=02f7afd4"></script>
+<script src="sezioni/scheda.js?v=e7ab70a9"></script>
+<script src="js/area-giocatori.js?v=70612353"></script>
 <script src="js/sblocco-zone.js?v=c8c202a6"></script>
-<script src="js/maelstrom-qualita.js?v=756641c2"></script>
+<script src="js/maelstrom-qualita.js?v=e91b462a"></script>
 <link rel="stylesheet" href="css/27-maelstrom-qualita.css?v=0ded168d">
 
 
@@ -152,7 +166,7 @@ var TCJ_VERSIONE="b43a0138";
 <link rel="stylesheet" href="css/11-plancia-drop.css?v=5625edaf">
 
 <script src="js/contenuti-e-master.js?v=1e8715d2"></script>
-<script src="js/suoni.js?v=a1ebd3f3"></script>
+<script src="js/suoni.js?v=635448fa"></script>
 
 <!-- ===== Viste dettagliate dei continenti, Maelstrom e isola sconosciuta =====
      Arrivano in sottofondo appena la pagina è aperta (vedi js/caricamento.js), inserite qui, in questo ordine. -->
@@ -165,7 +179,7 @@ var TCJ_VERSIONE="b43a0138";
   "sezioni/mappe/oscuro.js?v=8aaf2258",
   "sezioni/mappe/ramsgate.js?v=cb27da62",
   "sezioni/mappe/vecchia.js?v=40ae5ceb",
-  "sezioni/mappe/maelstrom.js?v=319c4dbd",
+  "sezioni/mappe/maelstrom.js?v=d65c470c",
   "js/mappe-apertura.js?v=7f5fcf3d",
   "js/maelstrom-apertura.js?v=15007a4e",
   "js/mappe-politiche.js?v=8682898d",
@@ -227,7 +241,7 @@ var TCJ_VERSIONE="b43a0138";
 <script src="js/master-animazioni.js?v=c6491196" id="ms-anim-js"></script>
 <script src="js/conferma.js?v=3974277a"></script>
 <script src="js/sync-giocatori.js?v=1eb5fe18"></script>
-<script src="js/gruppo.js?v=df939f64"></script>
+<script src="js/gruppo.js?v=eb619a82"></script>
 <link rel="stylesheet" href="css/28-diretta-schede.css?v=c8fa7e22">
 <script src="js/diretta-schede.js?v=1856ac20"></script>
 <link rel="stylesheet" href="css/25-area-modifica.css?v=700b6a16">
@@ -251,15 +265,15 @@ var TCJ_VERSIONE="b43a0138";
 <script src="js/reliquie-bacheca.js?v=5d5596d7"></script>
 <script src="js/incontri.js?v=fea1ffd4"></script>
 <script src="js/master-incontri.js?v=b1e147dd"></script>
-<script src="js/particelle-sfondo.js?v=134912a7"></script>
+<script src="js/particelle-sfondo.js?v=8bf6be37"></script>
 <script>/* Stili dei temi del sito: si scarica solo quello del tema scelto (gli altri non pesano sulla pagina).
    Qui viene caricato subito, nello stesso punto di sempre; se si cambia tema, js/tema-sito.js aggiunge quello nuovo. */
-var TCJ_TEMI_CSS={dauntless:["css/31-tema-dauntless.css?v=418e607a","css/37-caratteri-dauntless.css?v=3a26b787"],pergamena:["css/32-tema-pergamena.css?v=07d7ed1b","css/37-caratteri-pergamena.css?v=ab15bc95"],mh:["css/34-tema-monster-hunter.css?v=1ae882f7","css/37-caratteri-mh.css?v=7705bd27"],osteria:["css/35-tema-osteria.css?v=f9bbd1ef","css/37-caratteri-osteria.css?v=1bf8b6fc"],reami:["css/36-tema-reami.css?v=51102953","css/37-caratteri-reami.css?v=82be8aff"]};
+var TCJ_TEMI_CSS={dauntless:["css/31-tema-dauntless.css?v=418e607a","css/37-caratteri-dauntless.css?v=3a26b787"],pergamena:["css/32-tema-pergamena.css?v=07d7ed1b","css/37-caratteri-pergamena.css?v=9a577d5c"],mh:["css/34-tema-monster-hunter.css?v=1ae882f7","css/37-caratteri-mh.css?v=fb042f8a"],osteria:["css/35-tema-osteria.css?v=f9bbd1ef","css/37-caratteri-osteria.css?v=0fff4905"],reami:["css/36-tema-reami.css?v=51102953","css/37-caratteri-reami.css?v=82be8aff"]};
 (function(){var t=document.documentElement.getAttribute("data-tema"),l=TCJ_TEMI_CSS[t];if(l)document.write(l.map(function(u){return '<link rel="stylesheet" href="'+u+'" data-tema-css="'+t+'">';}).join(""));})();</script>
 <link rel="stylesheet" href="css/38-temi-telefono.css?v=6abddda5">
-<script src="js/tema-sito.js?v=5cf2019d"></script>
+<script src="js/tema-sito.js?v=14848c1e"></script>
 <script src="js/tema-creature.js?v=199ba883"></script>
 <link rel="stylesheet" href="css/33-area-aspetto.css?v=b5644c6e">
-<script src="js/area-aspetto.js?v=80928e98"></script>
+<script src="js/area-aspetto.js?v=e5f43eb7"></script>
 </body>
 </html>

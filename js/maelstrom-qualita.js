@@ -12,13 +12,14 @@
     return (tocco || poca) ? "bassa" : "alta";
   }
   window.maelQ = function(){
+    if(window.TCJ_LEGGERO) return "bassa";          /* versione leggera: sempre la più semplice, e ferma */
     var v = null; try { v = localStorage.getItem("tcj_mael"); } catch(e){}
     return (v === "alta" || v === "media" || v === "bassa") ? v : predefinita();
   };
   /* l'indirizzo della scena da caricare nella vista del Maelstrom */
   window.maelScena = function(f){
     var q = maelQ();
-    if(q === "bassa") return f.getAttribute("data-bassa") || f.getAttribute("data-src");
+    if(q === "bassa"){ var b = f.getAttribute("data-bassa") || f.getAttribute("data-src"); return window.TCJ_LEGGERO ? b + (b.indexOf("?") >= 0 ? "&" : "?") + "fermo=1" : b; }
     var s = f.getAttribute("data-src");
     return q === "media" ? s + (s.indexOf("?") >= 0 ? "&" : "?") + "q=media" : s;
   };

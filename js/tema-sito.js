@@ -24,6 +24,7 @@
   }
   window.temaApplica = function(){
     var v = temaSito(), h = document.documentElement;
+    if(window.TCJ_LEGGERO){ h.removeAttribute("data-tema"); return; }   /* versione leggera: niente temi */
     caricaCss(v);
     if(v === "attuale") h.removeAttribute("data-tema"); else h.setAttribute("data-tema", v);
   };

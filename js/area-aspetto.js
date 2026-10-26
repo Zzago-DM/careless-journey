@@ -16,6 +16,7 @@
    - Le trame (legno, carta, sughero) sono in css/33-area-aspetto.css; i libri usano gli stili della libreria del Master
      (css/20-master-libreria.css). */
 (function(){
+  if(window.TCJ_LEGGERO) return;   /* versione leggera: solo la scheda classica */
   var NOMI = {licenza:["🪪","Licenza dello Slayer"],livello:["⭐","Livello e rango"],pv:["❤","Punti Vita"],malus:["📝","Altri malus"],
     stati:["🌀","Stati alterati"],statistiche:["📊","Statistiche"],competenze:["🎯","Competenze"],arma1:["⚔","Arma principale"],
     abilita:["✨","Abilità dell'arma"],nuclei:["🔮","Nuclei"],arma2:["🏹","Arma secondaria"],equip:["🎒","Equipaggiamento"],

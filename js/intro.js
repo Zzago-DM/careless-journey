@@ -520,5 +520,5 @@
   intro.addEventListener('click',function(){if(done){return;}if(!triggered&&!cracking){startCrack();}else if(cracking){endCrack();}else{exitIntro();}});
   if(skip){skip.addEventListener('click',function(e){e.stopPropagation();exitIntro();});}
   if(reduce){if(ttl){ttl.classList.add('show');}intro.classList.add('hide');setTimeout(finish,900);}
-  else{raf=requestAnimationFrame(frame);}
+  else{var via=function(){raf=requestAnimationFrame(frame);};if(window.tcjPrimaIntro)tcjPrimaIntro(via);else via();}   /* parte dopo le schermate delle novità (js/novita.js) */
 })();
