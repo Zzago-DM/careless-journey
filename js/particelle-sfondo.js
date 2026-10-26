@@ -43,14 +43,20 @@
     P.length = want;
   }
   function hidden(){
-    return document.hidden || !!document.querySelector(".cj-overlay.open");   // mappe a tutto schermo aperte
+    return document.hidden || !!document.querySelector(".cj-overlay.open")   // mappe a tutto schermo aperte
+      || (typeof window.tcjCoperto === "function" && window.tcjCoperto());     // …o animazione d'apertura (js/risparmio.js)
   }
+  var PASSO = 1000 / 31;     // ridisegno circa 30 volte al secondo: scendono piano, a occhio non cambia nulla e il computer lavora la metà
   function frame(t){
     raf = requestAnimationFrame(frame);
-    var dt = Math.min(0.05, (t - last) / 1000 || 0); last = t;
-    if ((n++ % 30) === 0) paused = hidden();          // controllo ogni mezzo secondo circa
-    ctx.clearRect(0, 0, W, H);
+    if (t - last < PASSO - 2) return;
+    var dt = Math.min(0.08, (t - last) / 1000 || 0); last = t;
+    if ((n++ % 15) === 0) {                          // controllo ogni mezzo secondo circa
+      var era = paused; paused = hidden();
+      if (paused && !era) ctx.clearRect(0, 0, W, H);
+    }
     if (paused) return;
+    ctx.clearRect(0, 0, W, H);
     ctx.globalCompositeOperation = "lighter";
     for (var i = 0; i < P.length; i++){
       var p = P[i];

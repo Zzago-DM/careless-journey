@@ -72,6 +72,11 @@
       "Sul telefono il tema è fermo, senza animazioni, per non appesantire il sito. Si può cambiare anche da lì, dal menu <b>⚔ Slayer ▾ → «Tema del sito»</b>.",
       "Se avete un personaggio attivo, il tema lo segue su ogni dispositivo dove aprite la sua area."
     ]},
+    { id: "2026-10-sito-leggero", i: "⚡", t: "Sito più leggero sul computer", p: [
+      "Il sito ora lavora solo dove state guardando: le animazioni delle parti lontane dallo schermo si mettono in pausa e ripartono da dove erano appena ci arrivate.",
+      "Lo stesso vale per la pagina sotto l'animazione d'apertura e sotto le mappe a tutto schermo. Le particelle di sfondo sono identiche, ma costano la metà.",
+      "Non sparisce niente: temi, effetti e animazioni restano tutti. Il computer però scalda e consuma meno, e lo scorrimento è più fluido."
+    ]},
     { id: "2026-10-leggera", i: "📱", t: "Versione leggera per il telefono", p: [
       "Da oggi il sito ha due versioni.",
       "La <b>versione completa</b>, pensata per il computer, ha tutto: l'animazione d'apertura, gli aspetti dell'area, gli effetti laterali, le particelle e i suoni.",
