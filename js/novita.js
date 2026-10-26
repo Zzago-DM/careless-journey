@@ -54,6 +54,10 @@
       "Sullo sfondo una <b>stazione spaziale</b> con due grandi anelli che girano in versi opposti, luci che lampeggiano e navicelle che passano. I riquadri sono pannelli di metallo con la cornice d'acciaio, i titoli stanno in una targa arancione semitrasparente con un leggero disturbo da vecchio televisore.",
       "Si sceglie dal menu <b>⚔ Slayer ▾ → «Tema del sito»</b> (solo nella versione completa). Sul telefono la stazione resta ferma, per non appesantire il sito."
     ]},
+    { id: "2026-10-tressa", i: "🍺", t: "Un nuovo ritratto per Tressa", p: [
+      "Tressa, la barista della <b>Coda di Gnasher</b>, ha un ritratto tutto nuovo: boccale in mano, come sempre, pronta a brindare con chiunque passi dal bancone.",
+      "Lo trovate nella sua scheda tra i personaggi di Ramsgate e negli <b>Incontri</b>."
+    ]},
     { id: "2026-10-leggera", i: "📱", t: "Versione leggera per il telefono", p: [
       "Da oggi il sito ha due versioni.",
       "La <b>versione completa</b>, pensata per il computer, ha tutto: l'animazione d'apertura, i temi, gli aspetti dell'area, gli effetti laterali, le particelle e i suoni.",
