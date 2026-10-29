@@ -275,7 +275,7 @@
     + '<div class="stv-parts" id="stv-parts"></div><div class="stv-dep"><div class="stv-lbl">Nel deposito</div><div id="stv-dep"></div></div></div>'
     + '<div class="stv-sp" id="stv-s-var"><label class="stv-lbl" for="stv-vari">Oggetti vari · comune a tutto il gruppo</label>'
     + '<textarea class="stv-vari" id="stv-vari" maxlength="6000" placeholder="Corde, lanterne, attrezzi, lettere, ricordi… tutto quello che il gruppo tiene in stiva."></textarea></div>'
-    + '<div class="stv-sp" id="stv-s-dis"><div class="stv-disp"><div class="stv-botte" aria-hidden="true"></div><div>'
+    + '<div class="stv-sp" id="stv-s-dis"><div class="stv-disp"><div class="stv-pila" id="stv-pila" aria-hidden="true"></div><div class="stv-disp-x">'
     + '<div class="stv-disp-n" id="stv-disp-n">0</div><div class="stv-disp-l">giorni di viveri<br>per tutto il gruppo</div>'
     + '<div class="stv-disp-c" id="stv-disp-c"></div></div></div>'
     + '<p class="stv-nota" style="text-align:center">Ogni giorno di viaggio la dispensa scende di 1. I mezzi giorni si arrotondano per difetto: il gruppo ha razionato.</p></div>'
@@ -338,7 +338,40 @@
   }
   var variScrivendo = false;
   function vari(){ var t = $("stv-vari"); if(t && !variScrivendo && document.activeElement !== t && t.value !== doc.vari) t.value = doc.vari; }
+  /* la pila della dispensa: un barile o una cassa per ogni giorno di viveri, fino a 99 visibili.
+     Il tipo e la posa di ogni pezzo dipendono solo dalla sua posizione, quindi la pila è sempre la stessa per tutti;
+     quando il numero sale i pezzi nuovi cadono dall'alto, quando scende gli ultimi spariscono. */
+  var PILA_MAX = 99;
+  function caso(i){ var h = Math.imul((i + 1) ^ 0x5bd1e995, 2654435761) >>> 0; h ^= h >>> 15; h = Math.imul(h, 2246822519) >>> 0; h ^= h >>> 13; return h >>> 0; }
+  function pezzo(i, nuovo, ritardo){
+    var r = caso(i), tipo = r % 5 < 3 ? "b" : (r % 5 === 3 ? "c" : "c c2");
+    return '<i class="stv-pz ' + tipo + (nuovo ? " nuovo" : "") + '" style="--r:' + (((r >>> 5) % 9) - 4) + 'deg;--y:' + (((r >>> 9) % 4) - 1) + 'px;--d:' + ritardo + 'ms"></i>';
+  }
+  function pila(box, n){
+    if(!box) return;
+    var vis = Math.min(n, PILA_MAX), prima = box._n;
+    if(prima === vis && box._tot === n) return;
+    clearTimeout(box._t);
+    if(prima != null && vis < prima){
+      var ch = box.querySelectorAll(".stv-pz");
+      for(var j = vis; j < ch.length; j++) ch[j].classList.add("via");
+      box._n = vis; box._tot = n;
+      box._t = setTimeout(function(){ disegnaPila(box, n, vis); }, 280);
+      return;
+    }
+    var da = prima == null ? vis : prima;
+    box._n = vis; box._tot = n;
+    disegnaPila(box, n, da);
+  }
+  function disegnaPila(box, n, da){
+    var vis = Math.min(n, PILA_MAX), h = "";
+    for(var i = 0; i < vis; i++) h += pezzo(i, i >= da, Math.min(900, (i - da) * 70));
+    if(n > PILA_MAX) h += '<span class="stv-pila-piu">+' + (n - PILA_MAX) + '</span>';
+    if(!n) h = '<span class="stv-pila-vuota">Nessun barile: la dispensa è vuota</span>';
+    box.innerHTML = h;
+  }
   function dispensa(){
+    pila($("stv-pila"), doc.disp);
     var n = $("stv-disp-n"); if(n) n.textContent = doc.disp;
     var c = $("stv-disp-c"); if(c) c.innerHTML = contatore("disp", "disp", doc.disp, "giorni di viveri");
   }
@@ -364,7 +397,7 @@
     ov.classList.remove("on"); setTimeout(function(){ if(!ov.classList.contains("on")) ov.hidden = true; }, 260);
     if(!document.querySelector(".inc-win.on,.cj-overlay.open,.rel-ov.on")) document.body.style.overflow = "";
   }
-  window.stvApri = function(){ try { if(typeof nvClose === "function") nvClose(); } catch(_){} apri(); };
+  window.stvApri = function(s){ try { if(typeof nvClose === "function") nvClose(); } catch(_){} if(s && $("stv-s-" + s)) sezione = s; apri(); };
 
   /* cambi dalla stanza e dal riquadro della Nave */
   function cambiaStr(id, d){
@@ -419,6 +452,7 @@
     var g = $("nv-equip-grande");
     if(g && !grandeScrivendo && document.activeElement !== g && g.value !== doc.grande) g.value = doc.grande;
     var dsp = $("nv-res-disp"); if(dsp) dsp.textContent = doc.disp;
+    pila($("nv-pila"), doc.disp);
     var n = 0; Object.keys(doc.str).forEach(function(k){ n += int(doc.str[k]); });
     var pz = 0; (doc.parti || []).forEach(function(p){ pz += int(p.q); });
     var r = $("nv-stv-ries"); if(r) r.textContent = n + (n === 1 ? " strumento" : " strumenti") + " · " + pz + (pz === 1 ? " parte di mostro" : " parti di mostro");

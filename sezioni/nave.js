@@ -26,11 +26,13 @@ tcjSezione(`<section id="nave">
       <div class="nv-reserve-box" id="nv-reserve-box">
         <div class="nv-reserve">
           <span class="nv-lbl">🍞 Dispensa · giorni di viveri</span>
+          <div class="stv-pila stv-pila-sm" id="nv-pila" aria-hidden="true"></div>
           <div class="nv-counter">
             <button type="button" onclick="nvReserve('disp',-1)" aria-label="Un giorno in meno">−</button>
             <b class="nv-disp-n" id="nv-res-disp" aria-live="polite">0</b>
             <button type="button" onclick="nvReserve('disp',1)" aria-label="Un giorno in più">+</button>
           </div>
+          <div style="margin-top:.8rem"><button type="button" class="nv-go" onclick="stvApri('dis')">Apri la dispensa in stiva</button></div>
         </div>
         <div class="nv-reserve nv-stv">
           <span class="nv-lbl">🧰 Stiva Primaria</span>
