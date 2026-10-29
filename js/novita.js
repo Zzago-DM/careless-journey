@@ -82,6 +82,13 @@
       "La <b>versione completa</b>, pensata per il computer, ha tutto: l'animazione d'apertura, gli aspetti dell'area, gli effetti laterali, le particelle e i suoni.",
       "La <b>versione leggera</b>, pensata per il telefono, toglie animazioni, effetti e suoni: il sito è più veloce e consuma meno batteria. Tutti i contenuti e tutte le funzioni restano: scheda, Gruppo, mappe, viaggi, incontri. Anche il colore del vostro Aether e il tema del sito restano (fermi, senza animazioni).",
       "Nella prossima schermata scegliete quale usare su questo dispositivo. Potete cambiarla quando volete dal menu <b>⚔ Slayer → «Dispositivo»</b>."
+    ]},
+    { id: "2026-10-stiva", i: "🧰", t: "La stiva della nave e il nuovo Equipaggiamento", p: [
+      "Le scorte del gruppo adesso stanno davvero nella nave. Nella sezione <b>Nave</b> toccate la <b>Stiva Primaria</b> e poi <b>«🧰 Apri la stiva»</b>: dentro trovate quattro scaffali. <b>Strumenti</b> sono i tonici, i piloni e i nuclei elementali che avete a bordo. <b>Parti di mostro</b>: scegliete il Behemoth affrontato e aggiungete le parti che avete ottenuto. <b>Oggetti vari</b> è un foglio libero, e la <b>Dispensa</b> conta i giorni di viveri.",
+      "La stiva è una sola per tutto il gruppo: la vedete e la cambiate tutti, e i numeri si aggiornano da soli su ogni dispositivo. Anche il riquadro sotto la mappa della nave, con l'<b>Equipaggiamento grande</b> e la <b>Dispensa</b>, adesso è comune a tutti.",
+      "Nella scheda è cambiato l'<b>Equipaggiamento</b>. C'è uno slot fisso con i <b>5 tonici di Salute</b>, gratis a ogni spedizione, e poi <b>3 slot</b>: in ognuno 5 tonici oppure 2 piloni, di un solo tipo. Non si scrive più niente a mano: toccate <b>«Equipaggia»</b>, scegliete l'oggetto e da dove arriva. <b>Dalla stiva</b> lo prende dalla nave, e lì ne resta uno in meno. <b>Negozio</b> lo aggiunge senza toccare la stiva. «Riponi in stiva» rimette a bordo quello che non usate.",
+      "Sotto gli slot ci sono i <b>nuclei di ricambio</b>: potete portarne fino a 3, d'attacco o di difesa. Sono usa e getta: quando ne montate uno, il nucleo che avevate prima si consuma e sparisce. Prepararsi bene prima di partire, adesso, conta davvero.",
+      "<small>Per cambiare la stiva serve il salvataggio online collegato nella vostra Area dello Slayer. Quello che avevate scritto a mano nelle vecchie righe dell'Equipaggiamento lo ritrovate in fondo, sotto «Scritto a mano prima del cambio».</small>"
     ]}
   ];
   var KV = "tcj-novita-viste", KD = "tcj-dispositivo";

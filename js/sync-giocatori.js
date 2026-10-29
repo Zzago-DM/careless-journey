@@ -126,7 +126,7 @@
     (typeof SC_STATS !== "undefined" ? SC_STATS : []).forEach(function(s){ var o = (sc.stats || {})[s.id] || {}; add("Statistiche", s.nm, txt(o.v) + (txt(o.m) ? " (" + txt(o.m) + ")" : "")); });
     var comp = (typeof SC_COMPS !== "undefined" ? SC_COMPS : []).filter(function(c){ return (sc.comps || {})[c.id]; }).map(function(c){ return c.nm; });
     add("Competenze", "Competenze attive", comp.join(", "));
-    (sc.eq_txt || []).forEach(function(e, i){ if(txt(e) || txt((sc.eq_cnt||[])[i])) add("Equipaggiamento", "Oggetto " + (i+1), txt(e) + (txt((sc.eq_cnt||[])[i]) ? " ×" + txt(sc.eq_cnt[i]) : "")); });
+    (typeof eqTesto === "function" ? eqTesto(sc) : []).forEach(function(e, i){ add("Equipaggiamento", "Riga " + (i+1), e); });
     (sc.celle || []).forEach(function(c, i){ if(txt(c)) add("Equipaggiamento", "Cella " + (i+1), c); });
     var cr = (typeof CROWNS !== "undefined" ? CROWNS : []).filter(function(_, i){ return (sc.crowns || [])[i]; }).map(function(c){ return c.n; });
     add("Corone", "Corone ottenute", cr.join(", "));

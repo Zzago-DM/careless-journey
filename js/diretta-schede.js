@@ -179,7 +179,8 @@
     c("ndef", "Nucleo di difesa", sc.ndef && typeof SC_NC !== "undefined" && SC_NC[sc.ndef] ? SC_NC[sc.ndef].tx : sc.ndef);
     c("arma2", "Arma secondaria", sc.arma2); c("arma2t", "Tipo dell'arma secondaria", sc.arma2t === "arco" ? "Arco aetherico" : (sc.arma2 ? "Pistola" : ""));
     c("proiettili", "Proiettili", sc.proiettili);
-    for(var i = 0; i < 4; i++){ var et = txt((sc.eq_txt || [])[i]), n = txt((sc.eq_cnt || [])[i]); c("eq." + i, "Equipaggiamento " + (i + 1), et ? et + (n && n !== "0" ? " ×" + n : "") : ""); }
+    var eqR = typeof eqTesto === "function" ? eqTesto(sc) : [];
+    for(var i = 0; i < 8; i++) c("eq." + i, "Equipaggiamento", eqR[i] || "");
     c("equip", "Inventario", sc.equip);
     for(var j = 0; j < 6; j++) c("cella." + j, "Cella " + (j + 1), (sc.celle || [])[j]);
     var cr = (typeof CROWNS !== "undefined" ? CROWNS : []).filter(function(_, i){ return (sc.crowns || [])[i]; }).map(function(x){ return x.n; });
@@ -231,7 +232,7 @@
       + riga(M, "arma2", "Arma secondaria") + riga(M, "arma2t", "Tipo") + riga(M, "proiettili", "Proiettili"));
     /* equipaggiamento e inventario */
     var eq = "";
-    for(var e = 0; e < 4; e++) if(M["eq." + e].v) eq += '<li data-f="eq.' + e + '">' + esc(M["eq." + e].v) + '</li>';
+    for(var e = 0; e < 8; e++) if(M["eq." + e].v) eq += '<li data-f="eq.' + e + '">' + esc(M["eq." + e].v) + '</li>';
     var ce = "";
     for(var c = 0; c < 6; c++) if(M["cella." + c].v) ce += '<li data-f="cella.' + c + '">' + esc(M["cella." + c].v) + '</li>';
     h += blocco("🎒", "Equipaggiamento", (eq ? '<ul class="dv-ul">' + eq + '</ul>' : '<i class="dv-vuoto">Niente equipaggiato</i>')

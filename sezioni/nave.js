@@ -14,31 +14,29 @@ tcjSezione(`<section id="nave">
       <div class="card" data-a="radiante"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.6rem">🗺️</div><div><div class="ct">Sala Mappe</div><div class="cs">2° Piano Prua · cuore operativo</div></div></div><div class="cb"><p>Parabrezza panoramico a 180°. <strong>Tavolo olografico interattivo</strong> con mappa completa di tutte le isole. <strong>Radar avanzato</strong> per navi, behemoth e fenomeni aetherici.</p></div></div>
       <div class="card" data-a="terrestre"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.6rem">🌬️</div><div><div class="ct">Ponte Esterno</div><div class="cs">2° Piano Prua Esterna</div></div></div><div class="cb"><p>Piattaforma esterna sulla prua, vista libera sul cielo aperto e sulle isole durante la navigazione.</p></div></div>
       <div class="card" data-a="neutro"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.6rem">📦</div><div><div class="ct">Stiva Modulare</div><div class="cs">3° Piano Poppa · adattabile</div></div></div><div class="cb"><p>Riconfigurabile su richiesta: alloggi aggiuntivi, laboratori, sale di addestramento.</p></div><div style="margin-top:.75rem"><span class="tag tgo">Modulare</span><span class="tag tn">Espandibile</span></div></div>
-      <div class="card" data-a="neutro"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.6rem">⚙️</div><div><div class="ct">Stiva Primaria</div><div class="cs">4° Piano Poppa · stiva principale</div></div></div><div class="cb"><p>La stiva principale. Comunica con la Stiva Modulare tramite ascensore centrale e con l'esterno attraverso il <strong>portellone di carico</strong>.</p></div></div>
+      <div class="card" data-a="neutro"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.6rem">⚙️</div><div><div class="ct">Stiva Primaria</div><div class="cs">4° Piano Poppa · stiva principale</div></div></div><div class="cb"><p>La stiva principale. Comunica con la Stiva Modulare tramite ascensore centrale e con l'esterno attraverso il <strong>portellone di carico</strong>. Qui il gruppo tiene <strong>tonici, piloni, nuclei di ricambio, parti di mostro e viveri</strong>.</p></div></div>
       <div class="card" data-a="oscuro"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.6rem">⚡</div><div><div class="ct">Sala Macchine</div><div class="cs">3° Piano Prua · cuore energetico</div></div></div><div class="cb"><p>Protetta da <strong>ampi muri rinforzati</strong>. Nascosta dietro uno dei muri si trova una <strong>zona segreta</strong> per reliquie e artefatti.</p></div><div style="margin-top:.75rem"><span class="tag to" style="border-style:dashed">🔒 Zona Segreta</span></div></div>
     </div>
     <link rel="stylesheet" href="css/09-nave.css">
     <div class="nv-extra">
       <div class="nv-card" data-a="neutro">
         <span class="nv-lbl">📦 Equipaggiamento Grande Trasportato</span>
-        <textarea class="nv-note" id="nv-equip-grande" placeholder="Annota l'equipaggiamento ingombrante stivato a bordo: veicoli, macchinari, casse di rifornimenti, reliquie voluminose, prede di grossa taglia..." oninput="nvSave()"></textarea>
+        <textarea class="nv-note" id="nv-equip-grande" placeholder="Annota l'equipaggiamento ingombrante stivato a bordo: veicoli, macchinari, casse di rifornimenti, reliquie voluminose, prede di grossa taglia... (lo vedono e lo cambiano tutti)" oninput="nvSave()"></textarea>
       </div>
-      <div class="nv-reserve-box">
+      <div class="nv-reserve-box" id="nv-reserve-box">
         <div class="nv-reserve">
-          <span class="nv-lbl">🍞 Riserva Dispensa</span>
+          <span class="nv-lbl">🍞 Dispensa · giorni di viveri</span>
           <div class="nv-counter">
-            <button type="button" onclick="nvReserve('disp',-1)">−</button>
-            <input type="number" id="nv-res-disp" value="0" min="0" oninput="nvSave()">
-            <button type="button" onclick="nvReserve('disp',1)">+</button>
+            <button type="button" onclick="nvReserve('disp',-1)" aria-label="Un giorno in meno">−</button>
+            <b class="nv-disp-n" id="nv-res-disp" aria-live="polite">0</b>
+            <button type="button" onclick="nvReserve('disp',1)" aria-label="Un giorno in più">+</button>
           </div>
         </div>
-        <div class="nv-reserve">
-          <span class="nv-lbl">⚙️ Riserva Equipaggiamento</span>
-          <div class="nv-counter">
-            <button type="button" onclick="nvReserve('equip',-1)">−</button>
-            <input type="number" id="nv-res-equip" value="0" min="0" oninput="nvSave()">
-            <button type="button" onclick="nvReserve('equip',1)">+</button>
-          </div>
+        <div class="nv-reserve nv-stv">
+          <span class="nv-lbl">🧰 Stiva Primaria</span>
+          <span class="nv-stv-ries" id="nv-stv-ries"></span>
+          <div><button type="button" class="nv-go" onclick="stvApri()">Apri la stiva</button></div>
+          <span class="nv-stv-stato" id="nv-stv-stato"></span>
         </div>
       </div>
     </div>

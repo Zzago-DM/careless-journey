@@ -188,7 +188,7 @@ tcjSezione(`<section id="manuale">
 
     <!-- ===================== NUCLEI & ELEMENTI ===================== -->
     <div class="mpanel" id="p-elementi">
-      <p class="mn-lead">Il <b>nucleo elementale</b> si sceglie <b>prima di ogni esplorazione</b> e non si può cambiare durante l'avventura. Fa due cose insieme: dà un elemento ai tuoi <b>attacchi</b> e cambia la <b>resistenza</b> della tua armatura.</p>
+      <p class="mn-lead">Il <b>nucleo elementale</b> si sceglie <b>prima di ogni esplorazione</b> e non si può cambiare durante l'avventura, a meno di usare un <b>nucleo di ricambio</b> (vedi sotto). Fa due cose insieme: dà un elemento ai tuoi <b>attacchi</b> e cambia la <b>resistenza</b> della tua armatura.</p>
       <div class="mn-note"><span class="mn-k">La regola d'oro</span>In <b>difesa</b> conviene lo <b>stesso elemento</b> del Behemoth (subisci meno danni). In <b>attacco</b> conviene l'<b>elemento opposto</b> (fai più danni).</div>
 
       <h3 class="mn-h">Token elementali</h3>
@@ -199,6 +199,8 @@ tcjSezione(`<section id="manuale">
         <li>I contatori dei diversi elementi sono <b>separati</b>: un Behemoth può subire più malus aetherici insieme.</li>
       </ul>
 
+      <h3 class="mn-h">Nuclei di ricambio</h3>
+      <p>Oltre ai nuclei montati, ogni Slayer può portare con sé fino a <b>3 nuclei di ricambio</b>, d'attacco o di difesa, presi dalla stiva della nave o comprati al negozio. Sono usa e getta: quando ne monti uno, il nucleo che avevi prima <b>si consuma e sparisce</b>.</p>
       <h3 class="mn-h">I sei nuclei</h3>
       <div class="mn-grid">
         <div class="mn-c el" style="--c:var(--fire)"><div class="ct">🔥 Fiammeggiante</div>
@@ -257,7 +259,7 @@ tcjSezione(`<section id="manuale">
 
     <!-- ===================== TONICI & PILONI ===================== -->
     <div class="mpanel" id="p-equipaggiamento">
-      <p class="mn-lead">All'inizio di ogni spedizione ricevi gratis <b>5 tonici di guarigione</b> (curano 1D6 PV ciascuno). In più hai <b>3 slot</b> di equipaggiamento: in ogni slot puoi mettere <b>5 tonici</b> oppure <b>2 piloni</b>.</p>
+      <p class="mn-lead">All'inizio di ogni spedizione ricevi gratis <b>5 tonici di guarigione</b> (curano 1D6 PV ciascuno). In più hai <b>3 slot</b> di equipaggiamento: in ogni slot puoi mettere <b>5 tonici</b> oppure <b>2 piloni</b>, sempre di un solo tipo. Ogni oggetto arriva dalla <b>stiva della nave</b>, e allora in stiva ne resta uno in meno, oppure dal <b>negozio</b>. Quello che non usi lo puoi riporre in stiva.</p>
       <h3 class="mn-h">Tonici base <small>durano 1 turno</small></h3>
       <div class="mn-tw"><table class="tcj-t"><thead><tr><th style="width:30%">Tonico</th><th>Effetto</th></tr></thead><tbody>
         <tr><td><b>Salute</b></td><td>Recuperi 1D6 PV</td></tr><tr><td><b>Resistenza</b></td><td>+2 COST</td></tr><tr><td><b>Stamina</b></td><td>+2 DES</td></tr><tr><td><b>Assalto</b></td><td>+2 FOR</td></tr>
