@@ -141,6 +141,7 @@
     ZONE: ZONE,
     zona: function(k, def){ REG[k] = def; if(aperta && cur === k) monta(k, null); },
     apri: apri, chiudi: chiudi,
+    vai: function(k){ if(aperta) vai(k, null); else apri(k); },
     attuale: function(){ return aperta ? cur : null; }
   };
 })();

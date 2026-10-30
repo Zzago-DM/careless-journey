@@ -262,7 +262,7 @@
     + '<div class="stv-top"><div><div class="stv-k">Careless Journey · 4° piano di poppa</div><h3 class="stv-t" id="stv-t">Stiva Primaria</h3></div>'
     + '<button type="button" class="mae-x stv-x" id="stv-x" aria-label="Esci dalla stiva">✕</button></div>'
     + '<p class="stv-sub">Odore di catrame, di erbe secche e di legno umido. Le casse scricchiolano a ogni beccheggio della nave.</p>'
-    + '<div class="stv-stato" id="stv-stato" aria-live="polite"></div>'
+    + '<div class="stv-box" id="stv-box"><div class="stv-stato" id="stv-stato" aria-live="polite"></div>'
     + '<div class="stv-pills" role="tablist">'
     + '<button type="button" class="stv-pill on" role="tab" aria-selected="true" data-s="str">🧪 Strumenti</button>'
     + '<button type="button" class="stv-pill" role="tab" aria-selected="false" data-s="par">🦴 Parti di mostro</button>'
@@ -279,9 +279,10 @@
     + '<div class="stv-disp-n" id="stv-disp-n">0</div><div class="stv-disp-l">giorni di viveri<br>per tutto il gruppo</div>'
     + '<div class="stv-disp-c" id="stv-disp-c"></div></div></div>'
     + '<p class="stv-nota" style="text-align:center">Ogni giorno di viaggio la dispensa scende di 1. I mezzi giorni si arrotondano per difetto: il gruppo ha razionato.</p></div>'
-    + '</div></div>';
+    + '</div></div></div>';
   document.body.appendChild(ov);
   var sezione = "str", behScelto = null;
+  var box = ov.querySelector("#stv-box"), inNave = false;   /* il contenuto della stanza: nella finestra o nella pagina della nave (js/nave-stiva.js) */
 
   function statoStanza(){
     var w = $("stv-stato"); if(!w) return;
@@ -375,15 +376,15 @@
     var n = $("stv-disp-n"); if(n) n.textContent = doc.disp;
     var c = $("stv-disp-c"); if(c) c.innerHTML = contatore("disp", "disp", doc.disp, "giorni di viveri");
   }
-  function stanza(){ if(ov.hidden) return; statoStanza(); strumenti(); deposito(); vari(); dispensa(); }
+  function stanza(){ if(ov.hidden && !inNave) return; statoStanza(); strumenti(); deposito(); vari(); dispensa(); }
   STV.on(stanza);
 
-  function vaiSezione(s){
+  function vaiSezione(s, muto){
     sezione = s;
-    ov.querySelectorAll(".stv-pill").forEach(function(b){ var on = b.getAttribute("data-s") === s; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); });
-    ov.querySelectorAll(".stv-sp").forEach(function(p){ p.classList.toggle("on", p.id === "stv-s-" + s); });
+    box.querySelectorAll(".stv-pill").forEach(function(b){ var on = b.getAttribute("data-s") === s; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); });
+    box.querySelectorAll(".stv-sp").forEach(function(p){ p.classList.toggle("on", p.id === "stv-s-" + s); });
     if(s === "par"){ behemoth(); parti(); }
-    suono("paper");
+    if(!muto) suono("paper");
   }
   function apri(){
     ov.hidden = false; document.body.style.overflow = "hidden";
@@ -397,7 +398,16 @@
     ov.classList.remove("on"); setTimeout(function(){ if(!ov.classList.contains("on")) ov.hidden = true; }, 260);
     if(!document.querySelector(".inc-win.on,.cj-overlay.open,.rel-ov.on,.nx-ov.on")) document.body.style.overflow = "";
   }
-  window.stvApri = function(s){ try { if(typeof nvClose === "function") nvClose(); } catch(_){} if(s && $("stv-s-" + s)) sezione = s; apri(); };
+  window.stvApri = function(s){
+    try { if(typeof nvClose === "function") nvClose(); } catch(_){}
+    if(s && $("stv-s-" + s)) sezione = s;
+    if(STV.nave && window.NAVE){ if(inNave) vaiSezione(sezione); else NAVE.vai("stiva_primaria"); return; }   /* la Stiva Primaria della pagina della nave */
+    apri();
+  };
+  /* la pagina della nave (js/nave-stiva.js) porta il contenuto della stanza nel suo pannello di destra, e lo riporta qui all'uscita */
+  STV.stanzaMonta = function(dest){ if(ov.classList.contains("on")) chiudi(); dest.appendChild(box); inNave = true; stanza(); vaiSezione(sezione, true); guarda("stanza", true); };
+  STV.stanzaSmonta = function(){ if(!inNave) return; guarda("stanza", false); svuota(); inNave = false; ov.querySelector(".stv-sala").appendChild(box); };
+  STV.sezione = function(s){ if(s && $("stv-s-" + s)) vaiSezione(s); };
 
   /* cambi dalla stanza e dal riquadro della Nave */
   function cambiaStr(id, d){
@@ -429,8 +439,10 @@
   }
   ov.addEventListener("click", function(e){
     if(e.target === ov){ chiudi(); return; }
+    if(e.target.closest("#stv-x")){ chiudi(); return; }
+  });
+  box.addEventListener("click", function(e){
     var t = e.target;
-    if(t.closest("#stv-x")){ chiudi(); return; }
     var p = t.closest(".stv-pill"); if(p){ vaiSezione(p.getAttribute("data-s")); return; }
     var b = t.closest("[data-az]"); if(!b) return;
     var az = b.getAttribute("data-az"), id = b.getAttribute("data-id"), d = parseInt(b.getAttribute("data-d"), 10) || 0;
@@ -440,8 +452,8 @@
     else if(az === "parte") cambiaParte(parseInt(id, 10), d);
     else if(az === "parte-via") cambiaParte(parseInt(id, 10), -9999);
   });
-  ov.addEventListener("change", function(e){ if(e.target.id === "stv-beh"){ behScelto = e.target.value || null; parti(); } });
-  ov.addEventListener("input", function(e){ if(e.target.id === "stv-vari") scriviVari(e.target.value); });
+  box.addEventListener("change", function(e){ if(e.target.id === "stv-beh"){ behScelto = e.target.value || null; parti(); } });
+  box.addEventListener("input", function(e){ if(e.target.id === "stv-vari") scriviVari(e.target.value); });
   document.addEventListener("keydown", function(e){ if(e.key === "Escape" && !ov.hidden && !eqOv.classList.contains("on")) chiudi(); });
 
   /* =====================================================================
