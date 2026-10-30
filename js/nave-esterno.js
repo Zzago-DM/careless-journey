@@ -9,8 +9,8 @@
   if(!window.NAVE) return;
   var W = 600, H = 1046;
   var DX = 20, DY = 355;                                   /* dove sta la Sala Mappe dentro il ponte */
-  var BASSA = .6;                                          /* la Sala Mappe qui è schiacciata verso poppa: occupa il 40% in meno della lunghezza */
-  function Y(y){ return +(1005 - (1005 - (y + DY)) * BASSA).toFixed(1); }
+  var GIU = 251;                                           /* la Sala Mappe è spostata verso poppa del 40% della sua lunghezza: la parte in fondo esce dal ponte */
+  function Y(y){ return y + DY + GIU; }
   /* il cono esterno: la stessa forma della Sala Mappe, allargata dei due corridoi e allungata verso prua */
   var T0 = [333, 58], TC = [562, 424], TB = [584, 1005];
   var FUORI = "M267,58 Q300,32 333,58 Q562,424 584,1005 L16,1005 Q38,424 267,58 Z";
@@ -46,13 +46,12 @@
     for(var k = 0, y = 30; y < H; y += 74, k++) for(var x2 = 4 + (k % 4) * 18; x2 < W; x2 += 72) l(x2, y, x2 + 18, y, "rgba(0,0,0,.3)", 1.5);
     g.push('</g>');
     /* la Sala Mappe: la zona mancante del ponte */
+    g.push('<g clip-path="url(#nxe-forma)">');
     p(DENTRO, "#1a130c", "#d2a85a", 5);
-    g.push('<text x="300" y="' + Y(420) + '" fill="rgba(210,168,90,.45)" font-size="26" text-anchor="middle" letter-spacing="3">SALA MAPPE</text>');
-    /* le tre porte della Sala Mappe: in punta e, vicino alla base, una per lato sui corridoi */
+    g.push('</g>');
+    g.push('<text x="300" y="' + Y(330) + '" fill="rgba(210,168,90,.45)" font-size="26" text-anchor="middle" letter-spacing="3">SALA MAPPE</text>');
+    /* la porta in punta della Sala Mappe */
     porta("M" + (266 + DX) + "," + Y(33) + " L" + (294 + DX) + "," + Y(33), [266 + DX, Y(33)], [294 + DX, Y(33)]);
-    [1, -1].forEach(function(lato){
-      porta(tratto(M0, MC, MB, .885, .955, lato), bez(M0, MC, MB, .885, lato), bez(M0, MC, MB, .955, lato));
-    });
     /* parapetto: corrimano in legno con i montanti in ottone, lungo tutto il bordo del cono */
     p("M267,58 Q300,32 333,58 Q562,424 584,1005 M16,1005 Q38,424 267,58", "none", "#3a2412", 9);
     p("M267,58 Q300,32 333,58 Q562,424 584,1005 M16,1005 Q38,424 267,58", "none", "#9a6a34", 5);
@@ -60,7 +59,7 @@
       for(var i = 0; i <= 22; i++){ var q = bez(T0, TC, TB, i / 22, lato); c(q[0].toFixed(1), q[1].toFixed(1), 4.5, "#c8a04a", "#5a3a18", 1); }
     });
     /* in fondo ai corridoi, la parete verso la Mensa */
-    l(16, 1005, 36 + DX, 1005, "#d2a85a", 5); l(524 + DX, 1005, 584, 1005, "#d2a85a", 5);
+    l(16, 1005, 584, 1005, "#d2a85a", 5);
     var t = '<text x="300" y="20" fill="#a39478" font-size="22" text-anchor="middle">▲ prua</text>'
       + '<text x="300" y="1036" fill="#a39478" font-size="22" text-anchor="middle">▼ poppa</text>';
     return '<svg class="sm-svg nxe-svg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Ponte Esterno visto dall\'alto">' + defs + g.join("") + t + '</svg>';
