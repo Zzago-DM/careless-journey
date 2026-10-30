@@ -6,7 +6,7 @@
 (function(){
   "use strict";
   if(!window.NAVE) return;
-  var W = 560, H = 682, CX = 280, CY = 360, SCALA = .7;
+  var W = 560, H = 682, CX = 280, CY = 315, SCALA = .7;
   var FORMA = "M252,44 Q280,22 308,44 Q505,285 524,650 L36,650 Q55,285 252,44 Z";
   var g;
   function r(x, y, w, h, f, s, sw, rx, ex){ g.push('<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="' + (rx || 0) + '" fill="' + f + '" stroke="' + (s || "none") + '" stroke-width="' + (sw || 1) + '" ' + (ex || "") + '/>'); }
@@ -41,20 +41,15 @@
     /* tavolo, sedute e globo, rimpiccioliti tutti insieme attorno al centro del tavolo */
     g.push('<g transform="translate(' + CX + ',' + CY + ') scale(' + SCALA + ') translate(' + (-CX) + ',' + (-CY) + ')">');
     /* dodici sedute attorno al tavolo */
-    for(var s = 0; s < 12; s++){ var an = s * Math.PI / 6 + Math.PI / 12; seduta(CX + Math.cos(an) * 134, CY + Math.sin(an) * 134, an * 180 / Math.PI + 90); }
+    for(var s = 0; s < 12; s++){ var an = s * Math.PI / 6 + Math.PI / 12; seduta(CX + Math.cos(an) * 117, CY + Math.sin(an) * 117, an * 180 / Math.PI + 90); }
     /* tavolo circolare con il buco al centro */
-    c(CX, CY, 112, "#5a3a20", "#2a1a0a", 3);
-    c(CX, CY, 104, "none", ORO_P, 1.5, 'opacity=".7"');
+    /* corona del tavolo: 30% più stretta di prima (da 54 a 95 invece che a 112) */
+    c(CX, CY, 95, "#5a3a20", "#2a1a0a", 3);
+    c(CX, CY, 88, "none", ORO_P, 1.5, 'opacity=".7"');
     c(CX, CY, 54, "#0c0907", "#2a1a0a", 3);
     c(CX, CY, 60, "none", ORO_P, 1.5, 'opacity=".7"');
-    /* carte e strumenti sul tavolo */
-    [[-40, 2, -18], [62, -10, 32], [150, 4, 70], [206, -6, 120], [262, 2, 160], [318, -8, 210]].forEach(function(q, i){
-      var an = q[0] * Math.PI / 180, x = CX + Math.cos(an) * 82, y = CY + Math.sin(an) * 82;
-      g.push('<g transform="translate(' + x.toFixed(1) + ',' + y.toFixed(1) + ') rotate(' + q[2] + ')">');
-      if(i % 3 === 2){ c(0, 0, 8, "none", "#c8a04a", 2); l(-8, 0, 8, 0, "#c8a04a", 1); l(0, -8, 0, 8, "#c8a04a", 1); }
-      else { r(-15, -10, 30, 20, "#e6d6b0", "#a08a5a", 1, 1); p("M-10,-3 Q-2,-8 4,-2 T12,2", "none", "#8a6a3a", 1); c(-6, 4, 2, "#c84848"); }
-      g.push('</g>');
-    });
+    /* due strumenti di navigazione sul tavolo */
+    [150, 318].forEach(function(gr){ var an = gr * Math.PI / 180, x = CX + Math.cos(an) * 76, y = CY + Math.sin(an) * 76; c(x, y, 7, "none", "#c8a04a", 2); l(x - 7, y, x + 7, y, "#c8a04a", 1); l(x, y - 7, x, y + 7, "#c8a04a", 1); });
     /* il globo azzurro con i dettagli in oro */
     c(CX, CY, 48, "none", ORO_P, 3);
     c(CX, CY, 40, "url(#nxs-globo)", "#0c2440", 1.5);
@@ -79,7 +74,7 @@
   var sx = document.createElement("div"); sx.className = "sm-pianta";
   var dx = document.createElement("div");
   dx.innerHTML = '<div class="sm-h">🗺️ Sala Mappe</div>'
-    + '<p class="sm-d">Il cuore operativo della nave, sotto il Ponte di Comando. Al centro un grande tavolo circolare da dodici posti, coperto di carte e strumenti; nel buco al centro del tavolo gira un globo azzurro con i dettagli in oro.</p>'
+    + '<p class="sm-d">Il cuore operativo della nave, sotto il Ponte di Comando. Al centro un grande tavolo circolare da dodici posti; nel buco al centro del tavolo gira un globo azzurro con i dettagli in oro.</p>'
     + '<p class="sm-d">In punta si esce verso il Ponte Esterno, in fondo si va verso la Mensa; una scala sale al Ponte di Comando e un boccaporto scende alla Sala Macchine.</p>'
     + '<p class="stv-nota" style="margin-top:1rem">Cosa si potrà fare qui lo stiamo ancora decidendo.</p>';
   NAVE.zona("sala_mappe", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); } });
