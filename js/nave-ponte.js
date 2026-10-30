@@ -37,23 +37,30 @@
     [[242, 91.5], [318, 91.5]].forEach(function(q){ c(q[0], q[1], 3.5, "#c8903a", "#6a4020", 1); });
     for(var k = 0; k < 5; k++) l(256 + k * 12, 88, 256 + k * 12, 95, "rgba(0,0,0,.3)", 1);
   }
-  /* scala curva lungo la parete obliqua (lato: 1 destra, -1 sinistra): parte dentro il ponte, in basso, sale seguendo
-     il muro, lo attraversa e prosegue FUORI dal trapezio verso prua, scendendo al piano di sotto */
+  /* scala esterna (lato: 1 destra, -1 sinistra): una porta nella parete curva dà su un pianerottolo fuori dal ponte;
+     da lì la scala scende lungo il fianco, seguendo la curva del muro, verso prua e il piano di sotto */
   function scalaCurva(lato){
     var P0 = lato > 0 ? TR : TL, C = [lato > 0 ? 548 : 12, 150], P2 = lato > 0 ? BR : BL;
     function B(u){ var a = (1 - u) * (1 - u), b = 2 * (1 - u) * u, cc = u * u; return [a * P0[0] + b * C[0] + cc * P2[0], a * P0[1] + b * C[1] + cc * P2[1]]; }
     function D(u){ return [2 * (1 - u) * (C[0] - P0[0]) + 2 * u * (P2[0] - C[0]), 2 * (1 - u) * (C[1] - P0[1]) + 2 * u * (P2[1] - C[1])]; }
-    function punto(u, off){ var b = B(u), d = D(u), n = Math.hypot(d[0], d[1]); var nx = -d[1] / n, ny = d[0] / n; if(nx * lato > 0){ nx = -nx; ny = -ny; } return [b[0] + nx * off, b[1] + ny * off]; }
-    /* dentro (offset 7..40) da u=.95 a .62; attraversa il muro tra .62 e .42; fuori (offset -40..-7) fino a u=.12 */
-    function sposta(u){ var k = Math.min(1, Math.max(0, (.62 - u) / .2)); k = k * k * (3 - 2 * k); return [7 + (-40 - 7) * k, 40 + (-7 - 40) * k]; }
-    var u0 = .12, u1 = .95, N = 30, a = [], b = [];
-    for(var i = 0; i <= N; i++){ var u = u1 - (u1 - u0) * i / N, o = sposta(u); a.push(punto(u, o[0])); b.push(punto(u, o[1])); }
+    function punto(u, off){ var b = B(u), d = D(u), n = Math.hypot(d[0], d[1]); var nx = -d[1] / n, ny = d[0] / n; if(nx * lato < 0){ nx = -nx; ny = -ny; } return [b[0] + nx * off, b[1] + ny * off]; }   /* off > 0 = fuori dal ponte */
     function pts(L){ return L.map(function(q){ return q[0].toFixed(1) + "," + q[1].toFixed(1); }).join(" L"); }
-    p("M" + pts(a) + " L" + pts(b.slice().reverse()) + " Z", "#2a1a0a", "#7a5a3a", 1.5);
-    for(var k = 1; k < N; k++) l(a[k][0].toFixed(1), a[k][1].toFixed(1), b[k][0].toFixed(1), b[k][1].toFixed(1), "rgba(200,160,100," + (.85 - .6 * k / N).toFixed(2) + ")", 2);
-    var interno = [], esterno = [];
-    for(var j = 0; j <= N; j++){ var uu = u1 - (u1 - u0) * j / N, oo = sposta(uu); var lato1 = oo[0] > oo[1] ? 0 : 1; interno.push(punto(uu, Math.max(oo[0], oo[1]))); esterno.push(punto(uu, Math.min(oo[0], oo[1]))); }
-    p("M" + pts(interno), "none", "#c8a04a", 2); p("M" + pts(esterno), "none", "#c8a04a", 2);   /* corrimano sui due lati */
+    function banda(ua, ub, n, o1, o2){ var A = [], Bb = []; for(var i = 0; i <= n; i++){ var u = ua + (ub - ua) * i / n; A.push(punto(u, o1)); Bb.push(punto(u, o2)); } return { a: A, b: Bb }; }
+    var PORTA = [.5, .6], FONDO = .1, O1 = 4, O2 = 36;
+    /* pianerottolo davanti alla porta */
+    var pr = banda(PORTA[0], PORTA[1], 6, O1, O2);
+    p("M" + pts(pr.a) + " L" + pts(pr.b.slice().reverse()) + " Z", "#3a2615", "#7a5a3a", 1.5);
+    /* scala che scende verso prua */
+    var N = 22, sc = banda(PORTA[0], FONDO, N, O1, O2);
+    p("M" + pts(sc.a) + " L" + pts(sc.b.slice().reverse()) + " Z", "#2a1a0a", "#7a5a3a", 1.5);
+    for(var k = 1; k <= N; k++) l(sc.a[k][0].toFixed(1), sc.a[k][1].toFixed(1), sc.b[k][0].toFixed(1), sc.b[k][1].toFixed(1), "rgba(200,160,100," + (.85 - .6 * k / N).toFixed(2) + ")", 2);
+    var ring = banda(PORTA[1], FONDO, N + 6, O2, O2).a;
+    p("M" + pts(ring), "none", "#c8a04a", 2.5);                       /* parapetto sul lato esterno */
+    /* la porta: un varco nella parete */
+    var v = banda(PORTA[0] + .015, PORTA[1] - .015, 6, 0, 0).a;
+    p("M" + pts(v), "none", "#3a2615", 7);
+    var v1 = v[0], v2 = v[v.length - 1];
+    c(v1[0], v1[1], 3, "#c8a04a"); c(v2[0], v2[1], 3, "#c8a04a");
   }
   function pianta(){
     g = [];
@@ -80,7 +87,7 @@
     r(250, 256, 60, 44, "#2a1a0a", "#7a5a3a", 1.5); for(var z = 1; z < 6; z++) l(252, 256 + z * 7.3, 308, 256 + z * 7.3, "#8a6a3a", 2);
     p(FORMA, "none", "#d2a85a", 5);
     l(250, 300, 310, 300, "#2a1a0a", 7);
-    /* due scale curve: partono dentro, in basso, attraversano la parete e scendono fuori dal ponte verso prua */
+    /* due porte nelle pareti curve e, fuori, le scale che scendono lungo i fianchi verso prua */
     scalaCurva(1); scalaCurva(-1);
     var t = '<text x="280" y="16" fill="#a39478" font-size="15" text-anchor="middle">▲ prua</text>'
       + '<text x="280" y="322" fill="#a39478" font-size="15" text-anchor="middle">▼ verso la Sala Mappe</text>';
@@ -89,7 +96,7 @@
   var sx = document.createElement("div"); sx.className = "sm-pianta";
   var dx = document.createElement("div");
   dx.innerHTML = '<div class="sm-h">🧭 Ponte di Comando</div>'
-    + '<p class="sm-d">Rialzato sopra la Sala Mappe, con le vetrate che guardano verso prua. Davanti, sotto le vetrate, una lunga console con i computer di bordo; dietro di essa il timone con la seduta del timoniere, e due sedute ai lati della console. Lungo le pareti curve due scale escono dal ponte e scendono al piano di sotto, e una terza scala porta alla Sala Mappe.</p>'
+    + '<p class="sm-d">Rialzato sopra la Sala Mappe, con le vetrate che guardano verso prua. Davanti, sotto le vetrate, una lunga console con i computer di bordo; dietro di essa il timone con la seduta del timoniere, e due sedute ai lati della console. Da due porte nelle pareti curve si esce su due scale esterne che scendono lungo i fianchi verso prua, e una terza scala porta alla Sala Mappe.</p>'
     + '<p class="stv-nota" style="margin-top:1rem">Cosa si potrà fare qui lo stiamo ancora decidendo.</p>';
   NAVE.zona("ponte_comando", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); } });
 })();
