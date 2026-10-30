@@ -43,7 +43,7 @@
     function B(u){ var a = (1 - u) * (1 - u), b = 2 * (1 - u) * u, cc = u * u; return [a * P0[0] + b * C[0] + cc * P2[0], a * P0[1] + b * C[1] + cc * P2[1]]; }
     function D(u){ return [2 * (1 - u) * (C[0] - P0[0]) + 2 * u * (P2[0] - C[0]), 2 * (1 - u) * (C[1] - P0[1]) + 2 * u * (P2[1] - C[1])]; }
     function punto(u, off){ var b = B(u), d = D(u), n = Math.hypot(d[0], d[1]); var nx = -d[1] / n, ny = d[0] / n; if(nx * lato > 0){ nx = -nx; ny = -ny; } return [b[0] + nx * off, b[1] + ny * off]; }
-    var u0 = .5, u1 = .95, N = 16, est = [], int = [];
+    var u0 = .15, u1 = .95, N = 28, est = [], int = [];
     for(var i = 0; i <= N; i++){ var u = u0 + (u1 - u0) * i / N; est.push(punto(u, 7)); int.push(punto(u, 40)); }
     var d = "M" + est.map(function(q){ return q[0].toFixed(1) + "," + q[1].toFixed(1); }).join(" L") + " L" + int.reverse().map(function(q){ return q[0].toFixed(1) + "," + q[1].toFixed(1); }).join(" L") + " Z";
     int.reverse();
