@@ -1,13 +1,13 @@
 /* Esplora la nave › Sala Mappe (js/nave-esplora.js).
-   A sinistra la Sala Mappe vista dall'alto: una forma a cono molto lunga, stretta verso prua e larga verso poppa, con i lati curvi
+   A sinistra la Sala Mappe vista dall'alto: una forma a cono allungata, stretta verso prua e larga verso poppa, con i lati curvi
    come il Ponte di Comando. Verso la metà un grande tavolo circolare da dodici posti con un buco al centro, dove gira
    un globo azzurro con i dettagli in oro.
    A destra, per ora: la descrizione della Sala Mappe. */
 (function(){
   "use strict";
   if(!window.NAVE) return;
-  var W = 560, H = 832, CX = 280, CY = 440;
-  var FORMA = "M252,44 Q280,22 308,44 Q504,330 524,800 L36,800 Q56,330 252,44 Z";
+  var W = 560, H = 652, CX = 280, CY = 345;
+  var FORMA = "M252,44 Q280,22 308,44 Q505,270 524,620 L36,620 Q55,270 252,44 Z";
   var g;
   function r(x, y, w, h, f, s, sw, rx, ex){ g.push('<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="' + (rx || 0) + '" fill="' + f + '" stroke="' + (s || "none") + '" stroke-width="' + (sw || 1) + '" ' + (ex || "") + '/>'); }
   function c(x, y, R, f, s, sw, ex){ g.push('<circle cx="' + x + '" cy="' + y + '" r="' + R + '" fill="' + f + '" stroke="' + (s || "none") + '" stroke-width="' + (sw || 1) + '" ' + (ex || "") + '/>'); }
@@ -65,12 +65,12 @@
     c(CX - 13, CY - 14, 7, "rgba(255,255,255,.35)");
     [[0, -48], [48, 0], [0, 48], [-48, 0]].forEach(function(q){ c(CX + q[0], CY + q[1], 3.5, ORO_P, "#6a4a20", 1); });
     /* passaggi: verso il Ponte Esterno (punta), verso la Mensa (in fondo), la scala del Ponte di Comando e il boccaporto per la Sala Macchine */
-    r(452, 750, 50, 40, "#2a1a0a", "#7a5a3a", 1.5); for(var z = 1; z < 5; z++) l(454, 750 + z * 8, 500, 750 + z * 8, "#8a6a3a", 2);
-    r(60, 756, 42, 34, "#1a120a", "#7a5a3a", 2, 3); l(60, 773, 102, 773, "#7a5a3a", 1.5); c(81, 764, 3, "#c8a04a");
+    r(452, 570, 50, 40, "#2a1a0a", "#7a5a3a", 1.5); for(var z = 1; z < 5; z++) l(454, 570 + z * 8, 500, 570 + z * 8, "#8a6a3a", 2);
+    r(60, 576, 42, 34, "#1a120a", "#7a5a3a", 2, 3); l(60, 593, 102, 593, "#7a5a3a", 1.5); c(81, 584, 3, "#c8a04a");
     p(FORMA, "none", "#d2a85a", 5);
-    l(266, 30, 294, 30, "#2f2013", 7); l(250, 800, 310, 800, "#2f2013", 8);
+    l(266, 30, 294, 30, "#2f2013", 7); l(250, 620, 310, 620, "#2f2013", 8);
     var t = '<text x="280" y="18" fill="#a39478" font-size="22" text-anchor="middle">▲ verso il Ponte Esterno</text>'
-      + '<text x="280" y="826" fill="#a39478" font-size="22" text-anchor="middle">▼ verso la Mensa</text>';
+      + '<text x="280" y="646" fill="#a39478" font-size="22" text-anchor="middle">▼ verso la Mensa</text>';
     return '<svg class="sm-svg nxs-svg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Sala Mappe vista dall\'alto">' + defs + g.join("") + t + '</svg>';
   }
   var sx = document.createElement("div"); sx.className = "sm-pianta";
