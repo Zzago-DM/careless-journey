@@ -31,8 +31,7 @@
     r(-11, -10, 22, 20, "#5a3d22", "#3a2614", 1.5, 5); r(-11, 7, 22, 6, "#4a2c13", "", 0, 3);
     g.push('</g>');
   }
-  /* come le scale esterne del Ponte di Comando: una porta nel lato curvo del cono dà su un pianerottolo fuori dalla sala;
-     da lì la scala segue il lato del cono verso la punta e porta al Ponte Esterno (lato: 1 destra, -1 sinistra) */
+  /* due scale interne che seguono la parete curva del cono (lato: 1 destra, -1 sinistra) */
   function scalaLato(lato){
     var P0 = lato > 0 ? [308, 44] : [252, 44], C = lato > 0 ? [505, 285] : [55, 285], P2 = lato > 0 ? [524, 650] : [36, 650];
     function B(u){ var a = (1 - u) * (1 - u), b = 2 * (1 - u) * u, cc = u * u; return [a * P0[0] + b * C[0] + cc * P2[0], a * P0[1] + b * C[1] + cc * P2[1]]; }
@@ -41,17 +40,13 @@
     function pts(L){ return L.map(function(q){ return q[0].toFixed(1) + "," + q[1].toFixed(1); }).join(" L"); }
     function banda(ua, ub, n, o1, o2){ var A = [], Bb = []; for(var i = 0; i <= n; i++){ var u = ua + (ub - ua) * i / n; A.push(punto(u, o1)); Bb.push(punto(u, o2)); } return { a: A, b: Bb }; }
     /* dentro la sala: una scala lungo la parete, che sale verso la punta del cono */
-    var CIMA = .6, FONDO = .82, O1 = -4, O2 = -36, N = 22;
+    var CIMA = .67, FONDO = .89, O1 = -4, O2 = -36, N = 22;
     var sc = banda(CIMA, FONDO, N, O1, O2);
     p("M" + pts(sc.a) + " L" + pts(sc.b.slice().reverse()) + " Z", "#2a1a0a", "#7a5a3a", 1.5);
     for(var k = 1; k <= N; k++) l(sc.a[k][0].toFixed(1), sc.a[k][1].toFixed(1), sc.b[k][0].toFixed(1), sc.b[k][1].toFixed(1), "rgba(200,160,100," + (.85 - .6 * k / N).toFixed(2) + ")", 2);
     /* parapetto sul lato verso la sala, dalla cima fin quasi al piede della scala */
     var bordo = banda(CIMA, FONDO - .02, N + 8, O2, O2).a, testa = punto(CIMA, O1);
     p("M" + testa[0].toFixed(1) + "," + testa[1].toFixed(1) + " L" + pts(bordo), "none", "#c8a04a", 2.5);
-    /* porta verso il Ponte Esterno, nella parete vicino alla base: un varco con i montanti in ottone */
-    var v = banda(.885, .955, 6, 0, 0).a;
-    p("M" + pts(v), "none", "#2f2013", 7);
-    c(v[0][0], v[0][1], 3, "#c8a04a"); c(v[v.length - 1][0], v[v.length - 1][1], 3, "#c8a04a");
   }
   function pianta(){
     g = [];
@@ -88,7 +83,7 @@
     g.push('</g>');
     /* passaggi: verso il Ponte Esterno (punta) e verso la Mensa (in fondo) */
     p(FORMA, "none", "#d2a85a", 5);
-    /* due scale lungo le pareti del cono e, vicino alla base, due porte verso il Ponte Esterno */
+    /* due scale lungo le pareti del cono */
     scalaLato(1); scalaLato(-1);
     l(266, 30, 294, 30, "#2f2013", 7); l(250, 650, 310, 650, "#2f2013", 8);
     var t = '<text x="280" y="18" fill="#a39478" font-size="22" text-anchor="middle">▲ verso il Ponte Esterno</text>'
@@ -99,7 +94,7 @@
   var dx = document.createElement("div");
   dx.innerHTML = '<div class="sm-h">🗺️ Sala Mappe</div>'
     + '<p class="sm-d">Il cuore operativo della nave, sotto il Ponte di Comando. Al centro un grande tavolo circolare da dodici posti; nel buco al centro del tavolo gira un globo azzurro con i dettagli in oro.</p>'
-    + '<p class="sm-d">Sul Ponte Esterno si esce dalla punta e da due porte sui lati, vicino al fondo della sala; lungo le pareti del cono corrono due scale; in fondo si va verso la Mensa.</p>'
+    + '<p class="sm-d">In punta si esce sul Ponte Esterno; lungo le pareti del cono corrono due scale; in fondo si va verso la Mensa.</p>'
     + '<p class="stv-nota" style="margin-top:1rem">Cosa si potrà fare qui lo stiamo ancora decidendo.</p>';
   NAVE.zona("sala_mappe", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); } });
 })();
