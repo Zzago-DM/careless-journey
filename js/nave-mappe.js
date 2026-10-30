@@ -31,6 +31,26 @@
     r(-11, -10, 22, 20, "#5a3d22", "#3a2614", 1.5, 5); r(-11, 7, 22, 6, "#4a2c13", "", 0, 3);
     g.push('</g>');
   }
+  /* come le scale esterne del Ponte di Comando: una porta nel lato curvo del cono dà su un pianerottolo fuori dalla sala;
+     da lì la scala segue il lato del cono verso la punta e porta al Ponte Esterno (lato: 1 destra, -1 sinistra) */
+  function scalaLato(lato){
+    var P0 = lato > 0 ? [308, 44] : [252, 44], C = lato > 0 ? [505, 285] : [55, 285], P2 = lato > 0 ? [524, 650] : [36, 650];
+    function B(u){ var a = (1 - u) * (1 - u), b = 2 * (1 - u) * u, cc = u * u; return [a * P0[0] + b * C[0] + cc * P2[0], a * P0[1] + b * C[1] + cc * P2[1]]; }
+    function D(u){ return [2 * (1 - u) * (C[0] - P0[0]) + 2 * u * (P2[0] - C[0]), 2 * (1 - u) * (C[1] - P0[1]) + 2 * u * (P2[1] - C[1])]; }
+    function punto(u, off){ var b = B(u), d = D(u), n = Math.hypot(d[0], d[1]); var nx = -d[1] / n, ny = d[0] / n; if(nx * lato < 0){ nx = -nx; ny = -ny; } return [b[0] + nx * off, b[1] + ny * off]; }
+    function pts(L){ return L.map(function(q){ return q[0].toFixed(1) + "," + q[1].toFixed(1); }).join(" L"); }
+    function banda(ua, ub, n, o1, o2){ var A = [], Bb = []; for(var i = 0; i <= n; i++){ var u = ua + (ub - ua) * i / n; A.push(punto(u, o1)); Bb.push(punto(u, o2)); } return { a: A, b: Bb }; }
+    var PORTA = [.5, .6], FONDO = .14, O1 = 4, O2 = 36, N = 22;
+    var pr = banda(PORTA[0], PORTA[1], 6, O1, O2);
+    p("M" + pts(pr.a) + " L" + pts(pr.b.slice().reverse()) + " Z", "#3a2615", "#7a5a3a", 1.5);
+    var sc = banda(PORTA[0], FONDO, N, O1, O2);
+    p("M" + pts(sc.a) + " L" + pts(sc.b.slice().reverse()) + " Z", "#2a1a0a", "#7a5a3a", 1.5);
+    for(var k = 1; k <= N; k++) l(sc.a[k][0].toFixed(1), sc.a[k][1].toFixed(1), sc.b[k][0].toFixed(1), sc.b[k][1].toFixed(1), "rgba(200,160,100," + (.85 - .6 * k / N).toFixed(2) + ")", 2);
+    p("M" + pts(banda(PORTA[1], FONDO, N + 6, O2, O2).a), "none", "#c8a04a", 2.5);
+    var v = banda(PORTA[0] + .015, PORTA[1] - .015, 6, 0, 0).a;
+    p("M" + pts(v), "none", "#2f2013", 7);
+    c(v[0][0], v[0][1], 3, "#c8a04a"); c(v[v.length - 1][0], v[v.length - 1][1], 3, "#c8a04a");
+  }
   function pianta(){
     g = [];
     var defs = '<defs><clipPath id="nxs-forma"><path d="' + FORMA + '"/></clipPath>'
@@ -68,6 +88,8 @@
     r(452, 600, 50, 40, "#2a1a0a", "#7a5a3a", 1.5); for(var z = 1; z < 5; z++) l(454, 600 + z * 8, 500, 600 + z * 8, "#8a6a3a", 2);
     r(60, 606, 42, 34, "#1a120a", "#7a5a3a", 2, 3); l(60, 623, 102, 623, "#7a5a3a", 1.5); c(81, 614, 3, "#c8a04a");
     p(FORMA, "none", "#d2a85a", 5);
+    /* porte sui lati e scale che seguono il cono verso il Ponte Esterno */
+    scalaLato(1); scalaLato(-1);
     l(266, 30, 294, 30, "#2f2013", 7); l(250, 650, 310, 650, "#2f2013", 8);
     var t = '<text x="280" y="18" fill="#a39478" font-size="22" text-anchor="middle">▲ verso il Ponte Esterno</text>'
       + '<text x="280" y="676" fill="#a39478" font-size="22" text-anchor="middle">▼ verso la Mensa</text>';
@@ -77,7 +99,7 @@
   var dx = document.createElement("div");
   dx.innerHTML = '<div class="sm-h">🗺️ Sala Mappe</div>'
     + '<p class="sm-d">Il cuore operativo della nave, sotto il Ponte di Comando. Al centro un grande tavolo circolare da dodici posti; nel buco al centro del tavolo gira un globo azzurro con i dettagli in oro.</p>'
-    + '<p class="sm-d">In punta si esce verso il Ponte Esterno, in fondo si va verso la Mensa; una scala sale al Ponte di Comando e un boccaporto scende alla Sala Macchine.</p>'
+    + '<p class="sm-d">In punta e dalle due porte sui lati, con le scale che seguono il cono, si esce sul Ponte Esterno; in fondo si va verso la Mensa; una scala sale al Ponte di Comando e un boccaporto scende alla Sala Macchine.</p>'
     + '<p class="stv-nota" style="margin-top:1rem">Cosa si potrà fare qui lo stiamo ancora decidendo.</p>';
   NAVE.zona("sala_mappe", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); } });
 })();
