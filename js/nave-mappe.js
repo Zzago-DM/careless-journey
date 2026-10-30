@@ -40,13 +40,16 @@
     function punto(u, off){ var b = B(u), d = D(u), n = Math.hypot(d[0], d[1]); var nx = -d[1] / n, ny = d[0] / n; if(nx * lato < 0){ nx = -nx; ny = -ny; } return [b[0] + nx * off, b[1] + ny * off]; }
     function pts(L){ return L.map(function(q){ return q[0].toFixed(1) + "," + q[1].toFixed(1); }).join(" L"); }
     function banda(ua, ub, n, o1, o2){ var A = [], Bb = []; for(var i = 0; i <= n; i++){ var u = ua + (ub - ua) * i / n; A.push(punto(u, o1)); Bb.push(punto(u, o2)); } return { a: A, b: Bb }; }
-    var PORTA = [.5, .6], FONDO = .14, O1 = 4, O2 = 36, N = 22;
+    /* dentro la sala: pianerottolo davanti alla porta e scala che scende lungo la parete verso la base del cono */
+    var PORTA = [.5, .6], FONDO = .82, O1 = -4, O2 = -36, N = 22;
     var pr = banda(PORTA[0], PORTA[1], 6, O1, O2);
     p("M" + pts(pr.a) + " L" + pts(pr.b.slice().reverse()) + " Z", "#3a2615", "#7a5a3a", 1.5);
-    var sc = banda(PORTA[0], FONDO, N, O1, O2);
+    var sc = banda(PORTA[1], FONDO, N, O1, O2);
     p("M" + pts(sc.a) + " L" + pts(sc.b.slice().reverse()) + " Z", "#2a1a0a", "#7a5a3a", 1.5);
     for(var k = 1; k <= N; k++) l(sc.a[k][0].toFixed(1), sc.a[k][1].toFixed(1), sc.b[k][0].toFixed(1), sc.b[k][1].toFixed(1), "rgba(200,160,100," + (.85 - .6 * k / N).toFixed(2) + ")", 2);
-    p("M" + pts(banda(PORTA[1], FONDO, N + 6, O2, O2).a), "none", "#c8a04a", 2.5);
+    /* parapetto sul lato verso la sala, dalla testa del pianerottolo fin quasi al piede della scala */
+    var bordo = banda(PORTA[0], FONDO - .02, N + 8, O2, O2).a, testa = punto(PORTA[0], O1);
+    p("M" + testa[0].toFixed(1) + "," + testa[1].toFixed(1) + " L" + pts(bordo), "none", "#c8a04a", 2.5);
     var v = banda(PORTA[0] + .015, PORTA[1] - .015, 6, 0, 0).a;
     p("M" + pts(v), "none", "#2f2013", 7);
     c(v[0][0], v[0][1], 3, "#c8a04a"); c(v[v.length - 1][0], v[v.length - 1][1], 3, "#c8a04a");
@@ -99,7 +102,7 @@
   var dx = document.createElement("div");
   dx.innerHTML = '<div class="sm-h">🗺️ Sala Mappe</div>'
     + '<p class="sm-d">Il cuore operativo della nave, sotto il Ponte di Comando. Al centro un grande tavolo circolare da dodici posti; nel buco al centro del tavolo gira un globo azzurro con i dettagli in oro.</p>'
-    + '<p class="sm-d">In punta e dalle due porte sui lati, con le scale che seguono il cono, si esce sul Ponte Esterno; in fondo si va verso la Mensa; una scala sale al Ponte di Comando e un boccaporto scende alla Sala Macchine.</p>'
+    + '<p class="sm-d">In punta si esce sul Ponte Esterno, e lo si raggiunge anche dalle due porte sui lati, in cima alle scale che salgono lungo le pareti del cono; in fondo si va verso la Mensa; una scala sale al Ponte di Comando e un boccaporto scende alla Sala Macchine.</p>'
     + '<p class="stv-nota" style="margin-top:1rem">Cosa si potrà fare qui lo stiamo ancora decidendo.</p>';
   NAVE.zona("sala_mappe", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); } });
 })();
