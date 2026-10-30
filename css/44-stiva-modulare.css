@@ -1,0 +1,38 @@
+/* Stiva Modulare — js/stiva-modulare.js. La finestra riusa la stanza scura della Stiva (css/43-stiva.css: .stv-ov, .stv-sala…) */
+.sm-sala{max-width:1180px}
+.sm-corpo{position:relative;flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,1fr);gap:1.2rem;padding:.8rem 1.3rem 1.3rem;overflow:hidden}
+.sm-pianta{min-height:0;display:flex;align-items:flex-start;justify-content:center;overflow:auto}
+.sm-svg{display:block;width:100%;max-width:min(620px,calc(100vh - 230px));height:auto;font-family:Georgia,"Crimson Pro",serif;user-select:none}
+.sm-hit{fill:transparent;stroke:transparent;stroke-width:3;cursor:pointer;transition:stroke .2s,fill .2s;outline:none}
+.sm-hit:hover,.sm-hit:focus-visible{fill:rgba(236,199,126,.07);stroke:rgba(236,199,126,.55)}
+.sm-hit.on{fill:rgba(236,199,126,.10);stroke:#ecc77e;stroke-width:4}
+.sm-cristallo{animation:smBrilla 3.2s ease-in-out infinite}
+.sm-cristallo:nth-child(2n){animation-delay:-1.4s}
+@keyframes smBrilla{50%{opacity:.55}}
+.sm-pan{min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-right:.2rem}
+.sm-h{font-family:"Cinzel",serif;font-weight:700;font-size:1.05rem;color:var(--gold2);margin:.1rem 0 .3rem;line-height:1.3}
+.sm-d{font-size:.98rem;line-height:1.5;color:var(--text);margin:.2rem 0 .8rem}
+.sm-chips{display:flex;flex-wrap:wrap;gap:.35rem;margin:.1rem 0 .4rem}
+.sm-chip{display:inline-flex;align-items:center;font-family:"Crimson Pro",serif;font-size:.92rem;padding:.25rem .65rem;border-radius:999px;border:1px solid rgba(210,168,90,.45);color:var(--gold2);background:rgba(210,168,90,.08)}
+.sm-chip-b{cursor:pointer;color:var(--text2);background:transparent;min-height:34px}
+.sm-chip-b.on{color:#1a120a;background:var(--gold);border-color:var(--gold)}
+.sm-cat{display:flex;flex-direction:column;gap:.45rem;margin-top:.4rem}
+.sm-cat-r{padding:.55rem .6rem;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.07)}
+.sm-cat-n{font-family:"Cinzel",serif;font-size:.78rem;font-weight:700;color:#ecdcb8;margin-bottom:.35rem}
+.sm-cat-n small{font-family:"Crimson Pro",serif;font-weight:400;font-size:.82rem;color:var(--text2);margin-left:.35rem}
+.sm-cat-b{display:flex;flex-wrap:wrap;gap:.35rem}
+.sm-nav-b{margin:.4rem 0 .9rem}
+.sm-in{width:100%;min-height:42px;padding:.5rem .65rem;background:rgba(0,0,0,.35);border:1px solid var(--border);color:var(--text);font:inherit;font-size:1rem;box-sizing:border-box;margin-bottom:.6rem}
+.sm-note{width:100%;min-height:120px;padding:.6rem .7rem;background:rgba(0,0,0,.35);border:1px solid var(--border);color:var(--text);font:inherit;font-size:.98rem;line-height:1.45;resize:vertical;box-sizing:border-box}
+.sm-azioni{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.9rem}
+.sm-smonta:hover{color:#ff9a8a;border-color:rgba(255,120,100,.5)}
+.sm-indietro{display:inline-block;margin-top:1rem;background:none;border:0;color:var(--text2);font-family:"Cinzel",serif;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;padding:.4rem 0}
+.sm-indietro:hover{color:var(--gold2)}
+.sm-etq-i{display:none}
+@media(max-width:820px){
+  .sm-etq-l{display:none}.sm-etq-i{display:inline}
+  .sm-corpo{display:block;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:.6rem .9rem 1.2rem}
+  .sm-pianta{overflow:visible}
+  .sm-svg{max-width:100%}
+  .sm-pan{overflow:visible;margin-top:1rem}
+}

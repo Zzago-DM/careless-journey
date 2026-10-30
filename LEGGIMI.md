@@ -155,6 +155,16 @@ Il magazzino comune del gruppo sta nel repository privato `gruppo`, file `stiva.
 - **Zona Master › «Stiva della nave»** (`js/master-stiva.js`, aggiunto prima che i capitoli diventino libri): gli stessi numeri con +1, −1 e «aggiungi o togli N», più la dispensa. Nessun avviso ai giocatori.
 - Il catalogo (nomi, effetti, colori) è in cima a `js/stiva.js`, elenco `IT`: se aggiungi un tonico o un pilone, aggiungilo lì.
 
+## Stiva Modulare (js/stiva-modulare.js, css/44-stiva-modulare.css)
+
+Nella Nave, toccando la **Stiva Modulare** compare «🧭 Entra nella Stiva Modulare»: la pianta in scala (quadrato di lato 3x; al centro la navata larga x e lunga 3x con l'ascensore all'altezza della parete tra le stanze 3 e 4; ai lati 4 spazi per parte, S1–S4 e D1–D4, ognuno x × ¾x).
+
+- Misure: **piccola** 1 spazio, **media** 2 spazi vicini sullo stesso lato, **grande** la navata oppure un lato intero. Ogni stanza si amplia o si riduce di una misura tra quelle del suo tipo, o si smonta. La navata senza uso è un corridoio vuoto.
+- Le stanze si cambiano sempre (quando farlo lo decidono Master e giocatori). Catalogo, misure ammesse, descrizione e set di competenze sono nell'elenco `T` in cima al file; la regola delle competenze è in `REGOLA`. Lo Spazio libero ha nome e fino a 3 competenze scelti da chi lo allestisce.
+- Ogni stanza ha un foglio di note comune. I dati stanno nella stiva condivisa (`stiva.json`, campo `mod`), quindi si vedono in diretta come la Stiva Primaria.
+- L'arredo di ogni stanza è disegnato in SVG per uno spazio con la porta a destra (`ARREDO`); le medie ripetono l'arredo, le stanze di destra sono specchiate. Sul telefono sulla pianta compaiono solo le icone delle stanze.
+- Questa modifica non ha una schermata Novità: il Master ha chiesto di non annunciarla.
+
 ## Zona Master privata
 
 I contenuti della Zona Master (testi, segreti, schede di Mael e Maestri) **non stanno più in questo repository**: sono nel repository privato `tcj-master` (`zona-master.html`, `schede.json`).
