@@ -5,7 +5,8 @@
    - Al piano di sopra una galleria ad anello attorno al nucleo, con il parapetto, e una passerella verso la porta.
    - Al piano di sotto, attorno al nucleo, quattro pannelli curvi rivolti verso il motore; lungo le pareti altri pannelli
      rivolti verso il muro.
-   - Due scale collegano i livelli. La porta principale è sul lato di poppa (verso la Stiva Modulare).
+   - Due scale, una di fronte all'altra, attraversano la galleria e scendono verso il nucleo: una all'arrivo della passerella
+     dalla porta di poppa (verso la Stiva Modulare), l'altra dal lato opposto.
    A destra, per ora: la descrizione della Sala Macchine. */
 (function(){
   "use strict";
@@ -66,10 +67,11 @@
     l(CX + 168, CY - 22, W, CY - 22, "#9aa6b2", 2); l(CX + 168, CY + 22, W, CY + 22, "#9aa6b2", 2);
     /* scale tra i due piani */
     /* scale: una appena dentro l'ingresso, che scende dalla passerella; l'altra simmetrica, dal lato opposto della galleria */
-    scala(CX + 186, CY + 22, 30, 110, true);
     r(CX - 214, CY - 22, 46, 44, "#2c333b", "#5a6470", 2);                       /* pianerottolo dal lato opposto */
     for(var y2 = CX - 210; y2 < CX - 168; y2 += 8) l(y2, CY - 20, y2, CY + 20, "rgba(0,0,0,.35)", 1);
-    scala(CX - 216, CY + 22, 30, 110, true);
+    /* scale: attraversano la galleria, dal bordo esterno (piano di sopra) giù verso il nucleo (piano di sotto) */
+    scala(CX + 124, CY - 24, 52, 48, false);
+    scala(CX - 176, CY - 24, 52, 48, false);
     /* nucleo aetherico, visto dall'alto */
     c(CX, CY, 70, "#15191e", "#6a7682", 3);
     c(CX, CY, 60, "none", "#4a5560", 6, 'stroke-dasharray="14 8"');
