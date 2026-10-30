@@ -6,8 +6,8 @@
 (function(){
   "use strict";
   if(!window.NAVE) return;
-  var W = 560, H = 652, CX = 280, CY = 345;
-  var FORMA = "M252,44 Q280,22 308,44 Q505,270 524,620 L36,620 Q55,270 252,44 Z";
+  var W = 560, H = 682, CX = 280, CY = 360, SCALA = .7;
+  var FORMA = "M252,44 Q280,22 308,44 Q505,285 524,650 L36,650 Q55,285 252,44 Z";
   var g;
   function r(x, y, w, h, f, s, sw, rx, ex){ g.push('<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="' + (rx || 0) + '" fill="' + f + '" stroke="' + (s || "none") + '" stroke-width="' + (sw || 1) + '" ' + (ex || "") + '/>'); }
   function c(x, y, R, f, s, sw, ex){ g.push('<circle cx="' + x + '" cy="' + y + '" r="' + R + '" fill="' + f + '" stroke="' + (s || "none") + '" stroke-width="' + (sw || 1) + '" ' + (ex || "") + '/>'); }
@@ -38,6 +38,8 @@
     g.push('<g clip-path="url(#nxs-forma)">');
     r(0, 0, W, H, "#2f2013"); for(var i = 0; i < W; i += 20) l(i, 0, i, H, "rgba(0,0,0,.2)", 1);
     g.push('</g>');
+    /* tavolo, sedute e globo, rimpiccioliti tutti insieme attorno al centro del tavolo */
+    g.push('<g transform="translate(' + CX + ',' + CY + ') scale(' + SCALA + ') translate(' + (-CX) + ',' + (-CY) + ')">');
     /* dodici sedute attorno al tavolo */
     for(var s = 0; s < 12; s++){ var an = s * Math.PI / 6 + Math.PI / 12; seduta(CX + Math.cos(an) * 134, CY + Math.sin(an) * 134, an * 180 / Math.PI + 90); }
     /* tavolo circolare con il buco al centro */
@@ -64,13 +66,14 @@
     p("M" + (CX - 14) + "," + (CY - 16) + " q8,-6 14,2 q4,8 -4,12 q-10,2 -10,-14 Z", "rgba(120,190,110,.7)"); p("M" + (CX + 8) + "," + (CY + 4) + " q10,-4 14,6 q-2,10 -12,6 Z", "rgba(120,190,110,.7)");
     c(CX - 13, CY - 14, 7, "rgba(255,255,255,.35)");
     [[0, -48], [48, 0], [0, 48], [-48, 0]].forEach(function(q){ c(CX + q[0], CY + q[1], 3.5, ORO_P, "#6a4a20", 1); });
+    g.push('</g>');
     /* passaggi: verso il Ponte Esterno (punta), verso la Mensa (in fondo), la scala del Ponte di Comando e il boccaporto per la Sala Macchine */
-    r(452, 570, 50, 40, "#2a1a0a", "#7a5a3a", 1.5); for(var z = 1; z < 5; z++) l(454, 570 + z * 8, 500, 570 + z * 8, "#8a6a3a", 2);
-    r(60, 576, 42, 34, "#1a120a", "#7a5a3a", 2, 3); l(60, 593, 102, 593, "#7a5a3a", 1.5); c(81, 584, 3, "#c8a04a");
+    r(452, 600, 50, 40, "#2a1a0a", "#7a5a3a", 1.5); for(var z = 1; z < 5; z++) l(454, 600 + z * 8, 500, 600 + z * 8, "#8a6a3a", 2);
+    r(60, 606, 42, 34, "#1a120a", "#7a5a3a", 2, 3); l(60, 623, 102, 623, "#7a5a3a", 1.5); c(81, 614, 3, "#c8a04a");
     p(FORMA, "none", "#d2a85a", 5);
-    l(266, 30, 294, 30, "#2f2013", 7); l(250, 620, 310, 620, "#2f2013", 8);
+    l(266, 30, 294, 30, "#2f2013", 7); l(250, 650, 310, 650, "#2f2013", 8);
     var t = '<text x="280" y="18" fill="#a39478" font-size="22" text-anchor="middle">▲ verso il Ponte Esterno</text>'
-      + '<text x="280" y="646" fill="#a39478" font-size="22" text-anchor="middle">▼ verso la Mensa</text>';
+      + '<text x="280" y="676" fill="#a39478" font-size="22" text-anchor="middle">▼ verso la Mensa</text>';
     return '<svg class="sm-svg nxs-svg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Sala Mappe vista dall\'alto">' + defs + g.join("") + t + '</svg>';
   }
   var sx = document.createElement("div"); sx.className = "sm-pianta";
