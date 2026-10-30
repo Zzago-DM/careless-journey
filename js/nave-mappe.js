@@ -41,15 +41,15 @@
     /* tavolo, sedute e globo, rimpiccioliti tutti insieme attorno al centro del tavolo */
     g.push('<g transform="translate(' + CX + ',' + CY + ') scale(' + SCALA + ') translate(' + (-CX) + ',' + (-CY) + ')">');
     /* dodici sedute attorno al tavolo */
-    for(var s = 0; s < 12; s++){ var an = s * Math.PI / 6 + Math.PI / 12; seduta(CX + Math.cos(an) * 117, CY + Math.sin(an) * 117, an * 180 / Math.PI + 90); }
+    for(var s = 0; s < 12; s++){ var an = s * Math.PI / 6 + Math.PI / 12; seduta(CX + Math.cos(an) * 134, CY + Math.sin(an) * 134, an * 180 / Math.PI + 90); }
     /* tavolo circolare con il buco al centro */
-    /* corona del tavolo: 30% più stretta di prima (da 54 a 95 invece che a 112) */
-    c(CX, CY, 95, "#5a3a20", "#2a1a0a", 3);
-    c(CX, CY, 88, "none", ORO_P, 1.5, 'opacity=".7"');
-    c(CX, CY, 54, "#0c0907", "#2a1a0a", 3);
-    c(CX, CY, 60, "none", ORO_P, 1.5, 'opacity=".7"');
+    /* corona del tavolo: stesso bordo esterno, spessore ridotto del 30% (il buco centrale è più largo) */
+    c(CX, CY, 112, "#5a3a20", "#2a1a0a", 3);
+    c(CX, CY, 104, "none", ORO_P, 1.5, 'opacity=".7"');
+    c(CX, CY, 71, "#0c0907", "#2a1a0a", 3);
+    c(CX, CY, 77, "none", ORO_P, 1.5, 'opacity=".7"');
     /* due strumenti di navigazione sul tavolo */
-    [150, 318].forEach(function(gr){ var an = gr * Math.PI / 180, x = CX + Math.cos(an) * 76, y = CY + Math.sin(an) * 76; c(x, y, 7, "none", "#c8a04a", 2); l(x - 7, y, x + 7, y, "#c8a04a", 1); l(x, y - 7, x, y + 7, "#c8a04a", 1); });
+    [150, 318].forEach(function(gr){ var an = gr * Math.PI / 180, x = CX + Math.cos(an) * 91, y = CY + Math.sin(an) * 91; c(x, y, 7, "none", "#c8a04a", 2); l(x - 7, y, x + 7, y, "#c8a04a", 1); l(x, y - 7, x, y + 7, "#c8a04a", 1); });
     /* il globo azzurro con i dettagli in oro */
     c(CX, CY, 48, "none", ORO_P, 3);
     c(CX, CY, 40, "url(#nxs-globo)", "#0c2440", 1.5);
