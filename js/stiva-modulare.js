@@ -223,17 +223,12 @@
     return h + '</svg>';
   }
 
-  /* ---------- finestra ---------- */
-  var ov = document.createElement("div");
-  ov.className = "stv-ov sm-ov"; ov.hidden = true;
-  ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true"); ov.setAttribute("aria-labelledby", "sm-t");
-  ov.innerHTML = '<div class="stv-sala sm-sala"><div class="stv-lume" aria-hidden="true"></div>'
-    + '<div class="stv-top"><div><div class="stv-k">Careless Journey · 3° piano di poppa</div><h3 class="stv-t" id="sm-t">Stiva Modulare</h3></div>'
-    + '<button type="button" class="mae-x stv-x" id="sm-x" aria-label="Esci dalla Stiva Modulare">✕</button></div>'
-    + '<p class="stv-sub">Una navata centrale con l\'ascensore e otto spazi ai lati, da allestire come serve al gruppo. Toccate uno spazio, una stanza o la navata.</p>'
-    + '<div class="stv-stato" id="sm-stato" aria-live="polite"></div>'
-    + '<div class="sm-corpo"><div class="sm-pianta" id="sm-pianta"></div><div class="sm-pan" id="sm-pan" aria-live="polite"></div></div></div>';
-  document.body.appendChild(ov);
+  /* ---------- le due metà della pagina (js/nave-esplora.js): a sinistra la pianta, a destra il pannello ---------- */
+  var pEl = document.createElement("div"); pEl.className = "sm-pianta";
+  var rEl = document.createElement("div"); rEl.className = "sm-destra";
+  rEl.innerHTML = '<p class="stv-nota sm-intro">Una navata centrale con l\'ascensore e otto spazi ai lati, da allestire come serve al gruppo. Toccate uno spazio, una stanza o la navata.</p>'
+    + '<div class="stv-stato sm-stato" aria-live="polite"></div><div class="sm-pan" aria-live="polite"></div>';
+  var statoEl = rEl.querySelector(".sm-stato"), panEl = rEl.querySelector(".sm-pan"), aperta = false;
   var sel = null, scrivendo = false;
   function selUguale(k){ return sel && sel === k; }
 
@@ -258,7 +253,7 @@
     return out;
   }
   function pannello(){
-    var p = document.getElementById("sm-pan"), m = mod(), h = "";
+    var p = panEl, m = mod(), h = "";
     if(!p) return;
     if(scrivendo && p.contains(document.activeElement) && /sm-(note|nome)/.test(document.activeElement.id)) return;   /* non cancellare ciò che si sta scrivendo */
     if(sel && sel.charAt(0) === "r" && !stanzaId(m, sel.slice(1))) sel = null;
@@ -316,11 +311,11 @@
     return out;
   }
   function disegna(){
-    if(ov.hidden) return;
-    var st = document.getElementById("sm-stato"), s = S.stato();
+    if(!aperta) return;
+    var st = statoEl, s = S.stato();
     st.textContent = s === "ok" ? "In diretta · la vedono tutti" : S.messaggio(); st.setAttribute("data-s", s === "ok" ? "ok" : s === "attesa" ? "att" : "ko");
     var m = mod();
-    document.getElementById("sm-pianta").innerHTML = pianta(m);
+    pEl.innerHTML = pianta(m);
     pannello();
   }
   S.on(disegna);
@@ -353,11 +348,9 @@
   }
   function suono(n){ try { if(typeof sfxPlay === "function") sfxPlay(n); } catch(e){} }
 
-  ov.addEventListener("click", function(e){
-    if(e.target === ov){ chiudi(); return; }
+  function suClick(e){
     var t = e.target;
-    if(t.closest("#sm-x")){ chiudi(); return; }
-    var hit = t.closest(".sm-hit"); if(hit){ salvaTutto(); sel = hit.getAttribute("data-k"); suono("paper"); disegna(); return; }
+    var hit = t.closest(".sm-hit"); if(hit){ salvaTutto(); sel = hit.getAttribute("data-k"); suono("paper"); disegna(); if(window.innerWidth <= 860) try { rEl.scrollIntoView({ behavior: "smooth", block: "start" }); } catch(_){} return; }
     var b = t.closest("[data-az]"); if(!b) return;
     var az = b.getAttribute("data-az"), id = b.getAttribute("data-id");
     var sp = (b.getAttribute("data-s") || "").split(",").filter(Boolean).map(Number);
@@ -372,9 +365,10 @@
       if(k >= 0) l.splice(k, 1); else { if(l.length >= 3){ S.avviso("Al massimo 3 competenze per stanza.", true); return; } l.push(c); }
       campo(id, "comp", l, "competenze di " + nomeStanza(r)); disegna();
     }
-  });
-  ov.addEventListener("keydown", function(e){
-    if((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("sm-hit")){ e.preventDefault(); sel = e.target.getAttribute("data-k"); disegna(); var x = ov.querySelector('.sm-hit[data-k="' + sel + '"]'); if(x) x.focus(); }
+  }
+  [pEl, rEl].forEach(function(el){ el.addEventListener("click", suClick); });
+  pEl.addEventListener("keydown", function(e){
+    if((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("sm-hit")){ e.preventDefault(); sel = e.target.getAttribute("data-k"); disegna(); var x = pEl.querySelector('.sm-hit[data-k="' + sel + '"]'); if(x) x.focus(); }
   });
   /* nome e note: si salvano un attimo dopo che si smette di scrivere, ognuno per conto suo; uscendo dal campo si salvano subito */
   var attesa = {};
@@ -383,33 +377,24 @@
     clearTimeout(a.t); delete attesa[chiave];
     campo(a.id, a.k, a.v, a.k === "note" ? "note della stiva modulare" : "nome di una stanza");
     if(!Object.keys(attesa).length) scrivendo = false;
-    if(a.k === "nome") document.getElementById("sm-pianta").innerHTML = pianta(mod());
+    if(a.k === "nome" && aperta) pEl.innerHTML = pianta(mod());
   }
-  ov.addEventListener("input", function(e){
+  rEl.addEventListener("input", function(e){
     var el = e.target, id = el.getAttribute && el.getAttribute("data-id"); if(!id) return;
     var k = el.id === "sm-note" ? "note" : el.id === "sm-nome" ? "nome" : null; if(!k) return;
     var chiave = id + "|" + k; scrivendo = true;
     if(attesa[chiave]) clearTimeout(attesa[chiave].t);
     attesa[chiave] = { id: id, k: k, v: el.value, t: setTimeout(function(){ salvaCampo(chiave); }, 1000) };
   });
-  ov.addEventListener("focusout", function(e){
+  rEl.addEventListener("focusout", function(e){
     var el = e.target, id = el.getAttribute && el.getAttribute("data-id"); if(!id) return;
     var k = el.id === "sm-note" ? "note" : el.id === "sm-nome" ? "nome" : null; if(k){ var ch = id + "|" + k; setTimeout(function(){ salvaCampo(ch); }, 220); }
   });
   function salvaTutto(){ Object.keys(attesa).forEach(salvaCampo); }
-  document.addEventListener("keydown", function(e){ if(e.key === "Escape" && !ov.hidden){ if(sel){ sel = null; disegna(); } else chiudi(); } });
 
-  function apri(){
-    ov.hidden = false; document.body.style.overflow = "hidden";
-    requestAnimationFrame(function(){ ov.classList.add("on"); });
-    sel = null; disegna(); suono("gong");
-    S.guarda("modulare", true);
-    setTimeout(function(){ try { document.getElementById("sm-x").focus(); } catch(_){} }, 60);
-  }
-  function chiudi(){
-    salvaTutto(); S.guarda("modulare", false);
-    ov.classList.remove("on"); setTimeout(function(){ if(!ov.classList.contains("on")) ov.hidden = true; }, 260);
-    if(!document.querySelector(".inc-win.on,.cj-overlay.open,.rel-ov.on,.stv-ov.on:not(.sm-ov)")) document.body.style.overflow = "";
-  }
-  window.smApri = function(){ try { if(typeof nvClose === "function") nvClose(); } catch(_){} apri(); };
+  /* ---------- dentro la pagina divisa della nave ---------- */
+  function entra(){ aperta = true; sel = null; disegna(); S.guarda("modulare", true); }
+  function esci(){ salvaTutto(); aperta = false; S.guarda("modulare", false); }
+  if(window.NAVE) NAVE.zona("stiva_modulare", { sinistra: pEl, destra: rEl, apri: entra, chiudi: esci, esc: function(){ if(sel){ sel = null; disegna(); return true; } return false; } });
+  window.smApri = function(){ if(window.NAVE) NAVE.apri("stiva_modulare"); };
 })();

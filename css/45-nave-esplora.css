@@ -1,0 +1,73 @@
+/* Esplora la nave — js/nave-esplora.js. Pagina divisa: a sinistra la stanza vista dall'alto, a destra il pannello di utilità.
+   La finestra riusa la stanza scura della Stiva (css/43-stiva.css: .stv-ov, .stv-sala…) */
+.nx-sala{max-width:1280px;--bg2:#120d0a;--bg3:#17110c}
+.nx-top{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:1rem;padding:1rem 1.3rem .3rem}
+.nx-tit{min-width:0}
+.nx-mini{width:250px;cursor:pointer}
+.nx-mini-svg{display:block;width:100%;height:auto}
+.nx-mini-svg .nv-ship path{fill:#a87c3c;opacity:.55}
+.nx-mini-svg [data-k]{fill:rgba(210,168,90,.08);stroke:rgba(210,168,90,.35);stroke-width:2.5;transition:fill .25s}
+.nx-mini-svg .nx-va:hover{fill:rgba(210,168,90,.3);stroke:#ecc77e}
+.nx-mini-svg .nx-qui{fill:#ecc77e;stroke:#fff3cf;stroke-width:4;animation:nxQui 2.2s ease-in-out infinite}
+@keyframes nxQui{50%{fill:rgba(236,199,126,.55)}}
+.nx-nav{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.45rem;padding:.4rem 1.3rem .6rem}
+.nx-freccia{display:flex;align-items:center;gap:.5rem;min-height:44px;padding:.35rem .7rem;border:1px solid rgba(210,168,90,.3);background:rgba(0,0,0,.3);color:var(--text);cursor:pointer;text-align:left;font-family:"Crimson Pro",serif;font-size:.95rem;transition:background .2s,border-color .2s}
+.nx-freccia b{flex:none;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:rgba(210,168,90,.15);color:var(--gold2);font-size:.85rem}
+.nx-freccia span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nx-freccia:hover:not(:disabled){background:rgba(210,168,90,.12);border-color:var(--gold3)}
+.nx-freccia:disabled{opacity:.35;cursor:default}
+.nx-corpo{position:relative;flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,1fr);gap:1.1rem;padding:.2rem 1.3rem 1.3rem}
+.nx-meta{min-height:0;display:flex;flex-direction:column;border:1px solid rgba(210,168,90,.2);background:rgba(0,0,0,.22)}
+.nx-meta-t{flex:none;font-family:"Cinzel",serif;font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold3);padding:.55rem .8rem;border-bottom:1px solid rgba(210,168,90,.15)}
+.nx-meta-c{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:.8rem}
+.nx-sx .nx-meta-c{display:flex;align-items:flex-start;justify-content:center}
+.nx-dx .sm-pan{overflow:visible;padding:0}
+.nx-dx .sm-intro{margin-top:0}
+.nx-sx .sm-pianta{width:100%;height:100%;display:flex;justify-content:center}
+.nx-sx .sm-svg{height:100%;width:auto;max-width:100%}
+/* entrata nella stanza, dalla direzione da cui si arriva */
+.nx-corpo.nx-in-su{animation:nxSu .4s ease}
+.nx-corpo.nx-in-giu{animation:nxGiu .4s ease}
+.nx-corpo.nx-in-prua{animation:nxPrua .4s ease}
+.nx-corpo.nx-in-poppa{animation:nxPoppa .4s ease}
+@keyframes nxSu{from{opacity:0;transform:translateY(-28px)}}
+@keyframes nxGiu{from{opacity:0;transform:translateY(28px)}}
+@keyframes nxPrua{from{opacity:0;transform:translateX(-36px)}}
+@keyframes nxPoppa{from{opacity:0;transform:translateX(36px)}}
+/* stanze ancora da allestire */
+.nx-vuota{align-self:center;text-align:center;color:var(--text2);padding:2.5rem 1rem;border:1px dashed rgba(210,168,90,.35);width:100%;max-width:420px}
+.nx-vuota-e{font-size:3rem;opacity:.7}
+.nx-vuota-t{font-family:"Cinzel",serif;font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold2);margin:.6rem 0 .3rem}
+.nx-card p{margin:0 0 .6rem}
+@media(max-width:860px){
+  .nx-top{grid-template-columns:minmax(0,1fr) auto;padding:.8rem .9rem .2rem}
+  .nx-mini{grid-column:1/-1;grid-row:2;width:100%;max-width:240px;justify-self:center}
+  .nx-nav{grid-template-columns:repeat(2,minmax(0,1fr));padding:.3rem .9rem .5rem}
+  .nx-corpo{display:block;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:.2rem .9rem 1.2rem}
+  .nx-meta{margin-bottom:.9rem}
+  .nx-meta-c{overflow:visible}
+  .nx-sx .sm-pianta{height:auto}
+  .nx-sx .sm-svg{height:auto;width:100%;max-width:100%}
+}
+
+/* Alloggi (js/nave-alloggi.js) */
+.nxa-lume{animation:smBrilla 2.6s ease-in-out infinite}
+.sm-hit.nxa-libero{cursor:default}.sm-hit.nxa-libero:hover{fill:transparent;stroke:transparent}
+.nxa-destra .al-grid{grid-template-columns:1fr 1fr}
+.nxa-destra .al-door{width:100%}
+
+/* le stanze che si aprono sopra la pagina divisa (per esempio la Stiva Primaria dalla Mensa) restano davanti */
+.stv-ov:not(.nx-ov){z-index:3250}
+
+/* Sala Macchine (js/nave-macchine.js) */
+.nxk-nucleo{animation:nxkPulsa 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.nxk-anello{stroke-dasharray:18 10;animation:nxkGira 9s linear infinite;transform-box:fill-box;transform-origin:center}
+.nxk-anello2{animation-duration:6s;animation-direction:reverse}
+.nxk-cuore{animation:nxkCuore 1.2s ease-in-out infinite;filter:drop-shadow(0 0 6px #9fe0ff)}
+.nxk-flusso{stroke-dasharray:6 14;animation:nxkFlusso 1.4s linear infinite}
+.nxk-schermo{animation:nxkSchermo 4s ease-in-out infinite}
+@keyframes nxkPulsa{50%{transform:scale(1.08);opacity:.85}}
+@keyframes nxkGira{to{transform:rotate(360deg)}}
+@keyframes nxkCuore{50%{opacity:.7}}
+@keyframes nxkFlusso{to{stroke-dashoffset:-40}}
+@keyframes nxkSchermo{50%{opacity:.6}}

@@ -395,7 +395,7 @@
   function chiudi(){
     guarda("stanza", false); svuota();
     ov.classList.remove("on"); setTimeout(function(){ if(!ov.classList.contains("on")) ov.hidden = true; }, 260);
-    if(!document.querySelector(".inc-win.on,.cj-overlay.open,.rel-ov.on")) document.body.style.overflow = "";
+    if(!document.querySelector(".inc-win.on,.cj-overlay.open,.rel-ov.on,.nx-ov.on")) document.body.style.overflow = "";
   }
   window.stvApri = function(s){ try { if(typeof nvClose === "function") nvClose(); } catch(_){} if(s && $("stv-s-" + s)) sezione = s; apri(); };
 

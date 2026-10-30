@@ -481,7 +481,7 @@ const NV_INFO={
  scale:{e:"🪜",t:"Scale principali",s:"Collegamento tra i ponti",b:"La scalinata che collega i ponti della nave: dal <strong>Ponte di Comando</strong> scende alla Sala Mappe, poi alla Stiva Modulare e fino al fondo della nave."},
  scala_pioli:{e:"🌀",t:"Scala a chiocciola",s:"Parete di poppa · servizio",b:"Passaggio di servizio lungo la parete di poppa, dagli <strong>Alloggi</strong> fino al fondo della nave."},
  ascensore:{e:"🛗",t:"Ascensore centrale",s:"Stiva Modulare ↔ Stiva Primaria",b:"Collega la <strong>Stiva Modulare</strong> e la <strong>Stiva Primaria</strong>, per spostare carichi e attrezzature tra i due livelli."}};
-function nvPick(k){const info=NV_INFO[k],p=document.getElementById("nv-pop");if(!info||!p)return;if(info.alloggi){document.querySelectorAll("#nave .nv-a").forEach(function(a){a.classList.toggle("on",a.getAttribute("data-k")===k)});alOpen();return;}
+function nvPick(k){const info=NV_INFO[k],p=document.getElementById("nv-pop");if(!info||!p)return;if(info.alloggi){if(window.NAVE){NAVE.apri("alloggi");return;}document.querySelectorAll("#nave .nv-a").forEach(function(a){a.classList.toggle("on",a.getAttribute("data-k")===k)});alOpen();return;}
  document.querySelectorAll("#nave .nv-a").forEach(function(a){a.classList.toggle("on",a.getAttribute("data-k")===k)});
  let html="";
  if(info.card){const c=[].slice.call(document.querySelectorAll("#nv-cards > .card")).find(function(x){const t=x.querySelector(".ct");return t&&t.textContent.trim()===info.card});if(c)html=c.innerHTML;}
