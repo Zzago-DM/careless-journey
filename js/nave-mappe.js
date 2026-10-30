@@ -47,8 +47,8 @@
     /* parapetto sul lato verso la sala, dalla cima fin quasi al piede della scala */
     var bordo = banda(CIMA, FONDO - .02, N + 8, O2, O2).a, testa = punto(CIMA, O1);
     p("M" + testa[0].toFixed(1) + "," + testa[1].toFixed(1) + " L" + pts(bordo), "none", "#c8a04a", 2.5);
-    /* in cima alla scala, la porta verso il Ponte Esterno: un varco nella parete con i montanti in ottone */
-    var v = banda(CIMA, CIMA + .055, 6, 0, 0).a;
+    /* poco più avanti della cima della scala, la porta verso il Ponte Esterno: un varco nella parete con i montanti in ottone */
+    var v = banda(CIMA - .065, CIMA - .01, 6, 0, 0).a;
     p("M" + pts(v), "none", "#2f2013", 7);
     c(v[0][0], v[0][1], 3, "#c8a04a"); c(v[v.length - 1][0], v[v.length - 1][1], 3, "#c8a04a");
   }
