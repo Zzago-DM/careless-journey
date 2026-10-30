@@ -9,13 +9,15 @@
   if(!window.NAVE) return;
   var W = 600, H = 1046;
   var DX = 20, DY = 355;                                   /* dove sta la Sala Mappe dentro il ponte */
+  var BASSA = .6;                                          /* la Sala Mappe qui è schiacciata verso poppa: occupa il 40% in meno della lunghezza */
+  function Y(y){ return +(1005 - (1005 - (y + DY)) * BASSA).toFixed(1); }
   /* il cono esterno: la stessa forma della Sala Mappe, allargata dei due corridoi e allungata verso prua */
   var T0 = [333, 58], TC = [562, 424], TB = [584, 1005];
   var FUORI = "M267,58 Q300,32 333,58 Q562,424 584,1005 L16,1005 Q38,424 267,58 Z";
   /* la Sala Mappe (stessa forma di js/nave-mappe.js, spostata) */
-  var M0 = [308 + DX, 44 + DY], MC = [505 + DX, 285 + DY], MB = [524 + DX, 650 + DY];
-  var DENTRO = "M" + (252 + DX) + "," + (44 + DY) + " Q" + (280 + DX) + "," + (22 + DY) + " " + M0
-    + " Q" + MC + " " + MB + " L" + (36 + DX) + "," + (650 + DY) + " Q" + (55 + DX) + "," + (285 + DY) + " " + (252 + DX) + "," + (44 + DY) + " Z";
+  var M0 = [308 + DX, Y(44)], MC = [505 + DX, Y(285)], MB = [524 + DX, Y(650)];
+  var DENTRO = "M" + (252 + DX) + "," + Y(44) + " Q" + (280 + DX) + "," + Y(22) + " " + M0
+    + " Q" + MC + " " + MB + " L" + (36 + DX) + "," + Y(650) + " Q" + (55 + DX) + "," + Y(285) + " " + (252 + DX) + "," + Y(44) + " Z";
   var g;
   function c(x, y, R, f, s, sw, ex){ g.push('<circle cx="' + x + '" cy="' + y + '" r="' + R + '" fill="' + f + '" stroke="' + (s || "none") + '" stroke-width="' + (sw || 1) + '" ' + (ex || "") + '/>'); }
   function l(x1, y1, x2, y2, s, sw, ex){ g.push('<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="' + s + '" stroke-width="' + (sw || 1) + '" ' + (ex || "") + '/>'); }
@@ -45,9 +47,9 @@
     g.push('</g>');
     /* la Sala Mappe: la zona mancante del ponte */
     p(DENTRO, "#1a130c", "#d2a85a", 5);
-    g.push('<text x="300" y="' + (DY + 360) + '" fill="rgba(210,168,90,.45)" font-size="26" text-anchor="middle" letter-spacing="3">SALA MAPPE</text>');
+    g.push('<text x="300" y="' + Y(420) + '" fill="rgba(210,168,90,.45)" font-size="26" text-anchor="middle" letter-spacing="3">SALA MAPPE</text>');
     /* le tre porte della Sala Mappe: in punta e, vicino alla base, una per lato sui corridoi */
-    porta("M" + (266 + DX) + "," + (30 + DY + 3) + " L" + (294 + DX) + "," + (30 + DY + 3), [266 + DX, 33 + DY], [294 + DX, 33 + DY]);
+    porta("M" + (266 + DX) + "," + Y(33) + " L" + (294 + DX) + "," + Y(33), [266 + DX, Y(33)], [294 + DX, Y(33)]);
     [1, -1].forEach(function(lato){
       porta(tratto(M0, MC, MB, .885, .955, lato), bez(M0, MC, MB, .885, lato), bez(M0, MC, MB, .955, lato));
     });
