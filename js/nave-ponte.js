@@ -37,6 +37,20 @@
     [[242, 91.5], [318, 91.5]].forEach(function(q){ c(q[0], q[1], 3.5, "#c8903a", "#6a4020", 1); });
     for(var k = 0; k < 5; k++) l(256 + k * 12, 88, 256 + k * 12, 95, "rgba(0,0,0,.3)", 1);
   }
+  /* scala curva che segue la parete obliqua (lato: 1 destra, -1 sinistra), dal basso verso l'alto */
+  function scalaCurva(lato){
+    var P0 = lato > 0 ? TR : TL, C = [lato > 0 ? 548 : 12, 150], P2 = lato > 0 ? BR : BL;
+    function B(u){ var a = (1 - u) * (1 - u), b = 2 * (1 - u) * u, cc = u * u; return [a * P0[0] + b * C[0] + cc * P2[0], a * P0[1] + b * C[1] + cc * P2[1]]; }
+    function D(u){ return [2 * (1 - u) * (C[0] - P0[0]) + 2 * u * (P2[0] - C[0]), 2 * (1 - u) * (C[1] - P0[1]) + 2 * u * (P2[1] - C[1])]; }
+    function punto(u, off){ var b = B(u), d = D(u), n = Math.hypot(d[0], d[1]); var nx = -d[1] / n, ny = d[0] / n; if(nx * lato > 0){ nx = -nx; ny = -ny; } return [b[0] + nx * off, b[1] + ny * off]; }
+    var u0 = .5, u1 = .95, N = 16, est = [], int = [];
+    for(var i = 0; i <= N; i++){ var u = u0 + (u1 - u0) * i / N; est.push(punto(u, 7)); int.push(punto(u, 40)); }
+    var d = "M" + est.map(function(q){ return q[0].toFixed(1) + "," + q[1].toFixed(1); }).join(" L") + " L" + int.reverse().map(function(q){ return q[0].toFixed(1) + "," + q[1].toFixed(1); }).join(" L") + " Z";
+    int.reverse();
+    p(d, "#2a1a0a", "#7a5a3a", 1.5);
+    for(var k = 1; k < N; k++){ var a1 = est[k], a2 = int[k]; l(a1[0].toFixed(1), a1[1].toFixed(1), a2[0].toFixed(1), a2[1].toFixed(1), "rgba(200,160,100," + (.25 + .55 * k / N).toFixed(2) + ")", 2); }
+    p("M" + int.map(function(q){ return q[0].toFixed(1) + "," + q[1].toFixed(1); }).join(" L"), "none", "#c8a04a", 2);   /* corrimano */
+  }
   function pianta(){
     g = [];
     var defs = '<defs><clipPath id="nxp-forma"><path d="' + FORMA + '"/></clipPath></defs>';
@@ -58,8 +72,8 @@
     timone();
     seduta(280, 140, 0, "#7a2a22");
     seduta(205, 104, -20); seduta(355, 104, 20);
-    /* computer lungo i lati, più in basso */
-    [[70, 190, -76], [490, 190, 76]].forEach(function(q){ g.push('<g transform="translate(' + q[0] + ',' + q[1] + ') rotate(' + q[2] + ')">'); r(-30, -10, 60, 20, "#2a2f36", "#7a6a4a", 1.5, 3); r(-24, -7, 20, 8, "#3fa9d6", "", 0, 1, 'class="nxk-schermo"'); r(4, -7, 20, 8, "#5fd0a0", "", 0, 1, 'class="nxk-schermo"'); g.push('</g>'); });
+    /* due scale curve lungo i lati: partono in basso e, seguendo la parete, salgono verso prua scendendo al piano di sotto */
+    scalaCurva(1); scalaCurva(-1);
     /* scala che scende alla Sala Mappe */
     r(250, 256, 60, 44, "#2a1a0a", "#7a5a3a", 1.5); for(var z = 1; z < 6; z++) l(252, 256 + z * 7.3, 308, 256 + z * 7.3, "#8a6a3a", 2);
     p(FORMA, "none", "#d2a85a", 5);
@@ -71,7 +85,7 @@
   var sx = document.createElement("div"); sx.className = "sm-pianta";
   var dx = document.createElement("div");
   dx.innerHTML = '<div class="sm-h">🧭 Ponte di Comando</div>'
-    + '<p class="sm-d">Rialzato sopra la Sala Mappe, con le vetrate che guardano verso prua. Davanti, sotto le vetrate, una lunga console con i computer di bordo; dietro di essa il timone con la seduta del timoniere, e due sedute ai lati della console. Una scala scende alla Sala Mappe.</p>'
+    + '<p class="sm-d">Rialzato sopra la Sala Mappe, con le vetrate che guardano verso prua. Davanti, sotto le vetrate, una lunga console con i computer di bordo; dietro di essa il timone con la seduta del timoniere, e due sedute ai lati della console. Lungo le pareti curve due scale scendono al piano di sotto, e una terza scala porta alla Sala Mappe.</p>'
     + '<p class="stv-nota" style="margin-top:1rem">Cosa si potrà fare qui lo stiamo ancora decidendo.</p>';
   NAVE.zona("ponte_comando", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); } });
 })();
