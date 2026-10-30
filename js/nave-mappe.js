@@ -1,14 +1,13 @@
 /* Esplora la nave › Sala Mappe (js/nave-esplora.js).
-   A sinistra la Sala Mappe vista dall'alto: una forma a cono, stretta verso prua e larga verso poppa, con i lati curvi
+   A sinistra la Sala Mappe vista dall'alto: una forma a cono molto lunga, stretta verso prua e larga verso poppa, con i lati curvi
    come il Ponte di Comando. Verso la metà un grande tavolo circolare da dodici posti con un buco al centro, dove gira
-   un globo azzurro con i dettagli in oro. Sul pavimento intarsi in oro: le linee dei venti che partono dal tavolo come
-   su una carta nautica, un grande anello graduato, due rose dei venti e alcune costellazioni.
+   un globo azzurro con i dettagli in oro.
    A destra, per ora: la descrizione della Sala Mappe. */
 (function(){
   "use strict";
   if(!window.NAVE) return;
-  var W = 560, H = 470, CX = 280, CY = 268;
-  var FORMA = "M248,44 Q280,22 312,44 Q506,206 524,440 L36,440 Q54,206 248,44 Z";
+  var W = 560, H = 832, CX = 280, CY = 440;
+  var FORMA = "M252,44 Q280,22 308,44 Q504,330 524,800 L36,800 Q56,330 252,44 Z";
   var g;
   function r(x, y, w, h, f, s, sw, rx, ex){ g.push('<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="' + (rx || 0) + '" fill="' + f + '" stroke="' + (s || "none") + '" stroke-width="' + (sw || 1) + '" ' + (ex || "") + '/>'); }
   function c(x, y, R, f, s, sw, ex){ g.push('<circle cx="' + x + '" cy="' + y + '" r="' + R + '" fill="' + f + '" stroke="' + (s || "none") + '" stroke-width="' + (sw || 1) + '" ' + (ex || "") + '/>'); }
@@ -38,17 +37,6 @@
       + '<radialGradient id="nxs-globo" cx=".38" cy=".35" r=".7"><stop offset="0" stop-color="#bfe8ff"/><stop offset=".45" stop-color="#3f8fd0"/><stop offset="1" stop-color="#12345a"/></radialGradient></defs>';
     g.push('<g clip-path="url(#nxs-forma)">');
     r(0, 0, W, H, "#2f2013"); for(var i = 0; i < W; i += 20) l(i, 0, i, H, "rgba(0,0,0,.2)", 1);
-    /* linee dei venti, come su una carta nautica */
-    for(var k = 0; k < 32; k++){ var a = k * Math.PI / 16; l(CX, CY, CX + Math.cos(a) * 420, CY + Math.sin(a) * 420, ORO + (k % 4 ? ".12)" : ".28)"), k % 4 ? 1 : 1.5); }
-    /* anello graduato attorno al tavolo */
-    c(CX, CY, 170, "none", ORO + ".45)", 2); c(CX, CY, 160, "none", ORO + ".25)", 1);
-    for(var m = 0; m < 72; m++){ var b = m * Math.PI / 36, R2 = m % 6 ? 165 : 160; l(CX + Math.cos(b) * R2, CY + Math.sin(b) * R2, CX + Math.cos(b) * 170, CY + Math.sin(b) * 170, ORO + ".55)", 1); }
-    /* rose dei venti e costellazioni */
-    rosa(158, 402, 22); rosa(402, 402, 22); rosa(280, 74, 18);
-    costellazione([[170, 100], [196, 118], [214, 104], [236, 128]]);
-    costellazione([[350, 124], [372, 106], [396, 116], [404, 140], [384, 150]]);
-    costellazione([[90, 300], [104, 276], [86, 256]]);
-    costellazione([[470, 300], [456, 276], [478, 254]]);
     g.push('</g>');
     /* dodici sedute attorno al tavolo */
     for(var s = 0; s < 12; s++){ var an = s * Math.PI / 6 + Math.PI / 12; seduta(CX + Math.cos(an) * 134, CY + Math.sin(an) * 134, an * 180 / Math.PI + 90); }
@@ -77,18 +65,18 @@
     c(CX - 13, CY - 14, 7, "rgba(255,255,255,.35)");
     [[0, -48], [48, 0], [0, 48], [-48, 0]].forEach(function(q){ c(CX + q[0], CY + q[1], 3.5, ORO_P, "#6a4a20", 1); });
     /* passaggi: verso il Ponte Esterno (punta), verso la Mensa (in fondo), la scala del Ponte di Comando e il boccaporto per la Sala Macchine */
-    r(452, 394, 50, 40, "#2a1a0a", "#7a5a3a", 1.5); for(var z = 1; z < 5; z++) l(454, 394 + z * 8, 500, 394 + z * 8, "#8a6a3a", 2);
-    r(60, 398, 42, 34, "#1a120a", "#7a5a3a", 2, 3); l(60, 415, 102, 415, "#7a5a3a", 1.5); c(81, 406, 3, "#c8a04a");
+    r(452, 750, 50, 40, "#2a1a0a", "#7a5a3a", 1.5); for(var z = 1; z < 5; z++) l(454, 750 + z * 8, 500, 750 + z * 8, "#8a6a3a", 2);
+    r(60, 756, 42, 34, "#1a120a", "#7a5a3a", 2, 3); l(60, 773, 102, 773, "#7a5a3a", 1.5); c(81, 764, 3, "#c8a04a");
     p(FORMA, "none", "#d2a85a", 5);
-    l(266, 30, 294, 30, "#2f2013", 7); l(250, 440, 310, 440, "#2f2013", 8);
-    var t = '<text x="280" y="16" fill="#a39478" font-size="15" text-anchor="middle">▲ verso il Ponte Esterno</text>'
-      + '<text x="280" y="462" fill="#a39478" font-size="15" text-anchor="middle">▼ verso la Mensa</text>';
+    l(266, 30, 294, 30, "#2f2013", 7); l(250, 800, 310, 800, "#2f2013", 8);
+    var t = '<text x="280" y="18" fill="#a39478" font-size="22" text-anchor="middle">▲ verso il Ponte Esterno</text>'
+      + '<text x="280" y="826" fill="#a39478" font-size="22" text-anchor="middle">▼ verso la Mensa</text>';
     return '<svg class="sm-svg nxs-svg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Sala Mappe vista dall\'alto">' + defs + g.join("") + t + '</svg>';
   }
   var sx = document.createElement("div"); sx.className = "sm-pianta";
   var dx = document.createElement("div");
   dx.innerHTML = '<div class="sm-h">🗺️ Sala Mappe</div>'
-    + '<p class="sm-d">Il cuore operativo della nave, sotto il Ponte di Comando. Al centro un grande tavolo circolare da dodici posti, coperto di carte e strumenti; nel buco al centro del tavolo gira un globo azzurro con i dettagli in oro. Sul pavimento, intarsi in oro: le linee dei venti, un anello graduato, rose dei venti e costellazioni.</p>'
+    + '<p class="sm-d">Il cuore operativo della nave, sotto il Ponte di Comando. Al centro un grande tavolo circolare da dodici posti, coperto di carte e strumenti; nel buco al centro del tavolo gira un globo azzurro con i dettagli in oro.</p>'
     + '<p class="sm-d">In punta si esce verso il Ponte Esterno, in fondo si va verso la Mensa; una scala sale al Ponte di Comando e un boccaporto scende alla Sala Macchine.</p>'
     + '<p class="stv-nota" style="margin-top:1rem">Cosa si potrà fare qui lo stiamo ancora decidendo.</p>';
   NAVE.zona("sala_mappe", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); } });
