@@ -71,3 +71,8 @@
 @keyframes nxkCuore{50%{opacity:.7}}
 @keyframes nxkFlusso{to{stroke-dashoffset:-40}}
 @keyframes nxkSchermo{50%{opacity:.6}}
+
+/* Sala Mappe (js/nave-mappe.js): i meridiani del globo girano piano */
+.nxs-meridiani ellipse{animation:nxsGira 7s linear infinite}
+.nxs-meridiani ellipse:nth-child(2){animation-delay:-2.3s}.nxs-meridiani ellipse:nth-child(3){animation-delay:-4.6s}
+@keyframes nxsGira{0%{rx:2px;opacity:.2}50%{rx:40px;opacity:.9}100%{rx:2px;opacity:.2}}
