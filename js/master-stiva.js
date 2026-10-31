@@ -58,7 +58,12 @@
     var b = e.target.closest("[data-az]"); if(!b) return;
     var az = b.getAttribute("data-az"), id = b.getAttribute("data-id");
     if(az === "m1") cambia(id, parseInt(b.getAttribute("data-d"), 10) || 0);
-    else if(az === "mdisp"){ var d = parseInt(b.getAttribute("data-d"), 10) || 0; S.accoda("master", function(x){ x.disp = Math.max(0, (parseInt(x.disp, 10) || 0) + d); }, "dispensa " + (d > 0 ? "+1" : "−1")); }
+    else if(az === "mdisp"){
+      var d = parseInt(b.getAttribute("data-d"), 10) || 0;
+      /* anche per il Master il + si ferma quando la stiva è piena (60 giorni + le Stive aggiuntive, js/stiva.js) */
+      if(d > 0 && S.capienza && (parseInt(S.doc().disp, 10) || 0) >= S.capienza().tot){ S.avviso("La stiva è piena: " + S.posto() + ".", true); return; }
+      S.accoda("master", function(x){ var n = parseInt(x.disp, 10) || 0; if(d > 0 && S.capienza && n >= S.capienza(x).tot) return; x.disp = Math.max(0, n + d); }, "dispensa " + (d > 0 ? "+1" : "−1"));
+    }
     else if(az === "mN"){
       var inp = box.querySelector('input[data-qn="' + id + '"]'), n = Math.abs(parseInt(inp && inp.value, 10) || 0);
       if(!n){ if(inp) inp.focus(); return; }
