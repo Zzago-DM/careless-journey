@@ -182,7 +182,7 @@ Per spostarsi:
 - **Sala Mappe**: toccando il globo al centro del tavolo, o il pulsante «Apri la Mappa del Mondo» a destra, la nave si chiude e la pagina scorre fino alla Mappa del Mondo (`#mappa`).
 - Ponte di Comando, Sala Mappe, Ponte Esterno e Sala Macchine per ora hanno a destra solo la descrizione.
 - **Posto per i viveri** (`STV.capienza()` in `js/stiva.js`): 60 giorni nella Stiva Primaria, più 10 per ogni spazio di «Stiva aggiuntiva» nella Stiva Modulare (piccola 10, media 20, grande o navata 40; la Stiva aggiuntiva ora può essere anche piccola). A stiva piena il + della dispensa si ferma (nella stiva e nel riquadro sotto la mappa della Nave); sotto il numero c'è «posto per…». Se si smonta o si riduce una Stiva aggiuntiva e i viveri non entrano più, il sito lo dice prima di farlo; i giorni in più restano «di troppo» (in rosso) finché non si consumano, e non si disegnano. Il limite vale anche per il + della Zona Master.
-- Nei disegni non ci sono misure scritte. Queste modifiche non hanno una schermata Novità: il Master ha chiesto di non annunciarle.
+- Nei disegni non ci sono misure scritte. Novità: «Nave interattiva» (`2026-10-nave-interattiva`) e «Nuclei d'attacco e di difesa» (`2026-10-nuclei`), che hanno preso il posto della vecchia schermata sulla stiva (`2026-10-stiva`), così le vedono anche i giocatori che avevano già letto quella.
 
 ## Zona Master privata
 

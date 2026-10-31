@@ -83,12 +83,19 @@
       "La <b>versione leggera</b>, pensata per il telefono, toglie animazioni, effetti e suoni: il sito è più veloce e consuma meno batteria. Tutti i contenuti e tutte le funzioni restano: scheda, Gruppo, mappe, viaggi, incontri. Anche il colore del vostro Aether e il tema del sito restano (fermi, senza animazioni).",
       "Nella prossima schermata scegliete quale usare su questo dispositivo. Potete cambiarla quando volete dal menu <b>⚔ Slayer → «Dispositivo»</b>."
     ]},
-    { id: "2026-10-stiva", i: "🧰", t: "La stiva della nave e il nuovo Equipaggiamento", p: [
-      "Le scorte del gruppo adesso stanno davvero nella nave. Nella sezione <b>Nave</b> toccate la <b>Stiva Primaria</b> e poi <b>«🧰 Apri la stiva»</b>: dentro trovate quattro scaffali. <b>Strumenti</b> sono i tonici, i piloni e i nuclei elementali che avete a bordo. <b>Parti di mostro</b>: scegliete il Behemoth affrontato e aggiungete le parti che avete ottenuto. <b>Oggetti vari</b> è un foglio libero, e la <b>Dispensa</b> conta i giorni di viveri.",
-      "La stiva è una sola per tutto il gruppo: la vedete e la cambiate tutti, e i numeri si aggiornano da soli su ogni dispositivo. Anche il riquadro sotto la mappa della nave, con l'<b>Equipaggiamento grande</b> e la <b>Dispensa</b>, adesso è comune a tutti, e da lì <b>«Apri la dispensa in stiva»</b> vi porta dritti ai viveri.",
-      "Nella scheda è cambiato l'<b>Equipaggiamento</b>. C'è uno slot fisso con i <b>5 tonici di Salute</b>, gratis a ogni spedizione, e poi <b>3 slot</b>: in ognuno 5 tonici oppure 2 piloni, di un solo tipo. Non si scrive più niente a mano: toccate <b>«Equipaggia»</b>, scegliete l'oggetto e da dove arriva. <b>Dalla stiva</b> lo prende dalla nave, e lì ne resta uno in meno. <b>Negozio</b> lo aggiunge senza toccare la stiva. «Riponi in stiva» rimette a bordo quello che non usate.",
-      "Sotto gli slot ci sono i <b>nuclei di ricambio</b>: potete portarne fino a 3, d'attacco o di difesa. Sono usa e getta: quando ne montate uno, il nucleo che avevate prima si consuma e sparisce. Prepararsi bene prima di partire, adesso, conta davvero.",
-      "<small>Per cambiare la stiva serve il salvataggio online collegato nella vostra Area dello Slayer. Quello che avevate scritto a mano nelle vecchie righe dell'Equipaggiamento lo ritrovate in fondo, sotto «Scritto a mano prima del cambio».</small>"
+    { id: "2026-10-nave-interattiva", i: "⛵", t: "Nave interattiva", p: [
+      "Adesso potete entrare in ogni stanza della Careless Journey. Nella sezione <b>Nave</b> toccate una stanza sulla mappa: a sinistra la vedete dall'alto, a destra trovate cosa ci potete fare.",
+      "Per spostarvi c'è l'<b>elenco di tutte le stanze</b>, nella colonna di sinistra (sul telefono in una fila sopra il disegno): toccatene una e ci siete. Oppure muovetevi «a piedi» con i pulsanti sopra <b>porte</b>, <b>scale</b> e <b>ascensore</b> del disegno. La piccola nave in alto vi mostra dove siete.",
+      "La <b>Stiva Primaria</b> è pronta per preparare le missioni: dentro c'è la stiva comune del gruppo (strumenti, parti di mostro, oggetti vari e dispensa), e i magazzini dei viveri si riempiono man mano che caricate la dispensa. C'è posto per <b>60 giorni</b> di viveri: per portarne di più allestite una <b>Stiva aggiuntiva</b> nella <b>Stiva Modulare</b> (piccola +10, media +20, grande +40). A stiva piena il + si ferma.",
+      "Nella <b>Stiva Modulare</b> allestite gli spazi come vi servono, e nella <b>Sala Mappe</b> toccate il globo sul tavolo per aprire la Mappa del Mondo.",
+      "<small>Per cambiare la stiva serve il salvataggio online collegato nella vostra Area dello Slayer.</small>"
+    ]},
+    { id: "2026-10-nuclei", i: "🔮", t: "Nuclei d'attacco e di difesa", p: [
+      "Nell'Area dello Slayer è cambiato l'<b>Equipaggiamento</b>. C'è uno slot fisso con i <b>5 tonici di Salute</b>, gratis a ogni spedizione, e poi <b>3 slot</b>: in ognuno 5 tonici oppure 2 piloni, di un solo tipo. Toccate <b>«Equipaggia»</b>, scegliete l'oggetto e da dove arriva: <b>Dalla stiva</b> lo prende dalla nave (e lì ne resta uno in meno), <b>Negozio</b> lo aggiunge senza toccare la stiva.",
+      "Nella scheda restano il <b>Nucleo d'attacco</b> e il <b>Nucleo di difesa</b> che avete montati. Sotto gli slot, in più, ci sono i <b>nuclei di ricambio</b>: potete portarne fino a <b>3</b>, d'attacco o di difesa, di qualsiasi elemento.",
+      "I ricambi sono usa e getta: quando ne montate uno, il nucleo che avevate prima si consuma e sparisce. Il sito ve lo chiede prima di farlo. «Riponi» rimette nella stiva quello che non usate.",
+      "Prima di partire scegliete bene quali elementi portarvi: contro il Behemoth sbagliato, un nucleo di ricambio può fare la differenza.",
+      "<small>Quello che avevate scritto a mano nelle vecchie righe dell'Equipaggiamento lo ritrovate in fondo, sotto «Scritto a mano prima del cambio».</small>"
     ]}
   ];
   var KV = "tcj-novita-viste", KD = "tcj-dispositivo";
