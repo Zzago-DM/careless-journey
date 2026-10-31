@@ -165,6 +165,18 @@ Nella Nave, toccando la **Stiva Modulare** compare «🧭 Entra nella Stiva Modu
 - L'arredo di ogni stanza è disegnato in SVG per uno spazio con la porta a destra (`ARREDO`); le medie ripetono l'arredo, le stanze di destra sono specchiate. Sul telefono sulla pianta compaiono solo le icone delle stanze.
 - Questa modifica non ha una schermata Novità: il Master ha chiesto di non annunciarla.
 
+## Esplora la nave (js/nave-esplora.js, css/45-nave-esplora.css)
+
+Ogni zona della nave si apre in una pagina divisa: **a sinistra** la stanza vista dall'alto (disegno SVG), **a destra** il pannello di utilità. In alto piano e lato, la mappa della nave vista di lato con la stanza evidenziata e le frecce ▲▼ (piano di sopra e di sotto), ◀ (verso prua), ▶ (verso poppa); funzionano anche le frecce della tastiera. Esc chiude.
+
+- La cornice (`js/nave-esplora.js`) ha l'elenco `ZONE` (nome, piano, lato e collegamenti tra le zone). Una zona si registra con `NAVE.zona(chiave, { sinistra, destra, apri, chiudi, esc })`; si apre con `NAVE.apri(chiave)` o, se la pagina è già aperta, `NAVE.vai(chiave)`.
+- Un file per zona: `js/nave-alloggi.js`, `js/nave-mensa.js`, `js/nave-ponte.js` (Ponte di Comando), `js/nave-mappe.js` (Sala Mappe), `js/nave-esterno.js` (Ponte Esterno), `js/stiva-modulare.js`, `js/nave-macchine.js` (Sala Macchine), `js/nave-reliquie.js` (Stanza delle Reliquie), `js/nave-stiva.js` (Stiva Primaria).
+- **Alloggi**: le cabine seguono chi le occupa; a destra il pannello degli alloggi. **Mensa**: a destra i giorni della dispensa e «Apri la dispensa in stiva». **Stiva Modulare**: la pianta resta interattiva come prima.
+- **Stiva Primaria**: disegno solo decorativo (sei magazzini stretti per lato, spazio di carico al centro, ascensore). A destra la stiva condivisa: `js/stiva.js` sposta lì il suo contenuto (`STV.stanzaMonta` / `STV.stanzaSmonta`) e `stvApri()` porta a questa pagina invece della vecchia finestra.
+- **Stanza delle Reliquie**: disegno solo decorativo (cerchio tagliato dalla parete rinforzata con la porta blindata, 24 cassette sigillate su due file, tappeto di velluto). A destra reliquie e bacheca: `js/reliquie.js` le sposta lì (`relNave.monta` / `relNave.smonta`) e `relApri()` porta a questa pagina; la scheda di una reliquia si apre sopra la pagina.
+- Ponte di Comando, Sala Mappe, Ponte Esterno e Sala Macchine per ora hanno a destra solo la descrizione.
+- Nei disegni non ci sono misure scritte. Questa modifica non ha una schermata Novità: il Master ha chiesto di non annunciarla.
+
 ## Zona Master privata
 
 I contenuti della Zona Master (testi, segreti, schede di Mael e Maestri) **non stanno più in questo repository**: sono nel repository privato `tcj-master` (`zona-master.html`, `schede.json`).
