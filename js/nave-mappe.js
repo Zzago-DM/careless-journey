@@ -88,12 +88,12 @@
     g.push('<circle class="nxs-globo" cx="' + CX + '" cy="' + CY + '" r="52" role="button" tabindex="0" aria-label="Apri la Mappa del Mondo"><title>Apri la Mappa del Mondo</title></circle>');
     g.push('</g>');
     g.push('</g>');
-    /* passaggi: verso il Ponte Esterno (punta) e verso la Mensa (in fondo) */
+    /* passaggi: verso la Mensa (in fondo); sul Ponte Esterno si esce solo dalle due porte laterali */
     p(FORMA, "none", "#d2a85a", 5);
     /* due scale lungo le pareti del cono, con in cima la porta verso il Ponte Esterno */
     scalaLato(1); scalaLato(-1);
-    l(266, 30, 294, 30, "#2f2013", 7); l(250, 650, 310, 650, "#2f2013", 8);
-    var t = '<text x="280" y="18" fill="#a39478" font-size="22" text-anchor="middle">▲ verso il Ponte Esterno</text>'
+    l(250, 650, 310, 650, "#2f2013", 8);
+    var t = '<text x="280" y="18" fill="#a39478" font-size="22" text-anchor="middle">▲ prua</text>'
       + '<text x="280" y="676" fill="#a39478" font-size="22" text-anchor="middle">▼ verso la Mensa</text>';
     return '<svg class="sm-svg nxs-svg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Sala Mappe vista dall\'alto">' + defs + g.join("") + t + '</svg>';
   }
@@ -101,7 +101,7 @@
   var dx = document.createElement("div");
   dx.innerHTML = '<div class="sm-h">🗺️ Sala Mappe</div>'
     + '<p class="sm-d">Il cuore operativo della nave, sotto il Ponte di Comando. Al centro un grande tavolo circolare da dodici posti; nel buco al centro del tavolo gira un globo azzurro con i dettagli in oro.</p>'
-    + '<p class="sm-d">In punta si esce sul Ponte Esterno, e anche dalle due porte in cima alle scale che corrono lungo le pareti del cono; in fondo si va verso la Mensa.</p>'
+    + '<p class="sm-d">Sul Ponte Esterno si esce dalle due porte in cima alle scale che corrono lungo le pareti del cono; in fondo si va verso la Mensa.</p>'
     + '<p class="sm-d">Toccate il globo al centro del tavolo per aprire la Mappa del Mondo.</p>'
     + '<button type="button" class="eq-btn" data-nxs="mappa">🌍 Apri la Mappa del Mondo</button>'
     + '<p class="stv-nota" style="margin-top:1rem">Cosa si potrà fare qui lo stiamo ancora decidendo.</p>';
@@ -116,5 +116,5 @@
   sx.addEventListener("keydown", function(e){ if((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("nxs-globo")){ e.preventDefault(); mappa(); } });
   dx.addEventListener("click", function(e){ if(e.target.closest('[data-nxs="mappa"]')) mappa(); });
   NAVE.zona("sala_mappe", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); },
-    porte: [{ x: 300, y: 72, vai: "ponte_esterno" }, { x: 112, y: 428, vai: "ponte_esterno" }, { x: 488, y: 428, vai: "ponte_esterno" }, { x: 300, y: 622, vai: "mensa" }] });
+    porte: [{ x: 112, y: 428, vai: "ponte_esterno" }, { x: 488, y: 428, vai: "ponte_esterno" }, { x: 300, y: 622, vai: "mensa" }] });
 })();

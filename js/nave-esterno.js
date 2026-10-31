@@ -49,9 +49,10 @@
     g.push('<g clip-path="url(#nxe-forma)">');
     p(DENTRO, "#1a130c", "#d2a85a", 5);
     g.push('</g>');
-    g.push('<text x="300" y="' + Y(330) + '" fill="rgba(210,168,90,.45)" font-size="26" text-anchor="middle" letter-spacing="3">SALA MAPPE</text>');
-    /* la porta in punta della Sala Mappe */
-    porta("M" + (266 + DX) + "," + Y(33) + " L" + (294 + DX) + "," + Y(33), [266 + DX, Y(33)], [294 + DX, Y(33)]);
+    g.push('<text x="300" y="' + Y(190) + '" fill="rgba(210,168,90,.45)" font-size="26" text-anchor="middle" letter-spacing="3">SALA MAPPE</text>');
+    /* le due porte laterali della Sala Mappe (in punta non c'è uscita): in fondo ai due corridoi, dove la parete della
+       Sala Mappe incontra la fine del ponte */
+    [1, -1].forEach(function(lato){ porta(tratto(M0, MC, MB, .585, .62, lato), bez(M0, MC, MB, .585, lato), bez(M0, MC, MB, .62, lato)); });
     /* parapetto: corrimano in legno con i montanti in ottone, lungo tutto il bordo del cono */
     p("M267,58 Q300,32 333,58 Q562,424 584,1005 M16,1005 Q38,424 267,58", "none", "#3a2412", 9);
     p("M267,58 Q300,32 333,58 Q562,424 584,1005 M16,1005 Q38,424 267,58", "none", "#9a6a34", 5);
@@ -67,8 +68,8 @@
   var sx = document.createElement("div"); sx.className = "sm-pianta";
   var dx = document.createElement("div");
   dx.innerHTML = '<div class="sm-h">⛵ Ponte Esterno</div>'
-    + '<p class="sm-d">Il ponte all\'aperto sulla prua, con la vista libera sul cielo e sulle isole. Avvolge la Sala Mappe: davanti alla sua punta si apre in una piattaforma che si stringe fino alla prua, e ai suoi lati due corridoi stretti portano alle porte laterali. Tutto attorno corre il parapetto.</p>'
+    + '<p class="sm-d">Il ponte all\'aperto sulla prua, con la vista libera sul cielo e sulle isole. Avvolge la Sala Mappe: davanti alla sua punta si apre in una piattaforma che si stringe fino alla prua, e ai suoi lati due corridoi stretti portano alle due porte laterali, le uniche da cui si entra nella Sala Mappe. Tutto attorno corre il parapetto.</p>'
     + '<p class="stv-nota" style="margin-top:1rem">Cosa si potrà fare qui lo stiamo ancora decidendo.</p>';
   NAVE.zona("ponte_esterno", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); },
-    porte: [{ x: 300, y: 628, vai: "sala_mappe" }] });
+    porte: [{ x: 150, y: 922, vai: "sala_mappe" }, { x: 450, y: 922, vai: "sala_mappe" }] });
 })();
