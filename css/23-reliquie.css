@@ -178,3 +178,7 @@
 .re-gov .ie-gimg img{width:100%;height:100%;object-fit:contain;padding:8%}
 @media(max-width:760px){.re-fgrid{grid-template-columns:1fr}.re-img{max-width:280px;margin:0 auto}}
 .re-gov .ie-gimg.re-ko::after{content:"Non caricata · riapri la galleria";position:absolute;inset:auto .3rem .4rem;font-size:.62rem;text-align:center;color:#ff9a8a;font-style:italic}
+/* il contenuto della stanza: nella finestra o nel pannello di destra della pagina della nave (js/nave-reliquie.js) */
+.rel-corpo{position:relative;z-index:2;flex:1;min-height:0;display:flex;flex-direction:column}
+.nx-ov .rel-corpo .rel-sub{padding:0 .2rem}
+.nx-ov .rel-corpo .rel-scaffale{overflow:visible;padding:1.6rem .2rem 1rem;grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}

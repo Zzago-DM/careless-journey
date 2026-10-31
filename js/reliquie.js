@@ -36,8 +36,8 @@
     + '<div class="rel-polvere" aria-hidden="true"></div>'
     + '<div class="rel-top"><div><div class="rel-k">Careless Journey · dietro i muri della Sala Macchine</div><h3 class="rel-t" id="rel-t">Stanza delle Reliquie</h3></div>'
     + '<button type="button" class="mae-x rel-x" id="rel-x" aria-label="Esci dalla stanza">✕</button></div>'
-    + '<div class="rel-sub" id="rel-sub" aria-live="polite"></div>'
-    + '<div class="rel-scaffale" id="rel-scaffale" role="list"></div>'
+    + '<div class="rel-corpo" id="rel-corpo"><div class="rel-sub" id="rel-sub" aria-live="polite"></div>'
+    + '<div class="rel-scaffale" id="rel-scaffale" role="list"></div></div>'
     + '</div>'
     + '<div class="rel-det" id="rel-det" hidden role="dialog" aria-modal="true" aria-labelledby="rel-n"><div class="rel-dbox">'
     + '<button type="button" class="mae-x rel-dx" id="rel-dx" aria-label="Torna alla stanza">✕</button>'
@@ -47,7 +47,8 @@
     + '<div class="mae-nav"><button type="button" id="rel-prev">‹ Precedente</button><span id="rel-pos"></span><button type="button" id="rel-next">Successiva ›</button></div>'
     + '</div></div></div>';
   document.body.appendChild(ov);
-  var sala = ov.querySelector(".rel-sala"), det = $("rel-det");
+  var sala = ov.querySelector(".rel-sala"), det = $("rel-det"), corpo = $("rel-corpo"), inNave = false;
+  document.body.appendChild(det);   /* la scheda sta fuori dalla finestra: serve anche nella pagina della nave (js/nave-reliquie.js) */
 
   function polvere(){
     var p = ov.querySelector(".rel-polvere"); if(p.children.length || RIDOTTO) return;
@@ -102,7 +103,27 @@
     ov.classList.remove("on"); setTimeout(function(){ if(!ov.classList.contains("on")) ov.hidden = true; }, 260);
     if(!document.querySelector(".inc-win.on,.cj-overlay.open")) document.body.style.overflow = "";
   }
-  window.relApri = function(){ try { if(typeof nvClose === "function") nvClose(); } catch(_){} apriStanza(); };
+  window.relApri = function(){
+    try { if(typeof nvClose === "function") nvClose(); } catch(_){}
+    if(window.relNave.registrata && window.NAVE){ NAVE.vai("zona_segreta"); return; }
+    apriStanza();
+  };
+  /* la pagina della nave porta le reliquie e la bacheca nel suo pannello di destra, e le riporta qui all'uscita */
+  window.relNave = {
+    registrata: false,
+    monta: function(dest){
+      if(ov.classList.contains("on")) chiudiStanza();
+      dest.appendChild(corpo); inNave = true;
+      if(Date.now() - ultimo > 120000){ ultimo = Date.now(); caricato = false; carica(); }
+      scaffale(); if(window.relBac) window.relBac.apri();
+    },
+    smonta: function(){
+      if(!inNave) return;
+      if(!det.hidden) chiudiDet(true);
+      if(window.relBac) window.relBac.chiudi();
+      inNave = false; sala.appendChild(corpo);
+    }
+  };
 
   /* ---------- scheda della reliquia ---------- */
   function riempi(i){
@@ -149,26 +170,32 @@
 
   ov.addEventListener("click", function(e){
     if(e.target === ov || e.target.closest("#rel-x")){ chiudiStanza(); return; }
+  });
+  function esci(){ if(inNave){ if(!det.hidden) chiudiDet(true); NAVE.chiudi(); } else chiudiStanza(); }
+  corpo.addEventListener("click", function(e){
+    var a = e.target.closest(".rel-art[data-i]"); if(a) apriDet(+a.getAttribute("data-i"));
+  });
+  det.addEventListener("click", function(e){
     if(e.target === det || e.target.closest("#rel-dx")){ chiudiDet(); return; }
     if(e.target.closest("#rel-prev")){ passa(-1); return; }
     if(e.target.closest("#rel-next")){ passa(1); return; }
-    var a = e.target.closest(".rel-art[data-i]"); if(a){ apriDet(+a.getAttribute("data-i")); return; }
     var b = e.target.closest(".inc-chi-b[data-pg]"); if(b){ scelto = b.getAttribute("data-pg"); disegnaNote(R[cur]); return; }
-    if(e.target.closest("#rel-vai")){ chiudiStanza(); var s = $("scheda"); if(s) s.scrollIntoView({ behavior: "smooth" }); }
+    if(e.target.closest("#rel-vai")){ esci(); var s = $("scheda"); if(s) s.scrollIntoView({ behavior: "smooth" }); }
   });
   var tN = null;
-  ov.addEventListener("input", function(e){
+  det.addEventListener("input", function(e){
     if(e.target.id !== "rel-ta") return;
     var ta = e.target, k = ta.getAttribute("data-pg"), id = R[cur] && R[cur].id;
     clearTimeout(tN); $("rel-salvata").textContent = "…";
     tN = setTimeout(function(){ scriviNota(k, id, ta.value); $("rel-salvata").textContent = "✓ Salvata nella tua area"; }, 500);
   });
   document.addEventListener("keydown", function(e){
-    if(ov.hidden) return;
-    if(e.key === "Escape" && e.target.closest && e.target.closest(".rel-bac-mod")) return;   /* Esc nella bacheca annulla la modifica, non chiude la stanza */
+    if(ov.hidden && !inNave) return;
+    if(e.key === "Escape" && e.target.closest && e.target.closest(".rel-bac-mod")){ if(inNave) e.stopPropagation(); return; }   /* Esc nella bacheca annulla la modifica, non chiude la stanza */
+    if(inNave && det.hidden) return;                                                     /* nella pagina della nave, il resto dei tasti è della nave */
     if(e.key === "Escape"){ e.stopPropagation(); if(!det.hidden) chiudiDet(); else chiudiStanza(); }
-    else if(!det.hidden && e.target.id !== "rel-ta" && e.key === "ArrowRight") passa(1);
-    else if(!det.hidden && e.target.id !== "rel-ta" && e.key === "ArrowLeft") passa(-1);
+    else if(!det.hidden && e.target.id !== "rel-ta" && e.key === "ArrowRight"){ e.stopPropagation(); passa(1); }
+    else if(!det.hidden && e.target.id !== "rel-ta" && e.key === "ArrowLeft"){ e.stopPropagation(); passa(-1); }
   }, true);
   /* col dito, nella scheda: verso sinistra la reliquia dopo */
   (function(){ var x0 = 0, y0 = 0, ok = false, box = det.querySelector(".rel-dbox");
@@ -180,8 +207,8 @@
   function carica(){
     return fetch("dati/reliquie.json?t=" + Date.now(), { cache: "no-store" })
       .then(function(r){ if(r.status === 404) return { reliquie: [] }; if(!r.ok) throw r.status; return r.json(); })
-      .then(function(d){ R = (d.reliquie || []).filter(function(r){ return r && r.nome; }); caricato = true; if(!ov.hidden) scaffale(); })
-      .catch(function(){ caricato = true; R = []; if(!ov.hidden){ $("rel-scaffale").innerHTML = '<p class="rel-vuota">Non riesco ad aprire la stanza adesso. Riprova tra poco.</p>'; } });
+      .then(function(d){ R = (d.reliquie || []).filter(function(r){ return r && r.nome; }); caricato = true; if(!ov.hidden || inNave) scaffale(); })
+      .catch(function(){ caricato = true; R = []; if(!ov.hidden || inNave){ $("rel-scaffale").innerHTML = '<p class="rel-vuota">Non riesco ad aprire la stanza adesso. Riprova tra poco.</p>'; } });
   }
   /* la stanza si rilegge a ogni apertura dopo qualche minuto, così le nuove reliquie arrivano senza ricaricare */
   var ultimo = 0;
