@@ -78,6 +78,7 @@
   NAVE.zona("zona_segreta", {
     sinistra: sx, destra: dx,
     apri: function(){ sx.innerHTML = pianta(); relNave.monta(dx.querySelector(".nxr-rel")); },
-    chiudi: function(){ relNave.smonta(); }
+    chiudi: function(){ relNave.smonta(); },
+    porte: [{ x: 300, y: 438, vai: "sala_macchine" }]
   });
 })();

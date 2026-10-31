@@ -77,6 +77,9 @@
 .stv-disp-n{font-family:"Cinzel Decorative",serif;font-size:3.4rem;color:var(--gold2);line-height:1;text-align:center}
 .stv-disp-l{font-family:"Cinzel",serif;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text2);text-align:center;margin:.35rem 0 .7rem}
 .stv-disp-c{text-align:center}
+.stv-disp-p{text-align:center;font-size:.85rem;font-style:italic;color:var(--text2);margin-top:.45rem}
+.stv-disp-p.troppo{color:#e8866a;font-style:normal}
+.stv-cnt button:disabled,.nv-counter button:disabled{opacity:.35;cursor:not-allowed}
 @media(max-width:620px){.stv-fila-n{grid-template-columns:repeat(2,1fr)}.stv-fila{grid-template-columns:1fr 1fr}.stv-it{flex-direction:column;gap:.3rem}.stv-top,.stv-pills,.stv-corpo{padding-left:.9rem;padding-right:.9rem}.stv-sub,.stv-stato{margin-left:.9rem;margin-right:.9rem}}
 
 /* ---------- 3. Equipaggiamento della scheda ---------- */

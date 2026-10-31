@@ -98,5 +98,6 @@
   dx.innerHTML = '<div class="sm-h">🧭 Ponte di Comando</div>'
     + '<p class="sm-d">Rialzato sopra la Sala Mappe, con le vetrate che guardano verso prua. Davanti, sotto le vetrate, una lunga console con i computer di bordo; dietro di essa il timone con la seduta del timoniere, e due sedute ai lati della console. Da due porte nelle pareti curve si esce su due scale esterne che scendono lungo i fianchi verso prua, e una terza scala porta alla Sala Mappe.</p>'
     + '<p class="stv-nota" style="margin-top:1rem">Cosa si potrà fare qui lo stiamo ancora decidendo.</p>';
-  NAVE.zona("ponte_comando", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); } });
+  NAVE.zona("ponte_comando", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); },
+    porte: [{ x: 300, y: 282, vai: "sala_mappe" }, { x: 128, y: 300, vai: "alloggi" }, { x: 60, y: 172, vai: "ponte_esterno" }] });
 })();

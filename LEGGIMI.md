@@ -144,7 +144,7 @@ La scelta resta nel browser di ognuno (chiave `tcj_mael`). Se nessuno ha scelto,
 ## Stiva della nave ed Equipaggiamento (js/stiva.js, js/master-stiva.js, css/43-stiva.css)
 
 Il magazzino comune del gruppo sta nel repository privato `gruppo`, file `stiva.json` (funziona con i token che ci sono già, niente da preparare):
-`str` (tonici, piloni e nuclei: `n-att-<elemento>`, `n-def-<elemento>`), `parti` (parti di mostro: Behemoth, materiale, rarità, quantità), `vari` (Oggetti vari), `grande` (Equipaggiamento grande) e `disp` (giorni di viveri; i mezzi giorni si arrotondano per difetto).
+`str` (tonici, piloni e nuclei: `n-att-<elemento>`, `n-def-<elemento>`), `parti` (parti di mostro: Behemoth, materiale, rarità, quantità), `vari` (Oggetti vari), `grande` (Equipaggiamento grande) e `disp` (giorni di viveri; i mezzi giorni si arrotondano per difetto; il posto è in «Esplora la nave»).
 
 - **Nave › Stiva Primaria › «🧰 Apri la stiva»** (anche dal riquadro sotto la mappa della Nave): una stanza con quattro sezioni, Strumenti, Parti di mostro (si sceglie il Behemoth tra quelli di `dati/plancia.js` e si aggiungono le parti), Oggetti vari e Dispensa. La vedono e la cambiano tutti; mentre è aperta si rilegge ogni 4 secondi.
 - **Riquadro sotto la mappa della Nave**: «Equipaggiamento grande» e «Dispensa» ora sono quelli di `stiva.json`, comuni a tutti. La prima volta che la stiva viene creata, prende il testo e i giorni che quel dispositivo aveva nel vecchio riquadro (che era solo nel browser). Il vecchio contatore «Riserva Equipaggiamento» non c'è più: al suo posto c'è il riepilogo della stiva. Sotto la Dispensa c'è «Apri la dispensa in stiva» (`stvApri('dis')` apre la stanza direttamente su quella sezione).
@@ -167,15 +167,21 @@ Nella Nave, toccando la **Stiva Modulare** compare «🧭 Entra nella Stiva Modu
 
 ## Esplora la nave (js/nave-esplora.js, css/45-nave-esplora.css)
 
-Ogni zona della nave si apre in una pagina divisa: **a sinistra** la stanza vista dall'alto (disegno SVG), **a destra** il pannello di utilità. In alto piano e lato, la mappa della nave vista di lato con la stanza evidenziata e le frecce ▲▼ (piano di sopra e di sotto), ◀ (verso prua), ▶ (verso poppa); funzionano anche le frecce della tastiera. Esc chiude.
+Ogni zona della nave si apre in una pagina divisa: **a sinistra** la stanza vista dall'alto (disegno SVG), **a destra** il pannello di utilità. In alto piano e lato e la mappa della nave vista di lato con la stanza evidenziata (toccandola ci si sposta). Esc chiude.
 
-- La cornice (`js/nave-esplora.js`) ha l'elenco `ZONE` (nome, piano, lato e collegamenti tra le zone). Una zona si registra con `NAVE.zona(chiave, { sinistra, destra, apri, chiudi, esc })`; si apre con `NAVE.apri(chiave)` o, se la pagina è già aperta, `NAVE.vai(chiave)`.
+Per spostarsi:
+- **Elenco delle stanze**, nella colonna più a sinistra (sul telefono una fila da scorrere sopra il disegno): tutte le stanze divise per piano, per «teletrasportarsi» in qualsiasi stanza.
+- **Porte sul disegno**: pulsanti sopra porte, scale e ascensore, con il nome della stanza a cui danno (↑ / ↓ se cambiano piano). Si toccano o si attivano con Invio. Le frecce di prima, e le frecce della tastiera, non ci sono più.
+
+- La cornice (`js/nave-esplora.js`) ha l'elenco `ZONE` (nome, piano, lato e collegamenti tra le zone). Una zona si registra con `NAVE.zona(chiave, { sinistra, destra, apri, chiudi, esc, porte })`, dove `porte` è `[{ x, y, vai }]` nelle coordinate del disegno: la cornice aggiunge i pulsanti dentro l'svg `.sm-svg` e li rimette se la zona ridisegna la pianta; si apre con `NAVE.apri(chiave)` o, se la pagina è già aperta, `NAVE.vai(chiave)`.
 - Un file per zona: `js/nave-alloggi.js`, `js/nave-mensa.js`, `js/nave-ponte.js` (Ponte di Comando), `js/nave-mappe.js` (Sala Mappe), `js/nave-esterno.js` (Ponte Esterno), `js/stiva-modulare.js`, `js/nave-macchine.js` (Sala Macchine), `js/nave-reliquie.js` (Stanza delle Reliquie), `js/nave-stiva.js` (Stiva Primaria).
 - **Alloggi**: le cabine seguono chi le occupa; a destra il pannello degli alloggi. **Mensa**: a destra i giorni della dispensa e «Apri la dispensa in stiva». **Stiva Modulare**: la pianta resta interattiva come prima.
-- **Stiva Primaria**: disegno solo decorativo (sei magazzini stretti per lato, spazio di carico al centro, ascensore). A destra la stiva condivisa: `js/stiva.js` sposta lì il suo contenuto (`STV.stanzaMonta` / `STV.stanzaSmonta`) e `stvApri()` porta a questa pagina invece della vecchia finestra.
+- **Stiva Primaria**: sei magazzini stretti per lato, spazio di carico al centro, ascensore. I 3 magazzini per lato verso prua sono l'equipaggiamento degli Slayer (armi, armature, parti di mostro, scaffali, armadietti, cataste) e sono sempre pieni. I 3 per lato vicino all'ascensore sono i **viveri**: un pezzo (cassa, barile o sacco) per giorno di dispensa, 8 per magazzino, 48 in tutto; si riempiono dai due accanto all'ascensore, alternando i lati. Dal 49° al 60° giorno i pezzi stanno ai lati dello spazio centrale; oltre il 60° si vedono nelle Stive aggiuntive della Stiva Modulare. A destra la stiva condivisa: `js/stiva.js` sposta lì il suo contenuto (`STV.stanzaMonta` / `STV.stanzaSmonta`) e `stvApri()` porta a questa pagina invece della vecchia finestra.
 - **Stanza delle Reliquie**: disegno solo decorativo (cerchio tagliato dalla parete rinforzata con la porta blindata, 24 cassette sigillate su due file, tappeto di velluto). A destra reliquie e bacheca: `js/reliquie.js` le sposta lì (`relNave.monta` / `relNave.smonta`) e `relApri()` porta a questa pagina; la scheda di una reliquia si apre sopra la pagina.
+- **Sala Macchine**: il disegno è ruotato di 90° verso destra: l'ingresso dalla Stiva Modulare è in basso, la porta blindata della Stanza delle Reliquie in alto.
 - Ponte di Comando, Sala Mappe, Ponte Esterno e Sala Macchine per ora hanno a destra solo la descrizione.
-- Nei disegni non ci sono misure scritte. Questa modifica non ha una schermata Novità: il Master ha chiesto di non annunciarla.
+- **Posto per i viveri** (`STV.capienza()` in `js/stiva.js`): 60 giorni nella Stiva Primaria, più 10 per ogni spazio di «Stiva aggiuntiva» nella Stiva Modulare (piccola 10, media 20, grande o navata 40; la Stiva aggiuntiva ora può essere anche piccola). A stiva piena il + della dispensa si ferma (nella stiva e nel riquadro sotto la mappa della Nave); sotto il numero c'è «posto per…». Se si smonta o si riduce una Stiva aggiuntiva e i viveri non entrano più, il sito lo dice prima di farlo; i giorni in più restano «di troppo» (in rosso) finché non si consumano, e non si disegnano. Il + della Zona Master non ha limite.
+- Nei disegni non ci sono misure scritte. Queste modifiche non hanno una schermata Novità: il Master ha chiesto di non annunciarle.
 
 ## Zona Master privata
 

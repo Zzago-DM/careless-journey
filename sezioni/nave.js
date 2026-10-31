@@ -32,6 +32,7 @@ tcjSezione(`<section id="nave">
             <b class="nv-disp-n" id="nv-res-disp" aria-live="polite">0</b>
             <button type="button" onclick="nvReserve('disp',1)" aria-label="Un giorno in più">+</button>
           </div>
+          <div class="stv-disp-p" id="nv-disp-posto"></div>
           <div style="margin-top:.8rem"><button type="button" class="nv-go" onclick="stvApri('dis')">Apri la dispensa in stiva</button></div>
         </div>
         <div class="nv-reserve nv-stv">

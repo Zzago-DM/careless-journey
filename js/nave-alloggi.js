@@ -121,6 +121,7 @@
       var body = document.getElementById("al-body"), mod = document.querySelector("#al-ov .al-mod");
       if(body && mod) mod.appendChild(body);
     },
-    esc: function(){ if(alCur || alAsk){ try { clearTimeout(alT); if(alCur) alSave(); } catch(e){} alCur = null; alAsk = null; alRender(); return true; } return false; }
+    esc: function(){ if(alCur || alAsk){ try { clearTimeout(alT); if(alCur) alSave(); } catch(e){} alCur = null; alAsk = null; alRender(); return true; } return false; },
+    porte: [{ x: 275, y: 18, vai: "ponte_comando" }, { x: 275, y: 498, vai: "mensa" }]
   });
 })();

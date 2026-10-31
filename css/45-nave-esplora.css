@@ -10,13 +10,23 @@
 .nx-mini-svg .nx-va:hover{fill:rgba(210,168,90,.3);stroke:#ecc77e}
 .nx-mini-svg .nx-qui{fill:#ecc77e;stroke:#fff3cf;stroke-width:4;animation:nxQui 2.2s ease-in-out infinite}
 @keyframes nxQui{50%{fill:rgba(236,199,126,.55)}}
-.nx-nav{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.45rem;padding:.4rem 1.3rem .6rem}
-.nx-freccia{display:flex;align-items:center;gap:.5rem;min-height:44px;padding:.35rem .7rem;border:1px solid rgba(210,168,90,.3);background:rgba(0,0,0,.3);color:var(--text);cursor:pointer;text-align:left;font-family:"Crimson Pro",serif;font-size:.95rem;transition:background .2s,border-color .2s}
-.nx-freccia b{flex:none;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:rgba(210,168,90,.15);color:var(--gold2);font-size:.85rem}
-.nx-freccia span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.nx-freccia:hover:not(:disabled){background:rgba(210,168,90,.12);border-color:var(--gold3)}
-.nx-freccia:disabled{opacity:.35;cursor:default}
-.nx-corpo{position:relative;flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,1fr);gap:1.1rem;padding:.2rem 1.3rem 1.3rem}
+/* l'elenco di tutte le stanze, per «teletrasportarsi» */
+.nx-lista{min-height:0;display:flex;flex-direction:column;border:1px solid rgba(210,168,90,.2);background:rgba(0,0,0,.22)}
+.nx-lista-c{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:.5rem .45rem .7rem}
+.nx-piano{margin-bottom:.55rem}
+.nx-piano-t{font-family:"Cinzel",serif;font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text2);opacity:.75;padding:.2rem .35rem .25rem}
+.nx-st{display:flex;align-items:center;gap:.45rem;width:100%;min-height:36px;padding:.3rem .5rem;border:1px solid transparent;background:none;color:var(--text);cursor:pointer;text-align:left;font-family:"Crimson Pro",serif;font-size:.95rem;line-height:1.15;transition:background .2s,border-color .2s}
+.nx-st span{flex:none;width:1.3em;text-align:center}
+.nx-st:hover{background:rgba(210,168,90,.1);border-color:rgba(210,168,90,.3)}
+.nx-st.on{background:rgba(236,199,126,.16);border-color:var(--gold3);color:var(--gold2);cursor:default}
+/* le porte sul disegno */
+.nx-porta{cursor:pointer}
+.nx-porta rect{fill:rgba(18,12,7,.88);stroke:#ecc77e;stroke-width:1.5;transition:fill .2s}
+.nx-porta text{fill:#f3e3bd;font-family:"Crimson Pro",Georgia,serif;pointer-events:none}
+.nx-porta:hover rect,.nx-porta:focus rect{fill:rgba(236,199,126,.35)}
+.nx-porta:focus{outline:none}
+.nx-porta:focus-visible rect{stroke:#fff3cf;stroke-width:3}
+.nx-corpo{position:relative;flex:1;min-height:0;display:grid;grid-template-columns:168px minmax(0,1.1fr) minmax(300px,1fr);gap:1.1rem;padding:.2rem 1.3rem 1.3rem}
 .nx-meta{min-height:0;display:flex;flex-direction:column;border:1px solid rgba(210,168,90,.2);background:rgba(0,0,0,.22)}
 .nx-meta-t{flex:none;font-family:"Cinzel",serif;font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold3);padding:.55rem .8rem;border-bottom:1px solid rgba(210,168,90,.15)}
 .nx-meta-c{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:.8rem}
@@ -30,6 +40,8 @@
 .nx-corpo.nx-in-giu{animation:nxGiu .4s ease}
 .nx-corpo.nx-in-prua{animation:nxPrua .4s ease}
 .nx-corpo.nx-in-poppa{animation:nxPoppa .4s ease}
+.nx-corpo.nx-in-in{animation:nxIn .35s ease}
+@keyframes nxIn{from{opacity:0}}
 @keyframes nxSu{from{opacity:0;transform:translateY(-28px)}}
 @keyframes nxGiu{from{opacity:0;transform:translateY(28px)}}
 @keyframes nxPrua{from{opacity:0;transform:translateX(-36px)}}
@@ -42,9 +54,14 @@
 @media(max-width:860px){
   .nx-top{grid-template-columns:minmax(0,1fr) auto;padding:.8rem .9rem .2rem}
   .nx-mini{grid-column:1/-1;grid-row:2;width:100%;max-width:240px;justify-self:center}
-  .nx-nav{grid-template-columns:repeat(2,minmax(0,1fr));padding:.3rem .9rem .5rem}
   .nx-corpo{display:block;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:.2rem .9rem 1.2rem}
   .nx-meta{margin-bottom:.9rem}
+  .nx-lista{margin-bottom:.7rem;border:0;background:none}
+  .nx-lista>.nx-meta-t{display:none}
+  .nx-lista-c{display:flex;gap:.35rem;overflow-x:auto;overflow-y:hidden;padding:.1rem 0 .4rem;scrollbar-width:thin}
+  .nx-piano{display:contents}
+  .nx-piano-t{display:none}
+  .nx-st{flex:none;width:auto;min-height:40px;border-color:rgba(210,168,90,.25);background:rgba(0,0,0,.3);white-space:nowrap;font-size:.92rem}
   .nx-meta-c{overflow:visible}
   .nx-sx .sm-pianta{height:auto}
   .nx-sx .sm-svg{height:auto;width:100%;max-width:100%}
@@ -76,3 +93,8 @@
 .nxs-meridiani ellipse{animation:nxsGira 7s linear infinite}
 .nxs-meridiani ellipse:nth-child(2){animation-delay:-2.3s}.nxs-meridiani ellipse:nth-child(3){animation-delay:-4.6s}
 @keyframes nxsGira{0%{rx:2px;opacity:.2}50%{rx:40px;opacity:.9}100%{rx:2px;opacity:.2}}
+
+/* Stiva Primaria (js/nave-stiva.js): i viveri nuovi cadono al loro posto */
+.nxst-v.nuovo{animation:nxstCade .45s ease-out both;animation-delay:var(--d)}
+@keyframes nxstCade{from{opacity:0;transform:translateY(-14px)}}
+@media(prefers-reduced-motion:reduce){.nxst-v.nuovo{animation:none}}

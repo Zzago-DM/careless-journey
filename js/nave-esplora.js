@@ -1,13 +1,18 @@
 /* Esplora la nave — la pagina divisa di ogni zona della Careless Journey.
    A sinistra la stanza vista DALL'ALTO (disegno decorativo che segue i dati), a destra il pannello di UTILITÀ.
-   In alto: piano e lato della nave, una piccola mappa della nave vista di lato (la stessa della sezione Nave)
-   con la stanza attuale evidenziata, e le frecce per spostarsi: ▲▼ cambiano piano, ◀ va verso prua, ▶ verso poppa.
-   Anche le frecce della tastiera spostano tra le stanze (quando non si sta scrivendo).
+   In alto: piano e lato della nave e una piccola mappa della nave vista di lato (la stessa della sezione Nave)
+   con la stanza attuale evidenziata: toccandola ci si sposta.
+   Per spostarsi ci sono due modi:
+   - l'ELENCO DI TUTTE LE STANZE, nella colonna più a sinistra (sul telefono una fila sopra il disegno): ci si
+     «teletrasporta» in qualsiasi stanza;
+   - le PORTE sul disegno: pulsanti messi su porte, scale e ascensore, che portano alla stanza a cui danno.
 
-   Una zona si registra con NAVE.zona(chiave, { sinistra: elemento, destra: elemento, apri(), chiudi(), esc() }):
+   Una zona si registra con NAVE.zona(chiave, { sinistra, destra, apri(), chiudi(), esc(), porte }):
    - sinistra / destra: gli elementi da mostrare nelle due metà (la cornice li sposta dentro e fuori);
    - apri() / chiudi(): chiamate quando si entra e si esce dalla zona;
-   - esc(): facoltativa; se restituisce true, Esc è stato usato dalla zona (per esempio per tornare alla panoramica).
+   - esc(): facoltativa; se restituisce true, Esc è stato usato dalla zona (per esempio per tornare alla panoramica);
+   - porte: facoltativa; [{ x, y, vai }] nelle coordinate del disegno (viewBox dell'svg .sm-svg). La cornice aggiunge
+     i pulsanti al disegno, e li rimette se la zona ridisegna la pianta (per esempio la Stiva Modulare).
    Le zone non ancora registrate mostrano «In allestimento» e la descrizione della scheda della sezione Nave.
    Per aprire: NAVE.apri("stiva_modulare"). */
 (function(){
@@ -23,12 +28,7 @@
     zona_segreta:   { n: "Stanza delle Reliquie", e: "🗝️", piano: 3, lato: "prua · dietro la Sala Macchine", card: null, poppa: "sala_macchine" },
     stiva_primaria: { n: "Stiva Primaria",   e: "🧰", piano: 4, lato: "poppa",         card: "Stiva Primaria",     su: "stiva_modulare" }
   };
-  var DIR = [
-    { k: "su", f: "▲", t: "Piano di sopra", tasto: "ArrowUp" },
-    { k: "prua", f: "◀", t: "Verso prua", tasto: "ArrowLeft" },
-    { k: "poppa", f: "▶", t: "Verso poppa", tasto: "ArrowRight" },
-    { k: "giu", f: "▼", t: "Piano di sotto", tasto: "ArrowDown" }
-  ];
+  var ORDINE = ["alloggi", "ponte_comando", "mensa", "sala_mappe", "ponte_esterno", "stiva_modulare", "sala_macchine", "zona_segreta", "stiva_primaria"];
   var REG = {}, cur = null, aperta = false;
   function $(id){ return document.getElementById(id); }
   function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
@@ -44,8 +44,8 @@
     + '<div class="nx-tit"><div class="stv-k" id="nx-k"></div><h3 class="stv-t" id="nx-t"></h3></div>'
     + '<div class="nx-mini" id="nx-mini" aria-label="Mappa della nave: tocca una stanza per andarci"></div>'
     + '<button type="button" class="mae-x stv-x" id="nx-x" aria-label="Esci">✕</button></div>'
-    + '<div class="nx-nav" id="nx-nav" role="navigation" aria-label="Spostati nella nave"></div>'
     + '<div class="nx-corpo" id="nx-corpo">'
+    + '<div class="nx-lista" id="nx-lista" role="navigation" aria-label="Tutte le stanze della nave"></div>'
     + '<div class="nx-meta nx-sx" role="region" aria-label="Vista dall\'alto"><div class="nx-meta-t">Vista dall\'alto</div><div class="nx-meta-c" id="nx-sx"></div></div>'
     + '<div class="nx-meta nx-dx" role="region" aria-label="Cosa potete fare"><div class="nx-meta-t">Cosa potete fare</div><div class="nx-meta-c" id="nx-dx"></div></div>'
     + '</div></div>';
@@ -69,15 +69,48 @@
       a.classList.toggle("nx-va", !!ZONE[k] && k !== cur);
     });
   }
-  function navigazione(){
-    var z = ZONE[cur], h = "";
-    DIR.forEach(function(d){
-      var dest = z[d.k], dz = dest && ZONE[dest];
-      h += '<button type="button" class="nx-freccia nx-' + d.k + '" data-vai="' + (dest || "") + '" data-dir="' + d.k + '"' + (dz ? "" : " disabled") + ' title="' + d.t + '" aria-label="' + d.t + (dz ? ": " + esc(dz.n) : ": niente") + '">'
-        + '<b aria-hidden="true">' + d.f + '</b><span>' + (dz ? esc(dz.e + " " + dz.n) : "—") + '</span></button>';
+  /* l'elenco di tutte le stanze, divise per piano */
+  function elenco(){
+    var h = '<div class="nx-meta-t">Le stanze</div><div class="nx-lista-c">', piano = 0;
+    ORDINE.forEach(function(k){
+      var z = ZONE[k];
+      if(z.piano !== piano){ if(piano) h += '</div>'; piano = z.piano; h += '<div class="nx-piano"><div class="nx-piano-t">' + piano + '° piano</div>'; }
+      h += '<button type="button" class="nx-st' + (k === cur ? " on" : "") + '" data-vai="' + k + '"' + (k === cur ? ' aria-current="true"' : "") + '><span aria-hidden="true">' + z.e + '</span>' + esc(z.n) + '</button>';
     });
-    $("nx-nav").innerHTML = h;
+    $("nx-lista").innerHTML = h + '</div></div>';
+    var on = $("nx-lista").querySelector(".nx-st.on");
+    if(on && on.scrollIntoView && matchMedia("(max-width:860px)").matches){ try { on.scrollIntoView({ block: "nearest", inline: "center" }); } catch(_){} }
   }
+  /* da dove si arriva: serve solo per l'animazione di entrata */
+  function direzione(da, a){
+    var z = ZONE[da]; if(!z) return "in";
+    var d = ["su", "giu", "prua", "poppa"].filter(function(x){ return z[x] === a; })[0];
+    if(d) return d;
+    var za = ZONE[a];
+    return za.piano < z.piano ? "su" : za.piano > z.piano ? "giu" : "in";
+  }
+  /* le porte sul disegno: pulsanti dentro l'svg, così seguono il disegno quando si ingrandisce o rimpicciolisce */
+  function porte(){
+    var def = REG[cur], sx = $("nx-sx");
+    if(!def || !def.porte || !def.porte.length || !sx) return;
+    var svg = sx.querySelector("svg.sm-svg");
+    if(!svg || svg.querySelector(".nx-porte")) return;
+    var vb = svg.viewBox && svg.viewBox.baseVal; if(!vb || !vb.width) return;
+    var k = Math.max(vb.width, vb.height) / 560 * (matchMedia("(max-width:860px)").matches ? 1.35 : 1), fs = 15 * k, ph = 30 * k, h = "";   /* sul telefono un po' più grandi, per il dito */
+    def.porte.forEach(function(q){
+      var z = ZONE[q.vai]; if(!z) return;
+      var qui = ZONE[cur], frec = z.piano < qui.piano ? "↑ " : z.piano > qui.piano ? "↓ " : "";   /* scale e ascensore */
+      var testo = frec + z.n, pw = (testo.length * 7.6 + 46) * k;
+      var x = Math.max(vb.x + 4 * k, Math.min(vb.x + vb.width - pw - 4 * k, q.x - pw / 2));
+      var y = Math.max(vb.y + 4 * k, Math.min(vb.y + vb.height - ph - 4 * k, q.y - ph / 2));
+      h += '<g class="nx-porta" data-vai="' + q.vai + '" role="button" tabindex="0" aria-label="Vai a: ' + esc(z.n) + '" transform="translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ')">'
+        + '<rect width="' + pw.toFixed(1) + '" height="' + ph.toFixed(1) + '" rx="' + (ph / 2).toFixed(1) + '"/>'
+        + '<text x="' + (16 * k).toFixed(1) + '" y="' + (ph / 2 + fs * .36).toFixed(1) + '" font-size="' + fs.toFixed(1) + '">' + z.e + '</text>'
+        + '<text class="nx-porta-n" x="' + (38 * k).toFixed(1) + '" y="' + (ph / 2 + fs * .36).toFixed(1) + '" font-size="' + fs.toFixed(1) + '">' + esc(testo) + '</text></g>';
+    });
+    svg.insertAdjacentHTML("beforeend", '<g class="nx-porte">' + h + '</g>');
+  }
+  var osserva = window.MutationObserver ? new MutationObserver(function(){ if(aperta) porte(); }) : null;
   function segnaposto(k){
     var z = ZONE[k], sx = document.createElement("div"), dx = document.createElement("div"), testo = "";
     if(z.card){ var c = [].slice.call(document.querySelectorAll("#nv-cards > .card")).filter(function(x){ var t = x.querySelector(".ct"); return t && t.textContent.trim() === z.card; })[0]; if(c){ var b = c.querySelector(".cb"); testo = b ? b.innerHTML : ""; } }
@@ -95,15 +128,16 @@
     while(dx.firstChild) dx.removeChild(dx.firstChild);
     sx.appendChild(def.sinistra); dx.appendChild(def.destra);
     dx.scrollTop = 0;
-    navigazione(); mini();
+    elenco(); mini();
     if(def.apri) try { def.apri(); } catch(e){ console.error(e); }
+    porte();
     var corpo = $("nx-corpo");
-    if(dir && !RIDOTTO){ corpo.classList.remove("nx-in-su", "nx-in-giu", "nx-in-prua", "nx-in-poppa", "nx-in"); void corpo.offsetWidth; corpo.classList.add("nx-in-" + dir); }
+    if(dir && !RIDOTTO){ corpo.classList.remove("nx-in-su", "nx-in-giu", "nx-in-prua", "nx-in-poppa", "nx-in-in"); void corpo.offsetWidth; corpo.classList.add("nx-in-" + dir); }
     try { localStorage.setItem("tcj-nx-ultima", k); } catch(e){}
   }
   function vai(k, dir){
     if(!ZONE[k] || k === cur) return;
-    suono("paper"); monta(k, dir);
+    suono("paper"); monta(k, dir || direzione(cur, k));
   }
 
   function apri(k){
@@ -112,19 +146,25 @@
     ov.hidden = false; document.body.style.overflow = "hidden";
     requestAnimationFrame(function(){ ov.classList.add("on"); });
     aperta = true; cur = null; monta(k, null); suono("gong");
+    if(osserva) osserva.observe($("nx-sx"), { childList: true, subtree: true });
     setTimeout(function(){ try { $("nx-x").focus(); } catch(_){} }, 60);
   }
   function chiudi(){
     if(cur && REG[cur] && REG[cur].chiudi) try { REG[cur].chiudi(); } catch(e){ console.error(e); }
     aperta = false; cur = null;
+    if(osserva) osserva.disconnect();
     ov.classList.remove("on"); setTimeout(function(){ if(!ov.classList.contains("on")) ov.hidden = true; }, 260);
     if(!document.querySelector(".inc-win.on,.cj-overlay.open,.rel-ov.on,.stv-ov.on:not(.nx-ov)")) document.body.style.overflow = "";
   }
   ov.addEventListener("click", function(e){
     if(e.target === ov){ chiudi(); return; }
     if(e.target.closest("#nx-x")){ chiudi(); return; }
-    var f = e.target.closest(".nx-freccia"); if(f && !f.disabled) vai(f.getAttribute("data-vai"), f.getAttribute("data-dir"));
   });
+  /* elenco e porte: in cattura, così il clic non arriva anche al disegno sotto (per esempio la Stiva Modulare) */
+  ov.addEventListener("click", function(e){
+    var f = e.target.closest && e.target.closest(".nx-st,.nx-porta");
+    if(f){ e.stopPropagation(); e.preventDefault(); vai(f.getAttribute("data-vai"), null); }
+  }, true);
   document.addEventListener("keydown", function(e){
     if(!aperta) return;
     if(e.key === "Escape"){
@@ -132,9 +172,8 @@
       if(REG[cur] && REG[cur].esc && REG[cur].esc()) return;
       chiudi(); return;
     }
-    var t = e.target, scrive = t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
-    if(scrive || e.altKey || e.ctrlKey || e.metaKey) return;
-    DIR.forEach(function(d){ if(e.key === d.tasto && ZONE[cur][d.k]){ e.preventDefault(); vai(ZONE[cur][d.k], d.k); } });
+    var f = e.target && e.target.closest && e.target.closest(".nx-porta");
+    if(f && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); vai(f.getAttribute("data-vai"), null); }
   });
 
   window.NAVE = {

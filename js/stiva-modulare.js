@@ -26,7 +26,7 @@
     { id: "cel", i: "⛓️", n: "Cella", mis: "pm", comp: ["intim", "ing", "intu"], d: "Tenere prigionieri. Nella media ci sono più celle o una stanza per gli interrogatori." },
     { id: "add", i: "🗡️", n: "Sala d'addestramento", mis: "g", comp: ["atl", "acro"], d: "Allenarsi al combattimento, fare sparring, provare armi nuove." },
     { id: "pol", i: "🎯", n: "Poligono di tiro", mis: "g", comp: ["perc", "rap"], d: "Esercitarsi con pistole e archi aetherici, con bersagli fissi e mobili." },
-    { id: "sti", i: "📦", n: "Stiva aggiuntiva", mis: "mg", comp: ["atl", "furt"], d: "Carichi ingombranti, casse, prede di grossa taglia." },
+    { id: "sti", i: "📦", n: "Stiva aggiuntiva", mis: "pmg", comp: ["atl", "furt"], d: "Carichi ingombranti, casse, prede di grossa taglia. Fa posto a più viveri: 10 giorni in più la piccola, 20 la media, 40 la grande." },
     { id: "lib", i: "✎", n: "Spazio libero", mis: "pmg", comp: [], d: "Nome e uso li scrivete voi." }
   ];
   var MIS = { p: "piccola", m: "media", g: "grande" };
@@ -131,9 +131,29 @@
     }
   };
   function serra(D, x, y){ for(var i = 0; i < 4; i++){ D.r(x + 16, y + 18 + i * 74, X - 60, 40, "#3a2414", "#5a3d22", 2, 3); for(var j = 0; j < 7; j++) D.c(x + 30 + j * 20, y + 38 + i * 74, 7 + (j % 2) * 2, ["#3f7a3a", "#5aa04a", "#4a8a3a"][(i + j) % 3]); } barile(D, x + X - 26, y + 2 * P - 30, 14); D.c(x + X - 26, y + 2 * P - 30, 7, "#4a8aa8"); }
-  function stiva(D, x, y){
-    for(var i = 0; i < 4; i++) for(var j = 0; j < 3; j++){ var cx = x + 18 + j * 44, cy = y + 18 + i * 48; if((i + j) % 3 === 1) barile(D, cx + 14, cy + 14, 15); else cassa(D, cx, cy, 30); }
-    D.r(x + 20, y + 2 * P - 100, 120, 70, "#4a3a2a", "#2a1a0a", 2, 3); D.l(x + 20, y + 2 * P - 100, x + 140, y + 2 * P - 30, "#2a1a0a", 2); D.l(x + 140, y + 2 * P - 100, x + 20, y + 2 * P - 30, "#2a1a0a", 2);
+  /* Stiva aggiuntiva: 10 posti di viveri per spazio, segnati a terra. Si riempiono con i giorni di viveri oltre i 60
+     della Stiva Primaria (js/stiva.js, js/nave-stiva.js), stanza dopo stanza; i giorni «di troppo» non si disegnano. */
+  function caso(i){ var h = Math.imul((i + 7) ^ 0x2c1b3c6d, 2654435761) >>> 0; h ^= h >>> 15; h = Math.imul(h, 2246822519) >>> 0; h ^= h >>> 13; return h >>> 0; }
+  function sacco(D, cx, cy){ D.p('<ellipse cx="' + cx + '" cy="' + cy + '" rx="14" ry="12" fill="#c8b48a" stroke="#6a5a3a" stroke-width="2"/><path d="M' + (cx - 5) + ' ' + (cy - 10) + ' q5 4 10 0" fill="none" stroke="#6a5a3a" stroke-width="2"/>'); }
+  function viveri(D, cx, cy, i){
+    var r = caso(i) % 6;
+    if(r < 3) cassa(D, cx - 13, cy - 13, 26); else if(r < 5) barile(D, cx, cy, 13); else sacco(D, cx, cy);
+  }
+  function posti(D, punti, pieni){
+    punti.forEach(function(q, i){
+      if(i < pieni) viveri(D, q[0], q[1], q[2]);
+      else D.r(q[0] - 13, q[1] - 13, 26, 26, "rgba(0,0,0,.12)", "rgba(210,168,90,.28)", 1.2, 2, 'stroke-dasharray="3 4"');
+    });
+  }
+  function stiva(D, n, pieni, base){   /* n spazi in colonna, larghi X; 2 file da 5 per spazio */
+    var punti = [];
+    for(var k = 0; k < n; k++) for(var i = 0; i < 10; i++) punti.push([24 + (i % 5) * 36, k * P + 28 + Math.floor(i / 5) * 40, base + punti.length]);
+    posti(D, punti, pieni);
+  }
+  function stivaNavata(D, pieni, base){   /* la navata grande: 40 posti in 8 file da 5, sopra l'ascensore */
+    var punti = [];
+    for(var i = 0; i < 40; i++) punti.push([38 + (i % 5) * 36, 76 + Math.floor(i / 5) * 40, base + i]);
+    posti(D, punti, pieni);
   }
   function addestramento(D, x, y){
     var h = 4 * P;
@@ -151,11 +171,11 @@
     D.r(x + 30, y + h - 60, X - 60, 34, "#3a2614", "#5a3d22", 1.5, 2); for(var z = 0; z < 8; z++) D.l(x + 38 + z * 19, y + h - 56, x + 38 + z * 19, y + h - 30, "#8a6a3a", 3);
   }
   function libero(D, x, y, h){ D.r(x + 12, y + 12, X - 24, h - 24, "none", "rgba(210,168,90,.5)", 1.5, 4, 'stroke-dasharray="6 5"'); }
-  function arreda(D, t, n){   /* n = quanti spazi */
+  function arreda(D, t, n, pieni, base){   /* n = quanti spazi; pieni = viveri in una Stiva aggiuntiva */
     var y = 0, k;
     if(ARREDO[t]){ for(k = 0; k < n; k++) ARREDO[t](D, 0, k * P); return; }
     if(t === "ser"){ for(k = 0; k < n; k += 2) serra(D, 0, k * P); return; }
-    if(t === "sti"){ for(k = 0; k < n; k += 2) stiva(D, 0, k * P); return; }
+    if(t === "sti") return stiva(D, n, pieni || 0, base || 0);
     if(t === "add") return addestramento(D, 0, y);
     if(t === "pol") return poligono(D, 0, y);
     if(t === "lib") return libero(D, 0, 0, n * P);
@@ -179,7 +199,19 @@
       + '<text x="' + cx + '" y="' + (y - 4) + '" fill="#ecc77e" font-size="28" text-anchor="middle">' + icona + '</text></g>';
   }
   function rectStanza(s){ var sx = s[0] < 4 ? 0 : 2 * X; return { x: sx, y: (s[0] % 4) * P, w: X, h: s.length * P }; }
+  /* i giorni di viveri oltre i 60 della Stiva Primaria, divisi tra le Stive aggiuntive: prima i lati (S1…D4), poi la navata */
+  function viveriExtra(m){
+    var d = S.doc(), c = S.capienza ? S.capienza(d) : { base: 60, tot: 60 };
+    var resto = Math.max(0, Math.min(parseInt(d.disp, 10) || 0, c.tot) - c.base), out = {};
+    m.st.slice().sort(function(a, b){ return a.s[0] - b.s[0]; }).forEach(function(r){
+      if(r.t !== "sti") return;
+      var n = Math.min(resto, 10 * r.s.length); out[r.id] = n; resto -= n;
+    });
+    if(m.nav && m.nav.t === "sti") out.nav = Math.min(resto, 40);
+    return out;
+  }
   function pianta(m){
+    var vx = viveriExtra(m);
     var h = '<svg class="sm-svg" viewBox="-6 -6 ' + (L + 12) + ' ' + (L + 12) + '" role="img" aria-label="Pianta della Stiva Modulare">';
     h += pavimento(0, 0, L, L, WOOD);
     /* spazi vuoti */
@@ -194,13 +226,13 @@
     m.st.forEach(function(r){
       var q = rectStanza(r.s), D = new Disegno(), dx = r.s[0] >= 4;
       h += pavimento(q.x, q.y, q.w, q.h, WOOD);
-      arreda(D, r.t, r.s.length);
+      arreda(D, r.t, r.s.length, vx[r.id], r.s[0] * 10);
       h += gruppo(D, q.x, q.y, q.w, dx);
       h += etichetta(q.x + q.w / 2, q.y + q.h - 14, tipo(r.t).i + " " + nomeStanza(r), q.w, tipo(r.t).i);
     });
     /* navata */
     h += pavimento(X, 0, X, L, "#2e2014");
-    if(m.nav){ var D2 = new Disegno(); arreda(D2, m.nav.t, 4); h += gruppo(D2, X, 0, X, false); }
+    if(m.nav){ var D2 = new Disegno(); if(m.nav.t === "sti") stivaNavata(D2, vx.nav || 0, 80); else arreda(D2, m.nav.t, 4); h += gruppo(D2, X, 0, X, false); }
     h += '<rect x="' + (X + X / 2 - 44) + '" y="' + (ASC_Y - 44) + '" width="88" height="88" fill="#2e2014"/>'
       + '<rect x="' + (X + X / 2 - 34) + '" y="' + (ASC_Y - 34) + '" width="68" height="68" fill="#0c0907" stroke="#ecc77e" stroke-width="2"/>'
       + '<text x="' + (X + X / 2) + '" y="' + (ASC_Y + 9) + '" fill="#ecc77e" font-size="24" text-anchor="middle">⇅</text>';
@@ -328,19 +360,38 @@
       sel = "r" + id; suono("charge"); disegna();
     }
   }
+  /* se una Stiva aggiuntiva si rimpicciolisce o sparisce, i viveri che non entrano più restano «di troppo»: prima lo si dice */
+  function perdePosto(spazi){
+    var c = S.capienza ? S.capienza() : null, n = parseInt(S.doc().disp, 10) || 0;
+    if(!c || spazi <= 0) return 0;
+    return Math.max(0, n - (c.tot - spazi * (S.POSTO_SPAZIO || 10)));
+  }
+  function testoTroppo(x){ return x ? " In stiva non c'è più posto per tutti i viveri: " + x + (x === 1 ? " giorno resterà" : " giorni resteranno") + " di troppo finché non li consumate." : ""; }
+  function chiediPosto(spazi){
+    var x = perdePosto(spazi);
+    if(!x || typeof tcjConferma !== "function") return Promise.resolve(true);
+    return tcjConferma({ titolo: "Meno posto per i viveri", testo: testoTroppo(x).trim(), si: "Sì, procedi", attesa: 1 });
+  }
   function cambiaMisura(id, s){
+    var r0 = stanzaId(mod(), id);
+    if(r0 && r0.t === "sti" && s.length < r0.s.length){ chiediPosto(r0.s.length - s.length).then(function(ok){ if(ok) faiMisura(id, s); }); return; }
+    faiMisura(id, s);
+  }
+  function faiMisura(id, s){
     cambia(function(m){ var r = stanzaId(m, id); if(!r || !valido(s) || !liberi(m, s, id) || tipo(r.t).mis.indexOf(misura(s.length)) < 0) return; r.s = s.slice(); }, "cambia la misura di una stanza");
     suono("paper"); disegna();
   }
   function smonta(id){
     var m = mod(), r = stanzaId(m, id); if(!r) return;
-    var chiedi = typeof tcjConferma === "function" ? tcjConferma({ titolo: "Smontare «" + nomeStanza(r) + "»?", testo: "Lo spazio torna vuoto per tutti" + (r.note ? " e le note della stanza si perdono" : "") + ".", si: "Sì, smonta", attesa: 1 }) : Promise.resolve(confirm("Smontare «" + nomeStanza(r) + "»?"));
+    var troppo = r.t === "sti" ? testoTroppo(perdePosto(r.s.length)) : "";
+    var chiedi = typeof tcjConferma === "function" ? tcjConferma({ titolo: "Smontare «" + nomeStanza(r) + "»?", testo: "Lo spazio torna vuoto per tutti" + (r.note ? " e le note della stanza si perdono" : "") + "." + troppo, si: "Sì, smonta", attesa: 1 }) : Promise.resolve(confirm("Smontare «" + nomeStanza(r) + "»?"));
     chiedi.then(function(ok){ if(!ok) return; cambia(function(mm){ mm.st = mm.st.filter(function(x){ return x.id !== id; }); }, "smonta " + nomeStanza(r)); sel = null; disegna(); });
   }
   function navata(t){
     var m = mod(); if((m.nav ? m.nav.t : "") === t) return;
     var vai = function(){ cambia(function(mm){ mm.nav = t ? { t: t, nome: "", note: "", comp: t === "lib" ? [] : undefined } : null; }, t ? "allestisce la navata: " + tipo(t).n : "svuota la navata"); suono("paper"); disegna(); };
-    if(m.nav && m.nav.note && typeof tcjConferma === "function") tcjConferma({ titolo: "Cambiare l'uso della navata?", testo: "Le note di «" + nomeStanza(m.nav) + "» si perdono.", si: "Sì, cambia", attesa: 1 }).then(function(ok){ if(ok) vai(); });
+    var troppo = m.nav && m.nav.t === "sti" && t !== "sti" ? testoTroppo(perdePosto(4)) : "";
+    if(((m.nav && m.nav.note) || troppo) && typeof tcjConferma === "function") tcjConferma({ titolo: "Cambiare l'uso della navata?", testo: ((m.nav && m.nav.note) ? "Le note di «" + nomeStanza(m.nav) + "» si perdono." : "") + troppo, si: "Sì, cambia", attesa: 1 }).then(function(ok){ if(ok) vai(); });
     else vai();
   }
   function campo(id, k, v, msg){
@@ -395,6 +446,7 @@
   /* ---------- dentro la pagina divisa della nave ---------- */
   function entra(){ aperta = true; sel = null; disegna(); S.guarda("modulare", true); }
   function esci(){ salvaTutto(); aperta = false; S.guarda("modulare", false); }
-  if(window.NAVE) NAVE.zona("stiva_modulare", { sinistra: pEl, destra: rEl, apri: entra, chiudi: esci, esc: function(){ if(sel){ sel = null; disegna(); return true; } return false; } });
+  if(window.NAVE) NAVE.zona("stiva_modulare", { sinistra: pEl, destra: rEl, apri: entra, chiudi: esci, esc: function(){ if(sel){ sel = null; disegna(); return true; } return false; },
+    porte: [{ x: 330, y: 26, vai: "sala_macchine" }, { x: 330, y: 438, vai: "mensa" }, { x: 330, y: 553, vai: "stiva_primaria" }] });
   window.smApri = function(){ if(window.NAVE) NAVE.apri("stiva_modulare"); };
 })();

@@ -69,5 +69,6 @@
   dx.innerHTML = '<div class="sm-h">⛵ Ponte Esterno</div>'
     + '<p class="sm-d">Il ponte all\'aperto sulla prua, con la vista libera sul cielo e sulle isole. Avvolge la Sala Mappe: davanti alla sua punta si apre in una piattaforma che si stringe fino alla prua, e ai suoi lati due corridoi stretti portano alle porte laterali. Tutto attorno corre il parapetto.</p>'
     + '<p class="stv-nota" style="margin-top:1rem">Cosa si potrà fare qui lo stiamo ancora decidendo.</p>';
-  NAVE.zona("ponte_esterno", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); } });
+  NAVE.zona("ponte_esterno", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); },
+    porte: [{ x: 300, y: 628, vai: "sala_mappe" }] });
 })();

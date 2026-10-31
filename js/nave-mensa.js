@@ -65,6 +65,7 @@
   NAVE.zona("mensa", {
     sinistra: sx, destra: dx,
     apri: function(){ dentro = true; sx.innerHTML = pianta(); destra(); },
-    chiudi: function(){ dentro = false; }
+    chiudi: function(){ dentro = false; },
+    porte: [{ x: 220, y: 44, vai: "alloggi" }, { x: 220, y: 102, vai: "stiva_modulare" }, { x: 220, y: 836, vai: "sala_mappe" }]
   });
 })();

@@ -100,5 +100,6 @@
     + '<p class="sm-d">Il cuore operativo della nave, sotto il Ponte di Comando. Al centro un grande tavolo circolare da dodici posti; nel buco al centro del tavolo gira un globo azzurro con i dettagli in oro.</p>'
     + '<p class="sm-d">In punta si esce sul Ponte Esterno, e anche dalle due porte in cima alle scale che corrono lungo le pareti del cono; in fondo si va verso la Mensa.</p>'
     + '<p class="stv-nota" style="margin-top:1rem">Cosa si potrà fare qui lo stiamo ancora decidendo.</p>';
-  NAVE.zona("sala_mappe", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); } });
+  NAVE.zona("sala_mappe", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); },
+    porte: [{ x: 300, y: 72, vai: "ponte_esterno" }, { x: 112, y: 428, vai: "ponte_esterno" }, { x: 488, y: 428, vai: "ponte_esterno" }, { x: 300, y: 622, vai: "mensa" }] });
 })();

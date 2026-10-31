@@ -7,6 +7,9 @@
        vari   testo libero «Oggetti vari», comune ai tre
        grande testo libero «Equipaggiamento grande trasportato» (riquadro sotto la mappa della Nave)
        disp   giorni di viveri per tutto il gruppo (i mezzi giorni si arrotondano per difetto)
+              Posto: 60 giorni nella Stiva Primaria, più 10 per ogni spazio occupato da una «Stiva aggiuntiva» nella Stiva
+              Modulare (piccola 10, media 20, grande 40; la navata conta come grande). A stiva piena il + si ferma; se una
+              Stiva aggiuntiva viene smontata, i giorni che non entrano più restano «di troppo» finché non si consumano.
    - Leggere e scrivere usa i token che il sito ha già: quello del personaggio con l'area aperta, altrimenti quello del Master.
      Tutti e quattro i token includono già «gruppo»: non serve preparare niente.
    - Ogni cambio rilegge il file, applica la modifica e lo salva; se intanto qualcun altro l'ha salvato, riprova.
@@ -221,12 +224,22 @@
   }
   window.addEventListener("pagehide", function(){ if(coda.length) svuota(); });
 
+  /* quanti giorni di viveri ci stanno: 60 nella Stiva Primaria + 10 per ogni spazio di Stiva aggiuntiva (js/stiva-modulare.js) */
+  var POSTO_BASE = 60, POSTO_SPAZIO = 10;
+  function capienza(d){
+    var m = (d || doc).mod, extra = 0;
+    if(m && typeof m === "object"){
+      (Array.isArray(m.st) ? m.st : []).forEach(function(r){ if(r && r.t === "sti" && Array.isArray(r.s)) extra += POSTO_SPAZIO * r.s.length; });
+      if(m.nav && m.nav.t === "sti") extra += POSTO_SPAZIO * 4;
+    }
+    return { base: POSTO_BASE, extra: extra, tot: POSTO_BASE + extra };
+  }
   window.STV = {
     IT: IT, EL: EL, NUC: NUC, GRUPPI: GRUPPI, it: it, el: el, nid: nid, nome: nomeChiave, chiavi: chiavi,
     doc: function(){ return doc; }, q: function(id){ return int(doc.str[id]); },
     stato: function(){ return stato; }, leggi: leggi, guarda: guarda, chi: chiAgisce,
     on: function(f){ ASC.push(f); }, cambia: cambia, accoda: accoda, puoScrivere: function(){ return !!tokScrittura(chiAgisce()); },
-    breve: breve, avviso: avviso
+    breve: breve, avviso: avviso, capienza: capienza, POSTO_BASE: POSTO_BASE, POSTO_SPAZIO: POSTO_SPAZIO
   };
 
   var MSG = {
@@ -277,7 +290,7 @@
     + '<textarea class="stv-vari" id="stv-vari" maxlength="6000" placeholder="Corde, lanterne, attrezzi, lettere, ricordi… tutto quello che il gruppo tiene in stiva."></textarea></div>'
     + '<div class="stv-sp" id="stv-s-dis"><div class="stv-disp"><div class="stv-pila" id="stv-pila" aria-hidden="true"></div><div class="stv-disp-x">'
     + '<div class="stv-disp-n" id="stv-disp-n">0</div><div class="stv-disp-l">giorni di viveri<br>per tutto il gruppo</div>'
-    + '<div class="stv-disp-c" id="stv-disp-c"></div></div></div>'
+    + '<div class="stv-disp-c" id="stv-disp-c"></div><div class="stv-disp-p" id="stv-disp-p"></div></div></div>'
     + '<p class="stv-nota" style="text-align:center">Ogni giorno di viaggio la dispensa scende di 1. I mezzi giorni si arrotondano per difetto: il gruppo ha razionato.</p></div>'
     + '</div></div></div>';
   document.body.appendChild(ov);
@@ -374,7 +387,8 @@
   function dispensa(){
     pila($("stv-pila"), doc.disp);
     var n = $("stv-disp-n"); if(n) n.textContent = doc.disp;
-    var c = $("stv-disp-c"); if(c) c.innerHTML = contatore("disp", "disp", doc.disp, "giorni di viveri");
+    var c = $("stv-disp-c"); if(c){ c.innerHTML = contatore("disp", "disp", doc.disp, "giorni di viveri"); bloccaPiu(c); }
+    var po = $("stv-disp-p"); if(po){ po.textContent = posto(); po.classList.toggle("troppo", int(doc.disp) > capienza(doc).tot); }
   }
   function stanza(){ if(ov.hidden && !inNave) return; statoStanza(); strumenti(); deposito(); vari(); dispensa(); }
   STV.on(stanza);
@@ -414,9 +428,25 @@
     var chi = chiAgisce(), nome = nomeChiave(id);
     accoda(chi, function(x){ x.str[id] = Math.max(0, int(x.str[id]) + d); }, (d > 0 ? "+" : "−") + " " + nome);
   }
+  var PIENA = "La stiva è piena: non c'è posto per altri viveri. Allestite una Stiva aggiuntiva nella Stiva Modulare per fare spazio.";
   function cambiaDisp(d){
-    accoda(chiAgisce(), function(x){ x.disp = Math.max(0, int(x.disp) + d); }, "dispensa " + (d > 0 ? "+1" : "−1"));
+    if(d > 0 && int(doc.disp) >= capienza(doc).tot){ avviso(PIENA, true); return; }
+    accoda(chiAgisce(), function(x){
+      if(d > 0 && int(x.disp) >= capienza(x).tot) return;
+      x.disp = Math.max(0, int(x.disp) + d);
+    }, "dispensa " + (d > 0 ? "+1" : "−1"));
   }
+  /* il posto della dispensa, in parole: «posto per 60 · 3 di troppo» */
+  function posto(){
+    var c = capienza(doc), n = int(doc.disp);
+    return "posto per " + c.tot + (c.extra ? " (60 + " + c.extra + " nelle stive aggiuntive)" : "") + (n > c.tot ? " · " + (n - c.tot) + " di troppo" : n === c.tot ? " · la stiva è piena" : "");
+  }
+  function bloccaPiu(cont){
+    if(!cont) return;
+    var piu = cont.querySelector('[data-d="1"],[aria-label="Un giorno in più"]');
+    if(piu){ var pieno = int(doc.disp) >= capienza(doc).tot; piu.disabled = pieno; piu.title = pieno ? "La stiva è piena" : ""; }
+  }
+  window.STV.posto = posto;
   function aggiungiParte(m, r){
     var b = behScelto;
     if(accoda(chiAgisce(), function(x){
@@ -463,7 +493,8 @@
   function riquadroNave(){
     var g = $("nv-equip-grande");
     if(g && !grandeScrivendo && document.activeElement !== g && g.value !== doc.grande) g.value = doc.grande;
-    var dsp = $("nv-res-disp"); if(dsp) dsp.textContent = doc.disp;
+    var dsp = $("nv-res-disp"); if(dsp){ dsp.textContent = doc.disp; bloccaPiu(dsp.parentNode); }
+    var dpo = $("nv-disp-posto"); if(dpo){ dpo.textContent = posto(); dpo.classList.toggle("troppo", int(doc.disp) > capienza(doc).tot); }
     pila($("nv-pila"), doc.disp);
     var n = 0; Object.keys(doc.str).forEach(function(k){ n += int(doc.str[k]); });
     var pz = 0; (doc.parti || []).forEach(function(p){ pz += int(p.q); });

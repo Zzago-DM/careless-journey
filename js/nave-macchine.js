@@ -7,6 +7,9 @@
      rivolti verso il muro.
    - Due scale, una di fronte all'altra, attraversano la galleria e scendono verso il nucleo: una all'arrivo della passerella
      dalla porta di poppa (verso la Stiva Modulare), l'altra dal lato opposto.
+   - Dal lato opposto all'ingresso, nella parete rinforzata, la porta blindata della Stanza delle Reliquie.
+   Il disegno è costruito con la porta di poppa a destra e poi ruotato di 90° verso destra: l'ingresso dalla Stiva Modulare
+   finisce in basso e la porta blindata delle Reliquie in alto.
    A destra, per ora: la descrizione della Sala Macchine. */
 (function(){
   "use strict";
@@ -80,24 +83,30 @@
     c(CX, CY, 34, "none", "rgba(200,240,255,.75)", 2.5, 'class="nxk-anello"');
     c(CX, CY, 22, "none", "rgba(190,150,255,.8)", 2, 'class="nxk-anello nxk-anello2"');
     c(CX, CY, 11, "#f2fbff", "", 0, 'class="nxk-cuore"');
-    /* porta di poppa (verso la Stiva Modulare) e passaggio stretto verso prua */
+    /* porta di poppa (verso la Stiva Modulare) */
     l(W, CY - 20, W, CY + 20, "#2c333b", 9);
-    r(-3, CY - 14, 6, 28, "#3a4450", "#6a7682", 1);
     r(0, 0, W, H, "none", "#7a8694", 5);
+    /* porta blindata verso la Stanza delle Reliquie, nella parete rinforzata dal lato opposto */
+    r(-2, CY - 36, 14, 10, "#2c333b", "#6a7682", 1.5, 1); r(-2, CY + 26, 14, 10, "#2c333b", "#6a7682", 1.5, 1);   /* stipiti */
+    r(0, CY - 26, 12, 52, "#3a424c", "#9aa6b2", 2, 2);                                                                  /* battente */
+    for(var bb = 1; bb < 5; bb++) l(2, CY - 26 + bb * 52 / 5, 10, CY - 26 + bb * 52 / 5, "rgba(0,0,0,.4)", 1.5);
+    [CY - 18, CY - 8, CY + 6, CY + 16].forEach(function(yb){ r(9, yb, 6, 3, "#c0ccd8", "", 0, 1); });                  /* chiavistelli */
+    l(17, CY - 10, 17, CY + 10, "#c8a04a", 3); c(17, CY, 3, "#c8a04a", "#5a3a18", 1);                                  /* maniglia a leva */
     var defs = '<defs><radialGradient id="nxk-alone"><stop offset="0" stop-color="#e8f8ff"/><stop offset=".35" stop-color="#7fd4ff"/><stop offset=".7" stop-color="#6a5ae0" stop-opacity=".85"/><stop offset="1" stop-color="#2a2060" stop-opacity="0"/></radialGradient></defs>';
-    var t = '<text x="' + (W - 6) + '" y="' + (CY - 30) + '" fill="#9aa6b2" font-size="15" text-anchor="end">porta ▶</text>';
-    defs = defs.replace("</defs>", '<clipPath id="nxk-taglio"><rect x="0" y="0" width="' + W + '" height="' + H + '"/></clipPath></defs>');
-    return '<svg class="sm-svg nxk-svg" viewBox="-6 -6 ' + (W + 12) + ' ' + (H + 12) + '" role="img" aria-label="Sala Macchine vista dall\'alto">' + defs + '<g clip-path="url(#nxk-taglio)">' + g.join("") + '</g>' + t + '</svg>';
+    /* ruotata di 90° verso destra: il punto (x, y) finisce in (H − y, x) */
+    defs = defs.replace("</defs>", '<clipPath id="nxk-taglio"><rect x="0" y="0" width="' + H + '" height="' + W + '"/></clipPath></defs>');
+    return '<svg class="sm-svg nxk-svg" viewBox="-6 -6 ' + (H + 12) + ' ' + (W + 12) + '" role="img" aria-label="Sala Macchine vista dall\'alto">' + defs + '<g clip-path="url(#nxk-taglio)"><g transform="translate(' + H + ' 0) rotate(90)">' + g.join("") + '</g></g></svg>';
   }
 
   var sx = document.createElement("div"); sx.className = "sm-pianta";
   var dx = document.createElement("div");
   dx.innerHTML = '<div class="sm-h">⚙️ Sala Macchine</div>'
     + '<p class="sm-d">Il cuore energetico della nave, tutta in metallo e su due piani. Al centro il nucleo aetherico, una colonna di energia che attraversa entrambi i livelli; attorno, al piano di sopra, una galleria ad anello con il parapetto. Al piano di sotto i pannelli di controllo guardano il motore, mentre altri sono rivolti alle pareti. Due scale collegano i livelli.</p>'
-    + '<p class="sm-d">I muri sono rinforzati: dietro uno di essi c\'è la stanza delle Reliquie.</p>'
+    + '<p class="sm-d">I muri sono rinforzati. Di fronte all\'ingresso dalla Stiva Modulare, una porta blindata dà sulla Stanza delle Reliquie.</p>'
     + '<p class="stv-nota" style="margin-top:1rem">Cosa si potrà fare qui lo stiamo ancora decidendo.</p>';
   NAVE.zona("sala_macchine", {
     sinistra: sx, destra: dx,
-    apri: function(){ sx.innerHTML = pianta(); }
+    apri: function(){ sx.innerHTML = pianta(); },
+    porte: [{ x: 230, y: 66, vai: "zona_segreta" }, { x: 230, y: 538, vai: "stiva_modulare" }]
   });
 })();
