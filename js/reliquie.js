@@ -34,7 +34,7 @@
   ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true"); ov.setAttribute("aria-labelledby", "rel-t");
   ov.innerHTML = '<div class="rel-sala">'
     + '<div class="rel-polvere" aria-hidden="true"></div>'
-    + '<div class="rel-top"><div><div class="rel-k">Careless Journey · dietro i muri della Sala Macchine</div><h3 class="rel-t" id="rel-t">Stanza delle Reliquie</h3></div>'
+    + '<div class="rel-top"><div><div class="rel-k">Careless · dietro i muri della Sala Macchine</div><h3 class="rel-t" id="rel-t">Stanza delle Reliquie</h3></div>'
     + '<button type="button" class="mae-x rel-x" id="rel-x" aria-label="Esci dalla stanza">✕</button></div>'
     + '<div class="rel-corpo" id="rel-corpo"><div class="rel-sub" id="rel-sub" aria-live="polite"></div>'
     + '<div class="rel-scaffale" id="rel-scaffale" role="list"></div></div>'

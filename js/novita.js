@@ -13,7 +13,7 @@
 (function(){
   var NOVITA = [
     { id: "2026-10-nave-interattiva", i: "⛵", t: "Nave interattiva", p: [
-      "Adesso potete entrare in ogni stanza della Careless Journey. Nella sezione <b>Nave</b> toccate una stanza sulla mappa: a sinistra la vedete dall'alto, a destra trovate cosa ci potete fare.",
+      "Adesso potete entrare in ogni stanza della <b>Careless</b>. Nella sezione <b>Nave</b> toccate una stanza sulla mappa: a sinistra la vedete dall'alto, a destra trovate cosa ci potete fare.",
       "Per spostarvi c'è l'<b>elenco di tutte le stanze</b>, nella colonna di sinistra (sul telefono in una fila sopra il disegno): toccatene una e ci siete. Oppure muovetevi «a piedi» con i pulsanti sopra <b>porte</b>, <b>scale</b> e <b>ascensore</b> del disegno. La piccola nave in alto vi mostra dove siete.",
       "La <b>Stiva Primaria</b> è pronta per preparare le missioni: dentro c'è la stiva comune del gruppo (strumenti, parti di mostro, oggetti vari e dispensa), e i magazzini dei viveri si riempiono man mano che caricate la dispensa. C'è posto per <b>60 giorni</b> di viveri: per portarne di più allestite una <b>Stiva aggiuntiva</b> nella <b>Stiva Modulare</b> (piccola +10, media +20, grande +40). A stiva piena il + si ferma.",
       "Nella <b>Stiva Modulare</b> allestite gli spazi come vi servono, e nella <b>Sala Mappe</b> toccate il globo sul tavolo per aprire la Mappa del Mondo.",

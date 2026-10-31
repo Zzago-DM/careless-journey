@@ -272,7 +272,7 @@
   ov.className = "stv-ov"; ov.hidden = true;
   ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true"); ov.setAttribute("aria-labelledby", "stv-t");
   ov.innerHTML = '<div class="stv-sala"><div class="stv-lume" aria-hidden="true"></div>'
-    + '<div class="stv-top"><div><div class="stv-k">Careless Journey · 4° piano di poppa</div><h3 class="stv-t" id="stv-t">Stiva Primaria</h3></div>'
+    + '<div class="stv-top"><div><div class="stv-k">Careless · 4° piano di poppa</div><h3 class="stv-t" id="stv-t">Stiva Primaria</h3></div>'
     + '<button type="button" class="mae-x stv-x" id="stv-x" aria-label="Esci dalla stiva">✕</button></div>'
     + '<p class="stv-sub">Odore di catrame, di erbe secche e di legno umido. Le casse scricchiolano a ogni beccheggio della nave.</p>'
     + '<div class="stv-box" id="stv-box"><div class="stv-stato" id="stv-stato" aria-live="polite"></div>'

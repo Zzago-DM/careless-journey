@@ -1,4 +1,4 @@
-/* Esplora la nave — la pagina divisa di ogni zona della Careless Journey.
+/* Esplora la nave — la pagina divisa di ogni zona della Careless (la nave; la campagna è «The Careless Journey»).
    A sinistra la stanza vista DALL'ALTO (disegno decorativo che segue i dati), a destra il pannello di UTILITÀ.
    In alto: piano e lato della nave e una piccola mappa della nave vista di lato (la stessa della sezione Nave)
    con la stanza attuale evidenziata: toccandola ci si sposta.
@@ -122,7 +122,7 @@
     var z = ZONE[k], def = REG[k] || segnaposto(k), sx = $("nx-sx"), dx = $("nx-dx");
     if(cur && REG[cur] && REG[cur].chiudi && cur !== k) try { REG[cur].chiudi(); } catch(e){ console.error(e); }
     cur = k;
-    $("nx-k").textContent = "Careless Journey · " + z.piano + "° piano · " + z.lato;
+    $("nx-k").textContent = "Careless · " + z.piano + "° piano · " + z.lato;
     $("nx-t").textContent = z.e + " " + z.n;
     while(sx.firstChild) sx.removeChild(sx.firstChild);
     while(dx.firstChild) dx.removeChild(dx.firstChild);
