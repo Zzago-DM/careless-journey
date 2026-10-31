@@ -52,8 +52,8 @@
     c(CX, CY + 10, 100, "none", "rgba(200,160,74,.45)", 1.5);
     c(CX, CY + 10, 116, "none", "rgba(200,160,74,.5)", 2, 'stroke-dasharray="2 4"');
     /* le cassette: la fila di sopra contro la parete, quella di sotto che sporge un po' di più */
-    fila(186, 214, 22, true);
-    fila(214, 240, 24, false);
+    fila(186, 214, 11, true);
+    fila(214, 240, 12, false);
     /* pareti: metallo scuro con il rivestimento di legno all'interno */
     p(forma(RM), "none", "#5a3a20", 6);
     p(forma(RM + 7), "none", "#3a424c", 9);
