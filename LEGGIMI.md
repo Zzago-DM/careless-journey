@@ -104,6 +104,7 @@ Ogni player ha la sua nave: lo stato sta nella chiave `tcj-vg-<personaggio>`, de
 Prima di tutto il resto (anche dell'animazione d'apertura, che aspetta) compaiono:
 1. **Le novità**: una schermata per ogni aggiornamento («Novità · 1 di 6», «Ho capito →», «← Indietro»). Ognuna si vede **una volta sola per dispositivo** (chiave `tcj-novita-viste`).
    Per annunciarne una nuova: aggiungerla in fondo all'elenco `NOVITA` in `js/novita.js` con un `id` mai usato.
+   Le novità vecchie si tolgono dall'elenco quando non servono più (il Master ha tenuto solo le ultime: «Nave interattiva» e «Nuclei d'attacco e di difesa»). Gli `id` già letti restano in `tcj-novita-viste` e non danno fastidio.
    **Regola:** a ogni modifica che i giocatori vedono si aggiunge subito la sua schermata. Mai Zona Master, segreti, lore nascosta o sorprese (per esempio le animazioni di sblocco delle zone); nel dubbio, chiedere al Master.
 2. **Il dispositivo** (solo la prima volta, chiave `tcj-dispositivo`): «📱 Telefono — versione leggera» o «💻 Computer — versione completa», con già segnata quella adatta. Si cambia quando si vuole dal menu ⚔ Slayer → «Dispositivo» (la pagina si ricarica allo stesso punto, senza animazione d'apertura).
 
