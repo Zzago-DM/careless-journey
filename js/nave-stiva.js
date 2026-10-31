@@ -136,6 +136,14 @@
     /* dal 49° giorno: ai lati dello spazio centrale */
     for(var e = IN_MAG; e < n; e++){ var q = POSTI_CENTRO[e - IN_MAG]; pezzo(q[0], q[1], e, e >= prima ? e - prima + 1 : 0); }
     r(0, 0, L, L, "none", "#d2a85a", 5);
+    /* porta davanti (verso prua): il piano di sotto della Sala Macchine */
+    l(L / 2 - 30, 0, L / 2 + 30, 0, "#2e2014", 8); c(L / 2 - 30, 0, 4, "#c8a04a"); c(L / 2 + 30, 0, 4, "#c8a04a");
+    /* sotto l'ascensore, la scala a chiocciola che sale verso la Stiva Modulare e, più su, fino agli Alloggi */
+    var SC = ASC_Y + 92;
+    c(L / 2, SC, 30, "#1c140c", "#7a5a3a", 2);
+    for(var gr = 0; gr < 360; gr += 30){ var an = gr * Math.PI / 180; l((L / 2 + Math.cos(an) * 6).toFixed(1), (SC + Math.sin(an) * 6).toFixed(1), (L / 2 + Math.cos(an + .35) * 29).toFixed(1), (SC + Math.sin(an + .35) * 29).toFixed(1), "rgba(200,160,100,.7)", 2); }
+    c(L / 2, SC, 6, "#5a3d22", "#c8a04a", 1.5);
+    p('<path d="M' + (L / 2 + 30) + ' ' + SC + ' A30 30 0 1 1 ' + (L / 2) + ' ' + (SC - 30) + '" fill="none" stroke="#c8a04a" stroke-width="2"/>');   /* corrimano */
     return '<svg class="sm-svg nxst-svg" viewBox="-6 -6 ' + (L + 12) + ' ' + (L + 12) + '" role="img" aria-label="Stiva Primaria vista dall\'alto">' + g.join("") + sopra + '</svg>';
   }
 
@@ -151,6 +159,6 @@
     sinistra: sx, destra: dx,
     apri: function(){ dentro = true; giaVisti = null; sx.innerHTML = pianta(); S.stanzaMonta(dx.querySelector(".nxst-stiva")); },
     chiudi: function(){ dentro = false; S.stanzaSmonta(); },
-    porte: [{ x: 330, y: 440, vai: "stiva_modulare" }]
+    porte: [{ x: 330, y: 440, vai: "stiva_modulare" }, { x: 330, y: 32, vai: "sala_macchine", piano: false }, { x: 330, y: 638, vai: "alloggi" }]
   });
 })();

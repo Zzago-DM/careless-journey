@@ -11,7 +11,8 @@
    - sinistra / destra: gli elementi da mostrare nelle due metà (la cornice li sposta dentro e fuori);
    - apri() / chiudi(): chiamate quando si entra e si esce dalla zona;
    - esc(): facoltativa; se restituisce true, Esc è stato usato dalla zona (per esempio per tornare alla panoramica);
-   - porte: facoltativa; [{ x, y, vai }] nelle coordinate del disegno (viewBox dell'svg .sm-svg). La cornice aggiunge
+   - porte: facoltativa; [{ x, y, vai, piano }] nelle coordinate del disegno (piano: false toglie la freccia ↑/↓, per una
+     porta che dà su una stanza di un altro piano allo stesso livello, come la Sala Macchine su due piani) (viewBox dell'svg .sm-svg). La cornice aggiunge
      i pulsanti al disegno, e li rimette se la zona ridisegna la pianta (per esempio la Stiva Modulare).
    Le zone non ancora registrate mostrano «In allestimento» e la descrizione della scheda della sezione Nave.
    Per aprire: NAVE.apri("stiva_modulare"). */
@@ -26,7 +27,7 @@
     stiva_modulare: { n: "Stiva Modulare",   e: "🧩", piano: 3, lato: "poppa",         card: "Stiva Modulare",     su: "mensa",           giu: "stiva_primaria", prua: "sala_macchine" },
     sala_macchine:  { n: "Sala Macchine",    e: "⚙️", piano: 3, lato: "prua",          card: "Sala Macchine",      su: "sala_mappe",      prua: "zona_segreta",  poppa: "stiva_modulare" },
     zona_segreta:   { n: "Stanza delle Reliquie", e: "🗝️", piano: 3, lato: "prua · dietro la Sala Macchine", card: null, poppa: "sala_macchine" },
-    stiva_primaria: { n: "Stiva Primaria",   e: "🧰", piano: 4, lato: "poppa",         card: "Stiva Primaria",     su: "stiva_modulare" }
+    stiva_primaria: { n: "Stiva Primaria",   e: "🧰", piano: 4, lato: "poppa",         card: "Stiva Primaria",     su: "stiva_modulare", prua: "sala_macchine" }
   };
   var ORDINE = ["alloggi", "ponte_comando", "mensa", "sala_mappe", "ponte_esterno", "stiva_modulare", "sala_macchine", "zona_segreta", "stiva_primaria"];
   var REG = {}, cur = null, aperta = false;
@@ -99,7 +100,7 @@
     var k = Math.max(vb.width, vb.height) / 560 * (matchMedia("(max-width:860px)").matches ? 1.35 : 1), fs = 15 * k, ph = 30 * k, h = "";   /* sul telefono un po' più grandi, per il dito */
     def.porte.forEach(function(q){
       var z = ZONE[q.vai]; if(!z) return;
-      var qui = ZONE[cur], frec = z.piano < qui.piano ? "↑ " : z.piano > qui.piano ? "↓ " : "";   /* scale e ascensore */
+      var qui = ZONE[cur], frec = q.piano === false ? "" : z.piano < qui.piano ? "↑ " : z.piano > qui.piano ? "↓ " : "";   /* scale e ascensore; piano: false per una porta allo stesso livello */
       var testo = frec + z.n, pw = (testo.length * 7.6 + 46) * k;
       var x = Math.max(vb.x + 4 * k, Math.min(vb.x + vb.width - pw - 4 * k, q.x - pw / 2));
       var y = Math.max(vb.y + 4 * k, Math.min(vb.y + vb.height - ph - 4 * k, q.y - ph / 2));
