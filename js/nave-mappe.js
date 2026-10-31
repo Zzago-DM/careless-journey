@@ -1,7 +1,8 @@
 /* Esplora la nave › Sala Mappe (js/nave-esplora.js).
    A sinistra la Sala Mappe vista dall'alto: una forma a cono allungata, stretta verso prua e larga verso poppa, con i lati curvi
    come il Ponte di Comando. Verso la metà un grande tavolo circolare da dodici posti con un buco al centro, dove gira
-   un globo azzurro con i dettagli in oro.
+   un globo azzurro con i dettagli in oro. Toccando il globo (o il pulsante a destra) si chiude la nave e si va alla
+   Mappa del Mondo (#mappa).
    A destra, per ora: la descrizione della Sala Mappe. */
 (function(){
   "use strict";
@@ -83,6 +84,8 @@
     p("M" + (CX - 14) + "," + (CY - 16) + " q8,-6 14,2 q4,8 -4,12 q-10,2 -10,-14 Z", "rgba(120,190,110,.7)"); p("M" + (CX + 8) + "," + (CY + 4) + " q10,-4 14,6 q-2,10 -12,6 Z", "rgba(120,190,110,.7)");
     c(CX - 13, CY - 14, 7, "rgba(255,255,255,.35)");
     [[0, -48], [48, 0], [0, 48], [-48, 0]].forEach(function(q){ c(CX + q[0], CY + q[1], 3.5, ORO_P, "#6a4a20", 1); });
+    /* toccando il globo si apre la Mappa del Mondo (sezione #mappa del sito) */
+    g.push('<circle class="nxs-globo" cx="' + CX + '" cy="' + CY + '" r="52" role="button" tabindex="0" aria-label="Apri la Mappa del Mondo"><title>Apri la Mappa del Mondo</title></circle>');
     g.push('</g>');
     g.push('</g>');
     /* passaggi: verso il Ponte Esterno (punta) e verso la Mensa (in fondo) */
@@ -99,7 +102,19 @@
   dx.innerHTML = '<div class="sm-h">🗺️ Sala Mappe</div>'
     + '<p class="sm-d">Il cuore operativo della nave, sotto il Ponte di Comando. Al centro un grande tavolo circolare da dodici posti; nel buco al centro del tavolo gira un globo azzurro con i dettagli in oro.</p>'
     + '<p class="sm-d">In punta si esce sul Ponte Esterno, e anche dalle due porte in cima alle scale che corrono lungo le pareti del cono; in fondo si va verso la Mensa.</p>'
+    + '<p class="sm-d">Toccate il globo al centro del tavolo per aprire la Mappa del Mondo.</p>'
+    + '<button type="button" class="eq-btn" data-nxs="mappa">🌍 Apri la Mappa del Mondo</button>'
     + '<p class="stv-nota" style="margin-top:1rem">Cosa si potrà fare qui lo stiamo ancora decidendo.</p>';
+  /* chiude la nave e scorre fino alla Mappa del Mondo */
+  function mappa(){
+    if(window.NAVE) NAVE.chiudi();
+    /* due passaggi: le sezioni in mezzo possono finire di caricarsi durante lo scorrimento e spostare la mappa */
+    var vai = function(b){ var m = document.querySelector("#mappa .map-wrap") || document.getElementById("mappa"); if(m) m.scrollIntoView({ behavior: b, block: "center" }); };
+    setTimeout(function(){ vai("instant"); setTimeout(function(){ vai("smooth"); }, 450); }, 300);
+  }
+  sx.addEventListener("click", function(e){ if(e.target.closest && e.target.closest(".nxs-globo")) mappa(); });
+  sx.addEventListener("keydown", function(e){ if((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("nxs-globo")){ e.preventDefault(); mappa(); } });
+  dx.addEventListener("click", function(e){ if(e.target.closest('[data-nxs="mappa"]')) mappa(); });
   NAVE.zona("sala_mappe", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); },
     porte: [{ x: 300, y: 72, vai: "ponte_esterno" }, { x: 112, y: 428, vai: "ponte_esterno" }, { x: 488, y: 428, vai: "ponte_esterno" }, { x: 300, y: 622, vai: "mensa" }] });
 })();

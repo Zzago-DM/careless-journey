@@ -98,3 +98,8 @@
 .nxst-v.nuovo{animation:nxstCade .45s ease-out both;animation-delay:var(--d)}
 @keyframes nxstCade{from{opacity:0;transform:translateY(-14px)}}
 @media(prefers-reduced-motion:reduce){.nxst-v.nuovo{animation:none}}
+
+/* Sala Mappe: il globo si tocca per aprire la Mappa del Mondo */
+.nxs-globo{fill:transparent;stroke:transparent;stroke-width:3;cursor:pointer;transition:fill .25s,stroke .25s}
+.nxs-globo:hover,.nxs-globo:focus-visible{fill:rgba(159,224,255,.14);stroke:#ecc77e;outline:none}
+.nxs-globo:focus{outline:none}
