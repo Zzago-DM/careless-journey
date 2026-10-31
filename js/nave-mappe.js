@@ -101,7 +101,7 @@
   var dx = document.createElement("div");
   dx.innerHTML = '<div class="sm-h">🗺️ Sala Mappe</div>'
     + '<p class="sm-d">Il cuore operativo della nave, sotto il Ponte di Comando. Al centro un grande tavolo circolare da dodici posti; nel buco al centro del tavolo gira un globo azzurro con i dettagli in oro.</p>'
-    + '<p class="sm-d">Sul Ponte Esterno si esce dalle due porte in cima alle scale che corrono lungo le pareti del cono; in fondo si va verso la Mensa.</p>'
+    + '<p class="sm-d">Le due scale che corrono lungo le pareti del cono salgono al Ponte di Comando; accanto alla cima di ognuna, una porta dà sul Ponte Esterno. In fondo si va verso la Mensa.</p>'
     + '<p class="sm-d">Toccate il globo al centro del tavolo per aprire la Mappa del Mondo.</p>'
     + '<button type="button" class="eq-btn" data-nxs="mappa">🌍 Apri la Mappa del Mondo</button>'
     + '<p class="stv-nota" style="margin-top:1rem">Cosa si potrà fare qui lo stiamo ancora decidendo.</p>';
@@ -116,5 +116,5 @@
   sx.addEventListener("keydown", function(e){ if((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("nxs-globo")){ e.preventDefault(); mappa(); } });
   dx.addEventListener("click", function(e){ if(e.target.closest('[data-nxs="mappa"]')) mappa(); });
   NAVE.zona("sala_mappe", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); },
-    porte: [{ x: 112, y: 428, vai: "ponte_esterno" }, { x: 488, y: 428, vai: "ponte_esterno" }, { x: 300, y: 622, vai: "mensa" }] });
+    porte: [{ x: 112, y: 428, vai: "ponte_esterno" }, { x: 488, y: 428, vai: "ponte_esterno" }, { x: 70, y: 540, vai: "ponte_comando" }, { x: 490, y: 540, vai: "ponte_comando" }, { x: 300, y: 622, vai: "mensa" }] });
 })();
