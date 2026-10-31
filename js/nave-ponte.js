@@ -2,7 +2,8 @@
    A sinistra il Ponte visto dall'alto: un trapezio isoscele con i due lati obliqui curvi verso l'esterno.
    Sul lato minore, in alto, le vetrate e la zona di pilotaggio: una console unica e curva davanti, il timone visto dall'alto
    (la ruota di taglio sul piedistallo) con la seduta del timoniere, e due sedute ai lati della console. Sul lato maggiore, in basso,
-   la scala che scende alla Sala Mappe. Al centro del pavimento una rosa dei venti in ottone.
+   la porta sul retro verso gli Alloggi. Dalle porte nelle pareti curve, due scale esterne scendono lungo i fianchi fino alla
+   Sala Mappe. Al centro del pavimento una rosa dei venti in ottone.
    A destra, per ora: la descrizione del Ponte. */
 (function(){
   "use strict";
@@ -83,21 +84,20 @@
     timone();
     seduta(280, 140, 0, "#7a2a22");
     seduta(205, 104, -20); seduta(355, 104, 20);
-    /* scala che scende alla Sala Mappe */
-    r(250, 256, 60, 44, "#2a1a0a", "#7a5a3a", 1.5); for(var z = 1; z < 6; z++) l(252, 256 + z * 7.3, 308, 256 + z * 7.3, "#8a6a3a", 2);
     p(FORMA, "none", "#d2a85a", 5);
-    l(250, 300, 310, 300, "#2a1a0a", 7);
-    /* due porte nelle pareti curve e, fuori, le scale che scendono lungo i fianchi verso prua */
+    /* porta sul retro, verso gli Alloggi: un varco nella parete con i montanti in ottone */
+    l(254, 300, 306, 300, "#3a2615", 7); c(254, 300, 3.5, "#c8a04a"); c(306, 300, 3.5, "#c8a04a");
+    /* due porte nelle pareti curve e, fuori, le scale che scendono lungo i fianchi fino alla Sala Mappe */
     scalaCurva(1); scalaCurva(-1);
     var t = '<text x="280" y="16" fill="#a39478" font-size="15" text-anchor="middle">▲ prua</text>'
-      + '<text x="280" y="322" fill="#a39478" font-size="15" text-anchor="middle">▼ verso la Sala Mappe</text>';
+      + '<text x="280" y="322" fill="#a39478" font-size="15" text-anchor="middle">▼ verso gli Alloggi</text>';
     return '<svg class="sm-svg nxp-svg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Ponte di Comando visto dall\'alto">' + defs + g.join("") + t + '</svg>';
   }
   var sx = document.createElement("div"); sx.className = "sm-pianta";
   var dx = document.createElement("div");
   dx.innerHTML = '<div class="sm-h">🧭 Ponte di Comando</div>'
-    + '<p class="sm-d">Rialzato sopra la Sala Mappe, con le vetrate che guardano verso prua. Davanti, sotto le vetrate, una lunga console con i computer di bordo; dietro di essa il timone con la seduta del timoniere, e due sedute ai lati della console. Da due porte nelle pareti curve si esce su due scale esterne che scendono lungo i fianchi fino al Ponte Esterno, e una terza scala porta alla Sala Mappe.</p>'
+    + '<p class="sm-d">Rialzato sopra la Sala Mappe, con le vetrate che guardano verso prua. Davanti, sotto le vetrate, una lunga console con i computer di bordo; dietro di essa il timone con la seduta del timoniere, e due sedute ai lati della console. Da due porte nelle pareti curve si esce su due scale che scendono lungo i fianchi fino alla Sala Mappe; dalla porta sul retro si va agli Alloggi.</p>'
     + '<p class="stv-nota" style="margin-top:1rem">Cosa si potrà fare qui lo stiamo ancora decidendo.</p>';
   NAVE.zona("ponte_comando", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); },
-    porte: [{ x: 300, y: 282, vai: "sala_mappe" }, { x: 128, y: 300, vai: "alloggi" }, { x: 60, y: 172, vai: "ponte_esterno" }, { x: 500, y: 172, vai: "ponte_esterno" }] });
+    porte: [{ x: 280, y: 278, vai: "alloggi" }, { x: 60, y: 172, vai: "sala_mappe" }, { x: 500, y: 172, vai: "sala_mappe" }] });
 })();
