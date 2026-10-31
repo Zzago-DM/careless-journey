@@ -1,6 +1,6 @@
 /* Esplora la nave › Stanza delle Reliquie (js/nave-esplora.js).
    A sinistra la stanza vista dall'alto, solo decorativa: un cerchio tagliato da una parete dritta, che impedisce alla
-   circonferenza di chiudersi; la parete dritta è quella rinforzata verso la Sala Macchine, con la scala a pioli.
+   circonferenza di chiudersi; la parete dritta è quella rinforzata verso la Sala Macchine, con la porta blindata.
    Pareti in metallo scuro rivestite di legno, pavimento in assi scure e al centro un grande tappeto di velluto.
    Lungo la parete curva le reliquie, in cassette sigillate disposte su due file, una sopra l'altra.
    A destra: il contenuto della stanza delle Reliquie (js/reliquie.js), cioè le reliquie e la bacheca del gruppo. */
@@ -52,18 +52,21 @@
     c(CX, CY + 10, 100, "none", "rgba(200,160,74,.45)", 1.5);
     c(CX, CY + 10, 116, "none", "rgba(200,160,74,.5)", 2, 'stroke-dasharray="2 4"');
     /* le cassette: la fila di sopra contro la parete, quella di sotto che sporge un po' di più */
-    fila(186, 214, 11, true);
-    fila(214, 240, 12, false);
+    fila(186, 214, 10, true);
+    fila(214, 240, 10, false);
     /* pareti: metallo scuro con il rivestimento di legno all'interno */
     p(forma(RM), "none", "#5a3a20", 6);
     p(forma(RM + 7), "none", "#3a424c", 9);
     var ry = CY + CORDA, rdx = Math.sqrt(RM * RM - CORDA * CORDA);
     for(var m = CX - rdx + 14; m < CX + rdx - 10; m += 22) c(m.toFixed(1), ry + 4, 1.8, "#8a96a2");                /* rivetti della parete rinforzata */
     for(var a = 0; a < 360; a += 10){ var an = a * Math.PI / 180, q = pt(RM + 7, an); if(q[1] < ry - 2) c(q[0].toFixed(1), q[1].toFixed(1), 1.8, "#8a96a2"); }
-    /* scala a pioli contro la parete rinforzata */
-    r(CX - 16, ry - 34, 32, 30, "#2c3138", "#5a6470", 1.5);
-    l(CX - 12, ry - 34, CX - 12, ry - 4, "#9aa6b2", 2.5); l(CX + 12, ry - 34, CX + 12, ry - 4, "#9aa6b2", 2.5);
-    for(var z = 1; z < 5; z++) l(CX - 12, ry - 34 + z * 6, CX + 12, ry - 34 + z * 6, "#9aa6b2", 1.8);
+    /* porta blindata nella parete rinforzata: un battente spesso di acciaio, con i chiavistelli nel telaio e la maniglia a leva */
+    var PW = 64;
+    r(CX - PW / 2 - 10, ry - 8, 10, 22, "#2c3138", "#6a7682", 1.5, 1); r(CX + PW / 2, ry - 8, 10, 22, "#2c3138", "#6a7682", 1.5, 1);   /* stipiti */
+    r(CX - PW / 2, ry - 7, PW, 18, "#3a424c", "#9aa6b2", 2, 2);                                                                          /* battente */
+    for(var z = 1; z < 6; z++) l(CX - PW / 2 + z * PW / 6, ry - 5, CX - PW / 2 + z * PW / 6, ry + 9, "rgba(0,0,0,.35)", 1.5);
+    [-1, 1].forEach(function(s_){ for(var b_ = 0; b_ < 2; b_++) r(s_ > 0 ? CX + PW / 2 - 2 : CX - PW / 2 - 6, ry - 3 + b_ * 8, 8, 3, "#c0ccd8", "", 0, 1); });             /* chiavistelli */
+    l(CX - 12, ry - 12, CX + 12, ry - 12, "#c8a04a", 3); c(CX, ry - 12, 3.5, "#c8a04a", "#5a3a18", 1);                                  /* maniglia a leva */
     var t = '<text x="' + CX + '" y="' + (ry + 38) + '" fill="#a39478" font-size="17" text-anchor="middle">▼ la parete rinforzata della Sala Macchine</text>';
     return '<svg class="sm-svg nxr-svg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Stanza delle Reliquie vista dall\'alto">' + defs + g.join("") + t + '</svg>';
   }

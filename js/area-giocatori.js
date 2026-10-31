@@ -477,7 +477,7 @@ document.addEventListener("visibilitychange",function(){if(!document.hidden)orbK
 const NV_INFO={
  ponte_esterno:{card:"Ponte Esterno"},sala_mappe:{card:"Sala Mappe"},ponte_comando:{card:"Ponte di Comando"},alloggi:{card:"Alloggi Principali",alloggi:true},
  mensa:{card:"Mensa"},stiva_modulare:{card:"Stiva Modulare",modulare:true},stiva_primaria:{card:"Stiva Primaria",stiva:true},sala_macchine:{card:"Sala Macchine"},
- zona_segreta:{e:"🗝️",t:"Zona Segreta — Reliquie",s:"3° Piano Prua · dietro i muri della Sala Macchine",b:"Una stanza nascosta dietro uno dei muri rinforzati della Sala Macchine, dove vengono custoditi <strong>reliquie e artefatti</strong>. Vi si accede da una scala a pioli.",rel:true},
+ zona_segreta:{e:"🗝️",t:"Zona Segreta — Reliquie",s:"3° Piano Prua · dietro i muri della Sala Macchine",b:"Una stanza nascosta dietro uno dei muri rinforzati della Sala Macchine, dove vengono custoditi <strong>reliquie e artefatti</strong>. Vi si accede da una porta blindata.",rel:true},
  scale:{e:"🪜",t:"Scale principali",s:"Collegamento tra i ponti",b:"La scalinata che collega i ponti della nave: dal <strong>Ponte di Comando</strong> scende alla Sala Mappe, poi alla Stiva Modulare e fino al fondo della nave."},
  scala_pioli:{e:"🌀",t:"Scala a chiocciola",s:"Parete di poppa · servizio",b:"Passaggio di servizio lungo la parete di poppa, dagli <strong>Alloggi</strong> fino al fondo della nave."},
  ascensore:{e:"🛗",t:"Ascensore centrale",s:"Stiva Modulare ↔ Stiva Primaria",b:"Collega la <strong>Stiva Modulare</strong> e la <strong>Stiva Primaria</strong>, per spostare carichi e attrezzature tra i due livelli."}};
