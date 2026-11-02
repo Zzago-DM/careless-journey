@@ -765,7 +765,7 @@ const AMMO_MAX=6;
 const AMMO_FX=[
  {k:"terrestre",n:"Terrestre",e:"🌍",c:"#7fd06a",d:"<b>Su alleato/sé:</b> vortice di pietre, +3 COST. <b>Su nemico:</b> riduce DES e movimenti (svantaggio DES)."},
  {k:"ardente",n:"Fiammeggiante",e:"🔥",c:"#ff7a3a",d:"Palla di fuoco: 1D4 extra in area 3×3, infuoca il bersaglio e (tiro salvezza COST CD 13 + bonus) i vicini."},
- {k:"glaciale",n:"Congelante",e:"❄",c:"#9ee0ff",d:"Zona 5×5 di ghiaccio: vantaggio ai tiri contro gli avversari nell’area, mobilità ridotta per loro."},
+ {k:"glaciale",n:"Glaciale",e:"❄",c:"#9ee0ff",d:"Zona 5×5 di ghiaccio: vantaggio ai tiri contro gli avversari nell’area, mobilità ridotta per loro."},
  {k:"radiante",n:"Radiante",e:"✨",c:"#f3e2ff",d:"Zona 5×5: alleati +4 DES e +2 PV rigenerati per ogni turno trascorso nell’area."},
  {k:"oscuro",n:"Oscuro",e:"🌑",c:"#a77cff",d:"Portale che teletrasporta il bersaglio nell’area del colpo. <b>Su nemico:</b> 1D20 + Bonus DES contro CD 8; se riesce, il nemico viene teletrasportato. <b>Su alleato/sé:</b> teletrasporto automatico (fuga, schivata o sfuggire a prese), ma il bersaglio subisce comunque il danno."},
  {k:"folgorante",n:"Fulmineo",e:"⚡",c:"#ffe04a",d:"Fulmine sulla linea di tiro: paralizza il primo avversario colpito, che perde il turno."}];
