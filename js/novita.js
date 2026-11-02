@@ -37,6 +37,11 @@
     { id: "2026-11-stiva-50", i: "🧪", t: "Stiva: massimo 50 per tipo", p: [
       "Nella <b>stiva</b> della nave adesso c'è posto per al massimo <b>50 pezzi di ogni tonico e di ogni pilone</b>: accanto a ogni numero vedete «/50».",
       "Quando un tipo arriva a 50 il <b>+</b> si ferma, e non si può più riporre in stiva quell'oggetto finché non ne usate qualcuno. I nuclei elementali e i viveri seguono le loro regole di sempre."
+    ]},
+    { id: "2026-11-cornici", i: "🖼", t: "Cornici del ritratto", p: [
+      "Nell'<b>Area dello Slayer</b> la cornice del vostro ritratto è cambiata: adesso è disegnata come un vero oggetto, fatto con i materiali del vostro <b>continente d'origine</b>.",
+      "Glaciale: argento brinato con schegge di ghiaccio e ghiaccioli. Ardente: ferro battuto con crepe di brace e fiamme. Folgorante: ottone con rivetti e fulmini. Terrestre: legno intagliato con rampicanti e fiori. Radiante: madreperla e oro con raggi di luce. Oscuro: ossidiana con rune e spine. Ramsgate: bronzo con la cima da nave, la rosa dei venti e l'ancora.",
+      "La cornice segue il continente che avete scelto nella scheda: se lo cambiate, cambia anche lei."
     ]}
   ];
   var KV = "tcj-novita-viste", KD = "tcj-dispositivo";

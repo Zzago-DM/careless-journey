@@ -303,7 +303,7 @@ function sealReset(){const r=scGv("sc-rango");if(window.SEAL_CUR)delete window.S
 function sealToggle(){const c=document.getElementById("pa-seal-ctl");if(c)c.hidden=!c.hidden;}
 document.addEventListener("change",function(e){if(e.target&&e.target.id==="sc-rango")sealRender();});
 const PA_FR={glaciale:"\u2744\uFE0E",ardente:"\u2739",folgorante:"\u03DF",terrestre:"\u2766",radiante:"\u2726",oscuro:"\u263E",ramsgate:"\u2693\uFE0E"};
-function paFrame(){const c=document.querySelector(".pa-id"),v=scGv("pa-id-continente");if(!c)return;if(PA_FR[v]){c.setAttribute("data-cont",v);c.querySelectorAll(".pa-co").forEach(function(s){s.textContent=PA_FR[v]});}else{c.removeAttribute("data-cont");c.querySelectorAll(".pa-co").forEach(function(s){s.textContent=""});}}
+function paFrame(){const c=document.querySelector(".pa-id"),v=scGv("pa-id-continente");if(!c)return;if(window.paCornice)paCornice(c,PA_FR[v]?v:"");if(PA_FR[v]){c.setAttribute("data-cont",v);c.querySelectorAll(".pa-co").forEach(function(s){s.textContent=PA_FR[v]});}else{c.removeAttribute("data-cont");c.querySelectorAll(".pa-co").forEach(function(s){s.textContent=""});}}
 document.addEventListener("change",function(e){if(e.target&&e.target.id==="pa-id-continente")paFrame();});
 function paBuild(d){window.SEAL_CUR=(d.seal&&typeof d.seal==="object")?d.seal:{};window.SEAL_LAST=null;const id=d.id||{};PA_IDF.forEach(f=>{const e=document.getElementById("pa-id-"+f);if(e)e.value=id[f]!==undefined?id[f]:"";});
  if(id.nome===undefined){const e=document.getElementById("pa-id-nome");if(e)e.value=PA_FULL[scCur]||"";}

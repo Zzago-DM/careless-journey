@@ -189,6 +189,37 @@ html[data-pg=master] body{background-image:radial-gradient(ellipse 60% 40% at 0%
 @keyframes coShine{0%,100%{transform:scale(.85) rotate(0);opacity:.7}50%{transform:scale(1.2) rotate(45deg);opacity:1}}
 @keyframes coPulse{0%,100%{opacity:.55;transform:scale(.95)}50%{opacity:1;transform:scale(1.1)}}
 @media(prefers-reduced-motion:reduce){.pa-phw,.pa-phw::after,.pa-co{animation:none!important}}
+/* cornice disegnata (js/cornici-ritratto.js): sostituisce il bordo sfumato e i quattro tondini agli angoli */
+.pa-cornice{position:absolute;left:-16px;top:-16px;width:calc(100% + 32px);height:calc(100% + 32px);overflow:visible;pointer-events:none;z-index:2;filter:drop-shadow(0 2px 3px rgba(0,0,0,.55))}
+.pa-id.pa-fr-ok .pa-phw::after,.pa-id.pa-fr-ok .pa-co{display:none}
+.pa-cornice .cr-ruota{animation:crRuota 40s linear infinite}
+.pa-cornice .cr-bussola{animation:crBussola 6s ease-in-out infinite alternate}
+.pa-cornice .cr-brilla{transform-box:fill-box;transform-origin:center;animation:crBrilla 3s ease-in-out infinite}
+.pa-cornice .cr-goccia{animation:crGoccia 4.5s ease-in-out infinite}
+.pa-cornice .cr-brace{animation:crBrace 1.6s ease-in-out infinite}
+.pa-cornice .cr-fiamma{transform-box:fill-box;transform-origin:50% 100%;animation:crFiamma .9s ease-in-out infinite alternate}
+.pa-cornice .cr-scintilla{animation:crScintilla 3s ease-out infinite;opacity:0}
+.pa-cornice .cr-lampo{opacity:0;animation:crLampo 3.6s steps(1) infinite}
+.pa-cornice .cr-lampo2{animation:crLampo2 2.2s steps(1) infinite}
+.pa-cornice .cr-foglia{animation:crFoglia 4s ease-in-out infinite alternate}
+.pa-cornice .cr-stella{animation:crStella 2.8s ease-in-out infinite}
+.pa-cornice .cr-rune{animation:crRune 3.2s ease-in-out infinite}
+.pa-cornice .cr-fumo{transform-box:fill-box;transform-origin:center;animation:crFumo 5s ease-in-out infinite}
+@keyframes crRuota{to{transform:rotate(360deg)}}
+@keyframes crBussola{from{transform:rotate(-12deg)}to{transform:rotate(12deg)}}
+@keyframes crBrilla{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
+@keyframes crGoccia{0%,100%{opacity:.85}50%{opacity:1;filter:brightness(1.25)}}
+@keyframes crBrace{0%,100%{opacity:.7}40%{opacity:1}70%{opacity:.55}}
+@keyframes crFiamma{from{transform:scale(1,1)}to{transform:scale(.88,1.18)}}
+@keyframes crScintilla{0%{opacity:0;transform:translateY(0)}15%{opacity:1}100%{opacity:0;transform:translateY(-70px) translateX(6px)}}
+@keyframes crLampo{0%,70%{opacity:0}72%,76%{opacity:1}74%,80%{opacity:.15}82%,100%{opacity:0}}
+@keyframes crLampo2{0%,80%{opacity:.8}84%,92%{opacity:1;filter:brightness(1.6)}88%,96%{opacity:.6}}
+@keyframes crFoglia{from{transform:rotate(-6deg)}to{transform:rotate(6deg)}}
+@keyframes crStella{0%,100%{opacity:.2;transform:scale(.5)}50%{opacity:1;transform:scale(1.1)}}
+@keyframes crRune{0%,100%{opacity:.45}50%{opacity:1}}
+@keyframes crFumo{0%,100%{opacity:.2;transform:scale(.9) translate(0,0)}50%{opacity:.45;transform:scale(1.2) translate(2px,-3px)}}
+@media(prefers-reduced-motion:reduce){.pa-cornice *{animation:none!important}}
+
 /* ==== Sigillo di ceralacca del rango ==== */
 .pa-seal{width:150px;display:flex;flex-direction:column;align-items:center;margin-top:1.2rem}
 .pa-seal-vis{width:112px;height:112px;background:none;border:none;padding:0;cursor:pointer;transition:transform .25s ease}
