@@ -71,5 +71,5 @@
     + '<p class="sm-d">Il ponte all\'aperto sulla prua, con la vista libera sul cielo e sulle isole. Avvolge la Sala Mappe: davanti alla sua punta si apre in una piattaforma che si stringe fino alla prua, e ai suoi lati due corridoi stretti portano alle due porte laterali, le uniche da cui si entra nella Sala Mappe. Tutto attorno corre il parapetto.</p>'
     + '<p class="stv-nota" style="margin-top:1rem">Cosa si potrà fare qui lo stiamo ancora decidendo.</p>';
   NAVE.zona("ponte_esterno", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); },
-    porte: [{ x: 150, y: 922, vai: "sala_mappe" }, { x: 450, y: 922, vai: "sala_mappe" }] });
+    porte: [{ x: 150, y: 922, vai: "sala_mappe", bx: 300, by: 862 }, { x: 450, y: 922, vai: "sala_mappe", bx: 300, by: 862 }] });
 })();

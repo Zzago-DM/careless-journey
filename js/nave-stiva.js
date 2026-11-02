@@ -159,6 +159,6 @@
     sinistra: sx, destra: dx,
     apri: function(){ dentro = true; giaVisti = null; sx.innerHTML = pianta(); S.stanzaMonta(dx.querySelector(".nxst-stiva")); },
     chiudi: function(){ dentro = false; S.stanzaSmonta(); },
-    porte: [{ x: 330, y: 440, vai: "stiva_modulare" }, { x: 330, y: 32, vai: "sala_macchine", piano: false }, { x: 330, y: 638, vai: "alloggi" }]
+    porte: [{ x: 330, y: 440, vai: "stiva_modulare" }, { x: 330, y: 32, vai: "sala_macchine", piano: false }]
   });
 })();

@@ -236,6 +236,13 @@
     h += '<rect x="' + (X + X / 2 - 44) + '" y="' + (ASC_Y - 44) + '" width="88" height="88" fill="#2e2014"/>'
       + '<rect x="' + (X + X / 2 - 34) + '" y="' + (ASC_Y - 34) + '" width="68" height="68" fill="#0c0907" stroke="#ecc77e" stroke-width="2"/>'
       + '<text x="' + (X + X / 2) + '" y="' + (ASC_Y + 9) + '" fill="#ecc77e" font-size="24" text-anchor="middle">⇅</text>';
+    /* sotto l'ascensore la scala a chiocciola (la stessa della Stiva Primaria, qui subito sopra): sale alla Mensa e scende in stiva */
+    var SC = ASC_Y + 120, CXs = X + X / 2;
+    h += '<circle cx="' + CXs + '" cy="' + SC + '" r="28" fill="#1c140c" stroke="#7a5a3a" stroke-width="2"/>';
+    for(var gr = 0; gr < 360; gr += 30){ var an = gr * Math.PI / 180; h += '<line x1="' + (CXs + Math.cos(an) * 6).toFixed(1) + '" y1="' + (SC + Math.sin(an) * 6).toFixed(1) + '" x2="' + (CXs + Math.cos(an + .35) * 27).toFixed(1) + '" y2="' + (SC + Math.sin(an + .35) * 27).toFixed(1) + '" stroke="rgba(200,160,100,.7)" stroke-width="2"/>'; }
+    h += '<circle cx="' + CXs + '" cy="' + SC + '" r="6" fill="#5a3d22" stroke="#c8a04a" stroke-width="1.5"/>'
+      + '<path d="M' + (CXs + 28) + ' ' + SC + ' A28 28 0 1 1 ' + CXs + ' ' + (SC - 28) + '" fill="none" stroke="#c8a04a" stroke-width="2"/>'
+      + '<text x="' + CXs + '" y="' + (SC + 41) + '" fill="#a39478" font-size="12" text-anchor="middle" font-style="italic">scala a chiocciola</text>';
     if(m.nav) h += etichetta(X + X / 2, L - 14, tipo(m.nav.t).i + " " + nomeStanza(m.nav), X, tipo(m.nav.t).i);
     else h += '<text x="' + (X + X / 2) + '" y="40" fill="#a39478" font-size="14" text-anchor="middle" font-style="italic">navata · corridoio vuoto</text>';
     /* pareti e porte */
@@ -447,6 +454,6 @@
   function entra(){ aperta = true; sel = null; disegna(); S.guarda("modulare", true); }
   function esci(){ salvaTutto(); aperta = false; S.guarda("modulare", false); }
   if(window.NAVE) NAVE.zona("stiva_modulare", { sinistra: pEl, destra: rEl, apri: entra, chiudi: esci, esc: function(){ if(sel){ sel = null; disegna(); return true; } return false; },
-    porte: [{ x: 330, y: 26, vai: "sala_macchine" }, { x: 330, y: 438, vai: "mensa" }, { x: 330, y: 553, vai: "stiva_primaria" }] });
+    porte: [{ x: 330, y: 26, vai: "sala_macchine" }, { x: 330, y: 553, vai: "stiva_primaria", dentro: true }, { x: 330, y: 615, vai: "mensa" }] });
   window.smApri = function(){ if(window.NAVE) NAVE.apri("stiva_modulare"); };
 })();
