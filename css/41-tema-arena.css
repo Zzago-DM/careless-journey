@@ -67,6 +67,9 @@ html[data-tema=arena] .gc-tot b:not(:is(#ms,#pwo,#munlock,#intro,.map-wrap,.cj-o
 #ar-stazione::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px)}
 #ar-stazione .ar-scena{position:absolute;left:50%;top:50%;width:max(100vw,177.78vh);height:max(100vh,56.25vw);transform:translate(-50%,-50%);background:url("../media/arena-stazione.webp") 0 0/100% 100% no-repeat}
 #ar-stazione .ar-primo{position:absolute;inset:0;background:url("../media/arena-primo.webp") 0 0/100% 100% no-repeat;pointer-events:none}
+/* la scena è più grande dello schermo sugli schermi larghi (si taglia sopra e sotto): la nave tributo si misura sullo schermo,
+   all'82% della sua altezza, nella fascia di cielo libero sotto la stazione */
+#ar-stazione .ar-tributo{top:calc((max(100vh,56.25vw) - 100vh) / 2 + 82vh)}
 #ar-stazione .ar-tributo .nv-s{filter:drop-shadow(0 0 5px rgba(160,210,255,.4)) brightness(.92) contrast(1.05)}
 /* nave tributo: luce blu in coda che si allunga come una stella cadente */
 #ar-stazione .ar-stella{position:absolute;right:97%;top:60%;width:520%;height:22%;transform:translateY(-50%);pointer-events:none;
