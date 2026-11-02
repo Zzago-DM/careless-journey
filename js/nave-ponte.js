@@ -11,10 +11,7 @@
   var W = 560, H = 330;
   var TL = [140, 30], TR = [420, 30], BR = [530, 300], BL = [30, 300];
   var FORMA = "M" + TL + " L" + TR + " Q548,150 " + BR + " L" + BL + " Q12,150 " + TL + " Z";
-  /* la Careless è enorme: console, timone e sedute più piccoli rispetto al ponte, raccolti verso le vetrate */
-  var Q = .62;
   var g;
-  function pezzo(ax, ay, fn){ g.push('<g transform="translate(' + ax + ' ' + ay + ') scale(' + Q + ') translate(' + (-ax) + ' ' + (-ay) + ')">'); fn(); g.push('</g>'); }
   function r(x, y, w, h, f, s, sw, rx, ex){ g.push('<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="' + (rx || 0) + '" fill="' + f + '" stroke="' + (s || "none") + '" stroke-width="' + (sw || 1) + '" ' + (ex || "") + '/>'); }
   function c(x, y, R, f, s, sw, ex){ g.push('<circle cx="' + x + '" cy="' + y + '" r="' + R + '" fill="' + f + '" stroke="' + (s || "none") + '" stroke-width="' + (sw || 1) + '" ' + (ex || "") + '/>'); }
   function l(x1, y1, x2, y2, s, sw, ex){ g.push('<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="' + s + '" stroke-width="' + (sw || 1) + '" ' + (ex || "") + '/>'); }
@@ -73,24 +70,20 @@
     r(0, 0, W, H, "#3a2615"); for(var i = 0; i < W; i += 20) l(i, 0, i, H, "rgba(0,0,0,.2)", 1);
     for(var j = 0; j < H; j += 90) for(var k = 0; k < W; k += 40) l(k + (j / 90 % 2) * 20, j, k + (j / 90 % 2) * 20, j + 2, "rgba(0,0,0,.25)", 2);
     /* rosa dei venti in ottone */
-    pezzo(280, 212, function(){
     c(280, 212, 40, "none", "rgba(200,160,74,.55)", 2); c(280, 212, 30, "none", "rgba(200,160,74,.35)", 1);
     p("M280,168 L287,212 L280,256 L273,212 Z", "rgba(200,160,74,.55)"); p("M236,212 L280,205 L324,212 L280,219 Z", "rgba(200,160,74,.4)");
-    });
     /* tappeto della zona di pilotaggio */
-    pezzo(280, 36, function(){ p("M180,50 L380,50 Q404,110 395,160 L165,160 Q156,110 180,50 Z", "#5a1f1a", "#c8a04a", 1.5, 'opacity=".7"'); });
+    p("M180,50 L380,50 Q404,110 395,160 L165,160 Q156,110 180,50 Z", "#5a1f1a", "#c8a04a", 1.5, 'opacity=".7"');
     g.push('</g>');
     /* vetrate sul lato minore e sul primo tratto dei lati curvi (stessa curva della parete) */
     p("M" + TL + " L" + TR, "none", "#9fd8e8", 9, 'opacity=".75"');
     p("M420,30 Q471.2,78 499,130.8", "none", "#9fd8e8", 9, 'opacity=".55"'); p("M140,30 Q88.8,78 61,130.8", "none", "#9fd8e8", 9, 'opacity=".55"');
     for(var m = 0; m <= 7; m++){ var mx = 140 + m * 40; l(mx, 24, mx, 36, "#c8a04a", 3); }
     /* console unica davanti, il timone e le tre sedute: centrale per il timoniere, due ai lati della console */
-    pezzo(280, 36, function(){
     console_();
     timone();
     seduta(280, 140, 0, "#7a2a22");
     seduta(205, 104, -20); seduta(355, 104, 20);
-    });
     p(FORMA, "none", "#d2a85a", 5);
     /* porta sul retro, verso gli Alloggi: un varco nella parete con i montanti in ottone */
     l(254, 300, 306, 300, "#3a2615", 7); c(254, 300, 3.5, "#c8a04a"); c(306, 300, 3.5, "#c8a04a");

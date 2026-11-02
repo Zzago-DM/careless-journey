@@ -32,17 +32,18 @@
      col = colore della coperta del personaggio; null = alloggio libero (letto con lenzuola grigie, niente luci accese) */
   function cabina(col){
     var vivo = !!col, coperta = col || "#8a8478";
-    /* bagno */
-    pezzo(4, 4, function(){
+    /* bagno: la stanza resta grande, solo i sanitari sono più piccoli (ognuno verso la sua parete) */
     r(4, 4, 84, 92, "#cfc6b4", "#a87c3c", 2.5, 2);                                                         /* pavimento di piastrelle */
     for(var i = 1; i < 6; i++){ l(4, 4 + i * 15.3, 88, 4 + i * 15.3, "rgba(0,0,0,.08)"); l(4 + i * 14, 4, 4 + i * 14, 96, "rgba(0,0,0,.08)"); }
     l(88, 34, 88, 62, "#cfc6b4", 4);                                                                       /* porta del bagno: sul lato verso l'armadio, non davanti al letto */
+    pezzo(8, 8, function(){
     r(8, 8, 38, 66, "#f2efe8", "#8a8478", 1.5, 12); r(13, 13, 28, 56, "#a8d4e8", "", 0, 10, 'opacity=".8"');   /* vasca ampia, usata anche come doccia */
     c(27, 15, 4.5, "#c8c0b0", "#8a8478", 1); for(var s = -2; s <= 2; s++) l(27 + s * 2, 20, 27 + s * 4, 30, "rgba(255,255,255,.55)", 1);   /* soffione */
     l(46, 30, 46, 74, "rgba(200,235,250,.9)", 2.5);                                                       /* vetro della doccia */
-    r(58, 8, 26, 16, "#f2efe8", "#8a8478", 1.5, 6); c(71, 16, 4, "#a8d4e8");                              /* lavabo */
-    r(56, 36, 26, 22, "#8a5a3a", "", 0, 3, 'opacity=".6"');                                               /* tappetino */
-    r(52, 72, 14, 18, "#f2efe8", "#8a8478", 1.5, 6); r(70, 72, 14, 18, "#f2efe8", "#8a8478", 1.5, 6);       /* WC e bidet */
+    });
+    pezzo(84, 8, function(){ r(58, 8, 26, 16, "#f2efe8", "#8a8478", 1.5, 6); c(71, 16, 4, "#a8d4e8"); });                         /* lavabo */
+    pezzo(69, 47, function(){ r(56, 36, 26, 22, "#8a5a3a", "", 0, 3, 'opacity=".6"');                                               }); /* tappetino */
+    pezzo(84, 92, function(){ r(52, 72, 14, 18, "#f2efe8", "#8a8478", 1.5, 6); r(70, 72, 14, 18, "#f2efe8", "#8a8478", 1.5, 6);       /* WC e bidet */
     });
     /* zona notte: letto e comodino, verso l'angolo in basso a sinistra */
     pezzo(6, 160, function(){

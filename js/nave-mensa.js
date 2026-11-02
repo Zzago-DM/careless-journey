@@ -3,14 +3,14 @@
    in fondo la cucina (un quarto della lunghezza) con il piano a U: un tratto sul fondo a sinistra con i fornelli a induzione
    e il lavello, un tratto sulla parete sinistra con due frigoriferi grandi e la penisola davanti, parallela al fondo.
    La dispensa è una fila di armadietti sulla parete destra della cucina. Al centro del lato in fondo la porta della scala
-   a chiocciola (su agli Alloggi, giù alla Stiva Modulare). Nella sala tre tavoli rotondi da sei sedie.
+   a chiocciola (su agli Alloggi, giù alla Stiva Modulare). Nella sala tre tavoli rotondi da otto sedie.
    A destra, per ora: la descrizione della Mensa e i giorni di viveri della dispensa (dalla stiva condivisa, js/stiva.js). */
 (function(){
   "use strict";
   if(!window.NAVE) return;
   var W = 440, H = 880, K = 150;   /* profondità del pavimento della cucina */
   /* la Careless è enorme: mobili e tavoli più piccoli rispetto alla sala, rimpiccioliti verso la parete a cui stanno
-     (la cucina verso l'angolo in alto a sinistra, la dispensa verso la parete destra, i tavoli attorno al loro centro) */
+     (la cucina verso l'angolo in alto a sinistra, la dispensa verso la parete destra); i tavoli restano grandi */
   var Q = .6;
   var g;
   function pezzo(ax, ay, fn){ g.push('<g transform="translate(' + ax + ' ' + ay + ') scale(' + Q + ') translate(' + (-ax) + ' ' + (-ay) + ')">'); fn(); g.push('</g>'); }
@@ -43,11 +43,11 @@
     });
     /* porta della scala a chiocciola, al centro del lato in fondo */
     l(212, 0, 258, 0, "#2a1d12", 8);
-    /* tre tavoli rotondi da sei sedie */
-    [[130, 360], [310, 550], [130, 740]].forEach(function(q){ pezzo(q[0], q[1], function(){
-      for(var s = 0; s < 6; s++){ var an = s * Math.PI / 3; c(q[0] + Math.cos(an) * 62, q[1] + Math.sin(an) * 62, 11, "#5a3d22", "#3a2614", 1.5); }
+    /* tre tavoli rotondi da otto sedie, grandi come prima */
+    [[130, 360], [310, 550], [130, 740]].forEach(function(q){
+      for(var s = 0; s < 8; s++){ var an = s * Math.PI / 4; c(q[0] + Math.cos(an) * 62, q[1] + Math.sin(an) * 62, 11, "#5a3d22", "#3a2614", 1.5); }
       c(q[0], q[1], 44, "#7a5230", "#3a2614", 2.5); c(q[0], q[1], 34, "none", "rgba(255,220,160,.15)", 1); c(q[0], q[1], 5, "#ffd27a", "", 0, 'class="nxa-lume"');
-    }); });
+    });
     /* ingresso dalla Sala Mappe */
     l(196, H, 244, H, "#2a1d12", 9);
     r(0, 0, W, H, "none", "#d2a85a", 5);
@@ -63,7 +63,7 @@
     if(!dentro) return;
     var giorni = window.STV ? STV.doc().disp : null;
     dx.innerHTML = '<div class="sm-h">🍲 Mensa</div>'
-      + '<p class="sm-d">Sotto gli alloggi: tre tavoli rotondi da sei posti e, in fondo, una cucina vera, con fornelli a induzione, due frigoriferi grandi, la penisola e gli armadietti della dispensa. Dalla porta in fondo si prende la scala a chiocciola.</p>'
+      + '<p class="sm-d">Sotto gli alloggi: tre tavoli rotondi da otto posti e, in fondo, una cucina vera, con fornelli a induzione, due frigoriferi grandi, la penisola e gli armadietti della dispensa. Dalla porta in fondo si prende la scala a chiocciola.</p>'
       + (giorni != null ? '<div class="stv-lbl">Dispensa</div><p class="sm-d"><b>' + giorni + '</b> ' + (giorni === 1 ? "giorno" : "giorni") + ' di viveri per tutto il gruppo.</p>'
         + '<button type="button" class="eq-btn" data-nxm="disp">Apri la dispensa in stiva</button>' : '')
       + '<p class="stv-nota" style="margin-top:1rem">Cosa si potrà fare qui lo stiamo ancora decidendo.</p>';
