@@ -42,6 +42,11 @@
       "Nell'<b>Area dello Slayer</b> la cornice del vostro ritratto è cambiata: adesso è disegnata come un vero oggetto, fatto con i materiali del vostro <b>continente d'origine</b>.",
       "Glaciale: argento brinato con schegge di ghiaccio e ghiaccioli. Ardente: ferro battuto con crepe di brace e fiamme. Folgorante: ottone con rivetti e fulmini. Terrestre: legno intagliato con rampicanti e fiori. Radiante: madreperla e oro con raggi di luce. Oscuro: ossidiana con rune e spine. Ramsgate: bronzo con la cima da nave, la rosa dei venti e l'ancora.",
       "La cornice segue il continente che avete scelto nella scheda: se lo cambiate, cambia anche lei."
+    ]},
+    { id: "2026-11-dispensa-nuclei", i: "🍞", t: "Dispensa e nuclei nella stiva", p: [
+      "Nella <b>stiva</b> la <b>Dispensa</b> adesso sta in cima agli Strumenti, prima dei tonici base, con il suo − e + come tutto il resto. Accanto al numero vedete quanti giorni di viveri ci stanno: <b>/60</b>, di più se avete allestito una Stiva aggiuntiva. Quando è piena il + si ferma.",
+      "I <b>nuclei elementali</b> hanno un massimo di <b>20 per elemento</b>: accanto a ogni numero vedete «/20». Ora sono disposti su tre righe da due, così si vedono tutti senza scorrere di lato.",
+      "In tutto il sito le <b>barre per scorrere</b> sono più spesse e sempre visibili, anche quelle in basso dei riquadri piccoli."
     ]}
   ];
   var KV = "tcj-novita-viste", KD = "tcj-dispositivo";

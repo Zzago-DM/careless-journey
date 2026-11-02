@@ -35,12 +35,13 @@
     var st = document.getElementById("mstv-stato");
     if(st){ var s = S.stato(); st.textContent = s === "ok" ? "In diretta" : S.messaggio(); st.setAttribute("data-s", s === "ok" ? "ok" : "ko"); }
     if(box.querySelector("input[data-qn]:focus")) return;   /* non cancellare un numero che si sta scrivendo */
-    var h = S.GRUPPI.map(function(g){
+    var d = S.doc(), pz = 0; (d.parti || []).forEach(function(p){ pz += p.q; });
+    /* la dispensa per prima, come nella stanza della stiva, con il limite della stiva */
+    var h = '<div class="mstv-g">Dispensa</div><div class="mstv-r"><div class="mstv-n">🍞 <span>Giorni di viveri</span></div>' + S.disegno.contatore("mdisp", "disp", d.disp, "giorni di viveri", S.capienza ? S.capienza(d).tot : 0) + '<div></div></div>';
+    h += S.GRUPPI.map(function(g){
       return '<div class="mstv-g">' + g[1] + '</div>' + S.IT.filter(function(x){ return x.g === g[0]; }).map(function(x){ return riga(x.id, x.n, '<i class="eq-dot" style="--c:' + x.c + '"></i>'); }).join("");
     }).join("");
     h += '<div class="mstv-g">Nuclei elementali</div>' + S.EL.map(function(e){ return riga(S.nid(e.id), e.n, S.disegno.sfera(e, "sm")); }).join("");
-    var d = S.doc(), pz = 0; (d.parti || []).forEach(function(p){ pz += p.q; });
-    h += '<div class="mstv-g">Dispensa</div><div class="mstv-r"><div class="mstv-n">🍞 <span>Giorni di viveri</span></div>' + S.disegno.contatore("mdisp", "disp", d.disp, "giorni di viveri") + '<div></div></div>';
     h += '<p class="mstv-nota">Parti di mostro in deposito: <b>' + pz + '</b>. Le gestisci dalla stanza della stiva, come i giocatori.</p>';
     box.innerHTML = h;
   }

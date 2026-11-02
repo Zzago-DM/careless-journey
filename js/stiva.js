@@ -61,9 +61,9 @@
   function effAtt(e){ return "+2 danni contro i Behemoth " + PL[OPP[e.id]] + ". I tuoi colpi mettono token " + e.n + ": a 10 il Behemoth diventa " + MAL[e.id] + ". Contro i Behemoth " + PL[e.id] + " non ha effetto, perché sono immuni al loro elemento."; }
   function effDef(e){ return "Subisci ¼ di danni in meno dagli attacchi " + PL[e.id] + ", ma ¼ in più da quelli " + PL[OPP[e.id]] + "."; }
   var RIC_MAX = 6;   /* nuclei nello zaino, oltre ai due montati (8 in tutto) */
-  /* in stiva ci stanno al massimo 50 pezzi di ogni tonico e di ogni pilone */
-  var STIVA_MAX = 50;
-  function maxDi(id){ return it(id) ? STIVA_MAX : 0; }   /* 0 = senza limite (nuclei) */
+  /* in stiva ci stanno al massimo 50 pezzi di ogni tonico e di ogni pilone, e 20 nuclei per elemento */
+  var STIVA_MAX = 50, NUC_MAX = 20;
+  function maxDi(id){ return it(id) ? STIVA_MAX : /^n-/.test(id) ? NUC_MAX : 0; }
   function posto1(id, q){ var m = maxDi(id); return m ? Math.max(0, m - int(q)) : Infinity; }
   function it(id){ for(var i = 0; i < IT.length; i++) if(IT[i].id === id) return IT[i]; return null; }
   function el(id){ for(var i = 0; i < EL.length; i++) if(EL[i].id === id) return EL[i]; return null; }
@@ -294,7 +294,7 @@
     + '<button type="button" class="stv-pill on" role="tab" aria-selected="true" data-s="str">🧪 Strumenti</button>'
     + '<button type="button" class="stv-pill" role="tab" aria-selected="false" data-s="par">🦴 Parti di mostro</button>'
     + '<button type="button" class="stv-pill" role="tab" aria-selected="false" data-s="var">📦 Oggetti vari</button>'
-    + '<button type="button" class="stv-pill" role="tab" aria-selected="false" data-s="dis">🍞 Dispensa</button></div>'
+    + '</div>'
     + '<div class="stv-corpo" id="stv-corpo">'
     + '<div class="stv-sp on" id="stv-s-str"></div>'
     + '<div class="stv-sp" id="stv-s-par"><label class="stv-lbl" for="stv-beh">Behemoth affrontato</label><select class="stv-sel" id="stv-beh"></select>'
@@ -302,10 +302,6 @@
     + '<div class="stv-parts" id="stv-parts"></div><div class="stv-dep"><div class="stv-lbl">Nel deposito</div><div id="stv-dep"></div></div></div>'
     + '<div class="stv-sp" id="stv-s-var"><label class="stv-lbl" for="stv-vari">Oggetti vari · comune a tutto il gruppo</label>'
     + '<textarea class="stv-vari" id="stv-vari" maxlength="6000" placeholder="Corde, lanterne, attrezzi, lettere, ricordi… tutto quello che il gruppo tiene in stiva."></textarea></div>'
-    + '<div class="stv-sp" id="stv-s-dis"><div class="stv-disp"><div class="stv-pila" id="stv-pila" aria-hidden="true"></div><div class="stv-disp-x">'
-    + '<div class="stv-disp-n" id="stv-disp-n">0</div><div class="stv-disp-l">giorni di viveri<br>per tutto il gruppo</div>'
-    + '<div class="stv-disp-c" id="stv-disp-c"></div><div class="stv-disp-p" id="stv-disp-p"></div></div></div>'
-    + '<p class="stv-nota" style="text-align:center">Ogni giorno di viaggio la dispensa scende di 1. I mezzi giorni si arrotondano per difetto: il gruppo ha razionato.</p></div>'
     + '</div></div></div>';
   document.body.appendChild(ov);
   var sezione = "str", behScelto = null;
@@ -317,7 +313,14 @@
   }
   function strumenti(){
     var s = $("stv-s-str"); if(!s) return;
-    var h = GRUPPI.map(function(g){
+    /* la dispensa per prima: giorni di viveri, con il limite della stiva (60 più le Stive aggiuntive) */
+    var gv = int(doc.disp), tot = capienza(doc).tot;
+    var h = '<div class="stv-ripiano"><div class="stv-rt">Dispensa <small>ogni giorno di viaggio scende di 1</small></div><div class="stv-fila stv-fila-d">'
+      + '<div class="stv-it' + (gv ? "" : " zero") + '"><span class="stv-fig stv-fig-d" aria-hidden="true">🍞</span><div class="stv-it-i"><div class="stv-it-n">Giorni di viveri' + (gv ? "" : '<span class="stv-esaurito">esaurito</span>') + '</div>'
+      + '<div class="stv-it-e">Per tutto il gruppo. I mezzi giorni si arrotondano per difetto: il gruppo ha razionato.</div>'
+      + '<span class="stv-cnt-d">' + contatore("disp", "disp", gv, "giorni di viveri", tot) + '</span><div class="stv-disp-p' + (gv > tot ? " troppo" : "") + '">' + esc(posto()) + '</div></div></div>'
+      + '</div><div class="stv-asse" aria-hidden="true"></div></div>';
+    h += GRUPPI.map(function(g){
       return '<div class="stv-ripiano"><div class="stv-rt">' + g[1] + ' <small>' + g[2] + '</small></div><div class="stv-fila">'
         + IT.filter(function(x){ return x.g === g[0]; }).map(function(x){
           var q = int(doc.str[x.id]);
@@ -330,7 +333,7 @@
       + EL.map(function(e){
         var k = nid(e.id), q = int(doc.str[k]);
         return '<div class="stv-it' + (q ? "" : " zero") + '">' + sfera(e) + '<div class="stv-it-i"><div class="stv-it-n">' + e.n + (q ? "" : '<span class="stv-esaurito">esaurito</span>') + '</div>'
-          + contatore("str", k, q, "Nucleo " + e.n) + '</div></div>';
+          + contatore("str", k, q, "Nucleo " + e.n, NUC_MAX) + '</div></div>';
       }).join("") + '</div><div class="stv-asse" aria-hidden="true"></div></div>';
     s.innerHTML = h;
   }
@@ -426,6 +429,7 @@
   }
   window.stvApri = function(s){
     try { if(typeof nvClose === "function") nvClose(); } catch(_){}
+    if(s === "dis") s = "str";   /* la dispensa ora sta in cima agli Strumenti */
     if(s && $("stv-s-" + s)) sezione = s;
     if(STV.nave && window.NAVE){ if(inNave) vaiSezione(sezione); else NAVE.vai("stiva_primaria"); return; }   /* la Stiva Primaria della pagina della nave */
     apri();
@@ -438,7 +442,7 @@
   /* cambi dalla stanza e dal riquadro della Nave */
   function cambiaStr(id, d){
     var chi = chiAgisce(), nome = nomeChiave(id);
-    if(d > 0 && !posto1(id, doc.str[id])){ avviso(nome + ": in stiva ce ne stanno al massimo " + STIVA_MAX + ".", true); return; }
+    if(d > 0 && !posto1(id, doc.str[id])){ avviso(nome + ": in stiva ce ne stanno al massimo " + maxDi(id) + ".", true); return; }
     accoda(chi, function(x){ var q = int(x.str[id]); x.str[id] = Math.max(0, d > 0 ? q + Math.min(d, posto1(id, q)) : q + d); }, (d > 0 ? "+" : "−") + " " + nome);
   }
   var PIENA = "La stiva è piena: non c'è posto per altri viveri. Allestite una Stiva aggiuntiva nella Stiva Modulare per fare spazio.";
@@ -748,7 +752,7 @@
     var chi = eqKey();
     return cambia(chi, function(d){
       var p = posto1(id, d.str[id]);
-      if(p < n){ avviso(nomeChiave(id) + ": in stiva " + (p ? "c'è posto solo per " + p + " (massimo " + STIVA_MAX + ")." : "non c'è più posto (massimo " + STIVA_MAX + ")."), true); return false; }
+      if(p < n){ avviso(nomeChiave(id) + ": in stiva " + (p ? "c'è posto solo per " + p + " (massimo " + maxDi(id) + ")." : "non c'è più posto (massimo " + maxDi(id) + ")."), true); return false; }
       d.str[id] = int(d.str[id]) + n; return "Stiva · " + breve(chi) + " ripone " + n + " × " + nomeChiave(id); });
   }
   function confermaDlg(){
