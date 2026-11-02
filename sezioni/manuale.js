@@ -305,7 +305,7 @@ tcjSezione(`<section id="manuale">
           <div class="mn-row"><span class="mn-k">Su un nemico</span><span>Lo rallenta: svantaggio ai tiri di DES e movimenti ridotti.</span></div></div>
         <div class="mn-c el" style="--c:var(--fire)"><div class="ct">🔥 Fiammeggiante</div>
           <p>Una palla di fuoco: <b>1D4 danni extra</b> in un'area 3×3 e il bersaglio prende fuoco. Chi gli sta vicino fa un tiro salvezza di COST (CD 13 + bonus): se lo fallisce, prende fuoco anche lui.</p></div>
-        <div class="mn-c el" style="--c:var(--ice)"><div class="ct">❄️ Congelante</div>
+        <div class="mn-c el" style="--c:var(--ice)"><div class="ct">❄️ Glaciale</div>
           <p>Crea una zona di ghiaccio 5×5: hai <b>vantaggio</b> ai tiri contro gli avversari dentro l'area, che si muovono a fatica.</p></div>
         <div class="mn-c el" style="--c:var(--radiant)"><div class="ct">✨ Radiante</div>
           <p>Crea una zona 5×5: gli alleati dentro l'area hanno <b>+4 DES</b> e recuperano <b>2 PV</b> per ogni turno passato lì.</p></div>
