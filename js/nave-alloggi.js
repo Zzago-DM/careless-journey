@@ -71,7 +71,7 @@
        con un tavolino e due poltrone vicine, girate in diagonale verso la finestra (la finestra è disegnata sulla parete, in pianta()) */
     r(8, 102, 80, 58, vivo ? "#2a3a5a" : "#30302e", vivo ? "#5a6a8a" : "#4a4a44", 1.5, 4, 'opacity=".7"');     /* tappeto */
     c(30, 131, 7, "#6a4526", "#3a2614", 1.2); if(vivo) c(30, 131, 2.2, "#ffd27a", "", 0, 'class="nxa-lume"');   /* tavolino */
-    [[55, 118, 35], [55, 144, -35]].forEach(function(q){                                                     /* poltrone */
+    [[55, 118, -35], [55, 144, 35]].forEach(function(q){                                                     /* poltrone */
       g.push('<g transform="translate(' + q[0] + ' ' + q[1] + ') rotate(' + q[2] + ')">');
       r(-8, -11, 16, 22, "#7a3a2a", "#4a1f15", 1.2, 4); r(4, -11, 4, 22, "#5a2a1e", "", 0, 2);
       g.push('</g>');
@@ -92,7 +92,7 @@
   }
   function pianta(){
     var scelta = (typeof alCur !== "undefined" && alCur) || (typeof alAsk !== "undefined" && alAsk) || null;
-    var out = '<svg class="sm-svg nxa-svg" viewBox="-6 -24 ' + (W + 12) + ' ' + (H + 48) + '" role="img" aria-label="Alloggi visti dall\'alto">';
+    var out = '<svg class="sm-svg nxa-svg" viewBox="-6 -38 ' + (W + 12) + ' ' + (H + 76) + '" role="img" aria-label="Alloggi visti dall\'alto">';
     out += '<text x="' + (X / 2) + '" y="-8" fill="#a39478" font-size="12" text-anchor="middle" letter-spacing="3">BABORDO</text>'
       + '<text x="' + (X + C + X / 2) + '" y="-8" fill="#a39478" font-size="12" text-anchor="middle" letter-spacing="3">TRIBORDO</text>';
     /* corridoio */
@@ -152,6 +152,6 @@
       if(body && mod) mod.appendChild(body);
     },
     esc: function(){ if(alCur || alAsk){ try { clearTimeout(alT); if(alCur) alSave(); } catch(e){} alCur = null; alAsk = null; alRender(); return true; } return false; },
-    porte: [{ x: 275, y: 18, vai: "ponte_comando" }, { x: 275, y: 498, vai: "mensa" }]
+    porte: [{ x: 275, y: -20, vai: "ponte_comando" }, { x: 275, y: 518, vai: "mensa" }]
   });
 })();
