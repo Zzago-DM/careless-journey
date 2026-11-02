@@ -33,6 +33,10 @@
       "Anche nella <b>stiva</b> della nave i nuclei sono ora su un solo ripiano, <b>Nuclei elementali</b>: quelli che c'erano si sono sommati. Finché siete sulla nave, «Riponi» rimette nella stiva un nucleo dello zaino.",
       "Per riconoscerli al volo, sul nucleo d'attacco montato c'è una <b>spada</b> in trasparenza e su quello di difesa uno <b>scudo</b>.",
       "<small>I ricambi che avevate già li ritrovate nello zaino.</small>"
+    ]},
+    { id: "2026-11-stiva-50", i: "🧪", t: "Stiva: massimo 50 per tipo", p: [
+      "Nella <b>stiva</b> della nave adesso c'è posto per al massimo <b>50 pezzi di ogni tonico e di ogni pilone</b>: accanto a ogni numero vedete «/50».",
+      "Quando un tipo arriva a 50 il <b>+</b> si ferma, e non si può più riporre in stiva quell'oggetto finché non ne usate qualcuno. I nuclei elementali e i viveri seguono le loro regole di sempre."
     ]}
   ];
   var KV = "tcj-novita-viste", KD = "tcj-dispositivo";

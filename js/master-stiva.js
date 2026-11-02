@@ -26,7 +26,7 @@
   function riga(id, nome, segno){
     var q = S.q(id);
     return '<div class="mstv-r' + (q ? "" : " zero") + '"><div class="mstv-n">' + segno + '<span>' + esc(nome) + '</span></div>'
-      + S.disegno.contatore("m1", id, q, nome)
+      + S.disegno.contatore("m1", id, q, nome, S.max ? S.max(id) : 0)
       + '<div class="mstv-q"><input type="number" min="1" inputmode="numeric" placeholder="N" aria-label="Quanti per ' + esc(nome) + '" data-qn="' + esc(id) + '">'
       + '<button type="button" class="mstv-b" data-az="mN" data-id="' + esc(id) + '" data-s="1">Aggiungi</button>'
       + '<button type="button" class="mstv-b" data-az="mN" data-id="' + esc(id) + '" data-s="-1">Togli</button></div></div>';
@@ -48,8 +48,11 @@
   disegna();
 
   function cambia(id, d){
-    var nome = S.nome(id);
-    S.accoda("master", function(x){ x.str[id] = Math.max(0, (parseInt(x.str[id], 10) || 0) + d); }, (d > 0 ? "+" + d : "−" + (-d)) + " " + nome);
+    var nome = S.nome(id), max = S.max ? S.max(id) : 0, ora = S.q(id);
+    /* tonici e piloni: al massimo 50 per tipo in stiva (js/stiva.js) */
+    if(d > 0 && max && ora >= max){ S.avviso(nome + ": in stiva ce ne stanno al massimo " + max + ".", true); return; }
+    if(d > 0 && max && ora + d > max) S.avviso(nome + ": aggiunti solo " + (max - ora) + ", il massimo è " + max + ".");
+    S.accoda("master", function(x){ var q = parseInt(x.str[id], 10) || 0; x.str[id] = Math.max(0, d > 0 && max ? Math.min(max, q + d) : q + d); }, (d > 0 ? "+" + d : "−" + (-d)) + " " + nome);
   }
   sec.addEventListener("click", function(e){
     if(e.target.closest("#mstv-apri")){ if(window.stvApri) stvApri(); return; }

@@ -2,7 +2,7 @@
 
    DOVE STANNO I DATI
    - Nel repository privato Zzago-DM/gruppo (lo stesso del quadro «Il Gruppo»), file stiva.json:
-       str    { chiave: quantità }  tonici, piloni e nuclei elementali (chiavi dei nuclei: n-<elemento>, senza tipo;
+       str    { chiave: quantità }  tonici, piloni (al massimo 50 per tipo) e nuclei elementali (chiavi dei nuclei: n-<elemento>, senza tipo;
               i vecchi n-att-<elemento> e n-def-<elemento> vengono sommati la prima volta che il file si rilegge)
        parti  [ { b: Behemoth, m: materiale, r: rarità, q: quantità } ]
        vari   testo libero «Oggetti vari», comune ai tre
@@ -61,6 +61,10 @@
   function effAtt(e){ return "+2 danni contro i Behemoth " + PL[OPP[e.id]] + ". I tuoi colpi mettono token " + e.n + ": a 10 il Behemoth diventa " + MAL[e.id] + ". Contro i Behemoth " + PL[e.id] + " non ha effetto, perché sono immuni al loro elemento."; }
   function effDef(e){ return "Subisci ¼ di danni in meno dagli attacchi " + PL[e.id] + ", ma ¼ in più da quelli " + PL[OPP[e.id]] + "."; }
   var RIC_MAX = 6;   /* nuclei nello zaino, oltre ai due montati (8 in tutto) */
+  /* in stiva ci stanno al massimo 50 pezzi di ogni tonico e di ogni pilone */
+  var STIVA_MAX = 50;
+  function maxDi(id){ return it(id) ? STIVA_MAX : 0; }   /* 0 = senza limite (nuclei) */
+  function posto1(id, q){ var m = maxDi(id); return m ? Math.max(0, m - int(q)) : Infinity; }
   function it(id){ for(var i = 0; i < IT.length; i++) if(IT[i].id === id) return IT[i]; return null; }
   function el(id){ for(var i = 0; i < EL.length; i++) if(EL[i].id === id) return EL[i]; return null; }
   function nid(e){ return "n-" + e; }   /* in stiva i nuclei non hanno tipo: lo prendono quando si montano */
@@ -248,7 +252,7 @@
     doc: function(){ return doc; }, q: function(id){ return int(doc.str[id]); },
     stato: function(){ return stato; }, leggi: leggi, guarda: guarda, chi: chiAgisce,
     on: function(f){ ASC.push(f); }, cambia: cambia, accoda: accoda, puoScrivere: function(){ return !!tokScrittura(chiAgisce()); },
-    breve: breve, avviso: avviso, capienza: capienza, POSTO_BASE: POSTO_BASE, POSTO_SPAZIO: POSTO_SPAZIO
+    breve: breve, avviso: avviso, capienza: capienza, max: maxDi, STIVA_MAX: STIVA_MAX, POSTO_BASE: POSTO_BASE, POSTO_SPAZIO: POSTO_SPAZIO
   };
 
   var MSG = {
@@ -268,9 +272,10 @@
   function pilone(x){ return '<span class="stv-pyl" style="--c:' + x.c + '" aria-hidden="true"></span>'; }
   function sfera(e, cls){ return '<span class="stv-orb' + (cls ? " " + cls : "") + '" style="--c:' + e.c + '" aria-hidden="true"></span>'; }
   function figura(x, liv){ return x.k === "p" ? pilone(x) : boccetta(x, liv); }
-  function contatore(az, id, v, et){
+  function contatore(az, id, v, et, max){
+    var pieno = max && v >= max;
     return '<span class="stv-cnt"><button type="button" data-az="' + az + '" data-id="' + esc(id) + '" data-d="-1" aria-label="Togli uno: ' + esc(et) + '">−</button>'
-      + '<b>' + v + '</b><button type="button" data-az="' + az + '" data-id="' + esc(id) + '" data-d="1" aria-label="Aggiungi uno: ' + esc(et) + '">+</button></span>';
+      + '<b>' + v + (max ? '<small class="stv-max">/' + max + '</small>' : '') + '</b><button type="button" data-az="' + az + '" data-id="' + esc(id) + '" data-d="1" aria-label="Aggiungi uno: ' + esc(et) + '"' + (pieno ? ' disabled title="Massimo ' + max + ' in stiva"' : '') + '>+</button></span>';
   }
   window.STV.disegno = { boccetta: boccetta, pilone: pilone, sfera: sfera, figura: figura, contatore: contatore, esc: esc };
 
@@ -318,7 +323,7 @@
           var q = int(doc.str[x.id]);
           return '<div class="stv-it' + (q ? "" : " zero") + '">' + figura(x, Math.min(q, 8) / 8)
             + '<div class="stv-it-i"><div class="stv-it-n">' + esc(x.b) + (q ? "" : '<span class="stv-esaurito">esaurito</span>') + '</div>'
-            + '<div class="stv-it-e">' + esc(x.e) + '</div>' + contatore("str", x.id, q, x.n) + '</div></div>';
+            + '<div class="stv-it-e">' + esc(x.e) + '</div>' + contatore("str", x.id, q, x.n, STIVA_MAX) + '</div></div>';
         }).join("") + '</div><div class="stv-asse" aria-hidden="true"></div></div>';
     }).join("");
     h += '<div class="stv-ripiano"><div class="stv-rt">Nuclei elementali <small>si montano in attacco o in difesa quando li prendete per la scheda</small></div><div class="stv-fila stv-fila-n">'
@@ -433,7 +438,8 @@
   /* cambi dalla stanza e dal riquadro della Nave */
   function cambiaStr(id, d){
     var chi = chiAgisce(), nome = nomeChiave(id);
-    accoda(chi, function(x){ x.str[id] = Math.max(0, int(x.str[id]) + d); }, (d > 0 ? "+" : "−") + " " + nome);
+    if(d > 0 && !posto1(id, doc.str[id])){ avviso(nome + ": in stiva ce ne stanno al massimo " + STIVA_MAX + ".", true); return; }
+    accoda(chi, function(x){ var q = int(x.str[id]); x.str[id] = Math.max(0, d > 0 ? q + Math.min(d, posto1(id, q)) : q + d); }, (d > 0 ? "+" : "−") + " " + nome);
   }
   var PIENA = "La stiva è piena: non c'è posto per altri viveri. Allestite una Stiva aggiuntiva nella Stiva Modulare per fare spazio.";
   function cambiaDisp(d){
@@ -740,7 +746,10 @@
   }
   function riponi(id, n){
     var chi = eqKey();
-    return cambia(chi, function(d){ d.str[id] = int(d.str[id]) + n; return "Stiva · " + breve(chi) + " ripone " + n + " × " + nomeChiave(id); });
+    return cambia(chi, function(d){
+      var p = posto1(id, d.str[id]);
+      if(p < n){ avviso(nomeChiave(id) + ": in stiva " + (p ? "c'è posto solo per " + p + " (massimo " + STIVA_MAX + ")." : "non c'è più posto (massimo " + STIVA_MAX + ")."), true); return false; }
+      d.str[id] = int(d.str[id]) + n; return "Stiva · " + breve(chi) + " ripone " + n + " × " + nomeChiave(id); });
   }
   function confermaDlg(){
     if(!D || lavoro) return;
