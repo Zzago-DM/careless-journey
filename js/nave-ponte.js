@@ -99,5 +99,5 @@
     + '<p class="sm-d">Rialzato sopra la Sala Mappe, con le vetrate che guardano verso prua. Davanti, sotto le vetrate, una lunga console con i computer di bordo; dietro di essa il timone con la seduta del timoniere, e due sedute ai lati della console. Da due porte nelle pareti curve si esce su due scale che scendono lungo i fianchi fino alla Sala Mappe; dalla porta sul retro si va agli Alloggi.</p>'
     + '<p class="stv-nota" style="margin-top:1rem">Cosa si potrà fare qui lo stiamo ancora decidendo.</p>';
   NAVE.zona("ponte_comando", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); },
-    porte: [{ x: 280, y: 278, vai: "alloggi" }, { x: 60, y: 172, vai: "sala_mappe" }, { x: 500, y: 172, vai: "sala_mappe" }] });
+    porte: [{ x: 280, y: 298, vai: "alloggi" }, { x: 60, y: 172, vai: "sala_mappe" }, { x: 500, y: 172, vai: "sala_mappe" }] });
 })();

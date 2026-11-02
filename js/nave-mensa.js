@@ -74,6 +74,6 @@
     sinistra: sx, destra: dx,
     apri: function(){ dentro = true; sx.innerHTML = pianta(); destra(); },
     chiudi: function(){ dentro = false; },
-    porte: [{ x: 220, y: 44, vai: "alloggi" }, { x: 220, y: 102, vai: "stiva_modulare" }, { x: 220, y: 836, vai: "sala_mappe" }]
+    porte: [{ x: 228, y: 2, vai: "alloggi" }, { x: 242, y: 2, vai: "stiva_modulare" }, { x: 220, y: 878, vai: "sala_mappe" }]
   });
 })();

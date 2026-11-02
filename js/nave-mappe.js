@@ -116,5 +116,5 @@
   sx.addEventListener("keydown", function(e){ if((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("nxs-globo")){ e.preventDefault(); mappa(); } });
   dx.addEventListener("click", function(e){ if(e.target.closest('[data-nxs="mappa"]')) mappa(); });
   NAVE.zona("sala_mappe", { sinistra: sx, destra: dx, apri: function(){ sx.innerHTML = pianta(); },
-    porte: [{ x: 112, y: 428, vai: "ponte_esterno" }, { x: 488, y: 428, vai: "ponte_esterno" }, { x: 70, y: 540, vai: "ponte_comando" }, { x: 490, y: 540, vai: "ponte_comando" }, { x: 300, y: 622, vai: "mensa" }] });
+    porte: [{ x: 112, y: 428, vai: "ponte_esterno" }, { x: 488, y: 428, vai: "ponte_esterno" }, { x: 70, y: 540, vai: "ponte_comando" }, { x: 490, y: 540, vai: "ponte_comando" }, { x: 280, y: 648, vai: "mensa" }] });
 })();

@@ -91,25 +91,56 @@
     return za.piano < z.piano ? "su" : za.piano > z.piano ? "giu" : "in";
   }
   /* le porte sul disegno: pulsanti dentro l'svg, così seguono il disegno quando si ingrandisce o rimpicciolisce */
+  /* pulsanti delle porte: stanno FUORI dal disegno, in una fascia sopra o sotto (a seconda di dove sta la porta), così non coprono
+     la stanza. Una linea tratteggiata sottile collega il pulsante alla porta vera. Più porte verso la stessa stanza = un solo pulsante.
+     La fascia si ottiene allargando il viewBox dell'svg; se i pulsanti non stanno in una riga se ne aggiunge un'altra. */
   function porte(){
     var def = REG[cur], sx = $("nx-sx");
     if(!def || !def.porte || !def.porte.length || !sx) return;
     var svg = sx.querySelector("svg.sm-svg");
     if(!svg || svg.querySelector(".nx-porte")) return;
     var vb = svg.viewBox && svg.viewBox.baseVal; if(!vb || !vb.width) return;
-    var k = Math.max(vb.width, vb.height) / 560 * (matchMedia("(max-width:860px)").matches ? 1.35 : 1), fs = 15 * k, ph = 30 * k, h = "";   /* sul telefono un po' più grandi, per il dito */
-    def.porte.forEach(function(q){
-      var z = ZONE[q.vai]; if(!z) return;
-      var qui = ZONE[cur], frec = q.piano === false ? "" : z.piano < qui.piano ? "↑ " : z.piano > qui.piano ? "↓ " : "";   /* scale e ascensore; piano: false per una porta allo stesso livello */
-      var testo = frec + z.n, pw = (testo.length * 7.6 + 46) * k;
-      var x = Math.max(vb.x + 4 * k, Math.min(vb.x + vb.width - pw - 4 * k, q.x - pw / 2));
-      var y = Math.max(vb.y + 4 * k, Math.min(vb.y + vb.height - ph - 4 * k, q.y - ph / 2));
-      h += '<g class="nx-porta" data-vai="' + q.vai + '" role="button" tabindex="0" aria-label="Vai a: ' + esc(z.n) + '" transform="translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ')">'
-        + '<rect width="' + pw.toFixed(1) + '" height="' + ph.toFixed(1) + '" rx="' + (ph / 2).toFixed(1) + '"/>'
-        + '<text x="' + (16 * k).toFixed(1) + '" y="' + (ph / 2 + fs * .36).toFixed(1) + '" font-size="' + fs.toFixed(1) + '">' + z.e + '</text>'
-        + '<text class="nx-porta-n" x="' + (38 * k).toFixed(1) + '" y="' + (ph / 2 + fs * .36).toFixed(1) + '" font-size="' + fs.toFixed(1) + '">' + esc(testo) + '</text></g>';
+    var tel = matchMedia("(max-width:860px)").matches;
+    var k = (tel ? vb.width : Math.max(vb.width, vb.height)) / 560 * (tel ? 1.05 : .78)   /* sul telefono il disegno è largo quanto lo schermo: si misura sulla larghezza */, fs = 14 * k, ph = 26 * k, gap = 7 * k, h = "", linee = "";
+    var X0 = vb.x, X1 = vb.x + vb.width, Y0 = vb.y, Y1 = vb.y + vb.height, meta = Y0 + vb.height / 2;
+    /* raggruppa le porte per stanza di arrivo */
+    var gruppi = [], per = {};
+    def.porte.forEach(function(q){ if(!ZONE[q.vai]) return; var g = per[q.vai]; if(!g){ g = per[q.vai] = { vai: q.vai, piano: q.piano, pt: [] }; gruppi.push(g); } g.pt.push([q.x, q.y]); });
+    gruppi.forEach(function(g){
+      var z = ZONE[g.vai], qui = ZONE[cur];
+      var frec = g.piano === false ? "" : z.piano < qui.piano ? "↑ " : z.piano > qui.piano ? "↓ " : "";
+      g.testo = frec + z.n; g.e = z.e; g.pw = (g.testo.length * 7.1 + 40) * k;
+      var mx = 0, my = 0; g.pt.forEach(function(q){ mx += q[0]; my += q[1]; }); mx /= g.pt.length; my /= g.pt.length;
+      g.su = my < meta; g.cx = mx;
     });
-    svg.insertAdjacentHTML("beforeend", '<g class="nx-porte">' + h + '</g>');
+    /* sistema i pulsanti in righe, nella fascia sopra e in quella sotto */
+    function righe(lista){
+      lista.sort(function(a, b){ return a.cx - b.cx; });
+      var R = [];
+      lista.forEach(function(g){
+        var x = Math.max(X0 + 4 * k, Math.min(X1 - g.pw - 4 * k, g.cx - g.pw / 2)), r;
+        for(r = 0; r < R.length; r++){ var fine = R[r]; if(x >= fine + gap){ break; } if(fine + gap + g.pw <= X1 - 4 * k){ x = fine + gap; break; } }
+        if(r === R.length) R.push(0);
+        g.x = x; g.riga = r; R[r] = x + g.pw;
+      });
+      return R.length;
+    }
+    var nSu = righe(gruppi.filter(function(g){ return g.su; })), nGiu = righe(gruppi.filter(function(g){ return !g.su; }));
+    var hSu = nSu ? nSu * (ph + gap) + gap : 0, hGiu = nGiu ? nGiu * (ph + gap) + gap : 0;
+    svg.setAttribute("viewBox", X0 + " " + (Y0 - hSu) + " " + vb.width + " " + (vb.height + hSu + hGiu));
+    gruppi.forEach(function(g){
+      var y = g.su ? Y0 - hSu + gap + (nSu - 1 - g.riga) * (ph + gap) : Y1 + gap + g.riga * (ph + gap);
+      var bx = g.x + g.pw / 2, by = g.su ? y + ph : y;
+      g.pt.forEach(function(q){
+        linee += '<line class="nx-filo" data-vai="' + g.vai + '" x1="' + bx.toFixed(1) + '" y1="' + by.toFixed(1) + '" x2="' + q[0] + '" y2="' + q[1] + '" stroke-width="' + (1.3 * k).toFixed(2) + '" stroke-dasharray="' + (3 * k).toFixed(1) + ' ' + (4 * k).toFixed(1) + '"/>'
+          + '<circle class="nx-filo-p" data-vai="' + g.vai + '" cx="' + q[0] + '" cy="' + q[1] + '" r="' + (3.4 * k).toFixed(1) + '"/>';
+      });
+      h += '<g class="nx-porta" data-vai="' + g.vai + '" role="button" tabindex="0" aria-label="Vai a: ' + esc(ZONE[g.vai].n) + '" transform="translate(' + g.x.toFixed(1) + ' ' + y.toFixed(1) + ')">'
+        + '<rect width="' + g.pw.toFixed(1) + '" height="' + ph.toFixed(1) + '" rx="' + (ph / 2).toFixed(1) + '"/>'
+        + '<text x="' + (13 * k).toFixed(1) + '" y="' + (ph / 2 + fs * .36).toFixed(1) + '" font-size="' + fs.toFixed(1) + '">' + g.e + '</text>'
+        + '<text class="nx-porta-n" x="' + (33 * k).toFixed(1) + '" y="' + (ph / 2 + fs * .36).toFixed(1) + '" font-size="' + fs.toFixed(1) + '">' + esc(g.testo) + '</text></g>';
+    });
+    svg.insertAdjacentHTML("beforeend", '<g class="nx-porte">' + linee + h + '</g>');
   }
   var osserva = window.MutationObserver ? new MutationObserver(function(){ if(aperta) porte(); }) : null;
   function segnaposto(k){

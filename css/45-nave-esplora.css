@@ -21,11 +21,13 @@
 .nx-st.on{background:rgba(236,199,126,.16);border-color:var(--gold3);color:var(--gold2);cursor:default}
 /* le porte sul disegno */
 .nx-porta{cursor:pointer}
-.nx-porta rect{fill:rgba(18,12,7,.32);stroke:rgba(236,199,126,.55);stroke-width:1.2;transition:fill .2s,stroke .2s}
-.nx-porta text{fill:#f3e3bd;font-family:"Crimson Pro",Georgia,serif;pointer-events:none;paint-order:stroke;stroke:rgba(10,7,4,.85);stroke-width:3px;stroke-linejoin:round;opacity:.92}
+.nx-porta rect{fill:rgba(18,12,7,.18);stroke:rgba(236,199,126,.38);stroke-width:1;transition:fill .2s,stroke .2s}
+.nx-porta text{fill:#f3e3bd;font-family:"Crimson Pro",Georgia,serif;pointer-events:none;paint-order:stroke;stroke:rgba(10,7,4,.8);stroke-width:3px;stroke-linejoin:round;opacity:.85}
 .nx-porta:hover rect,.nx-porta:focus rect{fill:rgba(18,12,7,.75);stroke:#ecc77e}
 .nx-porta:hover text,.nx-porta:focus text{opacity:1}
 .nx-porta:focus{outline:none}
+.nx-filo{stroke:rgba(236,199,126,.38);fill:none;pointer-events:none}
+.nx-filo-p{fill:rgba(236,199,126,.55);pointer-events:none}
 .nx-porta:focus-visible rect{stroke:#fff3cf;stroke-width:3}
 .nx-corpo{position:relative;flex:1;min-height:0;display:grid;grid-template-columns:168px minmax(0,1.1fr) minmax(300px,1fr);gap:1.1rem;padding:.2rem 1.3rem 1.3rem}
 .nx-meta{min-height:0;display:flex;flex-direction:column;border:1px solid rgba(210,168,90,.2);background:rgba(0,0,0,.22)}
