@@ -27,8 +27,9 @@
   function pezzo(ax, ay, fn){ g.push('<g transform="translate(' + ax + ' ' + ay + ') scale(' + K + ') translate(' + (-ax) + ' ' + (-ay) + ')">'); fn(); g.push('</g>'); }
   function pavimento(x, y, w, h, col){ r(x, y, w, h, col); for(var i = 1; i < w / 22; i++) l(x + i * 22, y + 2, x + i * 22, y + h - 2, "rgba(0,0,0,.18)"); }
   /* una cabina con la porta a destra (x 0..X, y 0..P): alloggio comodo per chi passa mesi a bordo.
-     Bagno chiuso in alto a sinistra (vasca ampia usata anche come doccia, lavabo, WC e bidet), letto da una piazza e mezza in basso a sinistra
-     con comodino, armadio capiente e scrivania con cassetti lungo la parete di fondo, due poltrone con tavolino al centro.
+     Bagno chiuso in alto a sinistra (vasca ampia usata anche come doccia, lavabo, WC e bidet), armadio lungo la parete di fondo,
+     letto da una piazza e mezza in alto a destra (girato, testiera verso la porta) con il comodino, salottino al centro,
+     sotto il bagno l'angolo della finestra (secondo tappeto, tavolino e due poltrone), in basso scrivania e cassettiera.
      col = colore della coperta del personaggio; null = alloggio libero (letto con lenzuola grigie, niente luci accese) */
   function cabina(col){
     var vivo = !!col, coperta = col || "#8a8478";
@@ -45,21 +46,20 @@
     pezzo(69, 47, function(){ r(56, 36, 26, 22, "#8a5a3a", "", 0, 3, 'opacity=".6"');                                               }); /* tappetino */
     pezzo(84, 92, function(){ r(52, 72, 14, 18, "#f2efe8", "#8a8478", 1.5, 6); r(70, 72, 14, 18, "#f2efe8", "#8a8478", 1.5, 6);       /* WC e bidet */
     });
-    /* zona notte: letto e comodino, verso l'angolo in basso a sinistra */
+    /* zona notte: letto in alto a destra, girato di 180° (testiera contro la parete di destra), comodino sotto la testiera */
+    g.push('<g transform="translate(150.96 -115.68) rotate(180 35.52 139.84)">');
     pezzo(6, 160, function(){
     r(6, 104, 82, 56, "#5a3d22", "#3a2614", 1.5, 3);                                                        /* letto da una piazza e mezza */
     r(9, 108, 14, 22, "#f2efe8", "", 0, 4); r(9, 132, 14, 22, "#f2efe8", "", 0, 4);                         /* cuscini */
     r(26, 107, 59, 50, coperta, "", 0, 3, 'opacity="' + (vivo ? ".9" : ".55") + '"'); l(30, 107, 30, 157, "rgba(255,255,255,.25)", 2);
-    r(92, 140, 18, 18, "#6a4526", "#3a2614", 1.5); c(101, 149, 4, vivo ? "#ffd27a" : "#5a4a3a", "", 0, vivo ? 'class="nxa-lume"' : "");   /* comodino e lume */
     });
-    /* armadio e scrivania lungo la parete di fondo */
+    g.push('</g>');
+    r(201, 47, 13, 13, "#6a4526", "#3a2614", 1.2); c(207.5, 53.5, 3, vivo ? "#ffd27a" : "#5a4a3a", "", 0, vivo ? 'class="nxa-lume"' : "");   /* comodino e lume */
+    /* armadio lungo la parete di fondo */
     pezzo(96, 4, function(){
     r(96, 4, 58, 18, "#4a2c13", "#2a1a0a", 1.5); l(125, 4, 125, 22, "#2a1a0a", 1.5); c(121, 13, 1.5, "#c8a04a"); c(129, 13, 1.5, "#c8a04a");   /* armadio */
-    r(160, 4, 54, 22, "#6a4526", "#3a2614", 1.5); for(var j = 0; j < 3; j++) l(166 + j * 16, 20, 174 + j * 16, 20, "#c8a04a", 1.5);          /* scrivania con cassetti */
-    if(vivo){ r(168, 7, 16, 10, "#e6dccd"); c(204, 12, 3.5, "#ffd27a", "", 0, 'class="nxa-lume"'); }
-    c(187, 34, 8, "#5a3d22", "#3a2614", 1.5);                                                               /* sedia */
     });
-    /* salottino */
+    /* salottino al centro, come prima */
     pezzo(150, 93, function(){
     r(104, 56, 92, 74, vivo ? "#5a2a2a" : "#3a3028", vivo ? "#8a5a3a" : "#4a4038", 2, 4, 'opacity=".75"');   /* tappeto */
     r(136, 82, 30, 22, "#6a4526", "#3a2614", 1.5, 3);                                                      /* tavolino */
@@ -67,8 +67,21 @@
     r(108, 76, 22, 30, "#7a3a2a", "#4a1f15", 1.5, 6); r(108, 76, 6, 30, "#5a2a1e", "", 0, 3);                /* poltrona */
     r(172, 76, 22, 30, "#7a3a2a", "#4a1f15", 1.5, 6); r(188, 76, 6, 30, "#5a2a1e", "", 0, 3);                /* poltrona */
     });
-    pezzo(214, 150, function(){ c(206, 140, 8, "#3a5a2a", "#2a3a1a", 1.5); c(206, 140, 4, "#5aa04a");                                  });   /* pianta */
-    pezzo(148, 160, function(){ r(118, 150, 60, 10, "#3d2614", "#5a3d22", 1); });                         /* cassettiera bassa */
+    /* angolo della finestra: tra il muro del bagno e la parete verso l'alloggio accanto, un secondo tappeto
+       con un tavolino e due poltrone vicine, girate in diagonale verso la finestra (la finestra è disegnata sulla parete, in pianta()) */
+    r(8, 102, 80, 58, vivo ? "#2a3a5a" : "#30302e", vivo ? "#5a6a8a" : "#4a4a44", 1.5, 4, 'opacity=".7"');     /* tappeto */
+    c(30, 131, 7, "#6a4526", "#3a2614", 1.2); if(vivo) c(30, 131, 2.2, "#ffd27a", "", 0, 'class="nxa-lume"');   /* tavolino */
+    [[55, 118, 35], [55, 144, -35]].forEach(function(q){                                                     /* poltrone */
+      g.push('<g transform="translate(' + q[0] + ' ' + q[1] + ') rotate(' + q[2] + ')">');
+      r(-8, -11, 16, 22, "#7a3a2a", "#4a1f15", 1.2, 4); r(4, -11, 4, 22, "#5a2a1e", "", 0, 2);
+      g.push('</g>');
+    });
+    /* in basso, dove prima c'era la scritta: scrivania con la sedia e la cassettiera bassa */
+    r(112, 145, 39, 16, "#6a4526", "#3a2614", 1.2); for(var j = 0; j < 3; j++) l(117 + j * 11.5, 147, 123 + j * 11.5, 147, "#c8a04a", 1.2);   /* scrivania con cassetti */
+    if(vivo){ r(118, 151, 12, 7, "#e6dccd"); c(146, 154, 2.6, "#ffd27a", "", 0, 'class="nxa-lume"'); }
+    c(131.5, 137, 5.8, "#5a3d22", "#3a2614", 1.2);                                                          /* sedia */
+    r(160, 154, 43, 7, "#3d2614", "#5a3d22", 1);                                                            /* cassettiera bassa */
+    pezzo(214, 150, function(){ c(206, 140, 8, "#3a5a2a", "#2a3a1a", 1.5); c(206, 140, 4, "#5aa04a"); });   /* pianta */
   }
   function etichetta(cx, y, testo, icona, w){
     var stima = testo.length * 6.9 + 22, lw = Math.min(w, stima), stretto = stima > w;
@@ -96,12 +109,16 @@
         var px = lato ? x : x + X;
         out += '<rect x="' + (x + 1.5) + '" y="' + (y + 1.5) + '" width="' + (X - 3) + '" height="' + (P - 3) + '" fill="none" stroke="' + WALL + '" stroke-width="3"/>'
           + '<line x1="' + px + '" y1="' + (y + P / 2 - 20) + '" x2="' + px + '" y2="' + (y + P / 2 + 20) + '" stroke="#2e2014" stroke-width="7"/>';
+        /* finestra sulla parete dello scafo, al centro dell'angolo con il secondo tappeto */
+        var fx = lato ? W - 5 : -3;
+        hit += '<g pointer-events="none"><rect x="' + fx + '" y="' + (y + 114) + '" width="8" height="34" rx="2" fill="#9fd8e8" stroke="#c8a04a" stroke-width="2"/>'
+          + '<line x1="' + fx + '" y1="' + (y + 131) + '" x2="' + (fx + 8) + '" y2="' + (y + 131) + '" stroke="#c8a04a" stroke-width="1.5"/></g>';
         var c0 = k ? pg(k) : null, chiuso = k && !aperto(k) && !master();
-        /* l'etichetta sta sul salottino, lontana dal letto */
-        out += etichetta(x + (lato ? X - 150 : 150), y + P - 14, k ? (chiuso ? "🔒 " : "") + titolo(k) : "Alloggio libero", k ? c0.e : "🚪", 134);
         var on = k && k === scelta;
         hit += '<rect class="sm-hit' + (on ? " on" : "") + (k ? "" : " nxa-libero") + '" data-al="' + (k || "") + '" x="' + (x + 3) + '" y="' + (y + 3) + '" width="' + (X - 6) + '" height="' + (P - 6) + '" rx="4"'
           + (k ? ' tabindex="0" role="button" aria-label="' + esc(titolo(k)) + (chiuso ? ", serve la password" : "") + '"' : ' aria-hidden="true"') + '/>';
+        /* il nome dell'alloggio compare solo passandoci sopra (o toccandolo), subito dopo la sua area cliccabile */
+        hit += '<g class="nxa-etq">' + etichetta(x + (lato ? X - 150 : 150), y + P - 14, k ? (chiuso ? "🔒 " : "") + titolo(k) : "Alloggio libero", k ? c0.e : "🚪", 134) + '</g>';
       });
     });
     out += '<rect x="0" y="0" width="' + W + '" height="' + H + '" fill="none" stroke="#d2a85a" stroke-width="5"/>' + hit + '</svg>';

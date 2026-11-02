@@ -103,3 +103,7 @@
 .nxs-globo{fill:transparent;stroke:transparent;stroke-width:3;cursor:pointer;transition:fill .25s,stroke .25s}
 .nxs-globo:hover,.nxs-globo:focus-visible{fill:rgba(159,224,255,.14);stroke:#ecc77e;outline:none}
 .nxs-globo:focus{outline:none}
+
+/* Alloggi: il nome della cabina compare solo passandoci sopra, toccandola o quando è aperta */
+.nxa-etq{opacity:0;pointer-events:none;transition:opacity .2s}
+.sm-hit:hover+.nxa-etq,.sm-hit:focus+.nxa-etq,.sm-hit.on+.nxa-etq{opacity:1}
