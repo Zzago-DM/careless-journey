@@ -1,6 +1,6 @@
 /* Stile principale: colori, caratteri, impaginazione e tutte le sezioni di base */
 
-:root{--gold-rgb:200,168,75;--bg:#080a0f;--bg2:#0d1018;--bg3:#111520;--gold:#c8a84b;--gold2:#e8c870;--gold3:#a07830;--ice:#7ec8e3;--fire:#e05a20;--lightning:#f0d020;--earth:#4a9640;--radiant:#d4a8ff;--dark:#8860d0;--neutral:#a8a8b8;--text:#d0c8b8;--text2:#908878;--border:rgba(var(--gold-rgb),0.2);--master:#c84848;--master2:#ff6060;--master-bg:#180808}
+:root{--tcj-ok:1;--gold-rgb:200,168,75;--bg:#080a0f;--bg2:#0d1018;--bg3:#111520;--gold:#c8a84b;--gold2:#e8c870;--gold3:#a07830;--ice:#7ec8e3;--fire:#e05a20;--lightning:#f0d020;--earth:#4a9640;--radiant:#d4a8ff;--dark:#8860d0;--neutral:#a8a8b8;--text:#d0c8b8;--text2:#908878;--border:rgba(var(--gold-rgb),0.2);--master:#c84848;--master2:#ff6060;--master-bg:#180808}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:"Crimson Pro",Georgia,serif;font-size:17px;line-height:1.7;overflow-x:hidden}
