@@ -181,4 +181,13 @@
 /* il contenuto della stanza: nella finestra o nel pannello di destra della pagina della nave (js/nave-reliquie.js) */
 .rel-corpo{position:relative;z-index:2;flex:1;min-height:0;display:flex;flex-direction:column}
 .nx-ov .rel-corpo .rel-sub{padding:0 .2rem}
-.nx-ov .rel-corpo .rel-scaffale{overflow:visible;padding:1.6rem .2rem 1rem;grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+/* nella pagina della nave i piedistalli sono più piccoli, così le reliquie si vedono tutte insieme senza scorrere */
+.nx-ov .rel-corpo .rel-scaffale{overflow:visible;padding:1rem .2rem .8rem;gap:1.2rem .8rem;grid-template-columns:repeat(auto-fill,minmax(118px,1fr))}
+.nx-ov .rel-corpo .rel-art{height:86px}
+.nx-ov .rel-corpo .rel-art img{max-height:72px}
+.nx-ov .rel-corpo .rel-raggio{top:22px;height:86px}
+.nx-ov .rel-corpo .rel-cap{height:10px}
+.nx-ov .rel-corpo .rel-fusto{height:52px}
+.nx-ov .rel-corpo .rel-base{height:13px}
+.nx-ov .rel-corpo .rel-targa{margin-top:.5rem;font-size:.58rem;letter-spacing:.06em;padding:.28rem .5rem}
+.nx-ov .rel-corpo .rel-nulla{font-size:1.6rem}
