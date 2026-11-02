@@ -69,7 +69,18 @@ html[data-tema=arena] .gc-tot b:not(:is(#ms,#pwo,#munlock,#intro,.map-wrap,.cj-o
 #ar-stazione .ar-primo{position:absolute;inset:0;background:url("../media/arena-primo.webp") 0 0/100% 100% no-repeat;pointer-events:none}
 /* la scena è più grande dello schermo sugli schermi larghi (si taglia sopra e sotto): la nave tributo si misura sullo schermo,
    all'82% della sua altezza, nella fascia di cielo libero sotto la stazione */
-#ar-stazione .ar-tributo{top:calc((max(100vh,56.25vw) - 100vh) / 2 + 82vh)}
+#ar-stazione .ar-nv.ar-tributo{top:calc((max(100vh,56.25vw) - 100vh) / 2 + 82vh);animation:arTributo 150s linear -6s infinite;transform-origin:0 50%}
+#ar-stazione .ar-nv.ar-tributo .ar-nv-b{animation:arTributoVerso 150s step-end -6s infinite}
+/* tre passaggi in un giro di 150 secondi, con una pausa tra l'uno e l'altro:
+   1) da sinistra a destra, grandezza piena; 2) da destra a sinistra, più piccola e un po' più in basso; 3) da sinistra a destra, media e un po' più in alto */
+@keyframes arTributo{
+  0%{transform:translate(-30vw,0) scale(1)}
+  26.6%{transform:translate(130vw,0) scale(1)}
+  26.7%,40%{transform:translate(130vw,6vh) scale(.68)}
+  63.3%{transform:translate(-30vw,6vh) scale(.68)}
+  63.4%,73.3%{transform:translate(-30vw,-6vh) scale(.84)}
+  100%{transform:translate(130vw,-6vh) scale(.84)}}
+@keyframes arTributoVerso{0%{transform:none}26.7%{transform:scaleX(-1)}63.4%{transform:none}}
 #ar-stazione .ar-tributo .nv-s{filter:drop-shadow(0 0 5px rgba(160,210,255,.4)) brightness(.92) contrast(1.05)}
 /* nave tributo: luce blu in coda che si allunga come una stella cadente */
 #ar-stazione .ar-stella{position:absolute;right:97%;top:60%;width:520%;height:22%;transform:translateY(-50%);pointer-events:none;
