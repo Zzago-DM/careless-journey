@@ -9,6 +9,9 @@
   if(!window.NAVE || typeof AL_SLOTS === "undefined") return;
   var X = 220, P = 165, C = 110, W = 2 * X + C, H = 3 * P;
   var WOOD = "#2a1d12", WALL = "#a87c3c";
+  /* la Careless è enorme (circa 80 m di lunghezza): i mobili sono disegnati più piccoli rispetto alla stanza, ognuno
+     rimpicciolito verso il punto in cui tocca la parete, così le cabine sembrano grandi quanto sono */
+  var K = .72;
   var COL = { athena: "#7ec8e3", panlan: "#8860d0", asonnes: "#4a9640" };
   function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
   function pg(k){ return SC_CHARS.filter(function(c){ return c.k === k; })[0]; }
@@ -21,6 +24,7 @@
   function r(x, y, w, h, f, s, sw, rx, ex){ g.push('<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="' + (rx || 0) + '" fill="' + f + '" stroke="' + (s || "none") + '" stroke-width="' + (sw || 1) + '" ' + (ex || "") + '/>'); }
   function c(x, y, R, f, s, sw, ex){ g.push('<circle cx="' + x + '" cy="' + y + '" r="' + R + '" fill="' + f + '" stroke="' + (s || "none") + '" stroke-width="' + (sw || 1) + '" ' + (ex || "") + '/>'); }
   function l(x1, y1, x2, y2, s, sw, ex){ g.push('<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="' + s + '" stroke-width="' + (sw || 1) + '" ' + (ex || "") + '/>'); }
+  function pezzo(ax, ay, fn){ g.push('<g transform="translate(' + ax + ' ' + ay + ') scale(' + K + ') translate(' + (-ax) + ' ' + (-ay) + ')">'); fn(); g.push('</g>'); }
   function pavimento(x, y, w, h, col){ r(x, y, w, h, col); for(var i = 1; i < w / 22; i++) l(x + i * 22, y + 2, x + i * 22, y + h - 2, "rgba(0,0,0,.18)"); }
   /* una cabina con la porta a destra (x 0..X, y 0..P): alloggio comodo per chi passa mesi a bordo.
      Bagno chiuso in alto a sinistra (vasca ampia usata anche come doccia, lavabo, WC e bidet), letto da una piazza e mezza in basso a sinistra
@@ -29,6 +33,7 @@
   function cabina(col){
     var vivo = !!col, coperta = col || "#8a8478";
     /* bagno */
+    pezzo(4, 4, function(){
     r(4, 4, 84, 92, "#cfc6b4", "#a87c3c", 2.5, 2);                                                         /* pavimento di piastrelle */
     for(var i = 1; i < 6; i++){ l(4, 4 + i * 15.3, 88, 4 + i * 15.3, "rgba(0,0,0,.08)"); l(4 + i * 14, 4, 4 + i * 14, 96, "rgba(0,0,0,.08)"); }
     l(88, 34, 88, 62, "#cfc6b4", 4);                                                                       /* porta del bagno: sul lato verso l'armadio, non davanti al letto */
@@ -38,24 +43,31 @@
     r(58, 8, 26, 16, "#f2efe8", "#8a8478", 1.5, 6); c(71, 16, 4, "#a8d4e8");                              /* lavabo */
     r(56, 36, 26, 22, "#8a5a3a", "", 0, 3, 'opacity=".6"');                                               /* tappetino */
     r(52, 72, 14, 18, "#f2efe8", "#8a8478", 1.5, 6); r(70, 72, 14, 18, "#f2efe8", "#8a8478", 1.5, 6);       /* WC e bidet */
-    /* zona notte */
+    });
+    /* zona notte: letto e comodino, verso l'angolo in basso a sinistra */
+    pezzo(6, 160, function(){
     r(6, 104, 82, 56, "#5a3d22", "#3a2614", 1.5, 3);                                                        /* letto da una piazza e mezza */
     r(9, 108, 14, 22, "#f2efe8", "", 0, 4); r(9, 132, 14, 22, "#f2efe8", "", 0, 4);                         /* cuscini */
     r(26, 107, 59, 50, coperta, "", 0, 3, 'opacity="' + (vivo ? ".9" : ".55") + '"'); l(30, 107, 30, 157, "rgba(255,255,255,.25)", 2);
     r(92, 140, 18, 18, "#6a4526", "#3a2614", 1.5); c(101, 149, 4, vivo ? "#ffd27a" : "#5a4a3a", "", 0, vivo ? 'class="nxa-lume"' : "");   /* comodino e lume */
+    });
     /* armadio e scrivania lungo la parete di fondo */
+    pezzo(96, 4, function(){
     r(96, 4, 58, 18, "#4a2c13", "#2a1a0a", 1.5); l(125, 4, 125, 22, "#2a1a0a", 1.5); c(121, 13, 1.5, "#c8a04a"); c(129, 13, 1.5, "#c8a04a");   /* armadio */
     r(160, 4, 54, 22, "#6a4526", "#3a2614", 1.5); for(var j = 0; j < 3; j++) l(166 + j * 16, 20, 174 + j * 16, 20, "#c8a04a", 1.5);          /* scrivania con cassetti */
     if(vivo){ r(168, 7, 16, 10, "#e6dccd"); c(204, 12, 3.5, "#ffd27a", "", 0, 'class="nxa-lume"'); }
     c(187, 34, 8, "#5a3d22", "#3a2614", 1.5);                                                               /* sedia */
+    });
     /* salottino */
+    pezzo(150, 93, function(){
     r(104, 56, 92, 74, vivo ? "#5a2a2a" : "#3a3028", vivo ? "#8a5a3a" : "#4a4038", 2, 4, 'opacity=".75"');   /* tappeto */
     r(136, 82, 30, 22, "#6a4526", "#3a2614", 1.5, 3);                                                      /* tavolino */
     if(vivo) c(151, 93, 3, col);
     r(108, 76, 22, 30, "#7a3a2a", "#4a1f15", 1.5, 6); r(108, 76, 6, 30, "#5a2a1e", "", 0, 3);                /* poltrona */
     r(172, 76, 22, 30, "#7a3a2a", "#4a1f15", 1.5, 6); r(188, 76, 6, 30, "#5a2a1e", "", 0, 3);                /* poltrona */
-    c(206, 140, 8, "#3a5a2a", "#2a3a1a", 1.5); c(206, 140, 4, "#5aa04a");                                  /* pianta */
-    r(118, 150, 60, 10, "#3d2614", "#5a3d22", 1);                                                           /* cassettiera bassa */
+    });
+    pezzo(214, 150, function(){ c(206, 140, 8, "#3a5a2a", "#2a3a1a", 1.5); c(206, 140, 4, "#5aa04a");                                  });   /* pianta */
+    pezzo(148, 160, function(){ r(118, 150, 60, 10, "#3d2614", "#5a3d22", 1); });                         /* cassettiera bassa */
   }
   function etichetta(cx, y, testo, icona, w){
     var stima = testo.length * 6.9 + 22, lw = Math.min(w, stima), stretto = stima > w;

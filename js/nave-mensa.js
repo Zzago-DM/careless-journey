@@ -8,8 +8,12 @@
 (function(){
   "use strict";
   if(!window.NAVE) return;
-  var W = 440, H = 880, K = 220;
+  var W = 440, H = 880, K = 150;   /* profondità del pavimento della cucina */
+  /* la Careless è enorme: mobili e tavoli più piccoli rispetto alla sala, rimpiccioliti verso la parete a cui stanno
+     (la cucina verso l'angolo in alto a sinistra, la dispensa verso la parete destra, i tavoli attorno al loro centro) */
+  var Q = .6;
   var g;
+  function pezzo(ax, ay, fn){ g.push('<g transform="translate(' + ax + ' ' + ay + ') scale(' + Q + ') translate(' + (-ax) + ' ' + (-ay) + ')">'); fn(); g.push('</g>'); }
   function r(x, y, w, h, f, s, sw, rx, ex){ g.push('<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="' + (rx || 0) + '" fill="' + f + '" stroke="' + (s || "none") + '" stroke-width="' + (sw || 1) + '" ' + (ex || "") + '/>'); }
   function c(x, y, R, f, s, sw, ex){ g.push('<circle cx="' + x + '" cy="' + y + '" r="' + R + '" fill="' + f + '" stroke="' + (s || "none") + '" stroke-width="' + (sw || 1) + '" ' + (ex || "") + '/>'); }
   function l(x1, y1, x2, y2, s, sw, ex){ g.push('<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="' + s + '" stroke-width="' + (sw || 1) + '" ' + (ex || "") + '/>'); }
@@ -21,6 +25,7 @@
     for(var a = 0; a < W / 20; a++) for(var b = 0; b < K / 20; b++) r(a * 20 + (b % 2) * 10 - 10, b * 20, 20, 20, "none", "rgba(0,0,0,.12)");
     l(0, K, W, K, "rgba(210,168,90,.35)", 1.5, 'stroke-dasharray="6 6"');
     /* piano a U */
+    pezzo(0, 0, function(){
     var PIANO = "#8a8478", BORDO = "#4a4640";
     r(0, 0, 210, 30, PIANO, BORDO, 2); r(0, 30, 30, 182, PIANO, BORDO, 2); r(30, 180, 180, 32, PIANO, BORDO, 2);
     [[50, 15], [90, 15], [130, 15], [70, 196], [110, 196], [150, 196]].forEach(function(q){
@@ -29,17 +34,20 @@
     r(174, 6, 26, 18, "#c8c0b0", "#555", 1, 3); c(187, 15, 4, "#7ec8e3");                                         /* lavello */
     r(2, 46, 26, 52, "#d8d8d8", "#6a6a6a", 2, 2); l(15, 50, 15, 94, "#9a9a9a", 1);                                /* frigorifero */
     r(2, 104, 26, 52, "#d8d8d8", "#6a6a6a", 2, 2); l(15, 108, 15, 152, "#9a9a9a", 1);                             /* frigorifero */
+    });
     /* dispensa: armadietti sulla parete destra */
+    pezzo(438, 6, function(){
     r(410, 6, 28, 206, "#4a2c13", "#2a1a0a", 2);
     for(var k = 1; k < 6; k++) l(410, 6 + k * 34.3, 438, 6 + k * 34.3, "#2a1a0a", 1.5);
     for(var m = 0; m < 6; m++) c(414, 23 + m * 34.3, 1.6, "#c8a04a");
+    });
     /* porta della scala a chiocciola, al centro del lato in fondo */
     l(212, 0, 258, 0, "#2a1d12", 8);
     /* tre tavoli rotondi da sei sedie */
-    [[130, 360], [310, 550], [130, 740]].forEach(function(q){
+    [[130, 360], [310, 550], [130, 740]].forEach(function(q){ pezzo(q[0], q[1], function(){
       for(var s = 0; s < 6; s++){ var an = s * Math.PI / 3; c(q[0] + Math.cos(an) * 62, q[1] + Math.sin(an) * 62, 11, "#5a3d22", "#3a2614", 1.5); }
       c(q[0], q[1], 44, "#7a5230", "#3a2614", 2.5); c(q[0], q[1], 34, "none", "rgba(255,220,160,.15)", 1); c(q[0], q[1], 5, "#ffd27a", "", 0, 'class="nxa-lume"');
-    });
+    }); });
     /* ingresso dalla Sala Mappe */
     l(196, H, 244, H, "#2a1d12", 9);
     r(0, 0, W, H, "none", "#d2a85a", 5);
