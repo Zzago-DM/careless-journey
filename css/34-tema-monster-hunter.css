@@ -19,6 +19,8 @@ html[data-tema=mh] body::before{content:"";position:fixed;inset:-600px 0 0 0;z-i
 html[data-tema=mh] body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:var(--luce,transparent);mix-blend-mode:color;opacity:.55}
 @keyframes mhLucciole{to{transform:translateY(600px)}}
 #mh-cielo{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+/* alberi, pini e terreno ritagliati dallo sfondo, messi sopra le creature: stessa posizione e misura dello sfondo (.stars) */
+#mh-cielo .mh-primo{position:absolute;inset:0;background:url("../media/cacciatore-primo.webp") 50% 70%/cover no-repeat;pointer-events:none}
 #mh-cielo[hidden]{display:none}
 #mh-cielo .cr{position:absolute;left:0;top:var(--top);width:var(--w);animation:var(--anim) var(--dur) linear var(--del) infinite;will-change:transform}
 #mh-cielo .cr-dx{--anim:crDx}#mh-cielo .cr-sx{--anim:crSx}

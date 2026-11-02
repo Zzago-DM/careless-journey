@@ -13,7 +13,7 @@
     strato.innerHTML = CREATURE.map(function(c){
       return '<div class="cr cr-' + c.n + ' cr-' + (c.dir > 0 ? 'dx' : 'sx') + (c.far ? ' cr-lontano' : '') + '" style="--w:' + c.w + ';--top:' + c.top + ';--dur:' + c.dur + 's;--del:' + c.del + 's">'
         + '<div class="cr-volo"><div class="cr-gira" style="transform:scaleX(' + c.dir + ')">' + c.svg + '</div></div></div>';
-    }).join("") + '<div class="cr-campo">' + CAMPO + '</div>';
+    }).join("") + '<div class="mh-primo"></div>' + '<div class="cr-campo">' + CAMPO + '</div>';   /* alberi e terreno ritagliati (media/cacciatore-primo.webp): le creature ci passano dietro */
     document.body.appendChild(strato);
   }
   /* bordo ruvido e scheggiato per i titoli del tema (filter:url(#tcj-ruvido) in css/37-temi-caratteri.css) */
