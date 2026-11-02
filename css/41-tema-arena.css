@@ -66,6 +66,15 @@ html[data-tema=arena] .gc-tot b:not(:is(#ms,#pwo,#munlock,#intro,.map-wrap,.cj-o
 #ar-stazione[hidden]{display:none}
 #ar-stazione::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px)}
 #ar-stazione .ar-scena{position:absolute;left:50%;top:50%;width:max(100vw,177.78vh);height:max(100vh,56.25vw);transform:translate(-50%,-50%);background:url("../media/arena-stazione.webp") 0 0/100% 100% no-repeat}
+#ar-stazione .ar-primo{position:absolute;inset:0;background:url("../media/arena-primo.webp") 0 0/100% 100% no-repeat;pointer-events:none}
+#ar-stazione .ar-tributo .nv-s{filter:drop-shadow(0 0 5px rgba(160,210,255,.4)) brightness(.92) contrast(1.05)}
+/* nave tributo: luce blu in coda che si allunga come una stella cadente */
+#ar-stazione .ar-stella{position:absolute;right:97%;top:60%;width:520%;height:22%;transform:translateY(-50%);pointer-events:none;
+  background:linear-gradient(90deg,transparent 0%,rgba(60,140,255,.08) 30%,rgba(90,180,255,.45) 72%,#8fdcff 92%,#eafaff 100%);
+  clip-path:polygon(0 48%,100% 0,100% 100%,0 52%);filter:blur(.7px) drop-shadow(0 0 4px rgba(110,190,255,.9));animation:arStella 1.8s ease-in-out infinite}
+#ar-stazione .ar-stella::after{content:"";position:absolute;right:-6px;top:50%;width:16px;height:16px;transform:translate(0,-50%);border-radius:50%;
+  background:radial-gradient(circle,#ffffff 0%,#bfeaff 30%,rgba(90,180,255,.55) 55%,transparent 72%);box-shadow:0 0 14px 4px rgba(90,170,255,.6)}
+@keyframes arStella{0%,100%{opacity:.85;width:520%}50%{opacity:1;width:600%}}
 #ar-stazione .ar-an{position:absolute;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
 #ar-stazione .ar-sp{position:absolute;overflow:hidden}
 #ar-stazione .ar-giro{position:absolute;top:0;bottom:0;background-repeat:repeat-x;will-change:transform}
