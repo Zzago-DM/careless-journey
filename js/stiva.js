@@ -21,7 +21,7 @@
    2. la stanza della Stiva (Nave › Stiva Primaria › «Apri la stiva»): Strumenti, Parti di mostro, Oggetti vari, Dispensa;
    3. il riquadro sotto la mappa della Nave (Equipaggiamento grande e Dispensa), ora comune a tutti;
    4. l'Equipaggiamento della scheda: slot fisso con 5 tonici di Salute, 3 slot (5 tonici o 2 piloni di un solo tipo)
-      e fino a 3 nuclei di ricambio. Ogni oggetto arriva «Dalla stiva» (il numero in stiva scende) o «Negozio» (gratis,
+      e i nuclei di scorta (3 d'attacco e 3 di difesa, gestiti dal pulsante «Scambia» sotto i nuclei). Ogni oggetto arriva «Dalla stiva» (il numero in stiva scende) o «Negozio» (gratis,
       non tocca la stiva). Lo stato sta nella scheda del personaggio (campo eq2), quindi segue il suo salvataggio online. */
 (function(){
   "use strict";
@@ -519,7 +519,10 @@
   /* =====================================================================
      4. L'EQUIPAGGIAMENTO DELLA SCHEDA
      ===================================================================== */
-  function eqVuoto(){ return { sal: 5, slots: [null, null, null], ric: [null, null, null] }; }
+  /* ric = i nuclei di scorta: 3 d'attacco e 3 di difesa, oltre ai due montati (8 in tutto) */
+  function ricVuoto(){ var r = {}; r.att = []; r.def = []; for(var i = 0; i < RIC_MAX; i++){ r.att.push(null); r.def.push(null); } return r; }
+  function eqVuoto(){ return { sal: 5, slots: [null, null, null], ric: ricVuoto() }; }
+  function ricQuanti(t){ return EQ.ric[t].filter(Boolean).length; }
   function eqNorm(o){
     o = o && typeof o === "object" ? o : eqVuoto();
     var n = eqVuoto();
@@ -527,9 +530,15 @@
     for(var i = 0; i < 3; i++){
       var s = (o.slots || [])[i];
       if(s && it(s.id) && int(s.q) > 0){ var q = Math.min(cap(it(s.id)), int(s.q)), st = Math.min(q, int(s.st)); n.slots[i] = { id: s.id, q: q, st: st, ng: q - st }; }
-      var r = (o.ric || [])[i];
-      if(r && NUC[r.t] && el(r.e)) n.ric[i] = { t: r.t, e: r.e, src: r.src === "st" ? "st" : "ng" };
     }
+    var metti = function(t, r, pos){
+      if(!r || !NUC[t] || !el(r.e)) return;
+      var v = { t: t, e: r.e, src: r.src === "st" ? "st" : "ng" };
+      if(pos != null && pos < RIC_MAX && !n.ric[t][pos]){ n.ric[t][pos] = v; return; }
+      var j = n.ric[t].indexOf(null); if(j >= 0) n.ric[t][j] = v;
+    };
+    if(Array.isArray(o.ric)) o.ric.forEach(function(r){ if(r) metti(r.t, r); });            /* vecchio formato: 3 ricambi misti */
+    else if(o.ric) ["att", "def"].forEach(function(t){ (o.ric[t] || []).forEach(function(r, j){ metti(t, r, j); }); });
     if(Array.isArray(o.vecchio)) n.vecchio = o.vecchio.filter(function(v){ return v && v.t; });
     return n;
   }
@@ -547,7 +556,7 @@
       if(s.st) src.push(s.st + " dalla stiva"); if(s.ng) src.push(s.ng + " dal negozio");
       R.push("Slot " + (i + 1) + ": " + it(s.id).n + " ×" + s.q + (src.length ? " (" + src.join(", ") + ")" : ""));
     });
-    o.ric.forEach(function(r){ if(r) R.push("Ricambio: nucleo di " + NUC[r.t].n.toLowerCase() + " " + el(r.e).n + (r.src === "st" ? " (dalla stiva)" : " (dal negozio)")); });
+    ["att", "def"].forEach(function(t){ o.ric[t].forEach(function(r){ if(r) R.push("Scorta: nucleo di " + NUC[t].n.toLowerCase() + " " + el(r.e).n + (r.src === "st" ? " (dalla stiva)" : " (dal negozio)")); }); });
     (o.vecchio || []).forEach(function(v){ R.push("Scritto a mano: " + v.t + (v.n && v.n !== "0" ? " ×" + v.n : "")); });
     return R;
   };
@@ -592,22 +601,75 @@
         + '<button type="button" class="eq-btn eq-ghost" data-eq="riponi" data-i="' + i + '">Riponi in stiva</button></div></div>';
     });
     h += '</div>';
-    var ma = el(montato("att")), md = el(montato("def"));
-    h += '<div class="eq-ric-h"><span class="sc-lbl" style="margin:0">Nuclei di ricambio · ' + EQ.ric.filter(Boolean).length + ' / ' + RIC_MAX + '</span>'
-      + '<span class="eq-mont"><span>⚔ ' + (ma ? sfera(ma, "sm") + ma.n : "nessuno") + '</span><span>🛡 ' + (md ? sfera(md, "sm") + md.n : "nessuno") + '</span></span></div>';
-    h += '<div class="eq-sock">' + EQ.ric.map(function(r, i){
-      if(!r) return '<button type="button" class="eq-so eq-so-vuoto" data-eq="nuc" data-i="' + i + '"><span class="eq-piu" aria-hidden="true">＋</span><span>Aggiungi nucleo</span></button>';
-      var e = el(r.e);
-      return '<div class="eq-so">' + sfera(e) + '<div class="eq-so-i"><div class="eq-n">' + NUC[r.t].n + ' · ' + e.n + '</div>'
-        + '<div class="eq-src">' + (r.src === "st" ? '<span class="eq-chip eq-st">📦 Dalla stiva</span>' : '<span class="eq-chip eq-ng">🛒 Dal negozio</span>') + '</div></div>'
-        + '<div class="eq-b"><button type="button" class="eq-btn" data-eq="monta" data-i="' + i + '">Monta</button><button type="button" class="eq-btn eq-ghost" data-eq="nuc-riponi" data-i="' + i + '">Riponi</button></div></div>';
-    }).join("") + '</div>';
-    h += '<p class="eq-nota">Montando un ricambio, il nucleo che avevi prima si consuma e sparisce. «Riponi» rimette nella stiva quello che non usi, anche se l\'avevi preso al negozio.</p>';
     if(EQ.vecchio && EQ.vecchio.length){
       h += '<div class="eq-vecchio"><div class="sc-lbl">Scritto a mano prima del cambio</div><ul>' + EQ.vecchio.map(function(v){ return '<li>' + esc(v.t) + (v.n && v.n !== "0" ? " ×" + esc(v.n) : "") + '</li>'; }).join("")
         + '</ul><p class="eq-nota">Rimettete questi oggetti negli slot qui sopra, poi toccate il pulsante.</p><button type="button" class="eq-btn eq-ghost" data-eq="vecchio-via">✓ Fatto, togli questo elenco</button></div>';
     }
     box.innerHTML = h;
+    swConta(); if(nucOv.classList.contains("on")) disegnaNuc();
+  }
+
+  /* ---------- finestra «Scambia» dei nuclei (si apre dal pulsante sotto i nuclei della scheda) ---------- */
+  var nucOv = document.createElement("div");
+  nucOv.className = "eq-ov"; nucOv.setAttribute("role", "dialog"); nucOv.setAttribute("aria-modal", "true"); nucOv.setAttribute("aria-labelledby", "nz-dt");
+  nucOv.innerHTML = '<div class="eq-dlg nz-dlg" id="nz-dlg"></div>';
+  document.body.appendChild(nucOv);
+  /* il numero sul pulsante: quanti nuclei di scorta si portano dietro */
+  function swConta(){
+    var n = $("sc-nuc-sw-n"); if(!n) return;
+    n.textContent = "⚔ " + ricQuanti("att") + "/" + RIC_MAX + " · 🛡 " + ricQuanti("def") + "/" + RIC_MAX;
+  }
+  function apriNuc(){ disegnaNuc(); nucOv.classList.add("on"); suono("paper"); setTimeout(function(){ var b = nucOv.querySelector(".eq-btn"); try { if(b) b.focus(); } catch(_){} }, 40); }
+  function chiudiNuc(){ nucOv.classList.remove("on"); }
+  function disegnaNuc(){
+    var box = $("nz-dlg"); if(!box) return;
+    var h = '<div class="nz-top"><h3 class="eq-dt" id="nz-dt">Scambia nuclei</h3><button type="button" class="nz-x" data-nz="chiudi" aria-label="Chiudi">✕</button></div>';
+    h += '<div class="nz-cols">' + ["att", "def"].map(function(t){
+      var m = el(montato(t));
+      var c = '<div class="nz-col nz-' + t + '"><div class="nz-h">' + (t === "att" ? "⚔ " : "🛡 ") + NUC[t].n + '</div>';
+      c += '<div class="nz-mont nuc-' + t + '"><div class="sc-lbl">Equipaggiato</div>' + (m ? sfera(m) + '<div class="eq-n">' + m.n + '</div>' : '<div class="eq-e">Nessun nucleo montato</div>') + '</div>';
+      c += '<div class="sc-lbl nz-sl">Di scorta · ' + ricQuanti(t) + ' / ' + RIC_MAX + '</div><div class="nz-sock">';
+      c += EQ.ric[t].map(function(r, i){
+        if(!r) return '<button type="button" class="eq-so eq-so-vuoto nuc-' + t + '" data-nz="nuc" data-t="' + t + '" data-i="' + i + '"><span class="eq-piu" aria-hidden="true">＋</span><span>Aggiungi</span></button>';
+        var e = el(r.e);
+        return '<div class="eq-so nuc-' + t + '">' + sfera(e) + '<div class="eq-so-i"><div class="eq-n">' + e.n + '</div>'
+          + '<div class="eq-src">' + (r.src === "st" ? '<span class="eq-chip eq-st">📦 Stiva</span>' : '<span class="eq-chip eq-ng">🛒 Negozio</span>') + '</div></div>'
+          + '<div class="eq-b"><button type="button" class="eq-btn" data-nz="monta" data-t="' + t + '" data-i="' + i + '">Monta</button><button type="button" class="eq-btn eq-ghost" data-nz="riponi" data-t="' + t + '" data-i="' + i + '">Riponi</button></div></div>';
+      }).join("");
+      return c + '</div></div>';
+    }).join("") + '</div>';
+    h += '<p class="eq-nota">Puoi portarti 3 nuclei d\'attacco e 3 di difesa oltre ai due montati. Montandone uno, il nucleo che avevi prima si consuma e sparisce. «Riponi» rimette nella stiva quello che non usi, anche se l\'avevi preso al negozio.</p>';
+    box.innerHTML = h;
+  }
+  nucOv.addEventListener("click", function(e){
+    if(e.target === nucOv){ chiudiNuc(); return; }
+    var b = e.target.closest("[data-nz]"); if(!b) return;
+    var az = b.getAttribute("data-nz"), t = b.getAttribute("data-t"), i = parseInt(b.getAttribute("data-i"), 10);
+    if(az === "chiudi"){ chiudiNuc(); return; }
+    if(az === "nuc"){ if(ricQuanti(t) >= RIC_MAX) return; apriDlg({ tipo: "nuc", t: t, i: i, e: null, src: null }); return; }
+    if(az === "monta"){ montaScorta(t, i); return; }
+    if(az === "riponi"){
+      var z = EQ.ric[t][i]; if(!z || lavoro) return;
+      lavoro = true; b.disabled = true; b.textContent = "Ripongo…";
+      riponi(nid(t, z.e), 1).then(function(rr){
+        lavoro = false;
+        if(rr && rr.ok){ EQ.ric[t][i] = null; eqSalva(); avviso("Nucleo riposto nella stiva"); } else disegnaNuc();
+      });
+    }
+  });
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape" && nucOv.classList.contains("on") && !eqOv.classList.contains("on")) chiudiNuc(); });
+  document.addEventListener("click", function(e){ if(e.target.closest && e.target.closest("#sc-nuc-sw")) apriNuc(); });
+  function montaScorta(t, i){
+    var r = EQ.ric[t][i]; if(!r) return;
+    var sel = $(NUC[t].sel), vecchio = el(sel ? sel.value : ""), nuovo = el(r.e);
+    var testo = vecchio ? "Il nucleo " + vecchio.n + " che hai montato adesso si consuma e sparisce." : "Adesso non hai nessun nucleo di " + NUC[t].n.toLowerCase() + " montato.";
+    var chiedi = typeof tcjConferma === "function" ? tcjConferma({ titolo: "Montare il nucleo di " + NUC[t].n.toLowerCase() + " " + nuovo.n + "?", testo: testo, si: "Sì, montalo", attesa: 1 }) : Promise.resolve(confirm(testo));
+    chiedi.then(function(ok){
+      if(!ok) return;
+      if(sel){ sel.value = r.e; try { scNucleo(t); } catch(_){} try { orbSet(t, r.e); } catch(_){} }
+      EQ.ric[t][i] = null; eqSalva(); suono("charge");
+      avviso("Montato il nucleo di " + NUC[t].n.toLowerCase() + " " + nuovo.n + (vecchio ? ". Il nucleo " + vecchio.n + " si è consumato." : "."));
+    });
   }
 
   /* ---------- finestra di scelta ---------- */
@@ -616,7 +678,7 @@
   eqOv.innerHTML = '<div class="eq-dlg" id="eq-dlg"></div>';
   document.body.appendChild(eqOv);
   var D = null, lavoro = false;
-  function apriDlg(o){ D = o; disegnaDlg(); eqOv.classList.add("on"); guarda("scelta", true); suono("paper"); setTimeout(function(){ var b = eqOv.querySelector(".eq-opt,.eq-btn"); try { if(b) b.focus(); } catch(_){} }, 40); }
+  function apriDlg(o){ D = o; document.body.appendChild(eqOv); disegnaDlg(); eqOv.classList.add("on"); guarda("scelta", true); suono("paper"); setTimeout(function(){ var b = eqOv.querySelector(".eq-opt,.eq-btn"); try { if(b) b.focus(); } catch(_){} }, 40); }
   function chiudiDlg(){ eqOv.classList.remove("on"); D = null; guarda("scelta", false); }
   STV.on(function(){ if(D && !lavoro) disegnaDlg(); });
   function opzioneSrc(src, on, abil, sotto){
@@ -647,14 +709,13 @@
     } else {
       var k = D.e ? nid(D.t, D.e) : null, dn = k ? int(doc.str[k]) : 0;
       if(D.src === "st" && (!dn || !scrive)) D.src = null;
-      h += '<h3 class="eq-dt" id="eq-dt">Nucleo di ricambio</h3>'
-        + '<div class="eq-grp"><div class="sc-lbl">Tipo</div><div class="eq-opts">' + ["att", "def"].map(function(t){ return '<button type="button" class="eq-opt' + (D.t === t ? " on" : "") + '" data-t="' + t + '">' + (t === "att" ? "⚔ " : "🛡 ") + NUC[t].n + '</button>'; }).join("") + '</div></div>'
+      h += '<h3 class="eq-dt" id="eq-dt">' + (D.t === "att" ? "⚔ " : "🛡 ") + 'Nucleo di ' + NUC[D.t].n.toLowerCase() + ' di scorta</h3>'
         + '<div class="eq-grp"><div class="sc-lbl">Elemento</div><div class="eq-opts">' + EL.map(function(e){ return '<button type="button" class="eq-opt' + (D.e === e.id ? " on" : "") + '" data-e="' + e.id + '"><i class="eq-dot" style="--c:' + e.c + '"></i>' + e.n + ' <small>' + int(doc.str[nid(D.t, e.id)]) + ' in stiva</small></button>'; }).join("") + '</div></div>'
         + '<div class="eq-eff">' + esc(NUC[D.t].e) + '</div>'
         + '<div class="eq-grp"><div class="sc-lbl">Da dove arriva</div><div class="eq-opts">'
         + opzioneSrc("st", D.src === "st", D.e && dn && scrive, !scrive ? "serve il salvataggio online" : D.e ? (dn ? "in stiva: " + dn : "esaurito in stiva") : "")
         + opzioneSrc("ng", D.src === "ng", !!D.e, "non tocca la stiva") + '</div></div>'
-        + '<div class="eq-df"><span class="eq-nota">Ne porti ' + EQ.ric.filter(Boolean).length + ' su ' + RIC_MAX + '.</span><div class="eq-b"><button type="button" class="eq-btn eq-ghost" data-dlg="annulla">Annulla</button>'
+        + '<div class="eq-df"><span class="eq-nota">Ne porti ' + ricQuanti(D.t) + ' su ' + RIC_MAX + '.</span><div class="eq-b"><button type="button" class="eq-btn eq-ghost" data-dlg="annulla">Annulla</button>'
         + '<button type="button" class="eq-btn" data-dlg="ok"' + (D.e && D.src && !lavoro ? "" : " disabled") + '>' + (lavoro ? "Prendo…" : "Aggiungi") + '</button></div></div>';
     }
     box.innerHTML = h;
@@ -688,7 +749,7 @@
       prendi(o.id, o.q).then(function(r){ lavoro = false; if(r && r.ok) fatto(); else disegnaDlg(); });
     } else {
       if(!o.e || !o.src) return;
-      var mettiNelSocket = function(){ EQ.ric[o.i] = { t: o.t, e: o.e, src: o.src }; chiudiDlg(); eqSalva(); suono("charge"); };
+      var mettiNelSocket = function(){ EQ.ric[o.t][o.i] = { t: o.t, e: o.e, src: o.src }; chiudiDlg(); eqSalva(); suono("charge"); };
       if(o.src === "ng"){ mettiNelSocket(); return; }
       lavoro = true; disegnaDlg();
       prendi(nid(o.t, o.e), 1).then(function(r){ lavoro = false; if(r && r.ok) mettiNelSocket(); else disegnaDlg(); });
@@ -699,7 +760,6 @@
     if(!D) return;
     var t = e.target, b;
     if((b = t.closest("[data-id]")) && D.tipo === "slot" && !EQ.slots[D.i]){ D.id = b.getAttribute("data-id"); D.src = null; D.q = 1; disegnaDlg(); return; }
-    if((b = t.closest("[data-t]"))){ D.t = b.getAttribute("data-t"); D.src = null; disegnaDlg(); return; }
     if((b = t.closest("[data-e]"))){ D.e = b.getAttribute("data-e"); D.src = null; disegnaDlg(); return; }
     if((b = t.closest("[data-src]"))){ D.src = b.getAttribute("data-src"); D.q = D.q || 1; disegnaDlg(); return; }
     if((b = t.closest("[data-dq]"))){ D.q = (D.q || 1) + parseInt(b.getAttribute("data-dq"), 10); disegnaDlg(); return; }
@@ -729,33 +789,10 @@
       });
       return;
     }
-    if(az === "nuc"){ if(EQ.ric.filter(Boolean).length >= RIC_MAX) return; apriDlg({ tipo: "nuc", i: i, t: "def", e: null, src: null }); return; }
-    if(az === "monta"){
-      var r = EQ.ric[i]; if(!r) return;
-      var sel = $(NUC[r.t].sel), vecchio = el(sel ? sel.value : ""), nuovo = el(r.e);
-      var testo = vecchio ? "Il nucleo " + vecchio.n + " che hai montato adesso si consuma e sparisce." : "Adesso non hai nessun nucleo di " + NUC[r.t].n.toLowerCase() + " montato.";
-      var chiedi = typeof tcjConferma === "function" ? tcjConferma({ titolo: "Montare il nucleo di " + NUC[r.t].n.toLowerCase() + " " + nuovo.n + "?", testo: testo, si: "Sì, montalo", attesa: 1 }) : Promise.resolve(confirm(testo));
-      chiedi.then(function(ok){
-        if(!ok) return;
-        if(sel){ sel.value = r.e; try { scNucleo(r.t); } catch(_){} try { orbSet(r.t, r.e); } catch(_){} }
-        EQ.ric[i] = null; eqSalva(); suono("charge");
-        avviso("Montato il nucleo di " + NUC[r.t].n.toLowerCase() + " " + nuovo.n + (vecchio ? ". Il nucleo " + vecchio.n + " si è consumato." : "."));
-      });
-      return;
-    }
-    if(az === "nuc-riponi"){
-      var z = EQ.ric[i]; if(!z || lavoro) return;
-      lavoro = true; b.disabled = true; b.textContent = "Ripongo…";
-      riponi(nid(z.t, z.e), 1).then(function(rr){
-        lavoro = false;
-        if(rr && rr.ok){ EQ.ric[i] = null; eqSalva(); avviso("Nucleo riposto nella stiva"); } else disegnaEq();
-      });
-      return;
-    }
     if(az === "vecchio-via"){ delete EQ.vecchio; eqSalva(); }
   });
-  /* se cambiano i nuclei montati a mano, il riepilogo sopra i ricambi si aggiorna */
-  document.addEventListener("change", function(e){ if(e.target && (e.target.id === "sc-natt-s" || e.target.id === "sc-ndef-s")) disegnaEq(); });
+  /* se cambiano i nuclei montati a mano, la finestra «Scambia» (se aperta) si aggiorna */
+  document.addEventListener("change", function(e){ if(e.target && (e.target.id === "sc-natt-s" || e.target.id === "sc-ndef-s") && nucOv.classList.contains("on")) disegnaNuc(); });
   /* mentre l'Equipaggiamento è sullo schermo la stiva si rilegge ogni tanto (per i numeri nella finestra di scelta) */
   (function(){
     var box = $("eq-box"); if(!box || !window.IntersectionObserver) return;

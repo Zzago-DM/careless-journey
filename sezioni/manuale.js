@@ -188,7 +188,7 @@ tcjSezione(`<section id="manuale">
 
     <!-- ===================== NUCLEI & ELEMENTI ===================== -->
     <div class="mpanel" id="p-elementi">
-      <p class="mn-lead">Il <b>nucleo elementale</b> si sceglie <b>prima di ogni esplorazione</b> e non si può cambiare durante l'avventura, a meno di usare un <b>nucleo di ricambio</b> (vedi sotto). Fa due cose insieme: dà un elemento ai tuoi <b>attacchi</b> e cambia la <b>resistenza</b> della tua armatura.</p>
+      <p class="mn-lead">Il <b>nucleo elementale</b> si sceglie <b>prima di ogni esplorazione</b> e non si può cambiare durante l'avventura, a meno di usare un <b>nucleo di scorta</b> (vedi sotto). Fa due cose insieme: dà un elemento ai tuoi <b>attacchi</b> e cambia la <b>resistenza</b> della tua armatura.</p>
       <div class="mn-note"><span class="mn-k">La regola d'oro</span>In <b>difesa</b> conviene lo <b>stesso elemento</b> del Behemoth (subisci meno danni). In <b>attacco</b> conviene l'<b>elemento opposto</b> (fai più danni).</div>
 
       <h3 class="mn-h">Token elementali</h3>
@@ -199,8 +199,8 @@ tcjSezione(`<section id="manuale">
         <li>I contatori dei diversi elementi sono <b>separati</b>: un Behemoth può subire più malus aetherici insieme.</li>
       </ul>
 
-      <h3 class="mn-h">Nuclei di ricambio</h3>
-      <p>Oltre ai nuclei montati, ogni Slayer può portare con sé fino a <b>3 nuclei di ricambio</b>, d'attacco o di difesa, presi dalla stiva della nave o comprati al negozio. Sono usa e getta: quando ne monti uno, il nucleo che avevi prima <b>si consuma e sparisce</b>.</p>
+      <h3 class="mn-h">Nuclei di scorta</h3>
+      <p>Ogni Slayer monta <b>due nuclei</b>, uno d'attacco e uno di difesa, e può portarne con sé altri <b>3 d'attacco</b> e <b>3 di difesa</b> di scorta, presi dalla stiva della nave o comprati al negozio: <b>8 in tutto</b>. Quelli di scorta sono usa e getta: quando ne monti uno, il nucleo che avevi prima <b>si consuma e sparisce</b>.</p>
       <h3 class="mn-h">I sei nuclei</h3>
       <div class="mn-grid">
         <div class="mn-c el" style="--c:var(--fire)"><div class="ct">🔥 Fiammeggiante</div>
