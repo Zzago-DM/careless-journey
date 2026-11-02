@@ -26,12 +26,13 @@
       "Prima di partire scegliete bene quali elementi portarvi: contro il Behemoth sbagliato, un nucleo di ricambio può fare la differenza.",
       "<small>Quello che avevate scritto a mano nelle vecchie righe dell'Equipaggiamento lo ritrovate in fondo, sotto «Scritto a mano prima del cambio».</small>"
     ]},
-    { id: "2026-11-scambia-nuclei", i: "⇄", t: "Nuclei di scorta e «Scambia»", p: [
+    { id: "2026-11-zaino-nuclei", i: "⇄", t: "Nuclei nello zaino e «Scambia»", p: [
       "I nuclei di ricambio non stanno più nell'<b>Equipaggiamento</b>. Adesso, nella vostra Area dello Slayer, sotto il <b>Nucleo d'attacco</b> e il <b>Nucleo di difesa</b> c'è il pulsante <b>«⇄ Scambia»</b>.",
-      "Toccandolo si apre una finestra con i due nuclei che avete montati e, sotto ognuno, i nuclei <b>di scorta</b>: potete portarne <b>3 d'attacco</b> e <b>3 di difesa</b>, cioè <b>8 nuclei</b> in tutto contando quelli montati. Sul pulsante vedete sempre quanti ne avete dietro.",
-      "Da lì li aggiungete (dalla stiva o dal negozio), li montate o li riponete nella stiva. Come prima, quando ne montate uno il nucleo che avevate prima si consuma e sparisce, e il sito ve lo chiede prima di farlo.",
-      "Per riconoscerli al volo, i nuclei d'attacco hanno una <b>spada</b> in trasparenza e quelli di difesa uno <b>scudo</b>.",
-      "<small>I ricambi che avevate già vi aspettano nella finestra, ognuno al suo posto tra attacco e difesa.</small>"
+      "Toccandolo vedete in alto i due nuclei <b>equipaggiati</b>, con il loro effetto, e sotto il vostro <b>zaino</b>: <b>6 nuclei</b> di qualsiasi elemento, oltre ai due montati. Sul pulsante vedete sempre quanti ne avete dietro.",
+      "Nello zaino un nucleo non è né d'attacco né di difesa. Quando toccate <b>«Monta»</b>, il sito vi chiede se montarlo <b>in attacco</b> o <b>in difesa</b> e vi spiega cosa farebbe in ognuno dei due casi. Il nucleo montato non si toglie più, e quello che avevate prima si consuma e sparisce.",
+      "Anche nella <b>stiva</b> della nave i nuclei sono ora su un solo ripiano, <b>Nuclei elementali</b>: quelli che c'erano si sono sommati. Finché siete sulla nave, «Riponi» rimette nella stiva un nucleo dello zaino.",
+      "Per riconoscerli al volo, sul nucleo d'attacco montato c'è una <b>spada</b> in trasparenza e su quello di difesa uno <b>scudo</b>.",
+      "<small>I ricambi che avevate già li ritrovate nello zaino.</small>"
     ]}
   ];
   var KV = "tcj-novita-viste", KD = "tcj-dispositivo";

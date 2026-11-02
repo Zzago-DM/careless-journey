@@ -212,15 +212,24 @@ html[data-zm=oro] #m-stiva .stv-cnt button,html[data-zm=oro] .mstv-b,html[data-z
 .nz-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.6rem}
 .nz-x{background:none;border:1px solid var(--border);color:var(--text2);width:32px;height:32px;cursor:pointer;font:inherit;flex:none}
 .nz-x:hover{border-color:var(--gold3);color:var(--gold2)}
-.nz-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem}
-.nz-col{display:flex;flex-direction:column;gap:.5rem}
-.nz-h{font-family:"Cinzel",serif;color:var(--gold2);letter-spacing:.08em;font-size:.9rem;text-align:center;padding-bottom:.35rem;border-bottom:1px solid var(--border)}
-.nz-mont{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;min-height:120px;padding:.7rem;background:var(--bg);border:1px solid var(--gold3)}
-.nz-mont .stv-orb{width:44px;height:44px}
-.nz-sl{margin-top:.3rem}
-.nz-sock{display:flex;flex-direction:column;gap:.5rem}
-.nz-sock .eq-so{flex-direction:row;flex-wrap:wrap;text-align:left;min-height:0;align-items:center}
-.nz-sock .eq-so-i{align-items:flex-start;flex:1;min-width:0}
-.nz-sock .eq-so .eq-b{margin:0}
-.nz-sock .eq-so-vuoto{justify-content:center;min-height:62px}
-@media(max-width:640px){.nz-cols{grid-template-columns:1fr}}
+.nz-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem;margin-top:.35rem}
+.nz-h{font-family:"Cinzel",serif;color:var(--gold2);letter-spacing:.08em;font-size:.85rem}
+.nz-mont{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.35rem;padding:.75rem;background:var(--bg);border:1px solid var(--gold3)}
+.nz-mont .stv-orb{width:46px;height:46px}
+.nz-mont .eq-e{font-size:.8rem}
+.nz-sl{margin:1rem 0 .4rem}
+.nz-sock{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.55rem}
+.nz-sock .eq-so{min-height:132px}
+.nz-sock .eq-so-vuoto{min-height:132px}
+/* finestra «Monta»: attacco o difesa */
+.nz-pick{display:flex;align-items:center;gap:.6rem;margin:-.2rem 0 .7rem;color:var(--text2)}
+.nz-pick .stv-orb{width:38px;height:38px}
+.nz-scelte{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;margin-bottom:.8rem}
+.nz-scelta{display:flex;flex-direction:column;align-items:flex-start;gap:.4rem;text-align:left;padding:.8rem;background:var(--bg);border:1px solid var(--border);color:var(--text);font:inherit;cursor:pointer}
+.nz-scelta b{font-family:"Cinzel",serif;color:var(--gold2);letter-spacing:.06em;font-weight:600}
+.nz-scelta span{font-size:.88rem;line-height:1.4}
+.nz-scelta small{font-size:.76rem;color:var(--text2);font-style:italic;margin-top:auto}
+.nz-scelta:hover{border-color:var(--gold3)}
+.nz-scelta.on{border-color:var(--gold2);box-shadow:0 0 0 1px var(--gold2) inset,0 0 18px rgba(var(--gold-rgb),.18)}
+.nz-scelta.nuc-att::after,.nz-scelta.nuc-def::after{content:"";position:absolute;right:.5rem;top:.5rem;width:40px;height:40px;background:var(--gold2);opacity:.12;pointer-events:none;z-index:-1;-webkit-mask:var(--nuc-ico) center/contain no-repeat;mask:var(--nuc-ico) center/contain no-repeat}
+@media(max-width:640px){.nz-sock .eq-so{min-height:0;padding:.5rem .35rem}.nz-sock .eq-so .eq-b{margin:0}.nz-sock .eq-so-vuoto{flex-direction:column;justify-content:center;min-height:110px}.nz-sock .eq-so,.nz-sock .eq-so-i{flex-direction:column;align-items:center;text-align:center}.nz-sock .eq-b{flex-direction:column;width:100%}.nz-sock .eq-b .eq-btn{width:100%;padding:.4rem .2rem}.nz-scelte{grid-template-columns:1fr}.nz-cols{gap:.45rem}.nz-mont{padding:.55rem}}

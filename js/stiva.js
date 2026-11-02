@@ -2,7 +2,8 @@
 
    DOVE STANNO I DATI
    - Nel repository privato Zzago-DM/gruppo (lo stesso del quadro «Il Gruppo»), file stiva.json:
-       str    { chiave: quantità }  tonici, piloni e nuclei elementali (chiavi dei nuclei: n-att-<elemento>, n-def-<elemento>)
+       str    { chiave: quantità }  tonici, piloni e nuclei elementali (chiavi dei nuclei: n-<elemento>, senza tipo;
+              i vecchi n-att-<elemento> e n-def-<elemento> vengono sommati la prima volta che il file si rilegge)
        parti  [ { b: Behemoth, m: materiale, r: rarità, q: quantità } ]
        vari   testo libero «Oggetti vari», comune ai tre
        grande testo libero «Equipaggiamento grande trasportato» (riquadro sotto la mappa della Nave)
@@ -21,7 +22,7 @@
    2. la stanza della Stiva (Nave › Stiva Primaria › «Apri la stiva»): Strumenti, Parti di mostro, Oggetti vari, Dispensa;
    3. il riquadro sotto la mappa della Nave (Equipaggiamento grande e Dispensa), ora comune a tutti;
    4. l'Equipaggiamento della scheda: slot fisso con 5 tonici di Salute, 3 slot (5 tonici o 2 piloni di un solo tipo)
-      e i nuclei di scorta (3 d'attacco e 3 di difesa, gestiti dal pulsante «Scambia» sotto i nuclei). Ogni oggetto arriva «Dalla stiva» (il numero in stiva scende) o «Negozio» (gratis,
+      e i 6 nuclei nello zaino (senza tipo: si montano in attacco o in difesa dal pulsante «Scambia» sotto i nuclei). Ogni oggetto arriva «Dalla stiva» (il numero in stiva scende) o «Negozio» (gratis,
       non tocca la stiva). Lo stato sta nella scheda del personaggio (campo eq2), quindi segue il suo salvataggio online. */
 (function(){
   "use strict";
@@ -53,15 +54,21 @@
     att: { n: "Attacco", sel: "sc-natt-s", e: "+2 danni contro l'elemento opposto e può applicare il suo malus." },
     def: { n: "Difesa",  sel: "sc-ndef-s", e: "Riduce di ¼ i danni del suo elemento e aumenta di ¼ quelli dell'elemento opposto." }
   };
-  var RIC_MAX = 3;
+  /* che cosa fa ogni elemento montato in attacco o in difesa (finestra «Monta») */
+  var OPP = { glaciale: "ardente", ardente: "glaciale", folgorante: "terrestre", terrestre: "folgorante", radiante: "oscuro", oscuro: "radiante" };
+  var MAL = { glaciale: "Ibernato", ardente: "Bruciato", folgorante: "Fulminato", terrestre: "Interrato", radiante: "Abbagliato", oscuro: "Corrotto" };
+  var PL = { glaciale: "glaciali", ardente: "ardenti", folgorante: "folgoranti", terrestre: "terrestri", radiante: "radianti", oscuro: "oscuri" };
+  function effAtt(e){ return "+2 danni contro i Behemoth " + PL[OPP[e.id]] + ". I tuoi colpi mettono token " + e.n + ": a 10 il Behemoth diventa " + MAL[e.id] + ". Contro i Behemoth " + PL[e.id] + " non ha effetto, perché sono immuni al loro elemento."; }
+  function effDef(e){ return "Subisci ¼ di danni in meno dagli attacchi " + PL[e.id] + ", ma ¼ in più da quelli " + PL[OPP[e.id]] + "."; }
+  var RIC_MAX = 6;   /* nuclei nello zaino, oltre ai due montati (8 in tutto) */
   function it(id){ for(var i = 0; i < IT.length; i++) if(IT[i].id === id) return IT[i]; return null; }
   function el(id){ for(var i = 0; i < EL.length; i++) if(EL[i].id === id) return EL[i]; return null; }
-  function nid(t, e){ return "n-" + t + "-" + e; }
+  function nid(e){ return "n-" + e; }   /* in stiva i nuclei non hanno tipo: lo prendono quando si montano */
   function cap(x){ return x && x.k === "p" ? 2 : 5; }
-  function chiavi(){ var k = IT.map(function(x){ return x.id; }); ["att", "def"].forEach(function(t){ EL.forEach(function(e){ k.push(nid(t, e.id)); }); }); return k; }
+  function chiavi(){ var k = IT.map(function(x){ return x.id; }); EL.forEach(function(e){ k.push(nid(e.id)); }); return k; }
   function nomeChiave(id){
     var x = it(id); if(x) return x.n;
-    var m = /^n-(att|def)-(\w+)$/.exec(id || ""); if(m && el(m[2])) return "Nucleo di " + NUC[m[1]].n.toLowerCase() + " " + el(m[2]).n;
+    var m = /^n-(\w+)$/.exec(id || ""); if(m && el(m[1])) return "Nucleo " + el(m[1]).n;
     return id;
   }
 
@@ -109,6 +116,8 @@
     d = d && typeof d === "object" ? d : {};
     var s = d.str && typeof d.str === "object" ? d.str : {}, o = {};
     chiavi().forEach(function(k){ o[k] = int(s[k]); });
+    /* prima i nuclei stavano su due ripiani (n-att-<elemento>, n-def-<elemento>): ora si sommano in uno solo */
+    EL.forEach(function(e){ ["att", "def"].forEach(function(t){ var v = "n-" + t + "-" + e.id; if(v in s){ o[nid(e.id)] += int(s[v]); delete s[v]; } }); });
     Object.keys(s).forEach(function(k){ if(!(k in o)) o[k] = int(s[k]); });   /* oggetti che il sito non conosce ancora: si tengono */
     d.str = o;
     d.parti = (Array.isArray(d.parti) ? d.parti : []).filter(function(p){ return p && p.m && int(p.q) > 0; }).map(function(p){ return { b: String(p.b || ""), m: String(p.m), r: String(p.r || "Comune"), q: int(p.q) }; });
@@ -312,14 +321,12 @@
             + '<div class="stv-it-e">' + esc(x.e) + '</div>' + contatore("str", x.id, q, x.n) + '</div></div>';
         }).join("") + '</div><div class="stv-asse" aria-hidden="true"></div></div>';
     }).join("");
-    h += ["att", "def"].map(function(t){
-      return '<div class="stv-ripiano"><div class="stv-rt">Nuclei di ' + NUC[t].n.toLowerCase() + ' <small>' + esc(NUC[t].e) + '</small></div><div class="stv-fila stv-fila-n">'
-        + EL.map(function(e){
-          var k = nid(t, e.id), q = int(doc.str[k]);
-          return '<div class="stv-it' + (q ? "" : " zero") + '">' + sfera(e) + '<div class="stv-it-i"><div class="stv-it-n">' + e.n + (q ? "" : '<span class="stv-esaurito">esaurito</span>') + '</div>'
-            + contatore("str", k, q, "Nucleo di " + NUC[t].n.toLowerCase() + " " + e.n) + '</div></div>';
-        }).join("") + '</div><div class="stv-asse" aria-hidden="true"></div></div>';
-    }).join("");
+    h += '<div class="stv-ripiano"><div class="stv-rt">Nuclei elementali <small>si montano in attacco o in difesa quando li prendete per la scheda</small></div><div class="stv-fila stv-fila-n">'
+      + EL.map(function(e){
+        var k = nid(e.id), q = int(doc.str[k]);
+        return '<div class="stv-it' + (q ? "" : " zero") + '">' + sfera(e) + '<div class="stv-it-i"><div class="stv-it-n">' + e.n + (q ? "" : '<span class="stv-esaurito">esaurito</span>') + '</div>'
+          + contatore("str", k, q, "Nucleo " + e.n) + '</div></div>';
+      }).join("") + '</div><div class="stv-asse" aria-hidden="true"></div></div>';
     s.innerHTML = h;
   }
   function behemoth(){
@@ -519,10 +526,10 @@
   /* =====================================================================
      4. L'EQUIPAGGIAMENTO DELLA SCHEDA
      ===================================================================== */
-  /* ric = i nuclei di scorta: 3 d'attacco e 3 di difesa, oltre ai due montati (8 in tutto) */
-  function ricVuoto(){ var r = {}; r.att = []; r.def = []; for(var i = 0; i < RIC_MAX; i++){ r.att.push(null); r.def.push(null); } return r; }
+  /* ric = i nuclei nello zaino: 6, senza tipo (diventano d'attacco o di difesa quando si montano), oltre ai due montati */
+  function ricVuoto(){ var r = []; for(var i = 0; i < RIC_MAX; i++) r.push(null); return r; }
   function eqVuoto(){ return { sal: 5, slots: [null, null, null], ric: ricVuoto() }; }
-  function ricQuanti(t){ return EQ.ric[t].filter(Boolean).length; }
+  function ricQuanti(){ return EQ.ric.filter(Boolean).length; }
   function eqNorm(o){
     o = o && typeof o === "object" ? o : eqVuoto();
     var n = eqVuoto();
@@ -531,14 +538,12 @@
       var s = (o.slots || [])[i];
       if(s && it(s.id) && int(s.q) > 0){ var q = Math.min(cap(it(s.id)), int(s.q)), st = Math.min(q, int(s.st)); n.slots[i] = { id: s.id, q: q, st: st, ng: q - st }; }
     }
-    var metti = function(t, r, pos){
-      if(!r || !NUC[t] || !el(r.e)) return;
-      var v = { t: t, e: r.e, src: r.src === "st" ? "st" : "ng" };
-      if(pos != null && pos < RIC_MAX && !n.ric[t][pos]){ n.ric[t][pos] = v; return; }
-      var j = n.ric[t].indexOf(null); if(j >= 0) n.ric[t][j] = v;
-    };
-    if(Array.isArray(o.ric)) o.ric.forEach(function(r){ if(r) metti(r.t, r); });            /* vecchio formato: 3 ricambi misti */
-    else if(o.ric) ["att", "def"].forEach(function(t){ (o.ric[t] || []).forEach(function(r, j){ metti(t, r, j); }); });
+    var tutti = [];
+    if(Array.isArray(o.ric)) tutti = o.ric;                                                         /* 6 nello zaino (o i vecchi 3 ricambi) */
+    else if(o.ric) tutti = [].concat(o.ric.att || [], o.ric.def || []);                              /* versione di prova con attacco e difesa separati */
+    var j = 0;
+    if(Array.isArray(o.ric) && o.ric.length === RIC_MAX) o.ric.forEach(function(r, k){ if(r && el(r.e)) n.ric[k] = { e: r.e, src: r.src === "st" ? "st" : "ng" }; });
+    else tutti.forEach(function(r){ if(r && el(r.e) && j < RIC_MAX) n.ric[j++] = { e: r.e, src: r.src === "st" ? "st" : "ng" }; });
     if(Array.isArray(o.vecchio)) n.vecchio = o.vecchio.filter(function(v){ return v && v.t; });
     return n;
   }
@@ -556,7 +561,7 @@
       if(s.st) src.push(s.st + " dalla stiva"); if(s.ng) src.push(s.ng + " dal negozio");
       R.push("Slot " + (i + 1) + ": " + it(s.id).n + " ×" + s.q + (src.length ? " (" + src.join(", ") + ")" : ""));
     });
-    ["att", "def"].forEach(function(t){ o.ric[t].forEach(function(r){ if(r) R.push("Scorta: nucleo di " + NUC[t].n.toLowerCase() + " " + el(r.e).n + (r.src === "st" ? " (dalla stiva)" : " (dal negozio)")); }); });
+    o.ric.forEach(function(r){ if(r) R.push("Nello zaino: nucleo " + el(r.e).n + (r.src === "st" ? " (dalla stiva)" : " (dal negozio)")); });
     (o.vecchio || []).forEach(function(v){ R.push("Scritto a mano: " + v.t + (v.n && v.n !== "0" ? " ×" + v.n : "")); });
     return R;
   };
@@ -614,62 +619,54 @@
   nucOv.className = "eq-ov"; nucOv.setAttribute("role", "dialog"); nucOv.setAttribute("aria-modal", "true"); nucOv.setAttribute("aria-labelledby", "nz-dt");
   nucOv.innerHTML = '<div class="eq-dlg nz-dlg" id="nz-dlg"></div>';
   document.body.appendChild(nucOv);
-  /* il numero sul pulsante: quanti nuclei di scorta si portano dietro */
-  function swConta(){
-    var n = $("sc-nuc-sw-n"); if(!n) return;
-    n.textContent = "⚔ " + ricQuanti("att") + "/" + RIC_MAX + " · 🛡 " + ricQuanti("def") + "/" + RIC_MAX;
-  }
+  /* il numero sul pulsante: quanti nuclei ci si porta dietro */
+  function swConta(){ var n = $("sc-nuc-sw-n"); if(n) n.textContent = "🎒 " + ricQuanti() + "/" + RIC_MAX; }
   function apriNuc(){ disegnaNuc(); nucOv.classList.add("on"); suono("paper"); setTimeout(function(){ var b = nucOv.querySelector(".eq-btn"); try { if(b) b.focus(); } catch(_){} }, 40); }
   function chiudiNuc(){ nucOv.classList.remove("on"); }
   function disegnaNuc(){
     var box = $("nz-dlg"); if(!box) return;
     var h = '<div class="nz-top"><h3 class="eq-dt" id="nz-dt">Scambia nuclei</h3><button type="button" class="nz-x" data-nz="chiudi" aria-label="Chiudi">✕</button></div>';
-    h += '<div class="nz-cols">' + ["att", "def"].map(function(t){
+    h += '<div class="sc-lbl">Equipaggiati</div><div class="nz-cols">' + ["att", "def"].map(function(t){
       var m = el(montato(t));
-      var c = '<div class="nz-col nz-' + t + '"><div class="nz-h">' + (t === "att" ? "⚔ " : "🛡 ") + NUC[t].n + '</div>';
-      c += '<div class="nz-mont nuc-' + t + '"><div class="sc-lbl">Equipaggiato</div>' + (m ? sfera(m) + '<div class="eq-n">' + m.n + '</div>' : '<div class="eq-e">Nessun nucleo montato</div>') + '</div>';
-      c += '<div class="sc-lbl nz-sl">Di scorta · ' + ricQuanti(t) + ' / ' + RIC_MAX + '</div><div class="nz-sock">';
-      c += EQ.ric[t].map(function(r, i){
-        if(!r) return '<button type="button" class="eq-so eq-so-vuoto nuc-' + t + '" data-nz="nuc" data-t="' + t + '" data-i="' + i + '"><span class="eq-piu" aria-hidden="true">＋</span><span>Aggiungi</span></button>';
-        var e = el(r.e);
-        return '<div class="eq-so nuc-' + t + '">' + sfera(e) + '<div class="eq-so-i"><div class="eq-n">' + e.n + '</div>'
-          + '<div class="eq-src">' + (r.src === "st" ? '<span class="eq-chip eq-st">📦 Stiva</span>' : '<span class="eq-chip eq-ng">🛒 Negozio</span>') + '</div></div>'
-          + '<div class="eq-b"><button type="button" class="eq-btn" data-nz="monta" data-t="' + t + '" data-i="' + i + '">Monta</button><button type="button" class="eq-btn eq-ghost" data-nz="riponi" data-t="' + t + '" data-i="' + i + '">Riponi</button></div></div>';
-      }).join("");
-      return c + '</div></div>';
+      return '<div class="nz-mont nuc-' + t + '"><div class="nz-h">' + (t === "att" ? "⚔ " : "🛡 ") + NUC[t].n + '</div>'
+        + (m ? sfera(m) + '<div class="eq-n">' + m.n + '</div><div class="eq-e">' + esc(t === "att" ? effAtt(m) : effDef(m)) + '</div>' : '<div class="eq-e">Nessun nucleo montato</div>') + '</div>';
     }).join("") + '</div>';
-    h += '<p class="eq-nota">Puoi portarti 3 nuclei d\'attacco e 3 di difesa oltre ai due montati. Montandone uno, il nucleo che avevi prima si consuma e sparisce. «Riponi» rimette nella stiva quello che non usi, anche se l\'avevi preso al negozio.</p>';
+    h += '<div class="sc-lbl nz-sl">Nello zaino · ' + ricQuanti() + ' / ' + RIC_MAX + '</div><div class="nz-sock">';
+    h += EQ.ric.map(function(r, i){
+      if(!r) return '<button type="button" class="eq-so eq-so-vuoto" data-nz="nuc" data-i="' + i + '"><span class="eq-piu" aria-hidden="true">＋</span><span>Aggiungi</span></button>';
+      var e = el(r.e);
+      return '<div class="eq-so">' + sfera(e) + '<div class="eq-so-i"><div class="eq-n">' + e.n + '</div>'
+        + '<div class="eq-src">' + (r.src === "st" ? '<span class="eq-chip eq-st">📦 Stiva</span>' : '<span class="eq-chip eq-ng">🛒 Negozio</span>') + '</div></div>'
+        + '<div class="eq-b"><button type="button" class="eq-btn" data-nz="monta" data-i="' + i + '">Monta</button><button type="button" class="eq-btn eq-ghost" data-nz="riponi" data-i="' + i + '">Riponi</button></div></div>';
+    }).join("") + '</div>';
+    h += '<p class="eq-nota">Oltre ai due montati puoi portarti dietro 6 nuclei di qualsiasi elemento. Decidi se usarli in attacco o in difesa solo quando li monti: il nucleo montato non si toglie più, e quello che avevi prima si consuma e sparisce. Finché sei sulla nave, «Riponi» rimette nella stiva un nucleo dello zaino, anche se l\'avevi preso al negozio.</p>';
     box.innerHTML = h;
   }
   nucOv.addEventListener("click", function(e){
     if(e.target === nucOv){ chiudiNuc(); return; }
     var b = e.target.closest("[data-nz]"); if(!b) return;
-    var az = b.getAttribute("data-nz"), t = b.getAttribute("data-t"), i = parseInt(b.getAttribute("data-i"), 10);
+    var az = b.getAttribute("data-nz"), i = parseInt(b.getAttribute("data-i"), 10);
     if(az === "chiudi"){ chiudiNuc(); return; }
-    if(az === "nuc"){ if(ricQuanti(t) >= RIC_MAX) return; apriDlg({ tipo: "nuc", t: t, i: i, e: null, src: null }); return; }
-    if(az === "monta"){ montaScorta(t, i); return; }
+    if(az === "nuc"){ if(ricQuanti() >= RIC_MAX) return; apriDlg({ tipo: "nuc", i: i, e: null, src: null }); return; }
+    if(az === "monta"){ if(EQ.ric[i]) apriDlg({ tipo: "monta", i: i, t: null }); return; }
     if(az === "riponi"){
-      var z = EQ.ric[t][i]; if(!z || lavoro) return;
+      var z = EQ.ric[i]; if(!z || lavoro) return;
       lavoro = true; b.disabled = true; b.textContent = "Ripongo…";
-      riponi(nid(t, z.e), 1).then(function(rr){
+      riponi(nid(z.e), 1).then(function(rr){
         lavoro = false;
-        if(rr && rr.ok){ EQ.ric[t][i] = null; eqSalva(); avviso("Nucleo riposto nella stiva"); } else disegnaNuc();
+        if(rr && rr.ok){ EQ.ric[i] = null; eqSalva(); avviso("Nucleo riposto nella stiva"); } else disegnaNuc();
       });
     }
   });
   document.addEventListener("keydown", function(e){ if(e.key === "Escape" && nucOv.classList.contains("on") && !eqOv.classList.contains("on")) chiudiNuc(); });
   document.addEventListener("click", function(e){ if(e.target.closest && e.target.closest("#sc-nuc-sw")) apriNuc(); });
-  function montaScorta(t, i){
-    var r = EQ.ric[t][i]; if(!r) return;
+  /* monta il nucleo i dello zaino in attacco o in difesa (scelto nella finestra «Monta») */
+  function montaZaino(i, t){
+    var r = EQ.ric[i]; if(!r || !NUC[t]) return;
     var sel = $(NUC[t].sel), vecchio = el(sel ? sel.value : ""), nuovo = el(r.e);
-    var testo = vecchio ? "Il nucleo " + vecchio.n + " che hai montato adesso si consuma e sparisce." : "Adesso non hai nessun nucleo di " + NUC[t].n.toLowerCase() + " montato.";
-    var chiedi = typeof tcjConferma === "function" ? tcjConferma({ titolo: "Montare il nucleo di " + NUC[t].n.toLowerCase() + " " + nuovo.n + "?", testo: testo, si: "Sì, montalo", attesa: 1 }) : Promise.resolve(confirm(testo));
-    chiedi.then(function(ok){
-      if(!ok) return;
-      if(sel){ sel.value = r.e; try { scNucleo(t); } catch(_){} try { orbSet(t, r.e); } catch(_){} }
-      EQ.ric[t][i] = null; eqSalva(); suono("charge");
-      avviso("Montato il nucleo di " + NUC[t].n.toLowerCase() + " " + nuovo.n + (vecchio ? ". Il nucleo " + vecchio.n + " si è consumato." : "."));
-    });
+    if(sel){ sel.value = r.e; try { scNucleo(t); } catch(_){} try { orbSet(t, r.e); } catch(_){} }
+    EQ.ric[i] = null; chiudiDlg(); eqSalva(); suono("charge");
+    avviso("Montato il nucleo " + nuovo.n + " in " + (t === "att" ? "attacco" : "difesa") + (vecchio ? ". Il nucleo " + vecchio.n + " si è consumato." : "."));
   }
 
   /* ---------- finestra di scelta ---------- */
@@ -706,16 +703,28 @@
         + opzioneSrc("ng", D.src === "ng", !!x, "non tocca la stiva") + '</div></div>';
       h += '<div class="eq-df"><div><div class="sc-lbl">Quantità' + (x ? " · posto libero " + posto : "") + '</div><span class="stv-cnt"><button type="button" data-dq="-1" aria-label="Uno in meno">−</button><b>' + (x && D.src ? D.q : "–") + '</b><button type="button" data-dq="1" aria-label="Uno in più">+</button></span></div>'
         + '<div class="eq-b"><button type="button" class="eq-btn eq-ghost" data-dlg="annulla">Annulla</button><button type="button" class="eq-btn" data-dlg="ok"' + (x && D.src && max && !lavoro ? "" : " disabled") + '>' + (lavoro ? "Prendo…" : "Equipaggia") + '</button></div></div>';
+    } else if(D.tipo === "monta"){
+      var r = EQ.ric[D.i]; if(!r){ chiudiDlg(); return; }
+      var e = el(r.e);
+      h += '<h3 class="eq-dt" id="eq-dt">Montare il nucleo ' + e.n + '?</h3><div class="nz-pick">' + sfera(e) + '<span>Dove lo monti?</span></div>'
+        + '<div class="nz-scelte">' + ["att", "def"].map(function(t){
+          var v = el(montato(t));
+          return '<button type="button" class="nz-scelta nuc-' + t + (D.t === t ? " on" : "") + '" data-mt="' + t + '"><b>' + (t === "att" ? "⚔ In attacco" : "🛡 In difesa") + '</b>'
+            + '<span>' + esc(t === "att" ? effAtt(e) : effDef(e)) + '</span>'
+            + '<small>' + (v ? "Adesso hai " + v.n + ": si consuma e sparisce." : "Adesso non hai niente montato qui.") + '</small></button>';
+        }).join("") + '</div>'
+        + '<div class="eq-df"><span class="eq-nota">Una volta montato non si toglie più.</span><div class="eq-b"><button type="button" class="eq-btn eq-ghost" data-dlg="annulla">Annulla</button>'
+        + '<button type="button" class="eq-btn" data-dlg="ok"' + (D.t ? "" : " disabled") + '>' + (D.t ? (D.t === "att" ? "Monta in attacco" : "Monta in difesa") : "Monta") + '</button></div></div>';
     } else {
-      var k = D.e ? nid(D.t, D.e) : null, dn = k ? int(doc.str[k]) : 0;
+      var k = D.e ? nid(D.e) : null, dn = k ? int(doc.str[k]) : 0;
       if(D.src === "st" && (!dn || !scrive)) D.src = null;
-      h += '<h3 class="eq-dt" id="eq-dt">' + (D.t === "att" ? "⚔ " : "🛡 ") + 'Nucleo di ' + NUC[D.t].n.toLowerCase() + ' di scorta</h3>'
-        + '<div class="eq-grp"><div class="sc-lbl">Elemento</div><div class="eq-opts">' + EL.map(function(e){ return '<button type="button" class="eq-opt' + (D.e === e.id ? " on" : "") + '" data-e="' + e.id + '"><i class="eq-dot" style="--c:' + e.c + '"></i>' + e.n + ' <small>' + int(doc.str[nid(D.t, e.id)]) + ' in stiva</small></button>'; }).join("") + '</div></div>'
-        + '<div class="eq-eff">' + esc(NUC[D.t].e) + '</div>'
+      h += '<h3 class="eq-dt" id="eq-dt">Nucleo da portare nello zaino</h3>'
+        + '<div class="eq-grp"><div class="sc-lbl">Elemento</div><div class="eq-opts">' + EL.map(function(e){ return '<button type="button" class="eq-opt' + (D.e === e.id ? " on" : "") + '" data-e="' + e.id + '"><i class="eq-dot" style="--c:' + e.c + '"></i>' + e.n + ' <small>' + int(doc.str[nid(e.id)]) + ' in stiva</small></button>'; }).join("") + '</div></div>'
+        + '<div class="eq-eff">' + (D.e ? "Potrai montarlo in attacco o in difesa: lo decidi quando lo monti." : "Scegli l'elemento del nucleo.") + '</div>'
         + '<div class="eq-grp"><div class="sc-lbl">Da dove arriva</div><div class="eq-opts">'
         + opzioneSrc("st", D.src === "st", D.e && dn && scrive, !scrive ? "serve il salvataggio online" : D.e ? (dn ? "in stiva: " + dn : "esaurito in stiva") : "")
         + opzioneSrc("ng", D.src === "ng", !!D.e, "non tocca la stiva") + '</div></div>'
-        + '<div class="eq-df"><span class="eq-nota">Ne porti ' + ricQuanti(D.t) + ' su ' + RIC_MAX + '.</span><div class="eq-b"><button type="button" class="eq-btn eq-ghost" data-dlg="annulla">Annulla</button>'
+        + '<div class="eq-df"><span class="eq-nota">Ne porti ' + ricQuanti() + ' su ' + RIC_MAX + '.</span><div class="eq-b"><button type="button" class="eq-btn eq-ghost" data-dlg="annulla">Annulla</button>'
         + '<button type="button" class="eq-btn" data-dlg="ok"' + (D.e && D.src && !lavoro ? "" : " disabled") + '>' + (lavoro ? "Prendo…" : "Aggiungi") + '</button></div></div>';
     }
     box.innerHTML = h;
@@ -736,6 +745,7 @@
   function confermaDlg(){
     if(!D || lavoro) return;
     var o = D;
+    if(o.tipo === "monta"){ if(o.t) montaZaino(o.i, o.t); return; }
     if(o.tipo === "slot"){
       var x = it(o.id); if(!x || !o.src) return;
       var fatto = function(){
@@ -749,10 +759,10 @@
       prendi(o.id, o.q).then(function(r){ lavoro = false; if(r && r.ok) fatto(); else disegnaDlg(); });
     } else {
       if(!o.e || !o.src) return;
-      var mettiNelSocket = function(){ EQ.ric[o.t][o.i] = { t: o.t, e: o.e, src: o.src }; chiudiDlg(); eqSalva(); suono("charge"); };
+      var mettiNelSocket = function(){ EQ.ric[o.i] = { e: o.e, src: o.src }; chiudiDlg(); eqSalva(); suono("charge"); };
       if(o.src === "ng"){ mettiNelSocket(); return; }
       lavoro = true; disegnaDlg();
-      prendi(nid(o.t, o.e), 1).then(function(r){ lavoro = false; if(r && r.ok) mettiNelSocket(); else disegnaDlg(); });
+      prendi(nid(o.e), 1).then(function(r){ lavoro = false; if(r && r.ok) mettiNelSocket(); else disegnaDlg(); });
     }
   }
   eqOv.addEventListener("click", function(e){
@@ -760,6 +770,7 @@
     if(!D) return;
     var t = e.target, b;
     if((b = t.closest("[data-id]")) && D.tipo === "slot" && !EQ.slots[D.i]){ D.id = b.getAttribute("data-id"); D.src = null; D.q = 1; disegnaDlg(); return; }
+    if((b = t.closest("[data-mt]"))){ D.t = b.getAttribute("data-mt"); disegnaDlg(); return; }
     if((b = t.closest("[data-e]"))){ D.e = b.getAttribute("data-e"); D.src = null; disegnaDlg(); return; }
     if((b = t.closest("[data-src]"))){ D.src = b.getAttribute("data-src"); D.q = D.q || 1; disegnaDlg(); return; }
     if((b = t.closest("[data-dq]"))){ D.q = (D.q || 1) + parseInt(b.getAttribute("data-dq"), 10); disegnaDlg(); return; }
