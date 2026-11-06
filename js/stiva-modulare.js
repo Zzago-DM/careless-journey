@@ -16,17 +16,19 @@
 
   /* ---------- catalogo ---------- */
   var T = [
-    { id: "lab", i: "🔬", n: "Laboratorio aetherico", mis: "pm", comp: ["beh", "inv2", "poz"], d: "Studiare artefatti, reliquie, parti di mostro e campioni d'aether; fare esperimenti. Nella media si lavora in due." },
-    { id: "bib", i: "📚", n: "Biblioteca", mis: "pm", comp: ["stor", "trad", "inv2"], d: "Raccogliere libri, mappe e documenti trovati nei viaggi; fare ricerche su Mael, Behemoth e luoghi; tenere il diario di bordo." },
-    { id: "inf", i: "⚕️", n: "Infermeria", mis: "pm", comp: ["poz", "intu", "nat"], d: "Curare ferite e stati dopo una caccia, riposare. Nella media ci sono più letti per ospitare feriti." },
-    { id: "off", i: "🔨", n: "Officina", mis: "pm", comp: ["rap", "perc", "atl"], d: "Riparare armi, armature e pezzi della nave; piccoli lavori di costruzione." },
-    { id: "ghi", i: "🧊", n: "Ghiacciaia", mis: "pm", comp: ["soprav", "nat"], d: "Conservare viveri freschi e parti di mostro che si guastano." },
-    { id: "ser", i: "🌿", n: "Serra", mis: "mg", comp: ["nat", "poz", "amm"], d: "Coltivare erbe per i tonici e un po' di cibo fresco; un angolo di verde a bordo." },
-    { id: "cab", i: "🛏️", n: "Cabina", mis: "pm", comp: ["pers", "intr", "intu"], d: "Ospitare PNG, passeggeri o membri dell'equipaggio. La media può essere un alloggio con più letti o una cabina di lusso." },
-    { id: "cel", i: "⛓️", n: "Cella", mis: "pm", comp: ["intim", "ing", "intu"], d: "Tenere prigionieri. Nella media ci sono più celle o una stanza per gli interrogatori." },
-    { id: "add", i: "🗡️", n: "Sala d'addestramento", mis: "g", comp: ["atl", "acro"], d: "Allenarsi al combattimento, fare sparring, provare armi nuove." },
-    { id: "pol", i: "🎯", n: "Poligono di tiro", mis: "g", comp: ["perc", "rap"], d: "Esercitarsi con pistole e archi aetherici, con bersagli fissi e mobili." },
-    { id: "sti", i: "📦", n: "Stiva aggiuntiva", mis: "pmg", comp: ["atl", "furt"], d: "Carichi ingombranti, casse, prede di grossa taglia. Fa posto a più viveri: 10 giorni in più la piccola, 20 la media, 40 la grande." },
+    /* competenze divise in tre gruppi da 6 (pratiche, intellettuali, di carisma): ognuna si allena in almeno una stanza */
+    { id: "bib", i: "📚", n: "Biblioteca", mis: "pm", comp: ["stor", "trad", "beh"], d: "Raccogliere libri, mappe e documenti trovati nei viaggi; studiare la storia, le usanze dei popoli e i trattati sui Behemoth; tenere il diario di bordo." },
+    { id: "lab", i: "🔬", n: "Laboratorio aetherico", mis: "pm", comp: ["inv2", "poz", "nat"], d: "Studiare artefatti, reliquie, parti di mostro e campioni d'aether; fare esperimenti; riparare armi, armature e pezzi della nave. Nella media si lavora in due." },
+    { id: "inf", i: "⚕️", n: "Infermeria", mis: "pm", comp: ["pers", "intr", "intu"], d: "Curare ferite e stati dopo una caccia, riposare; tenere alto il morale dei feriti e capire come stanno davvero. Nella media ci sono più letti per ospitare feriti." },
+    { id: "ser", i: "🌿", n: "Serra", mis: "mg", comp: ["amm", "nat", "soprav"], d: "Coltivare erbe per i tonici e un po' di cibo fresco, anche in condizioni difficili; accudire gli insetti e i piccoli animali che servono alle piante." },
+    { id: "cel", i: "⛓️", n: "Sala interrogatori", mis: "pm", comp: ["ing", "intim", "intu"], d: "Tenere prigionieri e interrogarli: spaventare, ingannare, capire chi mente. Nella media ci sono più celle." },
+    { id: "add", i: "🗡️", n: "Sala d'addestramento", mis: "g", comp: ["atl", "acro", "furt", "rap", "perc", "soprav"], d: "Allenarsi al combattimento, fare sparring, provare armi nuove; esercitarsi al tiro con pistole e archi aetherici, con bersagli fissi e mobili." },
+    { id: "cab", i: "🛏️", n: "Cabina", mis: "pm", comp: [], d: "Ospitare PNG, passeggeri o membri dell'equipaggio. La media può essere un alloggio con più letti o una cabina di lusso." },
+    { id: "sti", i: "📦", n: "Stiva aggiuntiva", mis: "pmg", comp: [], d: "Carichi ingombranti, casse, prede di grossa taglia. Fa posto a più viveri: 10 giorni in più la piccola, 20 la media, 40 la grande." },
+    /* stanze non più costruibili: restano solo per quelle già allestite prima del cambio */
+    { id: "off", i: "🔨", n: "Officina", mis: "pm", comp: [], d: "Non si costruisce più: i lavori di riparazione ora si fanno nel Laboratorio aetherico.", nascosto: true },
+    { id: "ghi", i: "🧊", n: "Ghiacciaia", mis: "pm", comp: [], d: "Non si costruisce più: le casse della dispensa conservano già il cibo.", nascosto: true },
+    { id: "pol", i: "🎯", n: "Poligono di tiro", mis: "g", comp: [], d: "Non si costruisce più: il tiro ora si allena nella Sala d'addestramento.", nascosto: true },
     { id: "lib", i: "✎", n: "Spazio libero", mis: "pmg", comp: [], d: "Nome e uso li scrivete voi.", nascosto: true }   /* non si sceglie più: uno spazio non allestito è già libero (resta solo per le stanze create prima) */
   ];
   var MIS = { p: "piccola", m: "media", g: "grande" };
@@ -275,7 +277,7 @@
   function schedaTipo(t, r){
     var cl = r ? compDi(r) : t.comp;
     return '<p class="sm-d">' + esc(t.d) + '</p>'
-      + '<div class="stv-lbl">Competenze</div>' + (cl.length ? chips(cl) : '<p class="stv-nota">' + (t.id === "lib" ? "Nessuna: le sceglie il Master." : "Nessuna.") + '</p>');
+      + '<div class="stv-lbl">Competenze</div>' + (cl.length ? chips(cl) : '<p class="stv-nota">' + (t.id === "lib" ? "Nessuna: le sceglie il Master." : "Qui non si allena nessuna competenza.") + '</p>');
   }
   function opzioniMisura(m, i){
     var lato = i < 4 ? 0 : 4, out = [];
