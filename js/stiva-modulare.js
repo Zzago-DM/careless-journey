@@ -27,7 +27,7 @@
     { id: "add", i: "🗡️", n: "Sala d'addestramento", mis: "g", comp: ["atl", "acro"], d: "Allenarsi al combattimento, fare sparring, provare armi nuove." },
     { id: "pol", i: "🎯", n: "Poligono di tiro", mis: "g", comp: ["perc", "rap"], d: "Esercitarsi con pistole e archi aetherici, con bersagli fissi e mobili." },
     { id: "sti", i: "📦", n: "Stiva aggiuntiva", mis: "pmg", comp: ["atl", "furt"], d: "Carichi ingombranti, casse, prede di grossa taglia. Fa posto a più viveri: 10 giorni in più la piccola, 20 la media, 40 la grande." },
-    { id: "lib", i: "✎", n: "Spazio libero", mis: "pmg", comp: [], d: "Nome e uso li scrivete voi." }
+    { id: "lib", i: "✎", n: "Spazio libero", mis: "pmg", comp: [], d: "Nome e uso li scrivete voi.", nascosto: true }   /* non si sceglie più: uno spazio non allestito è già libero (resta solo per le stanze create prima) */
   ];
   var MIS = { p: "piccola", m: "media", g: "grande" };
   var REGOLA = "Chi passa del tempo in una stanza durante il viaggio sceglie una competenza del suo set: fino alla fine della missione successiva, se non ce l'ha la ottiene come competenza temporanea, se ce l'ha già prende +1. Una stanza piccola la può usare 1 Slayer per viaggio, una media 2, una grande tutto il gruppo.";
@@ -280,6 +280,7 @@
   function opzioniMisura(m, i){
     var lato = i < 4 ? 0 : 4, out = [];
     T.forEach(function(t){
+      if(t.nascosto) return;
       var b = [];
       if(t.mis.indexOf("p") >= 0) b.push({ et: "Piccola", s: [i] });
       if(t.mis.indexOf("m") >= 0){
@@ -313,7 +314,7 @@
       var nv = m.nav;
       h = '<div class="sm-h">Navata' + (nv ? " · " + tipo(nv.t).i + " " + esc(nomeStanza(nv)) : " · corridoio vuoto") + '</div>'
         + '<p class="stv-nota">Larga x e lunga 3x, con l\'ascensore all\'altezza della parete tra le stanze 3 e 4. Ospita una stanza grande alla volta.</p>'
-        + '<div class="sm-cat-b sm-nav-b">' + T.filter(function(t){ return t.mis.indexOf("g") >= 0; }).map(function(t){ var on = nv && nv.t === t.id; return '<button type="button" class="eq-opt' + (on ? " on" : "") + '" data-az="nav" data-t="' + t.id + '">' + t.i + ' ' + esc(t.n) + '</button>'; }).join("")
+        + '<div class="sm-cat-b sm-nav-b">' + T.filter(function(t){ return !t.nascosto && t.mis.indexOf("g") >= 0; }).map(function(t){ var on = nv && nv.t === t.id; return '<button type="button" class="eq-opt' + (on ? " on" : "") + '" data-az="nav" data-t="' + t.id + '">' + t.i + ' ' + esc(t.n) + '</button>'; }).join("")
         + '<button type="button" class="eq-opt' + (nv ? "" : " on") + '" data-az="nav" data-t="">⬚ Corridoio vuoto</button></div>';
       if(nv) h += dettagli(nv, "nav", m);
     } else {
