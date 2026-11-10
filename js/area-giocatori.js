@@ -838,31 +838,52 @@ let slAsk=null,slBg=false;
 function slMenuOpen(){const m=document.getElementById("sl-menu");return !!(m&&!m.hidden)}
 function slToggle(e){if(e)e.stopPropagation();const m=document.getElementById("sl-menu"),b=document.getElementById("sl-btn");if(!m||!b)return;const open=m.hidden;m.hidden=!open;b.setAttribute("aria-expanded",String(open));slAsk=null;if(open)slRender();}
 function slClose(){const m=document.getElementById("sl-menu"),b=document.getElementById("sl-btn");if(m)m.hidden=true;if(b)b.setAttribute("aria-expanded","false");slAsk=null;}
+/* Menu ⚔ Slayer: un pannello largo diviso in riquadri (Slayer · Aspetto del sito · Effetti e suoni · Zona Master).
+   Sul computer i riquadri stanno affiancati; sul telefono si vede un riquadro alla volta, scelto con le linguette in alto (slTab). */
+let slTab="pg";
+function slSetTab(t){slTab=t;slRender();}
 function slRender(){const b=document.getElementById("sl-btn"),m=document.getElementById("sl-menu");if(!b||!m)return;
  const act=paActive(),ac=SC_CHARS.find(c=>c.k===act);
  b.innerHTML=ac?('<span class="sl-bi">'+ac.e+'</span><span class="sl-bt"> '+ac.n+'</span> ▾'):'<span class="sl-bi">⚔</span><span class="sl-bt"> Slayer</span> ▾';
  if(m.hidden)return;
- let h='<div class="sl-h">Personaggio</div>';
- SC_CHARS.forEach(c=>{const open=paIsOpen(c.k),on=c.k===act;
-  h+=`<button type="button" class="sl-item${on?" on":""}" onclick="slPick('${c.k}')"><span class="sl-e">${c.e}</span><span class="sl-nm">${c.n}</span><span class="sl-st">${on?"✓ attivo":open?"aperta":(paMaster()?"🔒 chiusa":"🔒")}</span></button>`;
-  if(slAsk===c.k)h+=`<div class="sl-code"><input type="password" id="sl-code-in" placeholder="Password" aria-label="Password di ${c.n}" autocomplete="off" onkeydown="if(event.key==='Enter')slTry()"><button type="button" onclick="slTry()">Apri</button></div><div class="sl-err" id="sl-err" style="display:none">Password errata. Riprova.</div>`;});
  const LG=!!window.TCJ_LEGGERO; /* versione leggera: niente suoni, effetti, particelle e qualità del Maelstrom (il tema del sito invece resta) */
- h+='<div class="sl-sep"></div>';if(typeof tcjDispositivoRiga==="function")h+=tcjDispositivoRiga();
- if(!LG)h+=`<div class="sl-row"><div><span>Suoni</span><small>Effetti sonori del sito</small></div><button type="button" class="sl-sw" role="switch" aria-checked="${sfxOn()}" aria-label="Suoni" onclick="sfxToggle()"></button></div>`;
- if(!LG)h+=`<div class="sl-row"><div><span>Effetti laterali</span><small>${(act||mThemeActive())?"Particelle animate ai lati della pagina":"Visibili quando un personaggio è attivo"}</small></div><button type="button" class="sl-sw" role="switch" aria-checked="${fxOn()}" aria-label="Effetti laterali" onclick="fxToggle()"></button></div>`;
- if(!LG&&typeof bgfxOn==="function")h+=`<div class="sl-row"><div><span>Particelle di sfondo</span><small>Scintille che scendono lungo la pagina</small></div><button type="button" class="sl-sw" role="switch" aria-checked="${bgfxOn()}" aria-label="Particelle di sfondo" onclick="bgfxToggle()"></button></div>`;
- if(!LG&&typeof maelQRiga==="function")h+=maelQRiga();
- if(typeof temaRiga==="function")h+=temaRiga(); /* il tema del sito si sceglie anche nella versione leggera */
+ const sw=(nome,nota,on,fn,cl)=>`<div class="sl-row"><div><span>${nome}</span><small>${nota}</small></div><button type="button" class="sl-sw${cl||""}" role="switch" aria-checked="${on}" aria-label="${nome}" onclick="${fn}"></button></div>`;
+ const box=(id,ico,tit,corpo)=>`<section class="sl-box${slTab===id?" on":""}" data-t="${id}" aria-label="${tit}"><div class="sl-h"><span class="sl-hi">${ico}</span>${tit}</div>${corpo}</section>`;
+ const R=[];
+ /* 1. Slayer: personaggi, accesso all'area e azioni sul personaggio attivo */
+ let pg='';
+ SC_CHARS.forEach(c=>{const open=paIsOpen(c.k),on=c.k===act;
+  pg+=`<button type="button" class="sl-item${on?" on":""}" onclick="slPick('${c.k}')"><span class="sl-e">${c.e}</span><span class="sl-nm">${c.n}</span><span class="sl-st">${on?"✓ attivo":open?"aperta":(paMaster()?"🔒 chiusa":"🔒")}</span></button>`;
+  if(slAsk===c.k)pg+=`<div class="sl-code"><input type="password" id="sl-code-in" placeholder="Password" aria-label="Password di ${c.n}" autocomplete="off" onkeydown="if(event.key==='Enter')slTry()"><button type="button" onclick="slTry()">Apri</button></div><div class="sl-err" id="sl-err" style="display:none">Password errata. Riprova.</div>`;});
+ pg+='<div class="sl-acts"><a class="sl-act" href="#scheda" onclick="slClose()">↓ Vai all\'Area Slayer</a>';
+ if(ac)pg+=`<button type="button" class="sl-act" onclick="slClose();paNeutral()">◆ Torna al colore neutro</button>`;
+ if(ac&&(paOpenList().indexOf(act)>=0||paMaster()))pg+=`<button type="button" class="sl-act" onclick="slClose();paLock()">🔒 Chiudi l'area di ${ac.n}</button>`;
+ pg+='</div>';
+ R.push(["pg","⚔","Slayer",pg]);
+ /* 2. Aspetto del sito: tema, colori del personaggio attivo, versione del sito */
+ let asp='';
+ if(typeof temaRiga==="function")asp+=temaRiga(); /* il tema del sito si sceglie anche nella versione leggera */
  if(act){const pf=paPref(act),opt=function(v){return PA_ELS.map(function(e){return '<option value="'+e[0]+'"'+(e[0]===v?' selected':'')+'>'+e[1]+'</option>'}).join("")};
-  h+='<button type="button" class="sl-row sl-bgt" onclick="slBg=!slBg;slRender()" aria-expanded="'+slBg+'"><span>Impostazioni sfondo</span><span class="sl-car">'+(slBg?'\u25B4':'\u25BE')+'</span></button>';
-  if(slBg)h+='<div class="sl-bg"><label>Colore del sito<select onchange="paSetPref(\'c\',this.value)">'+opt(pf.c)+'</select></label>'+(LG?'':'<label>Effetti laterali<select onchange="paSetPref(\'fx\',this.value)">'+opt(pf.fx)+'</select></label>')+(pf.custom?'<button type="button" class="sl-act" onclick="paResetPref()">\u21BA Torna ai colori di '+ac.n+'</button>':'<small>Colori di base di '+ac.n+'</small>')+'</div>';}
+  asp+='<div class="sl-bg"><div class="sl-sub">Colori di '+ac.n+'</div><label>Colore del sito<select onchange="paSetPref(\'c\',this.value)">'+opt(pf.c)+'</select></label>'+(LG?'':'<label>Effetti laterali<select onchange="paSetPref(\'fx\',this.value)">'+opt(pf.fx)+'</select></label>')+(pf.custom?'<button type="button" class="sl-act" onclick="paResetPref()">↺ Torna ai colori di '+ac.n+'</button>':'<small>Colori di base di '+ac.n+'</small>')+'</div>';}
+ else asp+='<p class="sl-nota">Apri l\'area di un personaggio per usare i suoi colori sul sito.</p>';
+ if(typeof tcjDispositivoRiga==="function")asp+=tcjDispositivoRiga();
+ R.push(["asp","🎨","Aspetto del sito",asp]);
+ /* 3. Effetti e suoni (non nella versione leggera) */
+ if(!LG){let fx='';
+  fx+=sw("Suoni","Effetti sonori del sito",sfxOn(),"sfxToggle()");
+  fx+=sw("Effetti laterali",(act||mThemeActive())?"Particelle animate ai lati della pagina":"Visibili quando un personaggio è attivo",fxOn(),"fxToggle()");
+  if(typeof bgfxOn==="function")fx+=sw("Particelle di sfondo","Scintille che scendono lungo la pagina",bgfxOn(),"bgfxToggle()");
+  if(typeof maelQRiga==="function")fx+=maelQRiga();
+  R.push(["fx","✨","Effetti e suoni",fx]);}
+ /* 4. Zona Master, solo per il Master */
  if(paMaster()){const mp=mPref(),mopt=function(v){return M_ELS.map(function(e){return '<option value="'+e[0]+'"'+(e[0]===v?' selected':'')+'>'+e[1]+'</option>'}).join("")};
-  h+='<div class="sl-sep"></div><div class="sl-h sl-mh">👑 Zona Master</div><div class="sl-row"><div><span>Sfondo del Master</span><small>Ha la precedenza sui colori dei personaggi</small></div><button type="button" class="sl-sw sl-msw" role="switch" aria-checked="'+mp.on+'" aria-label="Sfondo del Master" onclick="mSetPref(\'on\','+(!mp.on)+')"></button></div>';
-  if(mp.on)h+='<div class="sl-bg"><label>Colore del sito<select onchange="mSetPref(\'c\',this.value)">'+mopt(mp.c)+'</select></label>'+(LG?'':'<label>Effetti laterali<select onchange="mSetPref(\'fx\',this.value)">'+mopt(mp.fx)+'</select></label>')+(mp.custom?'<button type="button" class="sl-act" onclick="mResetPref()">\u21BA Torna al Cremisi del Master</button>':'<small>Cremisi del Master, con il Sigillo Cremisi ai lati</small>')+'</div>';
-  const zm=mZm();h+='<div class="sl-bg sl-zm"><label>Colore della Zona Master<select onchange="mSetZm(this.value)"><option value="cremisi"'+(zm==="cremisi"?' selected':'')+'>🩸 Cremisi</option><option value="oro"'+(zm==="oro"?' selected':'')+'>☀ Oro · Golden Sun</option></select></label><small>Cambia solo la Zona Master, non lo sfondo del sito</small></div>';}
- h+='<div class="sl-sep"></div><a class="sl-act" href="#scheda" onclick="slClose()">↓ Vai all\'Area Slayer</a>';
- if(ac)h+=`<button type="button" class="sl-act" onclick="slClose();paNeutral()">◆ Torna al colore neutro</button>`;
- if(ac&&(paOpenList().indexOf(act)>=0||paMaster()))h+=`<button type="button" class="sl-act" onclick="slClose();paLock()">🔒 Chiudi l'area di ${ac.n}</button>`;
+  let ms=sw("Sfondo del Master","Ha la precedenza sui colori dei personaggi",mp.on,"mSetPref('on',"+(!mp.on)+")"," sl-msw");
+  if(mp.on)ms+='<div class="sl-bg"><label>Colore del sito<select onchange="mSetPref(\'c\',this.value)">'+mopt(mp.c)+'</select></label>'+(LG?'':'<label>Effetti laterali<select onchange="mSetPref(\'fx\',this.value)">'+mopt(mp.fx)+'</select></label>')+(mp.custom?'<button type="button" class="sl-act" onclick="mResetPref()">↺ Torna al Cremisi del Master</button>':'<small>Cremisi del Master, con il Sigillo Cremisi ai lati</small>')+'</div>';
+  const zm=mZm();ms+='<div class="sl-bg sl-zm"><label>Colore della Zona Master<select onchange="mSetZm(this.value)"><option value="cremisi"'+(zm==="cremisi"?' selected':'')+'>🩸 Cremisi</option><option value="oro"'+(zm==="oro"?' selected':'')+'>☀ Oro · Golden Sun</option></select></label><small>Cambia solo la Zona Master, non lo sfondo del sito</small></div>';
+  R.push(["ms","👑","Zona Master",ms]);}
+ if(!R.some(r=>r[0]===slTab))slTab="pg";
+ let h='<div class="sl-tabs" role="tablist">'+R.map(r=>`<button type="button" role="tab" class="sl-tab${slTab===r[0]?" on":""}" aria-selected="${slTab===r[0]}" onclick="event.stopPropagation();slSetTab('${r[0]}')"><span>${r[1]}</span> ${r[2]}</button>`).join("")+'</div>';
+ h+='<div class="sl-grid sl-n'+R.length+'">'+R.map(r=>box(r[0],r[1],r[2],r[3])).join("")+'</div>';
  m.innerHTML=h;
  if(slAsk){const i=document.getElementById("sl-code-in");if(i)setTimeout(function(){i.focus()},0);}}
 function slGo(k){paThemeOn=true;if(k!==scCur)scSwitch(k);else scBuild();}
