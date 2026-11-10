@@ -7,18 +7,18 @@
 (function(){
   "use strict";
   var wrap = document.getElementById("ml-cards"); if(!wrap) return;
-  var MAEL = ["estarossa", "symael", "azrael", "raphael", "gabrael", "mykael"];
+  var MAEL = ["maelstrom", "estarossa", "symael", "azrael", "raphael", "gabrael", "mykael"];   /* il Maelstrom ha un mosaico orizzontale */
   var OGGI = { estarossa: "Estarossa, governatore di Ramsgate", mykael: "Mykael, avvistato a Greenshard" };   /* didascalia della raffigurazione di oggi */
   var CENTRO = { estarossa: "45% 30%", mykael: "42% 40%" };   /* le foto di oggi non sono verticali: dove sta la figura, per il riquadro 3:4 */
   function scelta(k){ try { return localStorage.getItem("tcj-mael-vis-" + k) === "oggi" && OGGI[k] ? "oggi" : "mito"; } catch(e){ return "mito"; } }
   function src(k, v){ return "media/mael/" + k + "-" + v + ".webp"; }
   function nome(card){ var t = card.querySelector(".ct"); return t ? t.textContent.trim() : ""; }
-  function didascalia(k, v, n){ return v === "oggi" ? (typeof OGGI[k] === "string" && OGGI[k] ? OGGI[k] : n + " oggi") : "Raffigurazione di " + n; }
+  function didascalia(k, v, n){ return v === "oggi" ? (typeof OGGI[k] === "string" && OGGI[k] ? OGGI[k] : n + " oggi") : (k === "maelstrom" ? "Raffigurazione del Maelstrom" : "Raffigurazione di " + n); }
   MAEL.forEach(function(k){
     var card = wrap.querySelector('.card[data-mk="' + k + '"]'); if(!card) return;
     var n = nome(card), v = scelta(k);
     var fig = document.createElement("figure"); fig.className = "ml-fig";
-    fig.innerHTML = '<button type="button" class="ml-fig-b" aria-label="Apri in grande la raffigurazione di ' + n + '"><img src="' + src(k, v) + '" alt="Raffigurazione di ' + n + '" loading="lazy" decoding="async" width="720" height="960"></button>'
+    fig.innerHTML = '<button type="button" class="ml-fig-b" aria-label="Apri in grande la raffigurazione di ' + n + '"><img src="' + src(k, v) + '" alt="Raffigurazione di ' + n + '" loading="lazy" decoding="async" width="' + (k === "maelstrom" ? 1280 : 720) + '" height="960"></button>'
       + '<figcaption>' + didascalia(k, v, n) + '</figcaption>'
       + (OGGI[k] ? '<div class="ml-vis" role="group" aria-label="Quale raffigurazione"><button type="button" data-v="mito" aria-pressed="' + (v === "mito") + '">Raffigurazione</button><button type="button" data-v="oggi" aria-pressed="' + (v === "oggi") + '">Realtà</button></div>' : "");
     var corpo = document.createElement("div"); corpo.className = "ml-corpo";
