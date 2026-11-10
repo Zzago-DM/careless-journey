@@ -47,6 +47,12 @@
       "Nella <b>stiva</b> la <b>Dispensa</b> adesso sta in cima agli Strumenti, prima dei tonici base, con il suo − e + come tutto il resto. Accanto al numero vedete quanti giorni di viveri ci stanno: <b>/60</b>, di più se avete allestito una Stiva aggiuntiva. Quando è piena il + si ferma.",
       "I <b>nuclei elementali</b> hanno un massimo di <b>20 per elemento</b>: accanto a ogni numero vedete «/20». Ora sono disposti su tre righe da due, così si vedono tutti senza scorrere di lato.",
       "In tutto il sito le <b>barre per scorrere</b> sono più spesse e sempre visibili, anche quelle in basso dei riquadri piccoli."
+    ]},
+    { id: "2026-11-modulare", i: "▭", t: "Navigazione a moduli", p: [
+      "Adesso potete scegliere come muovervi nel sito. Aprite il menu <b>⚔ Slayer</b> in alto a destra e, nel riquadro <b>Aspetto del sito</b>, alla voce <b>Navigazione</b> scegliete tra <b>«↕ A scorrimento»</b>, com'è sempre stato, e <b>«▭ A moduli»</b>.",
+      "<b>A moduli</b> vedete <b>una sezione alla volta</b>: toccando i pulsanti in alto si passa all'altra con una breve animazione, come una diapositiva. Se una sezione è lunga si scorre, ma finisce lì, senza sconfinare nella successiva.",
+      "In fondo a ogni sezione trovate i pulsanti <b>◀ precedente</b> e <b>successiva ▶</b>. Ricaricando la pagina restate sulla sezione in cui eravate.",
+      "<small>La scelta vale solo per il dispositivo su cui la fate: potete tenere lo scorrimento sul telefono e i moduli sul computer, o il contrario.</small>"
     ]}
   ];
   var KV = "tcj-novita-viste", KD = "tcj-dispositivo";
