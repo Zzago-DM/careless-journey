@@ -30,6 +30,7 @@
   }
   /* timone visto dall'alto: la ruota è in piedi, quindi se ne vede solo il bordo, con le maniglie che sporgono, l'asse e il piedistallo */
   function timone(){
+    g.push('<g transform="rotate(180 280 105)">');   /* girato di 180°: la ruota sta verso la seduta del timoniere */
     r(270, 100, 20, 22, "#4a2c13", "#2a1a0a", 1.5, 3);              /* piedistallo */
     l(280, 100, 280, 92, "#8a6a3a", 4);                              /* asse */
     r(250, 88, 60, 7, "#a86c2a", "#5a3a18", 1.5, 3);                 /* la ruota, di taglio */
@@ -37,6 +38,7 @@
     [242, 246, 314, 318].forEach(function(x, i){ if(i % 3 === 0) r(x - 4, 89.5, 8, 4, "#c8903a", "", 0, 2); });
     [[242, 91.5], [318, 91.5]].forEach(function(q){ c(q[0], q[1], 3.5, "#c8903a", "#6a4020", 1); });
     for(var k = 0; k < 5; k++) l(256 + k * 12, 88, 256 + k * 12, 95, "rgba(0,0,0,.3)", 1);
+    g.push('</g>');
   }
   /* scala esterna (lato: 1 destra, -1 sinistra): una porta nella parete curva dà su un pianerottolo fuori dal ponte;
      da lì la scala scende lungo il fianco, seguendo la curva del muro, verso prua e il piano di sotto */
