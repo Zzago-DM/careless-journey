@@ -1,9 +1,9 @@
 /* I Mael — le raffigurazioni nelle schede della sezione «I Mael» (sezioni/mael.js).
    Ogni Mael ha la sua raffigurazione mitologica, un telo medievale (media/mael/<nome>-mito.webp).
    Chi è già stato incontrato ha anche la raffigurazione di oggi (media/mael/<nome>-oggi.webp): sotto l'immagine
-   compaiono i due pulsanti «Mitologica» e «Oggi». Per aggiungere un Mael incontrato basta mettere la sua immagine
+   compaiono i due pulsanti «Raffigurazione» e «Realtà». Per aggiungere un Mael incontrato basta mettere la sua immagine
    in media/mael/ e scrivere il suo nome in OGGI qui sotto.
-   Toccando l'immagine si apre in grande. La scelta Mitologica/Oggi resta salvata in questo browser. */
+   Toccando l'immagine si apre in grande. La scelta Raffigurazione/Realtà resta salvata in questo browser. */
 (function(){
   "use strict";
   var wrap = document.getElementById("ml-cards"); if(!wrap) return;
@@ -13,14 +13,14 @@
   function scelta(k){ try { return localStorage.getItem("tcj-mael-vis-" + k) === "oggi" && OGGI[k] ? "oggi" : "mito"; } catch(e){ return "mito"; } }
   function src(k, v){ return "media/mael/" + k + "-" + v + ".webp"; }
   function nome(card){ var t = card.querySelector(".ct"); return t ? t.textContent.trim() : ""; }
-  function didascalia(k, v, n){ return v === "oggi" ? (typeof OGGI[k] === "string" && OGGI[k] ? OGGI[k] : n + " oggi") : n + " nel mito"; }
+  function didascalia(k, v, n){ return v === "oggi" ? (typeof OGGI[k] === "string" && OGGI[k] ? OGGI[k] : n + " oggi") : "Raffigurazione di " + n; }
   MAEL.forEach(function(k){
     var card = wrap.querySelector('.card[data-mk="' + k + '"]'); if(!card) return;
     var n = nome(card), v = scelta(k);
     var fig = document.createElement("figure"); fig.className = "ml-fig";
     fig.innerHTML = '<button type="button" class="ml-fig-b" aria-label="Apri in grande la raffigurazione di ' + n + '"><img src="' + src(k, v) + '" alt="Raffigurazione di ' + n + '" loading="lazy" decoding="async" width="720" height="960"></button>'
       + '<figcaption>' + didascalia(k, v, n) + '</figcaption>'
-      + (OGGI[k] ? '<div class="ml-vis" role="group" aria-label="Quale raffigurazione"><button type="button" data-v="mito" aria-pressed="' + (v === "mito") + '">Mitologica</button><button type="button" data-v="oggi" aria-pressed="' + (v === "oggi") + '">Oggi</button></div>' : "");
+      + (OGGI[k] ? '<div class="ml-vis" role="group" aria-label="Quale raffigurazione"><button type="button" data-v="mito" aria-pressed="' + (v === "mito") + '">Raffigurazione</button><button type="button" data-v="oggi" aria-pressed="' + (v === "oggi") + '">Realtà</button></div>' : "");
     var corpo = document.createElement("div"); corpo.className = "ml-corpo";
     while(card.firstChild) corpo.appendChild(card.firstChild);
     card.appendChild(fig); card.appendChild(corpo); card.classList.add("ml-con-fig");
