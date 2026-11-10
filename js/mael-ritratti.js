@@ -8,7 +8,8 @@
   "use strict";
   var wrap = document.getElementById("ml-cards"); if(!wrap) return;
   var MAEL = ["estarossa", "symael", "azrael", "raphael", "gabrael", "mykael"];
-  var OGGI = {};   /* es. { estarossa: "Estarossa oggi, governatrice di Ramsgate" } */
+  var OGGI = { mykael: "Mykael, avvistato a Greenshard" };   /* didascalia della raffigurazione di oggi */
+  var CENTRO = { mykael: "42% 40%" };   /* le foto di oggi non sono verticali: dove sta la figura, per il riquadro 3:4 */
   function scelta(k){ try { return localStorage.getItem("tcj-mael-vis-" + k) === "oggi" && OGGI[k] ? "oggi" : "mito"; } catch(e){ return "mito"; } }
   function src(k, v){ return "media/mael/" + k + "-" + v + ".webp"; }
   function nome(card){ var t = card.querySelector(".ct"); return t ? t.textContent.trim() : ""; }
@@ -23,11 +24,12 @@
     var corpo = document.createElement("div"); corpo.className = "ml-corpo";
     while(card.firstChild) corpo.appendChild(card.firstChild);
     card.appendChild(fig); card.appendChild(corpo); card.classList.add("ml-con-fig");
+    if(v === "oggi" && CENTRO[k]) fig.querySelector("img").style.objectPosition = CENTRO[k];
     fig.addEventListener("click", function(e){
       var b = e.target.closest("[data-v]");
       if(b){
         var nv = b.getAttribute("data-v"); try { localStorage.setItem("tcj-mael-vis-" + k, nv); } catch(_){}
-        fig.querySelector("img").src = src(k, nv); fig.querySelector("figcaption").textContent = didascalia(k, nv, n);
+        var im = fig.querySelector("img"); im.src = src(k, nv); im.style.objectPosition = nv === "oggi" && CENTRO[k] ? CENTRO[k] : ""; fig.querySelector("figcaption").textContent = didascalia(k, nv, n);
         [].forEach.call(fig.querySelectorAll("[data-v]"), function(x){ x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
         try { if(typeof sfxPlay === "function") sfxPlay("flip"); } catch(_){}
         return;
