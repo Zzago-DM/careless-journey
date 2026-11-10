@@ -13,7 +13,11 @@
    - poi: scena di fine sessione per tutti, nuova cassetta nel Diario, e il riepilogo su Telegram in messaggi brevi.
    TELEGRAM
    - il token del bot resta SOLO in questo browser (localStorage «tcjtg»), non va mai nel codice del sito né su GitHub;
-   - i messaggi partono da qui direttamente verso api.telegram.org. «Trova il gruppo» legge il /start scritto nel gruppo. */
+   - i messaggi partono da qui direttamente verso api.telegram.org. «Trova il gruppo» legge il /start scritto nel gruppo.
+   - a fine sessione il bot scrive solo che la sessione è finita: il riepilogo lo chiedono i giocatori con i comandi
+     /parti, /monete, /risorse, /riepilogo e /help. Non c'è un server: risponde questa pagina, finché è aperta
+     (Zona Master su questo dispositivo, scheda del browser aperta). Rilegge Telegram ogni pochi secondi; i comandi più
+     vecchi di 15 minuti li lascia perdere. I comandi compaiono anche nel menu «/» di Telegram (setMyCommands). */
 (function(){
   "use strict";
   var ms = document.getElementById("ms");
@@ -40,6 +44,52 @@
   function tgInvia(testo){ var t = tg(); if(!t.token || !t.chat) return Promise.resolve(false); return tgApi("sendMessage", { chat_id: t.chat, text: testo, parse_mode: "HTML", disable_web_page_preview: "true" }).then(function(){ return true; }); }
   function tgInviaTutti(L){ return L.reduce(function(p, x){ return p.then(function(){ return tgInvia(x); }); }, Promise.resolve()); }
   function h(s){ return esc(s); }
+
+  /* ---------- comandi dei giocatori (/parti, /monete, /risorse, /riepilogo, /help) ---------- */
+  var COMANDI = [["parti", "Parti di mostro ottenute nell'ultima sessione"], ["monete", "Monete guadagnate e spese nell'ultima sessione"],
+    ["risorse", "Risorse comprate e usate nell'ultima sessione"], ["riepilogo", "Tutto il riepilogo dell'ultima sessione"], ["help", "I comandi che potete usare"]];
+  var cmdStato = "", inAscolto = false, tCmd = null;
+  function ultimaChiusa(){ var L = S.doc().diario.filter(function(c){ return c.fine && c.fine.blocchi; }); return L.length ? L[L.length - 1] : null; }
+  function bloccoTesto(b){ return "<b>" + h(b.i + " " + b.t) + "</b>\n" + (b.righe && b.righe.length ? b.righe.map(function(r){ return "• " + h(r); }).join("\n") : h(b.vuoto || "Niente da segnalare.")); }
+  function risposta(cmd){
+    if(cmd === "help" || cmd === "start" || cmd === "aiuto")
+      return "🧭 <b>Comandi del bot della Careless</b>\n" + COMANDI.map(function(c){ return "/" + c[0] + " · " + h(c[1]); }).join("\n");
+    var map = { parti: /parti/i, monete: /monete/i, risorse: /risorse/i };
+    if(!map[cmd] && cmd !== "riepilogo") return null;
+    var c = ultimaChiusa();
+    if(!c) return "Non c'è ancora una sessione chiusa: il riepilogo arriva dopo la prima «Fine sessione».";
+    var testa = "📼 <b>Sessione " + int(c.n) + "</b>" + (c.titolo ? " · " + h(c.titolo) : "") + "\n\n";
+    var bl = c.fine.blocchi.filter(function(b){ return cmd === "riepilogo" || map[cmd].test(b.t); });
+    if(!bl.length) return testa + "Niente da segnalare.";
+    return testa + bl.map(bloccoTesto).join("\n\n") + (cmd === "riepilogo" && c.fine.note ? "\n\n📜 " + h(c.fine.note) : "");
+  }
+  function scriviStatoCmd(t){ cmdStato = t; var p = document.getElementById("mses-cmdst"); if(p) p.textContent = t; }
+  function ascolta(){
+    clearTimeout(tCmd);
+    var t = tg();
+    if(!t.token || !t.chat || t.cmd === false){ scriviStatoCmd(""); return; }
+    if(inAscolto) return; inAscolto = true;
+    tgApi("getUpdates", { offset: String(int(t.off) || 0), timeout: "0", allowed_updates: '["message"]' }).then(function(L){
+      var t2 = tg(), ora = Date.now() / 1000, coda = [];
+      (L || []).forEach(function(u){
+        t2.off = Math.max(int(t2.off), u.update_id + 1);
+        var m = u.message; if(!m || !m.text || String(m.chat && m.chat.id) !== String(t2.chat) || ora - m.date > 900) return;
+        var mm = /^\/([a-zA-Z]+)(?:@(\w+))?/.exec(m.text.trim()); if(!mm) return;
+        if(mm[2] && t2.bot && mm[2].toLowerCase() !== String(t2.bot).toLowerCase()) return;   /* comando per un altro bot (per esempio quello dei dadi) */
+        var r = risposta(mm[1].toLowerCase()); if(r) coda.push({ testo: r, a: m.message_id });
+      });
+      salvaTg(t2);
+      return coda.reduce(function(p, x){ return p.then(function(){ return tgApi("sendMessage", { chat_id: t2.chat, text: x.testo, parse_mode: "HTML", reply_to_message_id: String(x.a), allow_sending_without_reply: "true" }); }); }, Promise.resolve())
+        .then(function(){ scriviStatoCmd("In ascolto: rispondo ai comandi finché questa pagina resta aperta" + (coda.length ? " · ultima risposta alle " + S.oraIt(Date.now()) : "") + "."); });
+    }).catch(function(e){ scriviStatoCmd("Non riesco a leggere i comandi da Telegram" + (e && e.description ? " (" + e.description + ")" : "") + ". Riprovo tra poco."); })
+      .then(function(){ inAscolto = false; tCmd = setTimeout(ascolta, document.hidden ? 15000 : 4000); });
+  }
+  /* i comandi nel menu «/» di Telegram: una volta per token */
+  function registraComandi(){
+    var t = tg(); if(!t.token || t.reg === t.token.slice(-6)) return;
+    tgApi("setMyCommands", { commands: JSON.stringify(COMANDI.map(function(c){ return { command: c[0], description: c[1] }; })) }).then(function(){ var t2 = tg(); t2.reg = t2.token.slice(-6); salvaTg(t2); }).catch(function(){});
+  }
+  setTimeout(function(){ registraComandi(); ascolta(); }, 2500);
 
   /* ---------- la foto della situazione ---------- */
   var IT = (window.STV && STV.IT) || [], EL = (window.STV && STV.EL) || [];
@@ -124,7 +174,9 @@
         + '<div class="mses-riga"><input type="password" id="mses-tok" placeholder="123456789:ABC…" autocomplete="off" aria-label="Token del bot"><button type="button" class="bk-btn" data-az="tok">Collega</button></div>'
         : (!t.chat ? '<p class="mses-n">Scrivi <b>/start</b> nel gruppo della campagna (con il bot già dentro), poi premi «Trova il gruppo».</p>' : '')
           + '<div class="mses-riga"><button type="button" class="bk-btn" data-az="trova">🔎 Trova il gruppo</button>' + (t.chat ? '<button type="button" class="bk-btn" data-az="prova">✉ Messaggio di prova</button>' : "")
-          + '<button type="button" class="bk-btn mses-sec" data-az="scollega">Dimentica il token</button></div><div id="mses-gruppi"></div>')
+          + '<button type="button" class="bk-btn mses-sec" data-az="scollega">Dimentica il token</button></div><div id="mses-gruppi"></div>'
+          + (t.chat ? '<label class="mses-ck"><input type="checkbox" id="mses-cmd"' + (t.cmd !== false ? " checked" : "") + '> Rispondi ai comandi dei giocatori (/parti, /monete, /risorse, /riepilogo, /help) finché questa pagina è aperta</label>'
+            + '<p class="mses-n" id="mses-cmdst">' + esc(cmdStato) + '</p>' : ""))
       + '</div>';
   }
   function disegna(){
@@ -141,7 +193,7 @@
         }).join("") + '</div>'
           + '<label class="mses-l">Titolo della cassetta (facoltativo)<input type="text" id="mses-ftit" maxlength="80" placeholder="Es. La caduta di Kharabak" value="' + esc(bozza.titolo || "") + '"></label>'
           + '<label class="mses-l">Le tue righe (facoltative)<textarea id="mses-fnote" rows="3" placeholder="Cosa è successo, in due righe">' + esc(bozza.note || "") + '</textarea></label>'
-          + '<label class="mses-ck"><input type="checkbox" id="mses-ftg"' + (tg().chat ? " checked" : " disabled") + '> Manda il riepilogo anche su Telegram</label>'
+          + '<label class="mses-ck"><input type="checkbox" id="mses-ftg"' + (tg().chat ? " checked" : " disabled") + '> Avvisa su Telegram che la sessione è finita (il riepilogo lo chiedono con /parti, /monete, /risorse)</label>'
           + '<div class="mses-riga"><button type="button" class="bk-btn mses-big" data-az="chiudi">⏹ Mostra ai giocatori e chiudi la sessione</button><button type="button" class="bk-btn mses-sec" data-az="annullaBozza">Indietro</button></div></div>';
       } else {
         html += '<div class="mses-riga"><button type="button" class="bk-btn mses-big" data-az="fine">⏹ Fine sessione</button><button type="button" class="bk-btn mses-sec" data-az="annulla">Annulla la sessione in corso</button></div>';
@@ -172,6 +224,7 @@
   function rid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
   function linkSito(){ return location.origin + location.pathname; }
 
+  box.addEventListener("change", function(e){ if(e.target.id === "mses-cmd"){ var t = tg(); t.cmd = e.target.checked; salvaTg(t); if(t.cmd) ascolta(); else { clearTimeout(tCmd); scriviStatoCmd("Comandi spenti: il bot non risponde."); } } });
   box.addEventListener("click", function(e){
     var b = e.target.closest("[data-az]"); if(!b) return;
     var az = b.getAttribute("data-az"), d = S.doc();
@@ -224,9 +277,7 @@
       }, "Sessione " + int(c0.n) + " · fine").then(function(){
         S.mostra(scena); bozza = null;
         if(!manda) return;
-        var testi = ["🏁 <b>Fine della sessione " + int(c0.n) + "</b>" + (titf ? " · " + h(titf) : "")];
-        bl.forEach(function(x){ testi.push("<b>" + h(x.i + " " + x.t) + "</b>\n" + (x.righe.length ? x.righe.map(function(r){ return "• " + h(r); }).join("\n") : h(x.vuoto || ""))); });
-        if(note) testi.push("📜 " + h(note));
+        var testi = ["🏁 <b>Fine della sessione " + int(c0.n) + "</b>" + (titf ? " · " + h(titf) : "") + "\n\nIl riepilogo lo chiedete a me: /parti · /monete · /risorse · /riepilogo\n/help per tutti i comandi"];
         return tgInviaTutti(testi).catch(function(e){ stato("Sessione chiusa, ma Telegram non ha ricevuto il riepilogo" + (e && e.description ? ": " + e.description : ".")); throw "tg"; });
       }).then(function(){ stato("Sessione " + int(c0.n) + " chiusa: la cassetta è nel Diario di bordo."); }).catch(function(e){ if(e !== "tg") errore(e); }).then(function(){ disegna(); });
       return;
@@ -257,7 +308,7 @@
       }).catch(errore);
       return;
     }
-    if(az === "sceglie"){ var t = tg(); t.chat = b.getAttribute("data-id"); t.nome = b.getAttribute("data-nome"); salvaTg(t); stato("Gruppo «" + t.nome + "» scelto."); disegna(); return; }
+    if(az === "sceglie"){ var t = tg(); t.chat = b.getAttribute("data-id"); t.nome = b.getAttribute("data-nome"); salvaTg(t); stato("Gruppo «" + t.nome + "» scelto."); disegna(); registraComandi(); ascolta(); return; }
     if(az === "prova"){ stato("Mando un messaggio di prova…"); tgInvia("🧭 Il bot della Careless è collegato. Qui arriveranno gli avvisi di inizio sessione e il bottino di fine sessione.").then(function(){ stato("Messaggio di prova mandato: controlla il gruppo."); }).catch(errore); return; }
     if(az === "scollega"){
       (typeof tcjConferma === "function" ? tcjConferma({ titolo: "Dimenticare il token del bot?", testo: "Questo browser non potrà più scrivere nel gruppo finché non incolli di nuovo il token. Il bot resta su Telegram.", si: "Sì, dimentica", attesa: 1 }) : Promise.resolve(true))
