@@ -53,6 +53,12 @@
       "<b>A moduli</b> vedete <b>una sezione alla volta</b>: toccando i pulsanti in alto si passa all'altra con una breve animazione, come una diapositiva. Se una sezione è lunga si scorre, ma finisce lì, senza sconfinare nella successiva.",
       "In fondo a ogni sezione trovate i pulsanti <b>◀ precedente</b> e <b>successiva ▶</b>. Ricaricando la pagina restate sulla sezione in cui eravate.",
       "<small>La scelta vale solo per il dispositivo su cui la fate: potete tenere lo scorrimento sul telefono e i moduli sul computer, o il contrario.</small>"
+    ]},
+    { id: "2026-11-messaggi", i: "✉", t: "Messaggi privati con il Master", p: [
+      "Sul lato destro dello schermo adesso c'è la linguetta <b>✉ Messaggi</b>: apre una chat <b>solo tra voi e il Master</b>. Gli altri giocatori non la vedono e non possono leggerla.",
+      "Potete scrivere al Master quando volete, anche durante la sessione, e mandargli un'<b>immagine</b> con il pulsante 🖼. Quando arriva un messaggio nuovo, sulla linguetta compare un <b>pallino</b> con il numero dei messaggi da leggere.",
+      "A volte il Master potrebbe mostrarvi qualcosa <b>in grande sullo schermo</b>, come un'immagine o un messaggio: lo chiudete quando volete e resta comunque nella chat.",
+      "<small>La linguetta compare quando avete aperto la vostra Area dello Slayer e collegato il salvataggio online, lo stesso che serve per la stiva. I messaggi arrivano dopo qualche secondo, non all'istante.</small>"
     ]}
   ];
   var KV = "tcj-novita-viste", KD = "tcj-dispositivo";
