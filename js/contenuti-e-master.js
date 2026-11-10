@@ -248,6 +248,10 @@ function initMapClicks(){
   });
 }
 
-window.addEventListener("load",()=>{buildBeh();buildW();buildC();buildTR();loadMN();mlLoad();scBuild();initMapClicks();try{document.querySelectorAll(".al-ov,.cr-ov").forEach(function(o){document.body.appendChild(o)});htlBuild();wmRoute();wmHoverInit();mlInit();calRender();}catch(e){console.error(e)}try{nvInit();nvToggleAll(localStorage.getItem("tcj_nv_all")==="1");}catch(e){}try{orbInit();orbSet("att",scGv("sc-natt-s"),true);orbSet("def",scGv("sc-ndef-s"),true);}catch(e){}buildNpcQtyBtns();if(!Object.keys(plState).length)plAdd();});
+/* armi e celle del Manuale: costruite quando il Manuale si avvicina allo schermo (o quando la ricerca le chiede) */
+let mnFatto=false;
+function tcjManuale(){if(mnFatto)return;mnFatto=true;try{buildW();buildC();}catch(e){console.error(e);}}
+function mnQuandoVicino(){const m=document.getElementById("manuale");if(!m||!("IntersectionObserver" in window)){tcjManuale();return;}const io=new IntersectionObserver(v=>{if(v.some(x=>x.isIntersecting)){io.disconnect();tcjManuale();}},{rootMargin:"1500px 0px"});io.observe(m);}
+window.addEventListener("load",()=>{buildBeh();mnQuandoVicino();buildTR();loadMN();mlLoad();scBuild();initMapClicks();try{document.querySelectorAll(".al-ov,.cr-ov").forEach(function(o){document.body.appendChild(o)});htlBuild();wmRoute();wmHoverInit();mlInit();calRender();}catch(e){console.error(e)}try{nvInit();nvToggleAll(localStorage.getItem("tcj_nv_all")==="1");}catch(e){}try{orbInit();orbSet("att",scGv("sc-natt-s"),true);orbSet("def",scGv("sc-ndef-s"),true);}catch(e){}buildNpcQtyBtns();if(!Object.keys(plState).length)plAdd();});
 window.addEventListener("scroll",updNav,{passive:true});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closepw();});

@@ -49,6 +49,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")crClose();});
 let skIdx=null, skRes=[], skSel=0;
 function skNorm(t){return (t||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();}
 function skBuild(){
+  if(window.tcjManuale)tcjManuale(); /* le schede di armi e celle si costruiscono quando servono: la ricerca le vuole tutte */
   const seen=new Set(), idx=[];
   const add=(el,cat)=>{if(!el||seen.has(el))return;const t=(el.textContent||"").replace(/\s+/g," ").trim();
     if(!t||t.length>72)return;seen.add(el);idx.push({e:el,t:t,l:skNorm(t),c:cat});};
@@ -894,7 +895,7 @@ function slRender(){const b=document.getElementById("sl-btn"),m=document.getElem
  m.innerHTML=h;
  if(slAsk){const i=document.getElementById("sl-code-in");if(i)setTimeout(function(){i.focus()},0);}}
 function slGo(k){paThemeOn=true;if(k!==scCur)scSwitch(k);else scBuild();}
-function slPick(k){if(paIsOpen(k)){slClose();slGo(k);slRender();return;}if(paMaster()){slClose();paMApri(k);return;}slAsk=(slAsk===k?null:k);slRender();}
+function slPick(k){if(paIsOpen(k)){slClose();slGo(k);slRender();return;}if(window.tcjCarica)tcjCarica("ritratti"); /* l'animazione di sblocco userà i ritratti: li preparo adesso */if(paMaster()){slClose();paMApri(k);return;}slAsk=(slAsk===k?null:k);slRender();}
 function slTry(){const k=slAsk,i=document.getElementById("sl-code-in");if(!k||!i)return;const v=i.value.trim().toLowerCase();
  if(paCodeOk(k,v)){paSetOpen(k,true);slClose();slGo(k);slRender();pgPlay(k);if(window.__sfxBurst){try{window.__sfxBurst()}catch(e){}}return;}
  const er=document.getElementById("sl-err");if(er)er.style.display="";const box=i.parentNode;if(box){box.classList.remove("pa-shake");void box.offsetWidth;box.classList.add("pa-shake");}i.select();}
