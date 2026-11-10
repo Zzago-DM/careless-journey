@@ -866,6 +866,7 @@ function slRender(){const b=document.getElementById("sl-btn"),m=document.getElem
  if(act){const pf=paPref(act),opt=function(v){return PA_ELS.map(function(e){return '<option value="'+e[0]+'"'+(e[0]===v?' selected':'')+'>'+e[1]+'</option>'}).join("")};
   asp+='<div class="sl-bg"><div class="sl-sub">Colori di '+ac.n+'</div><label>Colore del sito<select onchange="paSetPref(\'c\',this.value)">'+opt(pf.c)+'</select></label>'+(LG?'':'<label>Effetti laterali<select onchange="paSetPref(\'fx\',this.value)">'+opt(pf.fx)+'</select></label>')+(pf.custom?'<button type="button" class="sl-act" onclick="paResetPref()">↺ Torna ai colori di '+ac.n+'</button>':'<small>Colori di base di '+ac.n+'</small>')+'</div>';}
  else asp+='<p class="sl-nota">Apri l\'area di un personaggio per usare i suoi colori sul sito.</p>';
+ if(typeof tcjModulareRiga==="function")asp+=tcjModulareRiga();
  if(typeof tcjDispositivoRiga==="function")asp+=tcjDispositivoRiga();
  R.push(["asp","🎨","Aspetto del sito",asp]);
  /* 3. Effetti e suoni (non nella versione leggera) */

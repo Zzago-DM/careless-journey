@@ -810,3 +810,17 @@ strong{color:var(--gold2)}
 .nv-map.v2 .nv-l{font-size:14px;letter-spacing:1.5px;stroke-width:4px}
 .nv-map.v2 .nv-a{stroke-width:1.5}.nv-map.v2 .nv-a.on{stroke-width:2.2}
 @media(max-width:560px){.nv-map.v2 .nv-l{font-size:16px}}
+
+/* Navigazione a moduli (js/modulare.js): una sezione alla volta, con una sola animazione da sinistra a destra */
+html.tcj-mod body>section[id]:not(.mod-cur),html.tcj-mod body>#ms:not(.mod-cur){display:none!important}
+html.tcj-mod body>.mod-in{animation:tcjModIn .38s cubic-bezier(.2,.7,.25,1) both}
+@keyframes tcjModIn{from{opacity:0;transform:translateX(-56px)}to{opacity:1;transform:none}}
+html.tcj-mod body>section.mod-cur{min-height:calc(100vh - 60px)}
+#mod-barra{display:none}
+html.tcj-mod #mod-barra{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:.75rem;max-width:1100px;margin:0 auto;padding:1.4rem max(16px,1.5rem) 2rem;position:relative;z-index:1}
+#mod-barra .mod-b{font-family:"Cinzel",serif;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;padding:.7rem 1rem;background:rgba(var(--gold-rgb),.06);border:1px solid rgba(var(--gold-rgb),.35);color:var(--gold2);cursor:pointer;transition:all .2s;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#mod-barra .mod-b:hover{background:rgba(var(--gold-rgb),.14);border-color:var(--gold3)}
+#mod-barra .mod-b:first-child{justify-self:start}
+#mod-barra .mod-b:last-child{justify-self:end}
+#mod-barra .mod-pos{font-family:"Cinzel",serif;font-size:.55rem;letter-spacing:.2em;color:var(--text2)}
+@media (prefers-reduced-motion:reduce){html.tcj-mod body>.mod-in{animation:none}}

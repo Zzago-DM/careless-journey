@@ -11,6 +11,7 @@ if(lg){h.setAttribute("data-leggero","");
  var mm=window.matchMedia;if(mm)window.matchMedia=function(q){if(/prefers-reduced-motion\s*:\s*reduce/.test(q)){var f=function(){};return{matches:true,media:q,onchange:null,addListener:f,removeListener:f,addEventListener:f,removeEventListener:f,dispatchEvent:function(){return false}};}return mm.call(window,q);};
 }
  /* il tema del sito scelto resta anche nella versione leggera (telefono): cambia solo l'aspetto, senza animazioni */
+ if(L.getItem("tcj-modulare")==="1")h.classList.add("tcj-mod"); /* navigazione a moduli: js/modulare.js */
  var t=L.getItem("tcj-tema");if(["dauntless","pergamena","mh","osteria","reami","arena","truasilia"].indexOf(t)>=0)h.setAttribute("data-tema",t);
 })()}catch(e){}
 function tcjLeggero(){return !!window.TCJ_LEGGERO;}</script>
@@ -24,7 +25,7 @@ function tcjSezione(h){var s=document.currentScript;s.insertAdjacentHTML("before
 <script>/* Versione della pagina: la scrive strumenti/versiona.js a ogni pubblicazione.
    Se il browser ha aperto una copia vecchia rimasta in memoria, il sito se ne accorge:
    nei primi secondi si aggiorna da solo, più tardi propone «Aggiorna» (senza mai interrompere chi sta scrivendo). */
-var TCJ_VERSIONE="a817e83f";
+var TCJ_VERSIONE="765cff9d";
 (function(){
   var nascita=Date.now(),ultimo=0;
   function nuova(v){location.replace(location.pathname+"?v="+v+location.hash);}
@@ -76,7 +77,7 @@ var TCJ_VERSIONE="a817e83f";
   window.addEventListener("load",function(){setTimeout(function(){controlla(false);},800);setTimeout(function(){controlla(true);},4000);});
 })();</script>
 <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap&family=Michroma&family=Exo+2:ital,wght@0,400;0,500;0,700;1,400&family=Rajdhani:wght@500;600;700&family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=Oswald:wght@400;500;600&family=Gloria+Hallelujah&family=Patrick+Hand&family=Great+Vibes&family=Dancing+Script:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Marcellus&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Cabin+Sketch:wght@400;700&family=Metamorphous&family=Uncial+Antiqua&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/01-base.css?v=c329fa9f">
+<link rel="stylesheet" href="css/01-base.css?v=967fbee0">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Pinyon+Script&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/02-mappe-continenti.css?v=2f981e86" id="cj-styles">
 <link rel="stylesheet" href="css/03-hero-animazioni.css?v=fc52480b" id="hero-anim-css">
@@ -177,7 +178,7 @@ if(!window.TCJ_LEGGERO)document.write('<script src="js/intro.js?v=fdb394c0"><\/s
 <script src="sezioni/gruppo.js?v=cb7b77cd"></script>
 <script src="sezioni/scheda.js?v=b02ebeff"></script>
 <script src="js/cornici-ritratto.js?v=37236d29"></script>
-<script src="js/area-giocatori.js?v=5b1a5351"></script>
+<script src="js/area-giocatori.js?v=2b5ec987"></script>
 <script src="js/sblocco-zone.js?v=c8c202a6"></script>
 <script src="js/maelstrom-qualita.js?v=e91b462a"></script>
 <link rel="stylesheet" href="css/27-maelstrom-qualita.css?v=0ded168d">
@@ -318,6 +319,7 @@ var TCJ_TEMI_CSS={dauntless:["css/31-tema-dauntless.css?v=418e607a","css/37-cara
 <script src="js/tema-sito.js?v=a3695412"></script>
 <script src="js/tema-creature.js?v=06c7e8f1"></script>
 <script src="js/tema-arena.js?v=d5ead527"></script>
+<script src="js/modulare.js?v=72acedc6"></script>
 <link rel="stylesheet" href="css/33-area-aspetto.css?v=b5644c6e">
 <script src="js/area-aspetto.js?v=e5f43eb7"></script>
 </body>
