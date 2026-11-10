@@ -200,3 +200,4 @@
 .sc-wmod:empty{display:none}
 .sc-wmod.su{color:#7fd08a;border-color:rgba(127,208,138,.35);background:rgba(127,208,138,.08)}
 .sc-wmod.giu{color:#e07a6a;border-color:rgba(224,122,106,.35);background:rgba(224,122,106,.08)}
+.sc-wmod.vuoto{color:var(--text2);border-color:var(--border);opacity:.6}

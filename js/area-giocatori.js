@@ -768,7 +768,7 @@ function wpnRender(anim){const sel=document.getElementById("sc-wcat"),box=docume
 const WPN_STAT={Pesante:{DES:-1,COST:2},Leggera:{DES:2,COST:-1},Bilanciata:{DES:1,COST:1}};
 function wpnStatRender(){const sel=document.getElementById("sc-wcat");const w=sel?WD.find(function(x){return x.n===(sel.value||sel.dataset.v)}):null;const cat=w?String(w.t).split("·")[0].trim():"";const m=WPN_STAT[cat];
  ["DES","COST"].forEach(function(k){const el=document.getElementById("scw-"+k);if(!el)return;
-  if(!m){el.textContent="";el.className="sc-wmod";el.removeAttribute("title");return;}
+  if(!m){el.textContent="⚔ —";el.className="sc-wmod vuoto";el.title="Scegli la categoria dell’arma principale per vedere il suo modificatore";return;}
   const v=m[k];el.textContent="⚔ "+(v>0?"+":"")+v;el.className="sc-wmod "+(v>0?"su":"giu");el.title="Arma "+cat.toLowerCase()+" ("+w.n+"): "+(v>0?"+":"")+v+" al modificatore";});}
 document.addEventListener("change",function(e){if(!e.target)return;if(e.target.id==="sc-wcat"){e.target.dataset.v=e.target.value;wpnRender(true);wpnStatRender();sfxPlay("clang");}if(e.target.id==="sc-rango")wpnRender();});
 
