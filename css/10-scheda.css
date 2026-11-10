@@ -195,3 +195,8 @@
 @media(max-width:900px){.cr-grid{grid-template-columns:repeat(6,1fr);gap:.5rem}}
 @media(max-width:560px){.cr-grid{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:380px){.cr-grid{grid-template-columns:repeat(3,1fr)}}
+/* Modificatore dell'arma accanto a DES e COST */
+.sc-wmod{font-family:"Cinzel",serif;font-size:.68rem;letter-spacing:.04em;padding:.12rem .38rem;border:1px solid transparent;white-space:nowrap}
+.sc-wmod:empty{display:none}
+.sc-wmod.su{color:#7fd08a;border-color:rgba(127,208,138,.35);background:rgba(127,208,138,.08)}
+.sc-wmod.giu{color:#e07a6a;border-color:rgba(224,122,106,.35);background:rgba(224,122,106,.08)}

@@ -60,6 +60,11 @@
       "A volte il Master potrebbe mostrarvi qualcosa <b>in grande sullo schermo</b>, come un'immagine o un messaggio: lo chiudete quando volete e resta comunque nella chat.",
       "<small>La linguetta compare quando avete aperto la vostra Area dello Slayer e collegato il salvataggio online, lo stesso che serve per la stiva. I messaggi arrivano dopo qualche secondo, non all'istante.</small>"
     ]}
+    ,{ id: "2026-11-mod-arma", i: "⚔", t: "Il modificatore dell'arma", p: [
+      "Nella vostra Area dello Slayer, accanto a <b>Destrezza</b> e <b>Costituzione</b>, adesso compare quanto la vostra arma principale alza o abbassa il modificatore, come scritto nel Manuale.",
+      "<b>Armi pesanti</b> (martello, ascia): -1 DES, +2 COST. <b>Armi leggere</b> (pugni aetherici, lame a catena): +2 DES, -1 COST. <b>Armi bilanciate</b> (spada, lancia): +1 DES, +1 COST.",
+      "Il numero si aggiorna da solo quando scegliete la categoria dell'arma principale: verde se aumenta, rosso se diminuisce."
+    ]}
   ];
   var KV = "tcj-novita-viste", KD = "tcj-dispositivo";
   var L = null; try { L = window.localStorage; L.setItem("tcj-prova", "1"); L.removeItem("tcj-prova"); } catch(e){ L = null; }
