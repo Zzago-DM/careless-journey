@@ -8,8 +8,8 @@
   "use strict";
   var wrap = document.getElementById("ml-cards"); if(!wrap) return;
   var MAEL = ["estarossa", "symael", "azrael", "raphael", "gabrael", "mykael"];
-  var OGGI = { mykael: "Mykael, avvistato a Greenshard" };   /* didascalia della raffigurazione di oggi */
-  var CENTRO = { mykael: "42% 40%" };   /* le foto di oggi non sono verticali: dove sta la figura, per il riquadro 3:4 */
+  var OGGI = { estarossa: "Estarossa, governatore di Ramsgate", mykael: "Mykael, avvistato a Greenshard" };   /* didascalia della raffigurazione di oggi */
+  var CENTRO = { estarossa: "45% 30%", mykael: "42% 40%" };   /* le foto di oggi non sono verticali: dove sta la figura, per il riquadro 3:4 */
   function scelta(k){ try { return localStorage.getItem("tcj-mael-vis-" + k) === "oggi" && OGGI[k] ? "oggi" : "mito"; } catch(e){ return "mito"; } }
   function src(k, v){ return "media/mael/" + k + "-" + v + ".webp"; }
   function nome(card){ var t = card.querySelector(".ct"); return t ? t.textContent.trim() : ""; }
