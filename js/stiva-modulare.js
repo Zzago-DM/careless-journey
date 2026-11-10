@@ -303,7 +303,7 @@
     if(!sel){
       var n = m.st.length + (m.nav ? 1 : 0);
       h = '<div class="sm-h">La Stiva Modulare</div><p class="sm-d">' + (n ? n + (n === 1 ? " stanza allestita." : " stanze allestite.") : "Ancora niente di allestito: è un grande spazio vuoto.") + ' Toccate la pianta per allestire uno spazio, cambiare una stanza o scegliere l\'uso della navata.</p>'
-        + '<div class="stv-lbl">Misure</div><p class="sm-d"><b>Piccola</b>: 1 spazio · <b>media</b>: 2 spazi vicini sullo stesso lato · <b>grande</b>: la navata oppure un lato intero. Ogni stanza si può ampliare o ridurre di una misura.</p>'
+        + '<div class="stv-lbl">Misure</div><p class="sm-d"><b>Piccola</b>: 1 spazio · <b>media</b>: 2 spazi vicini sullo stesso lato · <b>grande</b>: la navata oppure un lato intero. Ogni stanza si può ampliare o ridurre di una misura: cambiando la misura cambia anche quante persone ci possono lavorare contemporaneamente (1 nella piccola, 2 nella media, tutto il gruppo nella grande).</p>'
         + '<div class="stv-lbl">Competenze</div><p class="sm-d">' + esc(REGOLA) + '</p>';
     } else if(sel.charAt(0) === "s"){
       var i = +sel.slice(1);
