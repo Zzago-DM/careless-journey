@@ -22,7 +22,7 @@
     { id: "inf", i: "⚕️", n: "Infermeria", mis: "pm", comp: ["pers", "intr", "intu"], d: "Curare ferite e stati dopo una caccia, riposare; tenere alto il morale dei feriti e capire come stanno davvero. Nella media ci sono più letti per ospitare feriti." },
     { id: "ser", i: "🌿", n: "Serra", mis: "mg", comp: [], d: "Coltivare erbe e cibo fresco a bordo: può servire ad aumentare le scorte della dispensa o a ricavare gli ingredienti per creare tonici." },
     { id: "cel", i: "⛓️", n: "Sala interrogatori", mis: "pm", comp: ["ing", "intim", "intu"], d: "Tenere prigionieri e interrogarli: spaventare, ingannare, capire chi mente. Nella media ci sono più celle." },
-    { id: "add", i: "🗡️", n: "Sala d'addestramento", mis: "g", comp: ["atl", "acro", "furt", "rap", "perc", "soprav"], d: "Allenarsi al combattimento, fare sparring, provare armi nuove; esercitarsi al tiro con pistole e archi aetherici, con bersagli fissi e mobili." },
+    { id: "add", i: "🗡️", n: "Sala d'addestramento", mis: "g", comp: ["atl", "acro", "furt", "rap", "perc", "soprav", "amm"], d: "Allenarsi al combattimento, fare sparring, provare armi nuove; esercitarsi al tiro con pistole e archi aetherici, con bersagli fissi e mobili." },
     { id: "cab", i: "🛏️", n: "Cabina", mis: "pm", comp: [], d: "Ospitare PNG, passeggeri o membri dell'equipaggio. La media può essere un alloggio con più letti o una cabina di lusso." },
     { id: "sti", i: "📦", n: "Stiva aggiuntiva", mis: "pmg", comp: [], d: "Carichi ingombranti, casse, prede di grossa taglia. Fa posto a più viveri: 10 giorni in più la piccola, 20 la media, 40 la grande." },
     /* stanze non più costruibili: restano solo per quelle già allestite prima del cambio */
