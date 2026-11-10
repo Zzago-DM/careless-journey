@@ -28,6 +28,8 @@
     /* versione leggera (telefono): il tema scelto resta, fermo; gli effetti pesanti li spengono css/38-temi-telefono.css e css/39-leggero.css */
     caricaCss(v);
     if(v === "attuale") h.removeAttribute("data-tema"); else h.setAttribute("data-tema", v);
+    /* colori ed effetti laterali dipendono dal tema (Truasilia non li usa): js/area-giocatori.js */
+    try { if(typeof paTheme === "function") paTheme(); } catch(e){}
   };
   window.temaSet = function(v){
     if(!valido(v)) return;

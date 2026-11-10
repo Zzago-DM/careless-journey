@@ -537,10 +537,14 @@ function paNeutral(){paThemeOn=false;paTheme();slRender();}
 const PA_DEF={athena:"glaciale",panlan:"oscuro",asonnes:"terrestre"};
 const PA_ELS=[["glaciale","❄ Glaciale"],["ardente","🔥 Ardente"],["folgorante","⚡ Folgorante"],["terrestre","🌍 Terrestre"],["radiante","✨ Radiante"],["oscuro","🌑 Oscuro"]];
 function paPrefRaw(k){try{const o=JSON.parse(localStorage.getItem("tcj_bg_"+k)||"{}");return o&&typeof o==="object"?o:{}}catch(e){return{}}}
-function paPref(k){const o=paPrefRaw(k),d=PA_DEF[k]||"glaciale",ok=function(v){return PA_ELS.some(function(e){return e[0]===v})};return {c:ok(o.c)?o.c:d,fx:ok(o.fx)?o.fx:d,custom:ok(o.c)||ok(o.fx)};}
+/* «Neutro»: il sito resta con i colori classici (niente data-el) e senza effetti laterali */
+const PA_SCELTE=[["neutro","◆ Neutro"]].concat(PA_ELS);
+function temaSenzaElementi(){return document.documentElement.getAttribute("data-tema")==="truasilia";} /* Truasilia: niente elementi né effetti laterali */
+function paElSet(el,v){if(!v||v==="neutro"||temaSenzaElementi())el.removeAttribute("data-el");else el.setAttribute("data-el",v);}
+function paPref(k){const o=paPrefRaw(k),d=PA_DEF[k]||"glaciale",ok=function(v){return PA_SCELTE.some(function(e){return e[0]===v})};return {c:ok(o.c)?o.c:d,fx:ok(o.fx)?o.fx:d,custom:ok(o.c)||ok(o.fx)};}
 function paSetPref(key,v){const k=paActive();if(!k)return;const o=paPrefRaw(k);o[key]=v;try{localStorage.setItem("tcj_bg_"+k,JSON.stringify(o))}catch(e){}paTheme();slRender();}
 function paResetPref(){const k=paActive();if(!k)return;try{localStorage.removeItem("tcj_bg_"+k)}catch(e){}paTheme();slRender();}
-function paFxEl(){if(typeof mThemeActive==="function"&&mThemeActive())return mPref().fx;const k=paActive();return k?paPref(k).fx:"";}
+function paFxEl(){if(temaSenzaElementi())return "";let v="";if(typeof mThemeActive==="function"&&mThemeActive())v=mPref().fx;else{const k=paActive();v=k?paPref(k).fx:"";}return v==="neutro"?"":v;}
 /* --- effetto laterale esclusivo del Master: "Sigillo Cremisi" --- */
 const MFX_RUNES=(function(){const out=[];let s=7;const r=function(){s=(s*9301+49297)%233280;return s/233280};
  for(let i=0;i<24;i++){const L=[[0,-1,0,1]];const n=1+Math.floor(r()*3);
@@ -584,7 +588,7 @@ function mfxDrawP(c,p,x,fade,t){
  return false;}
 
 /* --- sfondo e tema del Master --- */
-const M_ELS=[["master","🩸 Cremisi del Master"],["oro","☀ Oro del Master"]].concat(typeof PA_ELS!=="undefined"?PA_ELS:[]);
+const M_ELS=[["master","🩸 Cremisi del Master"],["oro","☀ Oro del Master"]].concat(typeof PA_SCELTE!=="undefined"?PA_SCELTE:[]);
 function mPref(){let o={};try{o=JSON.parse(localStorage.getItem("tcj_bg_master")||"{}")||{}}catch(e){}const ok=function(v){return M_ELS.some(function(e){return e[0]===v})};
  return {on:o.on!==false,c:ok(o.c)?o.c:"master",fx:ok(o.fx)?o.fx:"master",custom:ok(o.c)&&o.c!=="master"||ok(o.fx)&&o.fx!=="master"};}
 function mSetPref(k,v){if(k==="on"&&v)sfxPlay("gong");let o={};try{o=JSON.parse(localStorage.getItem("tcj_bg_master")||"{}")||{}}catch(e){}o[k]=v;try{localStorage.setItem("tcj_bg_master",JSON.stringify(o))}catch(e){}paTheme();slRender();}
@@ -830,9 +834,9 @@ function chUse(){if(CH_N<3)return;const tk=document.getElementById(CH_N>3?"ae-t1
   const w=document.querySelector(".ae-wrap");if(w){w.classList.remove("burst");void w.offsetWidth;w.classList.add("burst");}}
  sfxPlay("orb","folgorante");CH_N-=3;chRender(true);paAuto();}
 
-function paTheme(){try{const _k=paActive();if(_k)localStorage.setItem("tcj-pa-theme",_k);else localStorage.removeItem("tcj-pa-theme");}catch(e){}if(mThemeActive()){const mp=mPref(),h0=document.documentElement,s0=document.getElementById("scheda");h0.setAttribute("data-pg","master");h0.setAttribute("data-el",mp.c);if(s0)s0.setAttribute("data-el",paActive()?paPref(paActive()).c:(PA_DEF[scCur]||"glaciale"));try{fxSet(mp.fx)}catch(e){}return;}const k=paActive(),h=document.documentElement,sec=document.getElementById("scheda");
- if(k){const p=paPref(k);h.setAttribute("data-pg",k);h.setAttribute("data-el",p.c);}else{h.removeAttribute("data-pg");h.removeAttribute("data-el");}
- if(sec)sec.setAttribute("data-el",k?paPref(k).c:(PA_DEF[scCur]||"glaciale"));
+function paTheme(){try{const _k=paActive();if(_k)localStorage.setItem("tcj-pa-theme",_k);else localStorage.removeItem("tcj-pa-theme");}catch(e){}if(mThemeActive()){const mp=mPref(),h0=document.documentElement,s0=document.getElementById("scheda");h0.setAttribute("data-pg","master");paElSet(h0,mp.c);if(s0)s0.setAttribute("data-el",(function(c){return c==="neutro"?(PA_DEF[paActive()]||"glaciale"):c})(paActive()?paPref(paActive()).c:(PA_DEF[scCur]||"glaciale")));try{fxSet(paFxEl())}catch(e){}return;}const k=paActive(),h=document.documentElement,sec=document.getElementById("scheda");
+ if(k){const p=paPref(k);h.setAttribute("data-pg",k);paElSet(h,p.c);}else{h.removeAttribute("data-pg");h.removeAttribute("data-el");}
+ if(sec)sec.setAttribute("data-el",k&&paPref(k).c!=="neutro"?paPref(k).c:(PA_DEF[k||scCur]||"glaciale"));
  try{fxSet(paFxEl())}catch(e){}}
 let slAsk=null,slBg=false;
 function slMenuOpen(){const m=document.getElementById("sl-menu");return !!(m&&!m.hidden)}
@@ -863,23 +867,25 @@ function slRender(){const b=document.getElementById("sl-btn"),m=document.getElem
  /* 2. Aspetto del sito: tema, colori del personaggio attivo, versione del sito */
  let asp='';
  if(typeof temaRiga==="function")asp+=temaRiga(); /* il tema del sito si sceglie anche nella versione leggera */
- if(act){const pf=paPref(act),opt=function(v){return PA_ELS.map(function(e){return '<option value="'+e[0]+'"'+(e[0]===v?' selected':'')+'>'+e[1]+'</option>'}).join("")};
+ const TRU=temaSenzaElementi();
+ if(act&&TRU)asp+='<p class="sl-nota">Con il tema Truasilia il sito usa i suoi colori: niente elemento e niente effetti laterali.</p>';
+ else if(act){const pf=paPref(act),opt=function(v){return PA_SCELTE.map(function(e){return '<option value="'+e[0]+'"'+(e[0]===v?' selected':'')+'>'+e[1]+'</option>'}).join("")};
   asp+='<div class="sl-bg"><div class="sl-sub">Colori di '+ac.n+'</div><label>Colore del sito<select onchange="paSetPref(\'c\',this.value)">'+opt(pf.c)+'</select></label>'+(LG?'':'<label>Effetti laterali<select onchange="paSetPref(\'fx\',this.value)">'+opt(pf.fx)+'</select></label>')+(pf.custom?'<button type="button" class="sl-act" onclick="paResetPref()">↺ Torna ai colori di '+ac.n+'</button>':'<small>Colori di base di '+ac.n+'</small>')+'</div>';}
- else asp+='<p class="sl-nota">Apri l\'area di un personaggio per usare i suoi colori sul sito.</p>';
+ else if(!act)asp+='<p class="sl-nota">Apri l\'area di un personaggio per usare i suoi colori sul sito.</p>';
  if(typeof tcjModulareRiga==="function")asp+=tcjModulareRiga();
  if(typeof tcjDispositivoRiga==="function")asp+=tcjDispositivoRiga();
  R.push(["asp","🎨","Aspetto del sito",asp]);
  /* 3. Effetti e suoni (non nella versione leggera) */
  if(!LG){let fx='';
   fx+=sw("Suoni","Effetti sonori del sito",sfxOn(),"sfxToggle()");
-  fx+=sw("Effetti laterali",(act||mThemeActive())?"Particelle animate ai lati della pagina":"Visibili quando un personaggio è attivo",fxOn(),"fxToggle()");
+  if(!TRU)fx+=sw("Effetti laterali",(act||mThemeActive())?"Particelle animate ai lati della pagina":"Visibili quando un personaggio è attivo",fxOn(),"fxToggle()");
   if(typeof bgfxOn==="function")fx+=sw("Particelle di sfondo","Scintille che scendono lungo la pagina",bgfxOn(),"bgfxToggle()");
   if(typeof maelQRiga==="function")fx+=maelQRiga();
   R.push(["fx","✨","Effetti e suoni",fx]);}
  /* 4. Zona Master, solo per il Master */
  if(paMaster()){const mp=mPref(),mopt=function(v){return M_ELS.map(function(e){return '<option value="'+e[0]+'"'+(e[0]===v?' selected':'')+'>'+e[1]+'</option>'}).join("")};
   let ms=sw("Sfondo del Master","Ha la precedenza sui colori dei personaggi",mp.on,"mSetPref('on',"+(!mp.on)+")"," sl-msw");
-  if(mp.on)ms+='<div class="sl-bg"><label>Colore del sito<select onchange="mSetPref(\'c\',this.value)">'+mopt(mp.c)+'</select></label>'+(LG?'':'<label>Effetti laterali<select onchange="mSetPref(\'fx\',this.value)">'+mopt(mp.fx)+'</select></label>')+(mp.custom?'<button type="button" class="sl-act" onclick="mResetPref()">↺ Torna al Cremisi del Master</button>':'<small>Cremisi del Master, con il Sigillo Cremisi ai lati</small>')+'</div>';
+  if(mp.on&&!TRU)ms+='<div class="sl-bg"><label>Colore del sito<select onchange="mSetPref(\'c\',this.value)">'+mopt(mp.c)+'</select></label>'+(LG?'':'<label>Effetti laterali<select onchange="mSetPref(\'fx\',this.value)">'+mopt(mp.fx)+'</select></label>')+(mp.custom?'<button type="button" class="sl-act" onclick="mResetPref()">↺ Torna al Cremisi del Master</button>':'<small>Cremisi del Master, con il Sigillo Cremisi ai lati</small>')+'</div>';
   const zm=mZm();ms+='<div class="sl-bg sl-zm"><label>Colore della Zona Master<select onchange="mSetZm(this.value)"><option value="cremisi"'+(zm==="cremisi"?' selected':'')+'>🩸 Cremisi</option><option value="oro"'+(zm==="oro"?' selected':'')+'>☀ Oro · Golden Sun</option></select></label><small>Cambia solo la Zona Master, non lo sfondo del sito</small></div>';
   R.push(["ms","👑","Zona Master",ms]);}
  if(!R.some(r=>r[0]===slTab))slTab="pg";
