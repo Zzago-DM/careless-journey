@@ -179,3 +179,8 @@ html.ses-aperta{overflow:hidden}
 #mses .mses-gfv{display:flex;gap:.6rem;align-items:center;margin:.4rem 0 .4rem 1.4rem}
 #mses .mses-gfv img{max-height:90px;background:#fff;border-radius:4px}
 #mses select{background:rgba(0,0,0,.3);color:var(--text,#d0c8b8);border:1px solid rgba(var(--gold-rgb,200,168,75),.3);padding:.45rem}
+.lg-aur{font-family:"TCJ Aurebesh",system-ui,sans-serif;font-variant-ligatures:common-ligatures;letter-spacing:.05em;word-spacing:.3em}
+.ses-testo .lg-aur{text-align:center}
+.lg-aur p{margin:0 0 .9em}
+.msg-opt select{background:rgba(0,0,0,.35);color:inherit;border:1px solid rgba(232,200,112,.3);font:inherit;font-size:.8rem;padding:.15rem .3rem;max-width:11rem}
+#mses .mses-lg select{max-width:100%}

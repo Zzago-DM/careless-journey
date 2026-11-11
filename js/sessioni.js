@@ -153,7 +153,8 @@
   }
   function paragrafi(t){ return String(t || "").split(/\n{2,}/).map(function(p){ p = p.trim(); return p ? "<p>" + esc(p).replace(/\n/g, "<br>") + "</p>" : ""; }).join(""); }
   /* ---------- lingue degli Slayer (js/lingue.js) ----------
-     Un testo con «lingue: true» si vede nella lingua madre di chi lo legge (rune, gallifreyano, lingua degli Occulti);
+     Un testo con «lingue: true» si vede nella lingua madre di chi lo legge (rune, gallifreyano, Terre Oscure);
+     con «lingue: "occulti"» (o un'altra lingua) tutti gli Slayer lo vedono in quella lingua. Il Master vede sempre l'italiano.
      sotto c'è «Traduci», a meno che il Master non l'abbia bloccato («blocca»: da decifrare).
      Per Asonnes al posto del disegno automatico può esserci un'immagine fatta con il traduttore ufficiale. */
   function mioPg(){ var k = typeof scCur !== "undefined" ? scCur : ""; return (k && !master() && typeof paIsOpen === "function" && paIsOpen(k)) ? k : ""; }
@@ -166,11 +167,13 @@
       .then(function(r){ return r.ok ? r.blob() : null; }).then(function(b){ return b ? URL.createObjectURL(b) : ""; }).catch(function(){ return ""; });
     return IMG[path];
   }
+  /* in che lingua lo vede questo Slayer: la sua (lingue: true) o quella scelta dal Master */
+  function chiLingua(lingue, pg){ if(!lingue || !pg || !window.LINGUE) return ""; return LINGUE.di(lingue === true ? pg : lingue); }
   function inLingua(testo, o){
-    var pg = o.pg != null ? o.pg : mioPg(), it = paragrafi(testo);
-    if(!o.lingue || !pg || !window.LINGUE) return { html: it, lingua: false };
-    var h = LINGUE.html(testo, pg, { img: o.gf }); if(!h) return { html: it, lingua: false };
-    var n = esc(LINGUE.nome(pg));
+    var pg = o.pg != null ? o.pg : mioPg(), it = paragrafi(testo), l = chiLingua(o.lingue, pg);
+    if(!l) return { html: it, lingua: false };
+    var h = LINGUE.html(testo, l, { img: l === "gallifreyano" ? o.gf : "" }); if(!h) return { html: it, lingua: false };
+    var n = esc(LINGUE.nome(l));
     return { lingua: true, nome: n, html: '<div class="lg-box"><div class="lg-or">' + h + '</div><div class="lg-it" hidden>' + it + '</div>'
       + (o.senzaBottone ? "" : (o.blocca ? '<p class="lg-nota">🔒 ' + n + ' · da decifrare</p>' : '<button type="button" class="lg-trad" data-l="' + n + '">Traduci</button>')) + '</div>' };
   }
@@ -181,10 +184,10 @@
     return ora;
   }
   document.addEventListener("click", function(e){ var b = e.target.closest && e.target.closest(".lg-trad"); if(!b) return; var box = b.closest(".lg-box"); if(box) giraLingua(box, b); });
-  /* per Asonnes: se il testo ha l'immagine del traduttore ufficiale, la metto al posto del disegno */
-  function immagineGf(box, testo, path, pg){
-    if(!box || !path || (pg != null ? pg : mioPg()) !== "asonnes") return;
-    immagine(path).then(function(u){ var or = box.querySelector(".lg-or"); if(u && or) or.innerHTML = LINGUE.html(testo, "asonnes", { img: u }); });
+  /* gallifreyano: se il testo ha l'immagine del traduttore ufficiale, la metto al posto del disegno */
+  function immagineGf(box, testo, path, l){
+    if(!box || !path || l !== "gallifreyano") return;
+    immagine(path).then(function(u){ var or = box.querySelector(".lg-or"); if(u && or) or.innerHTML = LINGUE.html(testo, "gallifreyano", { img: u }); });
   }
 
   function mostraScena(s, come){
@@ -216,7 +219,7 @@
     if(s.tipo === "fine"){ tFine = setTimeout(chiudiScena, 90000); return; }
     /* il testo sale dal basso verso l'alto; la durata dipende da quanto è lungo */
     var sale = ov.querySelector(".ses-sale"), cr = ov.querySelector(".ses-crawl"), tSale = null;
-    if(L.lingua && s.gfImg && pgS === "asonnes") immagineGf(ov.querySelector(".lg-box"), s.testo, s.gfImg, pgS);
+    if(L.lingua && s.gfImg) immagineGf(ov.querySelector(".lg-box"), s.testo, s.gfImg, chiLingua(s.lingue, pgS));
     var tr = ov.querySelector(".ses-trad");
     if(tr) tr.addEventListener("click", function(){   /* tradotto: il testo riparte dal basso */
       giraLingua(ov.querySelector(".lg-box"), tr);
@@ -259,7 +262,7 @@
     dia.querySelector(".dia-rack").innerHTML = L.length ? L.map(function(c){ return cassetta(c, sel && int(c.n) === int(sel.n)); }).join("")
       : '<p class="dia-vuoto">Il diario parte dalla prossima sessione: alla fine di ogni sessione qui comparirà una nuova cassetta.</p>';
     dia.querySelector(".crt-in").innerHTML = display(sel);
-    if(sel && sel.lingue && sel.gfImg) immagineGf(dia.querySelector(".crt-in .lg-box"), sel.riassunto, sel.gfImg);
+    if(sel && sel.lingue && sel.gfImg) immagineGf(dia.querySelector(".crt-in .lg-box"), sel.riassunto, sel.gfImg, chiLingua(sel.lingue, mioPg()));
     var st = dia.querySelector(".dia-stato");
     st.textContent = tokLettura() ? "" : "Collega il salvataggio online nella tua Area dello Slayer per vedere le cassette più recenti. Qui c'è l'ultima copia salvata su questo dispositivo.";
   }
@@ -355,9 +358,9 @@
   var allegato = null, inviando = false;
   /* testo di un messaggio: nella lingua del giocatore se il Master l'ha mandato così (per Asonnes l'immagine allegata fa da gallifreyano) */
   function testoMsg(x, me){
-    var gfImg = x.lingua && x.img && me === "asonnes";
-    if(x.lingua && me && me !== "master" && x.x) return { html: inLingua(x.x, { lingue: true, blocca: x.blocca, pg: me, gf: gfImg ? x.img : "" }).html, gfImg: gfImg };
-    if(x.lingua && me === "master" && x.x && x.dest && window.LINGUE) return { html: '<div class="msg-x">' + esc(x.x).replace(/\n/g, "<br>") + '</div><span class="msg-lg">✒ ' + esc(LINGUE.nome(x.dest) || "nella sua lingua") + (x.blocca ? " · 🔒 da decifrare" : "") + '</span>', gfImg: false };
+    var gfImg = !!(x.lingua && x.img && me !== "master" && chiLingua(x.lingua, me) === "gallifreyano");
+    if(x.lingua && me && me !== "master" && x.x) return { html: inLingua(x.x, { lingue: x.lingua, blocca: x.blocca, pg: me, gf: gfImg ? x.img : "" }).html, gfImg: gfImg };
+    if(x.lingua && me === "master" && x.x && x.dest && window.LINGUE) return { html: '<div class="msg-x">' + esc(x.x).replace(/\n/g, "<br>") + '</div><span class="msg-lg">✒ ' + esc(LINGUE.nome(x.lingua === true ? x.dest : x.lingua) || "nella sua lingua") + (x.blocca ? " · 🔒 da decifrare" : "") + '</span>', gfImg: false };
     return { html: x.x ? '<div class="msg-x">' + esc(x.x).replace(/\n/g, "<br>") + '</div>' : "", gfImg: false };
   }
   function bolla(x, me){
@@ -376,11 +379,12 @@
       h += '<div class="msg-scrivi">' + (allegato ? '<div class="msg-alleg"><img src="' + allegato + '" alt=""><button type="button" class="msg-tolgi">✕ Togli immagine</button></div>' : "")
         + '<textarea id="msg-txt" rows="2" placeholder="' + (me === "master" ? "Scrivi a " + esc(CORTO[k]) + "…" : "Scrivi al Master…") + '" aria-label="Messaggio"></textarea>'
         + '<div class="msg-az"><label class="msg-file-b" title="Allega un\'immagine">🖼<input type="file" id="msg-file" accept="image/*" hidden></label>'
-        + (me === "master" ? '<label class="msg-opt"><input type="checkbox" id="msg-lingua"> ✒ Nella sua lingua</label><label class="msg-opt"><input type="checkbox" id="msg-blocca"> 🔒 Da decifrare</label><label class="msg-opt"><input type="checkbox" id="msg-mostra"> 📣 Mostra a schermo</label><label class="msg-opt"><input type="checkbox" id="msg-tutti"> A tutti</label>' : "")
+        + (me === "master" ? '<label class="msg-opt">✒ <select id="msg-lingua" aria-label="Lingua del messaggio"><option value="">Italiano</option><option value="sua">Nella sua lingua</option>' + (window.LINGUE ? LINGUE.elenco().map(function(l){ return '<option value="' + l.k + '">' + esc(l.n) + '</option>'; }).join("") : "") + '</select></label><label class="msg-opt"><input type="checkbox" id="msg-blocca"> 🔒 Da decifrare</label><label class="msg-opt"><input type="checkbox" id="msg-mostra"> 📣 Mostra a schermo</label><label class="msg-opt"><input type="checkbox" id="msg-tutti"> A tutti</label>' : "")
         + '<button type="button" class="msg-invia">Invia</button></div><div class="msg-err" id="msg-err" hidden></div></div>';
-      var txt = panel.querySelector("#msg-txt"), val = txt ? txt.value : "";
+      var txt = panel.querySelector("#msg-txt"), val = txt ? txt.value : "", lgS = panel.querySelector("#msg-lingua"), lgV = lgS ? lgS.value : "";
       panel.innerHTML = h;
       if(val) panel.querySelector("#msg-txt").value = val;
+      if(lgV && panel.querySelector("#msg-lingua")) panel.querySelector("#msg-lingua").value = lgV;
     }
     var lista = panel.querySelector(".msg-lista"), M = CONV[k].m;
     lista.innerHTML = M.length ? M.map(function(x){ return bolla(x, me); }).join("") : '<p class="msg-vuoto">' + (me === "master" ? "Nessun messaggio con " + esc(CORTO[k]) + ". Quello che scrivi qui lo vede solo lui." : "Nessun messaggio. Quello che scrivi qui lo legge solo il Master.") + '</p>';
@@ -417,11 +421,11 @@
     var me = io(), t = panel.querySelector("#msg-txt"), x = (t.value || "").trim();
     if(!x && !allegato) return;
     var mostra = !!(panel.querySelector("#msg-mostra") || {}).checked, tutti = !!(panel.querySelector("#msg-tutti") || {}).checked;
-    var lingua = !!(panel.querySelector("#msg-lingua") || {}).checked, blocca = lingua && !!(panel.querySelector("#msg-blocca") || {}).checked;
+    var lgv = (panel.querySelector("#msg-lingua") || {}).value || "", lingua = lgv === "sua" ? true : lgv, blocca = lingua && !!(panel.querySelector("#msg-blocca") || {}).checked;
     var dest = me === "master" ? (tutti ? CH.slice() : [convSel]) : [me];
     var msg = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), da: me, t: Date.now(), x: x.slice(0, 4000) };
     if(allegato) msg.img = allegato; if(mostra && me === "master") msg.mostra = true;
-    if(lingua && me === "master" && x){ msg.lingua = true; if(blocca) msg.blocca = true; }
+    if(lingua && me === "master" && x){ msg.lingua = lingua; if(blocca) msg.blocca = true; }
     inviando = true; errore(""); panel.querySelector(".msg-invia").disabled = true; panel.querySelector(".msg-invia").textContent = "Invio…";
     Promise.all(dest.map(function(k){
       var tok = tokPer(k);

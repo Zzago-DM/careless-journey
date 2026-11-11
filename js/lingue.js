@@ -3,14 +3,18 @@
      Asonnes → gallifreyano circolare, con le regole di Loren Sherman (lo stesso sistema da cui parte il traduttore
                ufficiale della BBC): ogni parola è un cerchio, le lettere girano in senso antiorario partendo dal basso.
                Al suo posto si può mettere un'immagine fatta con il traduttore ufficiale (vedi js/sessioni.js).
-     Pan Lan → lingua degli Occulti (Unseen), lettera per lettera come il traduttore LingoJam «Dauntless Unseen»:
-               la s in fondo alla parola diventa ς, come nel traduttore.
-   Uso: LINGUE.html(testo, pg) → HTML già pronto (rune, disegno SVG o testo normale); LINGUE.nome(pg) → nome della lingua.
+     Pan Lan → lingua delle Terre Oscure: l'alfabeto Aurebesh (font libero «Aurebesh» di SilvinoR, licenza OFL,
+               in media/font/), con le doppie lettere ch, sh, th, ae, eo, kh, ng, oo unite come nel vero Aurebesh.
+   In più, da scegliere a mano: la lingua degli Occulti (Unseen), lettera per lettera come il traduttore LingoJam
+               «Dauntless Unseen»: la s in fondo alla parola diventa ς, come nel traduttore.
+   Uso: LINGUE.html(testo, chi) → HTML già pronto (rune, disegno SVG o testo normale); LINGUE.nome(chi) → nome della lingua.
+        «chi» è uno Slayer (athena, asonnes, panlan: la sua lingua madre) oppure una lingua (rune, gallifreyano, aurebesh, occulti).
    Il testo italiano resta sempre quello originale: il pulsante «Traduci» lo mostra (lo gestisce chi usa questo file). */
 (function(){
   "use strict";
-  var LINGUA = { athena: "rune", asonnes: "gallifreyano", panlan: "occulti" };
-  var NOMI = { rune: "Rune anglosassoni", gallifreyano: "Gallifreyano", occulti: "Lingua degli Occulti" };
+  var LINGUA = { athena: "rune", asonnes: "gallifreyano", panlan: "aurebesh" };
+  var NOMI = { rune: "Rune anglosassoni", gallifreyano: "Gallifreyano", aurebesh: "Lingua delle Terre Oscure", occulti: "Lingua degli Occulti" };
+  function lingua(chi){ return LINGUA[chi] || (NOMI[chi] ? chi : ""); }
   function esc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function senzaAccenti(t){ return String(t || "").normalize("NFD").replace(/[̀-ͯ]/g, ""); }
 
@@ -46,6 +50,16 @@
     }
     return o;
   }
+
+  /* ---------------- lingua delle Terre Oscure (Aurebesh) ---------------- */
+  var fontAur = false;
+  function caricaFontAur(){
+    if(fontAur) return; fontAur = true;
+    var st = document.createElement("style");
+    st.textContent = '@font-face{font-family:"TCJ Aurebesh";src:url("media/font/aurebesh.woff2") format("woff2");font-display:swap}';
+    document.head.appendChild(st);
+  }
+  function aurebesh(t){ return senzaAccenti(t).toLowerCase().replace(/’/g, "'"); }
 
   /* ---------------- gallifreyano circolare (Sherman) ----------------
      Consonanti, quattro forme sul cerchio della parola:
@@ -172,16 +186,18 @@
 
   /* ---------------- l'uscita ---------------- */
   function html(t, pg, opz){
-    var l = LINGUA[pg]; opz = opz || {};
+    var l = lingua(pg); opz = opz || {};
     if(l === "rune"){ caricaFontRune(); return '<div class="lg-rune" lang="ang">' + t.split(/\n{2,}/).map(function(p){ return "<p>" + esc(rune(p)).replace(/\n/g, "<br>") + "</p>"; }).join("") + '</div>'; }
+    if(l === "aurebesh"){ caricaFontAur(); return '<div class="lg-aur" lang="x-aurebesh">' + t.split(/\n{2,}/).map(function(p){ return "<p>" + esc(aurebesh(p)).replace(/\n/g, "<br>") + "</p>"; }).join("") + '</div>'; }
     if(l === "occulti") return '<div class="lg-occ">' + t.split(/\n{2,}/).map(function(p){ return "<p>" + esc(occulti(p)).replace(/\n/g, "<br>") + "</p>"; }).join("") + '</div>';
     if(l === "gallifreyano"){ if(opz.img) return '<div class="gf-blocco"><img class="gf-img" src="' + opz.img + '" alt="Testo in gallifreyano"></div>'; return gallifreyano(t); }
     return null;   /* nessuna lingua (o non ancora pronta): chi chiama mostra l'italiano */
   }
   window.LINGUE = {
     html: html, rune: rune, occulti: occulti, gallifreyano: gallifreyano,
-    di: function(pg){ return LINGUA[pg] || ""; },
-    nome: function(pg){ return NOMI[LINGUA[pg]] || ""; },
-    pronta: function(pg){ return !!LINGUA[pg]; }
+    di: lingua,
+    nome: function(chi){ return NOMI[lingua(chi)] || ""; },
+    pronta: function(chi){ return !!lingua(chi); },
+    elenco: function(){ return Object.keys(NOMI).map(function(k){ return { k: k, n: NOMI[k] }; }); }
   };
 })();

@@ -204,9 +204,11 @@
         + '<div class="mses-riga"><label class="mses-l mses-num">Numero<input type="number" id="mses-n" min="1" value="' + prossimo + '"></label>'
         + '<label class="mses-l mses-grow">Titolo della sessione precedente (facoltativo)<input type="text" id="mses-tit" maxlength="80" placeholder="Es. Il cielo sopra Ramsgate" value="' + esc(prec && prec.titolo || "") + '"></label></div>'
         + '<label class="mses-l">Riassunto della sessione precedente<textarea id="mses-ria" rows="6" placeholder="Lo scriviamo insieme in chat e lo incolli qui. Lascia una riga vuota tra un paragrafo e l\'altro.">' + esc(prec && prec.riassunto || "") + '</textarea></label>'
-        + '<div class="mses-lg"><label class="mses-ck"><input type="checkbox" id="mses-lg"' + (bozzaLg.on ? " checked" : "") + '> ✒ Mostra il riassunto nella lingua di ogni Slayer (Athena in rune, Asonnes in gallifreyano, Pan Lan nella lingua degli Occulti)</label>'
+        + '<div class="mses-lg"><label class="mses-l">✒ Lingua del riassunto<select id="mses-lg">'
+          + [["", "Italiano per tutti"], ["sua", "Nella lingua di ogni Slayer (Athena in rune, Asonnes in gallifreyano, Pan Lan nella lingua delle Terre Oscure)"]].concat(window.LINGUE ? LINGUE.elenco().map(function(l){ return [l.k, "Tutti in " + l.n]; }) : [])
+            .map(function(o){ var v = bozzaLg.on === true ? "sua" : (bozzaLg.on || ""); return '<option value="' + o[0] + '"' + (v === o[0] ? " selected" : "") + '>' + esc(o[1]) + '</option>'; }).join("") + '</select></label>'
         + '<label class="mses-ck mses-sub"><input type="checkbox" id="mses-bl"' + (bozzaLg.blocca ? " checked" : "") + '> 🔒 Da decifrare: niente pulsante «Traduci»</label>'
-        + '<label class="mses-l mses-sub">Immagine in gallifreyano per Asonnes (facoltativa: dal traduttore ufficiale, al posto del disegno automatico)<input type="file" id="mses-gf" accept="image/*"></label>'
+        + '<label class="mses-l mses-sub">Immagine in gallifreyano (facoltativa: dal traduttore ufficiale, al posto del disegno automatico)<input type="file" id="mses-gf" accept="image/*"></label>'
         + (bozzaLg.gf ? '<div class="mses-gfv"><img src="' + bozzaLg.gf + '" alt=""><button type="button" class="bk-btn mses-sec" data-az="togliGf">✕ Togli immagine</button></div>' : "")
         + '<div class="mses-riga"><label class="mses-l mses-num">Vedi come<select id="mses-come"><option value="">Italiano</option>' + CH.map(function(k){ return '<option value="' + k + '"' + (bozzaLg.come === k ? " selected" : "") + '>' + esc(S.CORTO[k]) + '</option>'; }).join("") + '</select></label></div></div>'
         + '<label class="mses-ck"><input type="checkbox" id="mses-itg"' + (tg().chat ? " checked" : " disabled") + '> Avvisa su Telegram che la sessione sta per iniziare</label>'
@@ -231,7 +233,7 @@
 
   box.addEventListener("change", function(e){
     var id = e.target.id;
-    if(id === "mses-lg"){ bozzaLg.on = e.target.checked; return; }
+    if(id === "mses-lg"){ bozzaLg.on = e.target.value === "sua" ? true : e.target.value; return; }
     if(id === "mses-bl"){ bozzaLg.blocca = e.target.checked; return; }
     if(id === "mses-come"){ bozzaLg.come = e.target.value; return; }
     if(id === "mses-gf"){
@@ -252,19 +254,19 @@
     }
     if(az === "inizia"){
       var n = int($("mses-n").value) || 1, tit = $("mses-tit").value.trim(), ria = $("mses-ria").value.trim(), avvisa = $("mses-itg").checked;
-      var lg = bozzaLg.on && !!ria, bl = lg && bozzaLg.blocca, gfDati = lg ? bozzaLg.gf : "", gfPath = gfDati ? "lingue/sessione-" + n + "-gallifreyano.jpg" : "";
+      var lgv = bozzaLg.on, lg = !!lgv && !!ria, bl = lg && bozzaLg.blocca, gfDati = lg ? bozzaLg.gf : "", gfPath = gfDati ? "lingue/sessione-" + n + "-gallifreyano.jpg" : "";
       b.disabled = true; stato("Fotografo la situazione di partenza (stiva, cassa, equipaggiamento)…");
       (gfDati ? S.caricaImmagine(gfPath, gfDati) : Promise.resolve()).then(foto).then(function(f){
         stato("Salvo e mostro la scena ai giocatori…");
         var scena = { id: rid(), tipo: "inizio", n: n, titolo: tit, testo: ria, t: Date.now() };
-        if(lg){ scena.lingue = true; if(bl) scena.blocca = true; if(gfPath) scena.gfImg = gfPath; }
+        if(lg){ scena.lingue = lgv; if(bl) scena.blocca = true; if(gfPath) scena.gfImg = gfPath; }
         return S.modifica(function(x){
           x.corrente = { n: n, inizio: new Date().toISOString(), foto: f };
           if(n > 1 && (ria || tit)){
             var c = x.diario.filter(function(z){ return int(z.n) === n - 1; })[0];
             if(!c){ c = { n: n - 1 }; x.diario.push(c); }
             if(ria) c.riassunto = ria; if(tit) c.titolo = tit;
-            if(ria){ if(lg) c.lingue = true; else delete c.lingue; if(bl) c.blocca = true; else delete c.blocca; if(gfPath) c.gfImg = gfPath; else delete c.gfImg; }
+            if(ria){ if(lg) c.lingue = lgv; else delete c.lingue; if(bl) c.blocca = true; else delete c.blocca; if(gfPath) c.gfImg = gfPath; else delete c.gfImg; }
           }
           x.scena = scena;
         }, "Sessione " + n + " · inizio").then(function(){
