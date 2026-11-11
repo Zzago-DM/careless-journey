@@ -165,7 +165,7 @@
   }
 
   /* ---------- disegno del capitolo ---------- */
-  var bozza = null, lavoro = "";
+  var bozza = null, lavoro = "", bozzaLg = { on: false, blocca: false, gf: "", come: "" };
   function tgBox(){
     var t = tg();
     var stato = !t.token ? "Non collegato" : !t.chat ? "Bot collegato · manca il gruppo" : "Collegato a «" + esc(t.nome || "gruppo") + "»";
@@ -204,6 +204,11 @@
         + '<div class="mses-riga"><label class="mses-l mses-num">Numero<input type="number" id="mses-n" min="1" value="' + prossimo + '"></label>'
         + '<label class="mses-l mses-grow">Titolo della sessione precedente (facoltativo)<input type="text" id="mses-tit" maxlength="80" placeholder="Es. Il cielo sopra Ramsgate" value="' + esc(prec && prec.titolo || "") + '"></label></div>'
         + '<label class="mses-l">Riassunto della sessione precedente<textarea id="mses-ria" rows="6" placeholder="Lo scriviamo insieme in chat e lo incolli qui. Lascia una riga vuota tra un paragrafo e l\'altro.">' + esc(prec && prec.riassunto || "") + '</textarea></label>'
+        + '<div class="mses-lg"><label class="mses-ck"><input type="checkbox" id="mses-lg"' + (bozzaLg.on ? " checked" : "") + '> ✒ Mostra il riassunto nella lingua di ogni Slayer (Athena in rune, Asonnes in gallifreyano, Pan Lan nella lingua degli Occulti)</label>'
+        + '<label class="mses-ck mses-sub"><input type="checkbox" id="mses-bl"' + (bozzaLg.blocca ? " checked" : "") + '> 🔒 Da decifrare: niente pulsante «Traduci»</label>'
+        + '<label class="mses-l mses-sub">Immagine in gallifreyano per Asonnes (facoltativa: dal traduttore ufficiale, al posto del disegno automatico)<input type="file" id="mses-gf" accept="image/*"></label>'
+        + (bozzaLg.gf ? '<div class="mses-gfv"><img src="' + bozzaLg.gf + '" alt=""><button type="button" class="bk-btn mses-sec" data-az="togliGf">✕ Togli immagine</button></div>' : "")
+        + '<div class="mses-riga"><label class="mses-l mses-num">Vedi come<select id="mses-come"><option value="">Italiano</option>' + CH.map(function(k){ return '<option value="' + k + '"' + (bozzaLg.come === k ? " selected" : "") + '>' + esc(S.CORTO[k]) + '</option>'; }).join("") + '</select></label></div></div>'
         + '<label class="mses-ck"><input type="checkbox" id="mses-itg"' + (tg().chat ? " checked" : " disabled") + '> Avvisa su Telegram che la sessione sta per iniziare</label>'
         + '<div class="mses-riga"><button type="button" class="bk-btn mses-big" data-az="inizia">▶ Inizia sessione</button><button type="button" class="bk-btn mses-sec" data-az="anteprima">👁 Prova la scena solo qui</button></div></div>';
     }
@@ -224,7 +229,16 @@
   function rid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
   function linkSito(){ return location.origin + location.pathname; }
 
-  box.addEventListener("change", function(e){ if(e.target.id === "mses-cmd"){ var t = tg(); t.cmd = e.target.checked; salvaTg(t); if(t.cmd) ascolta(); else { clearTimeout(tCmd); scriviStatoCmd("Comandi spenti: il bot non risponde."); } } });
+  box.addEventListener("change", function(e){
+    var id = e.target.id;
+    if(id === "mses-lg"){ bozzaLg.on = e.target.checked; return; }
+    if(id === "mses-bl"){ bozzaLg.blocca = e.target.checked; return; }
+    if(id === "mses-come"){ bozzaLg.come = e.target.value; return; }
+    if(id === "mses-gf"){
+      var fl = e.target.files && e.target.files[0]; if(!fl) return;
+      var fr = new FileReader(); fr.onload = function(){ var im = new Image(); im.onload = function(){ var sc = Math.min(1, 1400 / Math.max(im.width, im.height)), c = document.createElement("canvas"); c.width = Math.round(im.width * sc); c.height = Math.round(im.height * sc); var x = c.getContext("2d"); x.fillStyle = "#ffffff"; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height); bozzaLg.gf = c.toDataURL("image/jpeg", .88); bozzaLg.on = true; disegna(); }; im.src = fr.result; }; fr.readAsDataURL(fl);
+      return;
+    } if(e.target.id === "mses-cmd"){ var t = tg(); t.cmd = e.target.checked; salvaTg(t); if(t.cmd) ascolta(); else { clearTimeout(tCmd); scriviStatoCmd("Comandi spenti: il bot non risponde."); } } });
   box.addEventListener("click", function(e){
     var b = e.target.closest("[data-az]"); if(!b) return;
     var az = b.getAttribute("data-az"), d = S.doc();
@@ -232,28 +246,32 @@
     if(az === "msg"){ S.apriMessaggi(); return; }
     if(az === "rivedi"){ if(d.scena) S.mostra(d.scena); return; }
     if(az === "anteprima"){
-      S.mostra({ id: "prova-" + rid(), tipo: "inizio", n: int(($("mses-n") || {}).value) || 1, titolo: (($("mses-tit") || {}).value || "").trim(), testo: (($("mses-ria") || {}).value || "").trim(), t: Date.now() });
+      S.mostra({ id: "prova-" + rid(), tipo: "inizio", n: int(($("mses-n") || {}).value) || 1, titolo: (($("mses-tit") || {}).value || "").trim(), testo: (($("mses-ria") || {}).value || "").trim(), t: Date.now(),
+        lingue: bozzaLg.on, blocca: bozzaLg.blocca, gfImg: bozzaLg.gf || "" }, bozzaLg.come || "");
       return;
     }
     if(az === "inizia"){
       var n = int($("mses-n").value) || 1, tit = $("mses-tit").value.trim(), ria = $("mses-ria").value.trim(), avvisa = $("mses-itg").checked;
+      var lg = bozzaLg.on && !!ria, bl = lg && bozzaLg.blocca, gfDati = lg ? bozzaLg.gf : "", gfPath = gfDati ? "lingue/sessione-" + n + "-gallifreyano.jpg" : "";
       b.disabled = true; stato("Fotografo la situazione di partenza (stiva, cassa, equipaggiamento)…");
-      foto().then(function(f){
+      (gfDati ? S.caricaImmagine(gfPath, gfDati) : Promise.resolve()).then(foto).then(function(f){
         stato("Salvo e mostro la scena ai giocatori…");
         var scena = { id: rid(), tipo: "inizio", n: n, titolo: tit, testo: ria, t: Date.now() };
+        if(lg){ scena.lingue = true; if(bl) scena.blocca = true; if(gfPath) scena.gfImg = gfPath; }
         return S.modifica(function(x){
           x.corrente = { n: n, inizio: new Date().toISOString(), foto: f };
           if(n > 1 && (ria || tit)){
             var c = x.diario.filter(function(z){ return int(z.n) === n - 1; })[0];
             if(!c){ c = { n: n - 1 }; x.diario.push(c); }
             if(ria) c.riassunto = ria; if(tit) c.titolo = tit;
+            if(ria){ if(lg) c.lingue = true; else delete c.lingue; if(bl) c.blocca = true; else delete c.blocca; if(gfPath) c.gfImg = gfPath; else delete c.gfImg; }
           }
           x.scena = scena;
         }, "Sessione " + n + " · inizio").then(function(){
           S.mostra(scena);
           if(avvisa) return tgInvia("🎬 <b>The Careless Journey</b>\nLa sessione " + n + " sta per iniziare!\n\n" + h(linkSito())).catch(function(e){ stato("Sessione iniziata, ma Telegram non ha ricevuto il messaggio" + (e && e.description ? ": " + e.description : ".")); throw "tg"; });
         });
-      }).then(function(){ stato("Sessione " + n + " iniziata."); }).catch(function(e){ if(e !== "tg") errore(e); }).then(function(){ b.disabled = false; disegna(); });
+      }).then(function(){ stato("Sessione " + n + " iniziata."); bozzaLg = { on: false, blocca: false, gf: "", come: "" }; }).catch(function(e){ if(e !== "tg") errore(e); }).then(function(){ b.disabled = false; disegna(); });
       return;
     }
     if(az === "fine"){
@@ -263,6 +281,7 @@
       return;
     }
     if(az === "annullaBozza"){ bozza = null; disegna(); return; }
+    if(az === "togliGf"){ bozzaLg.gf = ""; disegna(); return; }
     if(az === "chiudi"){
       if(!bozza || !d.corrente) return;
       var c0 = d.corrente, note = $("mses-fnote").value.trim(), titf = $("mses-ftit").value.trim(), manda = $("mses-ftg").checked, bl = bozza.blocchi;

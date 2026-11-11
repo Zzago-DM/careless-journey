@@ -153,3 +153,29 @@ html.ses-aperta{overflow:hidden}
 #mses .mses-lav{color:#ffcfc5;font-style:italic}
 #mses .mses-err{color:#ff8a7a;font-family:"Crimson Pro",Georgia,serif}
 #mses #mses-gruppi{display:flex;flex-wrap:wrap;gap:.5rem}
+
+/* ---------- lingue degli Slayer (js/lingue.js) ---------- */
+.lg-rune{font-family:"Noto Sans Runic","Segoe UI Historic","Segoe UI Symbol",serif;letter-spacing:.06em;word-spacing:.35em}
+.lg-occ{letter-spacing:.04em;word-spacing:.2em}
+.lg-rune p,.lg-occ p{margin:0 0 .9em}
+.gf-blocco{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem}
+.gf{width:min(300px,100%);height:auto;flex:0 1 auto}
+.gf .gf-p{fill:currentColor;stroke:none}
+.gf-img{max-width:100%;border-radius:6px;background:#fff}
+.lg-trad{font-family:"Cinzel",Georgia,serif;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;margin-top:.5rem;padding:.4rem .8rem;background:transparent;border:1px solid rgba(var(--gold-rgb,200,168,75),.4);color:var(--gold2,#e8c870);cursor:pointer}
+.lg-nota{font-size:.75rem;font-style:italic;opacity:.75;margin:.4rem 0 0}
+.msg-b .gf{width:min(220px,100%)}
+.msg-b .lg-box{font-family:"Crimson Pro",Georgia,serif;font-size:1.02rem;line-height:1.4}
+.msg-lg{display:inline-block;margin-top:.3rem;font-size:.68rem;color:var(--gold2,#e8c870);opacity:.85;font-family:system-ui,sans-serif}
+.msg-show-x .gf{width:min(420px,100%)}
+.crt-testo .gf{width:min(260px,100%);color:#bff3d8}
+.ses-testo .gf{width:min(340px,80vw);color:#e8c870}
+.ses-testo .lg-rune{font-size:1.15em}
+.ses-trad,.ses-lgnota{position:absolute;left:calc(18px + env(safe-area-inset-left,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:2;font-family:"Cinzel",Georgia,serif;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;padding:.7rem 1.1rem;background:rgba(0,0,0,.5);color:#d8c79c;border:1px solid rgba(232,200,112,.35);margin:0}
+.ses-trad{cursor:pointer}
+.ses-lgnota{font-family:"Crimson Pro",Georgia,serif;font-style:italic;letter-spacing:0;text-transform:none;font-size:.95rem}
+#mses .mses-lg{border-left:2px solid rgba(var(--gold-rgb,200,168,75),.3);padding-left:.8rem;margin:.6rem 0}
+#mses .mses-sub{margin-left:1.4rem}
+#mses .mses-gfv{display:flex;gap:.6rem;align-items:center;margin:.4rem 0 .4rem 1.4rem}
+#mses .mses-gfv img{max-height:90px;background:#fff;border-radius:4px}
+#mses select{background:rgba(0,0,0,.3);color:var(--text,#d0c8b8);border:1px solid rgba(var(--gold-rgb,200,168,75),.3);padding:.45rem}

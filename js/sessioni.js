@@ -152,7 +152,42 @@
     }).join("");
   }
   function paragrafi(t){ return String(t || "").split(/\n{2,}/).map(function(p){ p = p.trim(); return p ? "<p>" + esc(p).replace(/\n/g, "<br>") + "</p>" : ""; }).join(""); }
-  function mostraScena(s){
+  /* ---------- lingue degli Slayer (js/lingue.js) ----------
+     Un testo con «lingue: true» si vede nella lingua madre di chi lo legge (rune, gallifreyano, lingua degli Occulti);
+     sotto c'è «Traduci», a meno che il Master non l'abbia bloccato («blocca»: da decifrare).
+     Per Asonnes al posto del disegno automatico può esserci un'immagine fatta con il traduttore ufficiale. */
+  function mioPg(){ var k = typeof scCur !== "undefined" ? scCur : ""; return (k && !master() && typeof paIsOpen === "function" && paIsOpen(k)) ? k : ""; }
+  var IMG = {};
+  function immagine(path){
+    if(!path) return Promise.resolve(""); if(/^data:/.test(path)) return Promise.resolve(path);
+    if(IMG[path]) return IMG[path];
+    var tok = tokLettura(); if(!tok) return Promise.resolve("");
+    IMG[path] = gh(tok, "GET", GRUPPO, "/contents/" + path, null, { "Accept": "application/vnd.github.raw+json" })
+      .then(function(r){ return r.ok ? r.blob() : null; }).then(function(b){ return b ? URL.createObjectURL(b) : ""; }).catch(function(){ return ""; });
+    return IMG[path];
+  }
+  function inLingua(testo, o){
+    var pg = o.pg != null ? o.pg : mioPg(), it = paragrafi(testo);
+    if(!o.lingue || !pg || !window.LINGUE) return { html: it, lingua: false };
+    var h = LINGUE.html(testo, pg, { img: o.gf }); if(!h) return { html: it, lingua: false };
+    var n = esc(LINGUE.nome(pg));
+    return { lingua: true, nome: n, html: '<div class="lg-box"><div class="lg-or">' + h + '</div><div class="lg-it" hidden>' + it + '</div>'
+      + (o.senzaBottone ? "" : (o.blocca ? '<p class="lg-nota">🔒 ' + n + ' · da decifrare</p>' : '<button type="button" class="lg-trad" data-l="' + n + '">Traduci</button>')) + '</div>' };
+  }
+  function giraLingua(box, b){
+    var it = box.querySelector(".lg-it"), or = box.querySelector(".lg-or"), ora = it.hidden;
+    it.hidden = !ora; or.hidden = ora;
+    if(b) b.textContent = ora ? "Mostra in " + b.getAttribute("data-l") : "Traduci";
+    return ora;
+  }
+  document.addEventListener("click", function(e){ var b = e.target.closest && e.target.closest(".lg-trad"); if(!b) return; var box = b.closest(".lg-box"); if(box) giraLingua(box, b); });
+  /* per Asonnes: se il testo ha l'immagine del traduttore ufficiale, la metto al posto del disegno */
+  function immagineGf(box, testo, path, pg){
+    if(!box || !path || (pg != null ? pg : mioPg()) !== "asonnes") return;
+    immagine(path).then(function(u){ var or = box.querySelector(".lg-or"); if(u && or) or.innerHTML = LINGUE.html(testo, "asonnes", { img: u }); });
+  }
+
+  function mostraScena(s, come){
     if(ov) chiudiScena();
     ov = document.createElement("div"); ov.className = "ses-ov ses-" + (s.tipo === "fine" ? "fine" : "inizio"); ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true");
     ov.setAttribute("aria-label", s.tipo === "fine" ? "Fine della sessione" : "Riassunto della sessione precedente");
@@ -163,12 +198,15 @@
         + (s.note ? '<div class="ses-note" style="--i:' + (s.blocchi || []).length + '">' + paragrafi(s.note) + '</div>' : "")
         + '</div>';
     } else {
-      var corpo = s.testo ? paragrafi(s.testo) : "";
+      var pgS = come != null ? come : mioPg();
+      var L = s.testo ? inLingua(s.testo, { lingue: s.lingue, blocca: s.blocca, pg: pgS, senzaBottone: true }) : { html: "" };
+      var corpo = L.html;
       h += '<div class="ses-crawl' + (corpo ? "" : " solo-tit") + '"><div class="ses-sale"><div class="ses-ep">Sessione ' + int(s.n) + '</div>'
         + (s.titolo ? '<h2 class="ses-tit">' + esc(s.titolo) + '</h2>' : '<h2 class="ses-tit">The Careless Journey</h2>')
         + (corpo ? '<div class="ses-prec">Nella sessione precedente…</div><div class="ses-testo">' + corpo + '</div>' : "") + '</div></div>';
     }
     h += '<button type="button" class="ses-salta">' + (s.tipo === "fine" ? "Chiudi" : "Salta ▸") + '</button>';
+    if(s.tipo !== "fine" && L.lingua) h += s.blocca ? '<p class="ses-lgnota">🔒 ' + L.nome + ' · da decifrare</p>' : '<button type="button" class="ses-trad" data-l="' + L.nome + '">Traduci</button>';
     ov.innerHTML = h;
     document.body.appendChild(ov); document.documentElement.classList.add("ses-aperta");
     ov.querySelector(".ses-salta").addEventListener("click", chiudiScena);
@@ -177,8 +215,15 @@
     suono(s.tipo === "fine" ? "coin" : "gong");
     if(s.tipo === "fine"){ tFine = setTimeout(chiudiScena, 90000); return; }
     /* il testo sale dal basso verso l'alto; la durata dipende da quanto è lungo */
-    var sale = ov.querySelector(".ses-sale"), cr = ov.querySelector(".ses-crawl");
-    requestAnimationFrame(function(){
+    var sale = ov.querySelector(".ses-sale"), cr = ov.querySelector(".ses-crawl"), tSale = null;
+    if(L.lingua && s.gfImg && pgS === "asonnes") immagineGf(ov.querySelector(".lg-box"), s.testo, s.gfImg, pgS);
+    var tr = ov.querySelector(".ses-trad");
+    if(tr) tr.addEventListener("click", function(){   /* tradotto: il testo riparte dal basso */
+      giraLingua(ov.querySelector(".lg-box"), tr);
+      clearTimeout(tFine); clearTimeout(tSale); sale.style.transition = "none"; requestAnimationFrame(sali);
+    });
+    requestAnimationFrame(sali);
+    function sali(){
       if(!ov) return;
       var H = cr.clientHeight, alto = sale.offsetHeight;
       if(RIDOTTO){ sale.style.transform = "translateY(" + Math.max(0, (H - alto) / 2) + "px)"; tFine = setTimeout(chiudiScena, 9000 + (s.testo || "").length * 45); return; }
@@ -186,9 +231,9 @@
       sale.style.transform = "translateY(" + H + "px)";
       void sale.offsetWidth;
       sale.style.transition = "transform " + dur + "ms linear";
-      setTimeout(function(){ if(sale) sale.style.transform = "translateY(" + (-alto) + "px)"; }, 1300);
+      tSale = setTimeout(function(){ if(sale) sale.style.transform = "translateY(" + (-alto) + "px)"; }, 1300);
       tFine = setTimeout(chiudiScena, dur + 1900);
-    });
+    }
   }
   function corpoDur(t, dist){ return Math.max(9000, Math.min(110000, dist / 42 * 1000)); }   /* ~42 pixel al secondo */
 
@@ -202,7 +247,7 @@
     if(!c) return '<div class="crt-off"><span>▶ Scegli una cassetta</span></div>';
     var h = '<div class="crt-osd"><span>▶ PLAY</span><span>SESS. ' + String(int(c.n)).padStart(2, "0") + '</span><span>' + esc(c.data ? dataIt(c.data) : "") + '</span></div>';
     h += '<div class="crt-tit">' + esc(c.titolo || ("Sessione " + int(c.n))) + '</div>';
-    h += c.riassunto ? '<div class="crt-testo">' + paragrafi(c.riassunto) + '</div>' : '<p class="crt-nota">Il riassunto di questa sessione arriverà all\'inizio della prossima.</p>';
+    h += c.riassunto ? '<div class="crt-testo">' + inLingua(c.riassunto, { lingue: c.lingue, blocca: c.blocca }).html + '</div>' : '<p class="crt-nota">Il riassunto di questa sessione arriverà all\'inizio della prossima.</p>';
     if(c.fine && c.fine.blocchi) h += '<div class="crt-sub">A fine sessione</div><div class="crt-bls">' + blocchiHtml(c.fine.blocchi) + '</div>' + (c.fine.note ? '<div class="crt-testo">' + paragrafi(c.fine.note) + '</div>' : "");
     return h;
   }
@@ -214,6 +259,7 @@
     dia.querySelector(".dia-rack").innerHTML = L.length ? L.map(function(c){ return cassetta(c, sel && int(c.n) === int(sel.n)); }).join("")
       : '<p class="dia-vuoto">Il diario parte dalla prossima sessione: alla fine di ogni sessione qui comparirà una nuova cassetta.</p>';
     dia.querySelector(".crt-in").innerHTML = display(sel);
+    if(sel && sel.lingue && sel.gfImg) immagineGf(dia.querySelector(".crt-in .lg-box"), sel.riassunto, sel.gfImg);
     var st = dia.querySelector(".dia-stato");
     st.textContent = tokLettura() ? "" : "Collega il salvataggio online nella tua Area dello Slayer per vedere le cassette più recenti. Qui c'è l'ultima copia salvata su questo dispositivo.";
   }
@@ -307,11 +353,18 @@
   }
   function chiudiPanel(){ if(!panel) return; var p = panel; panel = null; p.classList.remove("aperto"); setTimeout(function(){ if(p.parentNode) p.parentNode.removeChild(p); }, 300); giroM(); }
   var allegato = null, inviando = false;
+  /* testo di un messaggio: nella lingua del giocatore se il Master l'ha mandato così (per Asonnes l'immagine allegata fa da gallifreyano) */
+  function testoMsg(x, me){
+    var gfImg = x.lingua && x.img && me === "asonnes";
+    if(x.lingua && me && me !== "master" && x.x) return { html: inLingua(x.x, { lingue: true, blocca: x.blocca, pg: me, gf: gfImg ? x.img : "" }).html, gfImg: gfImg };
+    if(x.lingua && me === "master" && x.x && x.dest && window.LINGUE) return { html: '<div class="msg-x">' + esc(x.x).replace(/\n/g, "<br>") + '</div><span class="msg-lg">✒ ' + esc(LINGUE.nome(x.dest) || "nella sua lingua") + (x.blocca ? " · 🔒 da decifrare" : "") + '</span>', gfImg: false };
+    return { html: x.x ? '<div class="msg-x">' + esc(x.x).replace(/\n/g, "<br>") + '</div>' : "", gfImg: false };
+  }
   function bolla(x, me){
-    var mio = x.da === me, chi = x.da === "master" ? "Master" : (CORTO[x.da] || x.da);
+    var mio = x.da === me, chi = x.da === "master" ? "Master" : (CORTO[x.da] || x.da), T = testoMsg(x, me);
     return '<div class="msg-b' + (mio ? " mio" : "") + '"><div class="msg-bh">' + esc(mio ? "Tu" : chi) + ' · ' + esc(oraIt(x.t)) + (x.mostra ? ' · <span title="Mostrato a schermo">📣</span>' : "") + '</div>'
-      + (x.img ? '<button type="button" class="msg-img" data-img="' + esc(x.id) + '"><img src="' + x.img + '" alt="Immagine"></button>' : (x.imgVia ? '<p class="msg-via">(immagine non più conservata)</p>' : ""))
-      + (x.x ? '<div class="msg-x">' + esc(x.x).replace(/\n/g, "<br>") + '</div>' : "") + '</div>';
+      + (x.img && !T.gfImg ? '<button type="button" class="msg-img" data-img="' + esc(x.id) + '"><img src="' + x.img + '" alt="Immagine"></button>' : (x.imgVia ? '<p class="msg-via">(immagine non più conservata)</p>' : ""))
+      + T.html + '</div>';
   }
   function disegnaPanel(soloLista){
     if(!panel) return;
@@ -323,7 +376,7 @@
       h += '<div class="msg-scrivi">' + (allegato ? '<div class="msg-alleg"><img src="' + allegato + '" alt=""><button type="button" class="msg-tolgi">✕ Togli immagine</button></div>' : "")
         + '<textarea id="msg-txt" rows="2" placeholder="' + (me === "master" ? "Scrivi a " + esc(CORTO[k]) + "…" : "Scrivi al Master…") + '" aria-label="Messaggio"></textarea>'
         + '<div class="msg-az"><label class="msg-file-b" title="Allega un\'immagine">🖼<input type="file" id="msg-file" accept="image/*" hidden></label>'
-        + (me === "master" ? '<label class="msg-opt"><input type="checkbox" id="msg-mostra"> 📣 Mostra a schermo</label><label class="msg-opt"><input type="checkbox" id="msg-tutti"> A tutti</label>' : "")
+        + (me === "master" ? '<label class="msg-opt"><input type="checkbox" id="msg-lingua"> ✒ Nella sua lingua</label><label class="msg-opt"><input type="checkbox" id="msg-blocca"> 🔒 Da decifrare</label><label class="msg-opt"><input type="checkbox" id="msg-mostra"> 📣 Mostra a schermo</label><label class="msg-opt"><input type="checkbox" id="msg-tutti"> A tutti</label>' : "")
         + '<button type="button" class="msg-invia">Invia</button></div><div class="msg-err" id="msg-err" hidden></div></div>';
       var txt = panel.querySelector("#msg-txt"), val = txt ? txt.value : "";
       panel.innerHTML = h;
@@ -364,15 +417,18 @@
     var me = io(), t = panel.querySelector("#msg-txt"), x = (t.value || "").trim();
     if(!x && !allegato) return;
     var mostra = !!(panel.querySelector("#msg-mostra") || {}).checked, tutti = !!(panel.querySelector("#msg-tutti") || {}).checked;
+    var lingua = !!(panel.querySelector("#msg-lingua") || {}).checked, blocca = lingua && !!(panel.querySelector("#msg-blocca") || {}).checked;
     var dest = me === "master" ? (tutti ? CH.slice() : [convSel]) : [me];
     var msg = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), da: me, t: Date.now(), x: x.slice(0, 4000) };
     if(allegato) msg.img = allegato; if(mostra && me === "master") msg.mostra = true;
+    if(lingua && me === "master" && x){ msg.lingua = true; if(blocca) msg.blocca = true; }
     inviando = true; errore(""); panel.querySelector(".msg-invia").disabled = true; panel.querySelector(".msg-invia").textContent = "Invio…";
     Promise.all(dest.map(function(k){
       var tok = tokPer(k);
       return modificaFile(tok, OWNER + "/tcj-" + k, MSGF, function(d){
         var m = Array.isArray(d.m) ? d.m : [];
-        m.push(msg);
+        var mm = msg; if(msg.lingua){ mm = JSON.parse(JSON.stringify(msg)); mm.dest = k; }
+        m.push(mm);
         /* restano gli ultimi 80 messaggi, e le immagini solo negli ultimi 15 */
         if(m.length > 80) m = m.slice(-80);
         var conImg = 0; for(var i = m.length - 1; i >= 0; i--){ if(m[i].img){ conImg++; if(conImg > 15){ delete m[i].img; m[i].imgVia = 1; } } }
@@ -394,7 +450,7 @@
   function mostraASchermo(x, rivedi){
     var o = document.createElement("div"); o.className = "msg-show"; o.setAttribute("role", "dialog"); o.setAttribute("aria-modal", "true"); o.setAttribute("aria-label", "Il Master ti mostra");
     o.innerHTML = '<div class="msg-show-box"><div class="msg-show-h">' + (x.da === "master" ? (rivedi ? "Immagine" : "Il Master ti mostra") : "Da " + esc(CORTO[x.da] || x.da)) + '</div>'
-      + (x.img ? '<img src="' + x.img + '" alt="Immagine mandata dal Master">' : "") + (x.x ? '<div class="msg-show-x">' + esc(x.x).replace(/\n/g, "<br>") + '</div>' : "")
+      + (function(){ var me = io(), T = testoMsg(x, me); return (x.img && !T.gfImg ? '<img src="' + x.img + '" alt="Immagine mandata dal Master">' : "") + (T.html ? '<div class="msg-show-x">' + T.html + '</div>' : ""); })()
       + '<button type="button" class="msg-show-c">Chiudi</button></div>';
     document.body.appendChild(o);
     function via(){ if(o.parentNode) o.parentNode.removeChild(o); }
@@ -408,7 +464,15 @@
   window.SESS = {
     doc: function(){ return doc; }, on: function(f){ ascS.push(f); }, leggi: leggiSessioni, modifica: modificaSessioni,
     leggiFile: leggiFile, tokMaster: tokMaster, OWNER: OWNER, GRUPPO: GRUPPO, CH: CH, NOME: NOME, CORTO: CORTO, EMO: EMO,
-    mostra: function(s){ segnaVista(s.id); mostraScena(s); }, esc: esc, dataIt: dataIt, oraIt: oraIt, int: int,
+    mostra: function(s, come){ segnaVista(s.id); mostraScena(s, come); }, esc: esc, dataIt: dataIt, oraIt: oraIt, int: int,
+    /* immagine (data URL) salvata come file nel repository del gruppo: per il gallifreyano ufficiale del riassunto */
+    caricaImmagine: function(path, dataUrl){
+      var tok = tokMaster(), b64 = String(dataUrl).split(",")[1] || "";
+      return gh(tok, "GET", GRUPPO, "/contents/" + path).then(function(r){ return r.ok ? r.json() : {}; }).then(function(j){
+        var corpo = { message: "Immagine in gallifreyano · " + path, content: b64 }; if(j && j.sha) corpo.sha = j.sha;
+        return gh(tok, "PUT", GRUPPO, "/contents/" + path, corpo).then(function(r){ if(!r.ok) throw r; delete IMG[path]; return path; });
+      });
+    },
     apriMessaggi: function(k){ apriPanel(k); }
   };
 
