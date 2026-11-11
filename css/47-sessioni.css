@@ -156,8 +156,8 @@ html.ses-aperta{overflow:hidden}
 
 /* ---------- lingue degli Slayer (js/lingue.js) ---------- */
 .lg-rune{font-family:"Noto Sans Runic","Segoe UI Historic","Segoe UI Symbol",serif;letter-spacing:.06em;word-spacing:.35em}
-.lg-occ{letter-spacing:.04em;word-spacing:.2em}
-.lg-rune p,.lg-occ p{margin:0 0 .9em}
+.lg-ign{letter-spacing:.04em;word-spacing:.2em}
+.lg-rune p,.lg-ign p{margin:0 0 .9em}
 .gf-blocco{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem}
 .gf{width:min(300px,100%);height:auto;flex:0 1 auto}
 .gf .gf-p{fill:currentColor;stroke:none}

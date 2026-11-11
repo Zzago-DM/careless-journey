@@ -154,7 +154,7 @@
   function paragrafi(t){ return String(t || "").split(/\n{2,}/).map(function(p){ p = p.trim(); return p ? "<p>" + esc(p).replace(/\n/g, "<br>") + "</p>" : ""; }).join(""); }
   /* ---------- lingue degli Slayer (js/lingue.js) ----------
      Un testo con «lingue: true» si vede nella lingua madre di chi lo legge (rune, gallifreyano, Terre Oscure);
-     con «lingue: "occulti"» (o un'altra lingua) tutti gli Slayer lo vedono in quella lingua. Il Master vede sempre l'italiano.
+     con «lingue: "ignota"» (o un'altra lingua) tutti gli Slayer lo vedono in quella lingua. Il Master vede sempre l'italiano.
      sotto c'è «Traduci», a meno che il Master non l'abbia bloccato («blocca»: da decifrare).
      Per Asonnes al posto del disegno automatico può esserci un'immagine fatta con il traduttore ufficiale. */
   function mioPg(){ var k = typeof scCur !== "undefined" ? scCur : ""; return (k && !master() && typeof paIsOpen === "function" && paIsOpen(k)) ? k : ""; }
@@ -173,7 +173,7 @@
     var pg = o.pg != null ? o.pg : mioPg(), it = paragrafi(testo), l = chiLingua(o.lingue, pg);
     if(!l) return { html: it, lingua: false };
     var h = LINGUE.html(testo, l, { img: l === "gallifreyano" ? o.gf : "" }); if(!h) return { html: it, lingua: false };
-    var n = esc(LINGUE.nome(l)), bl = !!o.blocca || LINGUE.segreta(l);   /* gli Occulti non si traducono mai */
+    var n = esc(LINGUE.nome(l)), bl = !!o.blocca || LINGUE.segreta(l);   /* le lingue extra non si traducono mai */
     return { lingua: true, nome: n, blocca: bl, html: '<div class="lg-box"><div class="lg-or">' + h + '</div><div class="lg-it" hidden>' + it + '</div>'
       + (o.senzaBottone ? "" : (bl ? '<p class="lg-nota">🔒 ' + n + ' · da decifrare</p>' : '<button type="button" class="lg-trad" data-l="' + n + '">Traduci</button>')) + '</div>' };
   }

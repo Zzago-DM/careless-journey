@@ -5,16 +5,16 @@
                Al suo posto si può mettere un'immagine fatta con il traduttore ufficiale (vedi js/sessioni.js).
      Pan Lan → lingua delle Terre Oscure: l'alfabeto Aurebesh (font libero «Aurebesh» di SilvinoR, licenza OFL,
                in media/font/), con le doppie lettere ch, sh, th, ae, eo, kh, ng, oo unite come nel vero Aurebesh.
-   In più, lingua extra da scegliere a mano e MAI traducibile dal sito (niente «Traduci», per nessuno): la lingua degli Occulti (Unseen), lettera per lettera come il traduttore LingoJam
-               «Dauntless Unseen»: la s in fondo alla parola diventa ς, come nel traduttore.
+   In più, la «Lingua …»: lingua extra da scegliere a mano e MAI traducibile dal sito (niente «Traduci», per nessuno).
+               Va lettera per lettera; la s in fondo alla parola diventa ς.
    Uso: LINGUE.html(testo, chi) → HTML già pronto (rune, disegno SVG o testo normale); LINGUE.nome(chi) → nome della lingua.
-        «chi» è uno Slayer (athena, asonnes, panlan: la sua lingua madre) oppure una lingua (rune, gallifreyano, aurebesh, occulti).
+        «chi» è uno Slayer (athena, asonnes, panlan: la sua lingua madre) oppure una lingua (rune, gallifreyano, aurebesh, ignota).
    Il testo italiano resta sempre quello originale: il pulsante «Traduci» lo mostra (lo gestisce chi usa questo file). */
 (function(){
   "use strict";
   var LINGUA = { athena: "rune", asonnes: "gallifreyano", panlan: "aurebesh" };
-  var NOMI = { rune: "Rune anglosassoni", gallifreyano: "Gallifreyano", aurebesh: "Lingua delle Terre Oscure", occulti: "Lingua degli Occulti" };
-  var SEGRETE = { occulti: true };   /* lingue extra: nessuno può tradurle in automatico */
+  var NOMI = { rune: "Rune anglosassoni", gallifreyano: "Gallifreyano", aurebesh: "Lingua delle Terre Oscure", ignota: "Lingua …" };
+  var SEGRETE = { ignota: true };   /* lingue extra: nessuno può tradurle in automatico */
   function lingua(chi){ return LINGUA[chi] || (NOMI[chi] ? chi : ""); }
   function esc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function senzaAccenti(t){ return String(t || "").normalize("NFD").replace(/[̀-ͯ]/g, ""); }
@@ -39,10 +39,10 @@
     var l = document.createElement("link"); l.rel = "stylesheet"; l.href = "https://fonts.googleapis.com/css2?family=Noto+Sans+Runic&display=swap"; document.head.appendChild(l);
   }
 
-  /* ---------------- lingua degli Occulti ---------------- */
+  /* ---------------- lingua … ---------------- */
   var OCC = { a: "ㅏ", b: "б", c: "c", d: "δ", e: "э", f: "φ", g: "γ", h: "ㅎ", i: "и", j: "ㅈ", k: "ㅋ", l: "λ", m: "ㅁ", n: "n", o: "ω",
     p: "π", q: "ξ", r: "ㄹ", s: "σ", t: "t", u: "u", v: "v", w: "w", x: "x", y: "y", z: "з" };
-  function occulti(t){
+  function ignota(t){
     var s = senzaAccenti(t).toLowerCase(), o = "";
     for(var i = 0; i < s.length; i++){
       var c = s[i];
@@ -190,12 +190,12 @@
     var l = lingua(pg); opz = opz || {};
     if(l === "rune"){ caricaFontRune(); return '<div class="lg-rune" lang="ang">' + t.split(/\n{2,}/).map(function(p){ return "<p>" + esc(rune(p)).replace(/\n/g, "<br>") + "</p>"; }).join("") + '</div>'; }
     if(l === "aurebesh"){ caricaFontAur(); return '<div class="lg-aur" lang="x-aurebesh">' + t.split(/\n{2,}/).map(function(p){ return "<p>" + esc(aurebesh(p)).replace(/\n/g, "<br>") + "</p>"; }).join("") + '</div>'; }
-    if(l === "occulti") return '<div class="lg-occ">' + t.split(/\n{2,}/).map(function(p){ return "<p>" + esc(occulti(p)).replace(/\n/g, "<br>") + "</p>"; }).join("") + '</div>';
+    if(l === "ignota") return '<div class="lg-ign">' + t.split(/\n{2,}/).map(function(p){ return "<p>" + esc(ignota(p)).replace(/\n/g, "<br>") + "</p>"; }).join("") + '</div>';
     if(l === "gallifreyano"){ if(opz.img) return '<div class="gf-blocco"><img class="gf-img" src="' + opz.img + '" alt="Testo in gallifreyano"></div>'; return gallifreyano(t); }
     return null;   /* nessuna lingua (o non ancora pronta): chi chiama mostra l'italiano */
   }
   window.LINGUE = {
-    html: html, rune: rune, occulti: occulti, gallifreyano: gallifreyano,
+    html: html, rune: rune, ignota: ignota, gallifreyano: gallifreyano,
     di: lingua,
     nome: function(chi){ return NOMI[lingua(chi)] || ""; },
     pronta: function(chi){ return !!lingua(chi); },
