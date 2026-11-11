@@ -5,7 +5,7 @@
                Al suo posto si può mettere un'immagine fatta con il traduttore ufficiale (vedi js/sessioni.js).
      Pan Lan → lingua delle Terre Oscure: l'alfabeto Aurebesh (font libero «Aurebesh» di SilvinoR, licenza OFL,
                in media/font/), con le doppie lettere ch, sh, th, ae, eo, kh, ng, oo unite come nel vero Aurebesh.
-   In più, da scegliere a mano: la lingua degli Occulti (Unseen), lettera per lettera come il traduttore LingoJam
+   In più, lingua extra da scegliere a mano e MAI traducibile dal sito (niente «Traduci», per nessuno): la lingua degli Occulti (Unseen), lettera per lettera come il traduttore LingoJam
                «Dauntless Unseen»: la s in fondo alla parola diventa ς, come nel traduttore.
    Uso: LINGUE.html(testo, chi) → HTML già pronto (rune, disegno SVG o testo normale); LINGUE.nome(chi) → nome della lingua.
         «chi» è uno Slayer (athena, asonnes, panlan: la sua lingua madre) oppure una lingua (rune, gallifreyano, aurebesh, occulti).
@@ -14,6 +14,7 @@
   "use strict";
   var LINGUA = { athena: "rune", asonnes: "gallifreyano", panlan: "aurebesh" };
   var NOMI = { rune: "Rune anglosassoni", gallifreyano: "Gallifreyano", aurebesh: "Lingua delle Terre Oscure", occulti: "Lingua degli Occulti" };
+  var SEGRETE = { occulti: true };   /* lingue extra: nessuno può tradurle in automatico */
   function lingua(chi){ return LINGUA[chi] || (NOMI[chi] ? chi : ""); }
   function esc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function senzaAccenti(t){ return String(t || "").normalize("NFD").replace(/[̀-ͯ]/g, ""); }
@@ -198,6 +199,7 @@
     di: lingua,
     nome: function(chi){ return NOMI[lingua(chi)] || ""; },
     pronta: function(chi){ return !!lingua(chi); },
-    elenco: function(){ return Object.keys(NOMI).map(function(k){ return { k: k, n: NOMI[k] }; }); }
+    segreta: function(chi){ return !!SEGRETE[lingua(chi)]; },
+    elenco: function(){ return Object.keys(NOMI).map(function(k){ return { k: k, n: NOMI[k] + (SEGRETE[k] ? " (extra · non traducibile)" : "") }; }); }
   };
 })();

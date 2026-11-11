@@ -173,9 +173,9 @@
     var pg = o.pg != null ? o.pg : mioPg(), it = paragrafi(testo), l = chiLingua(o.lingue, pg);
     if(!l) return { html: it, lingua: false };
     var h = LINGUE.html(testo, l, { img: l === "gallifreyano" ? o.gf : "" }); if(!h) return { html: it, lingua: false };
-    var n = esc(LINGUE.nome(l));
-    return { lingua: true, nome: n, html: '<div class="lg-box"><div class="lg-or">' + h + '</div><div class="lg-it" hidden>' + it + '</div>'
-      + (o.senzaBottone ? "" : (o.blocca ? '<p class="lg-nota">🔒 ' + n + ' · da decifrare</p>' : '<button type="button" class="lg-trad" data-l="' + n + '">Traduci</button>')) + '</div>' };
+    var n = esc(LINGUE.nome(l)), bl = !!o.blocca || LINGUE.segreta(l);   /* gli Occulti non si traducono mai */
+    return { lingua: true, nome: n, blocca: bl, html: '<div class="lg-box"><div class="lg-or">' + h + '</div><div class="lg-it" hidden>' + it + '</div>'
+      + (o.senzaBottone ? "" : (bl ? '<p class="lg-nota">🔒 ' + n + ' · da decifrare</p>' : '<button type="button" class="lg-trad" data-l="' + n + '">Traduci</button>')) + '</div>' };
   }
   function giraLingua(box, b){
     var it = box.querySelector(".lg-it"), or = box.querySelector(".lg-or"), ora = it.hidden;
@@ -209,7 +209,7 @@
         + (corpo ? '<div class="ses-prec">Nella sessione precedente…</div><div class="ses-testo">' + corpo + '</div>' : "") + '</div></div>';
     }
     h += '<button type="button" class="ses-salta">' + (s.tipo === "fine" ? "Chiudi" : "Salta ▸") + '</button>';
-    if(s.tipo !== "fine" && L.lingua) h += s.blocca ? '<p class="ses-lgnota">🔒 ' + L.nome + ' · da decifrare</p>' : '<button type="button" class="ses-trad" data-l="' + L.nome + '">Traduci</button>';
+    if(s.tipo !== "fine" && L.lingua) h += L.blocca ? '<p class="ses-lgnota">🔒 ' + L.nome + ' · da decifrare</p>' : '<button type="button" class="ses-trad" data-l="' + L.nome + '">Traduci</button>';
     ov.innerHTML = h;
     document.body.appendChild(ov); document.documentElement.classList.add("ses-aperta");
     ov.querySelector(".ses-salta").addEventListener("click", chiudiScena);
@@ -360,7 +360,7 @@
   function testoMsg(x, me){
     var gfImg = !!(x.lingua && x.img && me !== "master" && chiLingua(x.lingua, me) === "gallifreyano");
     if(x.lingua && me && me !== "master" && x.x) return { html: inLingua(x.x, { lingue: x.lingua, blocca: x.blocca, pg: me, gf: gfImg ? x.img : "" }).html, gfImg: gfImg };
-    if(x.lingua && me === "master" && x.x && x.dest && window.LINGUE) return { html: '<div class="msg-x">' + esc(x.x).replace(/\n/g, "<br>") + '</div><span class="msg-lg">✒ ' + esc(LINGUE.nome(x.lingua === true ? x.dest : x.lingua) || "nella sua lingua") + (x.blocca ? " · 🔒 da decifrare" : "") + '</span>', gfImg: false };
+    if(x.lingua && me === "master" && x.x && x.dest && window.LINGUE) return { html: '<div class="msg-x">' + esc(x.x).replace(/\n/g, "<br>") + '</div><span class="msg-lg">✒ ' + esc(LINGUE.nome(x.lingua === true ? x.dest : x.lingua) || "nella sua lingua") + (x.blocca || (x.lingua !== true && LINGUE.segreta(x.lingua)) ? " · 🔒 da decifrare" : "") + '</span>', gfImg: false };
     return { html: x.x ? '<div class="msg-x">' + esc(x.x).replace(/\n/g, "<br>") + '</div>' : "", gfImg: false };
   }
   function bolla(x, me){
