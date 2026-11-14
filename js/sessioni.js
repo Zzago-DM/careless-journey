@@ -10,6 +10,11 @@
    - Messaggi privati: nel repository privato di ogni personaggio (es. Zzago-DM/tcj-athena), file messaggi.json:
        { m: [{ id, da: "master" | <personaggio>, t, x: testo, img: immagine (data URL), mostra: true/false }] }
      Lo aprono solo il token di quel giocatore e quello del Master: gli altri giocatori non possono leggerlo.
+   - Chat di gruppo (tutti i giocatori e il Master): repository Zzago-DM/gruppo, file chat-gruppo.json, stesso formato.
+   - Messaggi eliminati: quando un giocatore elimina un suo messaggio resta nel file con del: { da, t } e sparisce per
+     tutti tranne che per il Master, che lo vede in trasparenza e con «OK» lo toglie davvero (o li toglie tutti insieme
+     con «Togli gli eliminati»). Quello che elimina il Master sparisce subito, per tutti. «Svuota chat» (solo il Master)
+     cancella l'intera conversazione.
      Quello che si è già letto lo ricorda il dispositivo (localStorage), così leggere non costa nessuna scrittura.
 
    COSA SUCCEDE SUI DISPOSITIVI
@@ -18,7 +23,9 @@
      il riassunto sale dal basso verso l'alto, poi il sito torna com'era. A fine sessione compaiono bottino, monete e risorse.
    - Diario di bordo: Area dello Slayer › «📼 Diario di bordo» (e il menu ⚔ Slayer): una cassetta VHS per sessione;
      selezionandola, a destra si accende il display con il riassunto e il riepilogo di fine sessione.
-   - Messaggi: la linguetta ✉ sul lato destro apre la chat con il Master (per il Master: una conversazione per Slayer).
+   - Messaggi: la linguetta ✉ sul lato destro apre i messaggi: «Con il Master» (privata) e «Di gruppo» (per il Master:
+     una conversazione per Slayer più quella di gruppo). «☑ Seleziona» permette di scegliere i messaggi da eliminare:
+     i giocatori solo i propri, il Master tutti.
      Un'immagine del Master, o un messaggio con «Mostra a schermo», compare anche in grande sullo schermo del giocatore. */
 (function(){
   "use strict";
@@ -51,7 +58,7 @@
     if(k && typeof paIsOpen === "function" && paIsOpen(k) && tokPg(k)) return k;
     return "";
   }
-  function tokPer(k){ return io() === "master" ? tokMaster() : tokPg(k); }
+  function tokPer(k){ var me = io(); return me === "master" ? tokMaster() : tokPg(k === "gruppo" ? me : k); }
 
   /* ---------- GitHub ---------- */
   function b64e(str){ var by = new TextEncoder().encode(str), bin = ""; for(var i = 0; i < by.length; i += 0x8000) bin += String.fromCharCode.apply(null, by.subarray(i, i + 0x8000)); return btoa(bin); }
@@ -292,29 +299,36 @@
   })();
 
   /* =================== Messaggi privati Master ↔ Slayer =================== */
-  var CONV = {};    /* k -> { m: [...], etag } */
-  CH.forEach(function(k){ CONV[k] = { m: (leggiJ("tcjmsg_" + k).m || []), etag: null }; });
+  var CONV = {};    /* k -> { m: [...], etag }  (k = personaggio, oppure "gruppo" per la chat di tutti) */
+  CH.concat(["gruppo"]).forEach(function(k){ CONV[k] = { m: (leggiJ("tcjmsg_" + k).m || []), etag: null }; });
+  function repoDi(k){ return k === "gruppo" ? GRUPPO : OWNER + "/tcj-" + k; }
+  function fileDi(k){ return k === "gruppo" ? "chat-gruppo.json" : MSGF; }
+  /* i messaggi che vede questo dispositivo: gli eliminati li vede solo il Master */
+  function visibili(k, me){ return CONV[k].m.filter(function(x){ return me === "master" || !x.del; }); }
   function letti(){ return leggiJ("tcjmsg_letti"); }
   function segnaLetto(k){ var l = letti(), c = CONV[k].m, ul = c.length ? c[c.length - 1].t : 0; l[io() + ">" + k] = ul; salvaJ("tcjmsg_letti", l); }
-  function nonLetti(k){ var me = io(); if(!me) return 0; var da = letti()[me + ">" + k] || 0; return CONV[k].m.filter(function(x){ return x.t > da && x.da !== me && (me === "master" ? x.da === k : x.da === "master"); }).length; }
-  function conversazioni(){ var me = io(); return me === "master" ? CH.slice() : (me ? [me] : []); }
+  function nonLetti(k){ var me = io(); if(!me) return 0; var da = letti()[me + ">" + k] || 0; return CONV[k].m.filter(function(x){ return x.t > da && !x.del && x.da !== me && (k === "gruppo" || (me === "master" ? x.da === k : x.da === "master")); }).length; }
+  function conversazioni(){ var me = io(); return me === "master" ? CH.concat(["gruppo"]) : (me ? [me, "gruppo"] : []); }
+  var selez = null;   /* modalità «Seleziona»: { id: true } dei messaggi scelti */
   var panel = null, tab = null, convSel = null, mostrati = leggiJ("tcjmsg_mostrati");
   function leggiConv(k){
     var tok = tokPer(k); if(!tok) return Promise.resolve();
-    return leggiFile(tok, OWNER + "/tcj-" + k, MSGF, CONV[k].etag).then(function(r){
+    return leggiFile(tok, repoDi(k), fileDi(k), CONV[k].etag).then(function(r){
       if(r.uguale || r.vuoto) return;
-      CONV[k].etag = r.etag; var prima = CONV[k].m.length;
+      CONV[k].etag = r.etag; var prima = firma(CONV[k].m);
       CONV[k].m = ((r.j && Array.isArray(r.j.m)) ? r.j.m : []).filter(function(x){ return x && x.id; });
       salvaJ("tcjmsg_" + k, { m: CONV[k].m.slice(-60) });
-      if(CONV[k].m.length !== prima) cambiato(k);
+      if(firma(CONV[k].m) !== prima) cambiato(k);
     }).catch(function(){});
   }
+  function firma(m){ return m.map(function(x){ return x.id + (x.del ? "d" : ""); }).join(","); }
   function cambiato(k){
     disegnaTab(); if(panel && convSel === k) disegnaPanel(true);
     /* il Master mostra qualcosa a schermo: lo apro in grande al giocatore */
     var me = io(); if(!me || me === "master") return;
     CONV[k].m.forEach(function(x){
-      if(x.da !== "master" || mostrati[x.id] || !(x.img || x.mostra)) return;
+      /* nella chat di gruppo va in grande solo quello che il Master ha segnato «Mostra a schermo» */
+      if(x.da !== "master" || x.del || mostrati[x.id] || !(k === "gruppo" ? x.mostra : (x.img || x.mostra))) return;
       mostrati[x.id] = 1; salvaJ("tcjmsg_mostrati", mostrati);
       if(Date.now() - x.t < ORE3) mostraASchermo(x);
     });
@@ -325,7 +339,7 @@
     var L = conversazioni(); disegnaTab();
     if(!L.length){ tM = setTimeout(giroM, 15000); return; }
     var aperto = !!panel;
-    Promise.all((aperto && io() !== "master" ? L : L).map(leggiConv)).then(function(){ tM = setTimeout(giroM, aperto ? 5000 : (io() === "master" ? 25000 : 15000)); });
+    Promise.all(L.map(leggiConv)).then(function(){ tM = setTimeout(giroM, aperto ? 5000 : (io() === "master" ? 25000 : 15000)); });
   }
   function disegnaTab(){
     var L = conversazioni();
@@ -343,7 +357,7 @@
   }
   function apriPanel(k){
     var L = conversazioni(); if(!L.length) return;
-    convSel = k && L.indexOf(k) >= 0 ? k : (convSel && L.indexOf(convSel) >= 0 ? convSel : L[0]);
+    convSel = k && L.indexOf(k) >= 0 ? k : (convSel && L.indexOf(convSel) >= 0 ? convSel : L[0]); selez = null;
     if(!panel){
       panel = document.createElement("aside"); panel.id = "msg-panel"; panel.setAttribute("aria-label", "Messaggi privati");
       document.body.appendChild(panel);
@@ -354,7 +368,7 @@
     }
     disegnaPanel(); suono("swish"); giroM();
   }
-  function chiudiPanel(){ if(!panel) return; var p = panel; panel = null; p.classList.remove("aperto"); setTimeout(function(){ if(p.parentNode) p.parentNode.removeChild(p); }, 300); giroM(); }
+  function chiudiPanel(){ if(!panel) return; var p = panel; panel = null; selez = null; p.classList.remove("aperto"); setTimeout(function(){ if(p.parentNode) p.parentNode.removeChild(p); }, 300); giroM(); }
   var allegato = null, inviando = false;
   /* testo di un messaggio: nella lingua del giocatore se il Master l'ha mandato così (per Asonnes l'immagine allegata fa da gallifreyano) */
   function testoMsg(x, me){
@@ -363,38 +377,65 @@
     if(x.lingua && me === "master" && x.x && x.dest && window.LINGUE) return { html: '<div class="msg-x">' + esc(x.x).replace(/\n/g, "<br>") + '</div><span class="msg-lg">✒ ' + esc(LINGUE.nome(x.lingua === true ? x.dest : x.lingua) || "nella sua lingua") + (x.blocca || (x.lingua !== true && LINGUE.segreta(x.lingua)) ? " · 🔒 da decifrare" : "") + '</span>', gfImg: false };
     return { html: x.x ? '<div class="msg-x">' + esc(x.x).replace(/\n/g, "<br>") + '</div>' : "", gfImg: false };
   }
+  function eliminabile(x, me){ return me === "master" || (x.da === me && !x.del); }
   function bolla(x, me){
     var mio = x.da === me, chi = x.da === "master" ? "Master" : (CORTO[x.da] || x.da), T = testoMsg(x, me);
-    return '<div class="msg-b' + (mio ? " mio" : "") + '"><div class="msg-bh">' + esc(mio ? "Tu" : chi) + ' · ' + esc(oraIt(x.t)) + (x.mostra ? ' · <span title="Mostrato a schermo">📣</span>' : "") + '</div>'
-      + (x.img && !T.gfImg ? '<button type="button" class="msg-img" data-img="' + esc(x.id) + '"><img src="' + x.img + '" alt="Immagine"></button>' : (x.imgVia ? '<p class="msg-via">(immagine non più conservata)</p>' : ""))
-      + T.html + '</div>';
+    var sel = selez && eliminabile(x, me), on = sel && selez[x.id];
+    var testa = '<div class="msg-bh">' + esc(mio ? "Tu" : chi) + ' · ' + esc(oraIt(x.t)) + (x.mostra ? ' · <span title="Mostrato a schermo">📣</span>' : "")
+      + (x.del ? ' · <span class="msg-delt">🗑 eliminato' + (x.del.da && x.del.da !== x.da ? " da " + esc(CORTO[x.del.da] || x.del.da) : "") + '</span>' : "") + '</div>';
+    var corpo = (x.img && !T.gfImg ? (sel ? '<span class="msg-img"><img src="' + x.img + '" alt="Immagine"></span>' : '<button type="button" class="msg-img" data-img="' + esc(x.id) + '"><img src="' + x.img + '" alt="Immagine"></button>') : (x.imgVia ? '<p class="msg-via">(immagine non più conservata)</p>' : ""))
+      + T.html;
+    var cls = "msg-b" + (mio ? " mio" : "") + (x.del ? " del" : "") + (sel ? " sel" : "") + (on ? " on" : "");
+    if(sel) return '<button type="button" class="' + cls + '" data-sel="' + esc(x.id) + '" aria-pressed="' + !!on + '"><span class="msg-spunta" aria-hidden="true">' + (on ? "☑" : "☐") + '</span>' + testa + corpo + '</button>';
+    return '<div class="' + cls + '">' + testa + corpo
+      + (x.del && me === "master" && !selez ? '<button type="button" class="msg-ok" data-ok="' + esc(x.id) + '" title="Il giocatore l\'ha eliminato: OK lo toglie anche a te">OK</button>' : "") + '</div>';
   }
   function disegnaPanel(soloLista){
     if(!panel) return;
     var me = io(), L = conversazioni(), k = convSel;
     if(!soloLista){
-      var h = '<div class="msg-h"><div><div class="msg-sub">' + (me === "master" ? "Messaggi privati" : "Solo tu e il Master") + '</div><div class="msg-t">' + (me === "master" ? "✉ Messaggi agli Slayer" : "✉ Messaggi con il Master") + '</div></div><button type="button" class="msg-x" aria-label="Chiudi">✕</button></div>';
-      if(me === "master") h += '<div class="msg-chs">' + L.map(function(c){ return '<button type="button" class="msg-ch' + (c === k ? " on" : "") + '" data-k="' + c + '">' + EMO[c] + " " + esc(CORTO[c]) + '<span class="msg-chn"></span></button>'; }).join("") + '</div>';
+      var gr = k === "gruppo";
+      var h = '<div class="msg-h"><div><div class="msg-sub">' + (gr ? "Tutti gli Slayer e il Master" : me === "master" ? "Messaggi privati" : "Solo tu e il Master") + '</div><div class="msg-t">' + (gr ? "✉ Chat di gruppo" : me === "master" ? "✉ Messaggi agli Slayer" : "✉ Messaggi con il Master") + '</div></div>'
+        + '<div class="msg-hb">' + (visibili(k, me).some(function(x){ return eliminabile(x, me); }) || selez ? '<button type="button" class="msg-selb" aria-pressed="' + !!selez + '">' + (selez ? "Fine" : "☑ Seleziona") + '</button>' : "") + '<button type="button" class="msg-x" aria-label="Chiudi">✕</button></div></div>';
+      h += '<div class="msg-chs' + (me === "master" ? "" : " due") + '">' + L.map(function(c){
+        var et = c === "gruppo" ? "👥 Gruppo" : me === "master" ? EMO[c] + " " + esc(CORTO[c]) : "🔒 Con il Master";
+        return '<button type="button" class="msg-ch' + (c === k ? " on" : "") + '" data-k="' + c + '">' + et + '<span class="msg-chn"></span></button>'; }).join("") + '</div>';
+      var nDel = me === "master" ? CONV[k].m.filter(function(x){ return x.del; }).length : 0;
+      if(nDel && !selez) h += '<div class="msg-delbar"><span>' + nDel + (nDel === 1 ? " messaggio eliminato" : " messaggi eliminati") + ' (li vedi solo tu)</span><button type="button" class="msg-togli-del">Togli gli eliminati</button></div>';
       h += '<div class="msg-lista" aria-live="polite"></div>';
+      if(selez){
+        var nS = Object.keys(selez).length;
+        h += '<div class="msg-selbar"><button type="button" class="msg-elimina"' + (nS ? "" : " disabled") + '>🗑 Elimina' + (nS ? " (" + nS + ")" : "") + '</button>'
+          + (me === "master" ? '<button type="button" class="msg-svuota">Svuota chat</button>' : "")
+          + '<button type="button" class="msg-annulla">Annulla</button></div><div class="msg-err" id="msg-err" hidden></div>';
+      } else
       h += '<div class="msg-scrivi">' + (allegato ? '<div class="msg-alleg"><img src="' + allegato + '" alt=""><button type="button" class="msg-tolgi">✕ Togli immagine</button></div>' : "")
-        + '<textarea id="msg-txt" rows="2" placeholder="' + (me === "master" ? "Scrivi a " + esc(CORTO[k]) + "…" : "Scrivi al Master…") + '" aria-label="Messaggio"></textarea>'
+        + '<textarea id="msg-txt" rows="2" placeholder="' + (gr ? "Scrivi al gruppo…" : me === "master" ? "Scrivi a " + esc(CORTO[k]) + "…" : "Scrivi al Master…") + '" aria-label="Messaggio"></textarea>'
         + '<div class="msg-az"><label class="msg-file-b" title="Allega un\'immagine">🖼<input type="file" id="msg-file" accept="image/*" hidden></label>'
-        + (me === "master" ? '<label class="msg-opt">✒ <select id="msg-lingua" aria-label="Lingua del messaggio"><option value="">Italiano</option><option value="sua">Nella sua lingua</option>' + (window.LINGUE ? LINGUE.elenco().map(function(l){ return '<option value="' + l.k + '">' + esc(l.n) + '</option>'; }).join("") : "") + '</select></label><label class="msg-opt"><input type="checkbox" id="msg-blocca"> 🔒 Da decifrare</label><label class="msg-opt"><input type="checkbox" id="msg-mostra"> 📣 Mostra a schermo</label><label class="msg-opt"><input type="checkbox" id="msg-tutti"> A tutti</label>' : "")
+        + (me === "master" && gr ? '<label class="msg-opt"><input type="checkbox" id="msg-mostra"> 📣 Mostra a schermo</label>' : "")
+        + (me === "master" && !gr ? '<label class="msg-opt">✒ <select id="msg-lingua" aria-label="Lingua del messaggio"><option value="">Italiano</option><option value="sua">Nella sua lingua</option>' + (window.LINGUE ? LINGUE.elenco().map(function(l){ return '<option value="' + l.k + '">' + esc(l.n) + '</option>'; }).join("") : "") + '</select></label><label class="msg-opt"><input type="checkbox" id="msg-blocca"> 🔒 Da decifrare</label><label class="msg-opt"><input type="checkbox" id="msg-mostra"> 📣 Mostra a schermo</label><label class="msg-opt"><input type="checkbox" id="msg-tutti"> A tutti</label>' : "")
         + '<button type="button" class="msg-invia">Invia</button></div><div class="msg-err" id="msg-err" hidden></div></div>';
-      var txt = panel.querySelector("#msg-txt"), val = txt ? txt.value : "", lgS = panel.querySelector("#msg-lingua"), lgV = lgS ? lgS.value : "";
-      panel.innerHTML = h;
-      if(val) panel.querySelector("#msg-txt").value = val;
+      var txt = panel.querySelector("#msg-txt"), val = txt ? txt.value : (panel._bozza || ""), lgS = panel.querySelector("#msg-lingua"), lgV = lgS ? lgS.value : "";
+      panel._bozza = val; panel.innerHTML = h;
+      if(val && panel.querySelector("#msg-txt")) panel.querySelector("#msg-txt").value = val;
       if(lgV && panel.querySelector("#msg-lingua")) panel.querySelector("#msg-lingua").value = lgV;
     }
-    var lista = panel.querySelector(".msg-lista"), M = CONV[k].m;
-    lista.innerHTML = M.length ? M.map(function(x){ return bolla(x, me); }).join("") : '<p class="msg-vuoto">' + (me === "master" ? "Nessun messaggio con " + esc(CORTO[k]) + ". Quello che scrivi qui lo vede solo lui." : "Nessun messaggio. Quello che scrivi qui lo legge solo il Master.") + '</p>';
-    lista.scrollTop = lista.scrollHeight;
+    var lista = panel.querySelector(".msg-lista"), M = visibili(k, me), giu = lista.scrollHeight - lista.scrollTop - lista.clientHeight < 60 || !soloLista;
+    lista.innerHTML = M.length ? M.map(function(x){ return bolla(x, me); }).join("") : '<p class="msg-vuoto">' + (k === "gruppo" ? "Nessun messaggio. Quello che scrivi qui lo leggono tutti gli Slayer e il Master." : me === "master" ? "Nessun messaggio con " + esc(CORTO[k]) + ". Quello che scrivi qui lo vede solo lui." : "Nessun messaggio. Quello che scrivi qui lo legge solo il Master.") + '</p>';
+    if(giu && !selez) lista.scrollTop = lista.scrollHeight;
     segnaLetto(k); disegnaTab();
-    if(!soloLista) setTimeout(function(){ var t = panel && panel.querySelector("#msg-txt"); if(t) try { t.focus({ preventScroll: true }); } catch(e){} }, 30);
+    if(!soloLista && !selez) setTimeout(function(){ var t = panel && panel.querySelector("#msg-txt"); if(t) try { t.focus({ preventScroll: true }); } catch(e){} }, 30);
   }
   function clicPanel(e){
-    if(e.target.closest(".msg-x")){ chiudiPanel(); return; }
-    var c = e.target.closest(".msg-ch"); if(c){ convSel = c.getAttribute("data-k"); allegato = null; disegnaPanel(); leggiConv(convSel); return; }
+    if(e.target.closest("button.msg-x")){ chiudiPanel(); return; }
+    var c = e.target.closest(".msg-ch"); if(c){ convSel = c.getAttribute("data-k"); allegato = null; selez = null; panel._bozza = ""; var tx = panel.querySelector("#msg-txt"); if(tx) tx.value = ""; disegnaPanel(); leggiConv(convSel); return; }
+    if(e.target.closest(".msg-selb")){ selez = selez ? null : {}; disegnaPanel(); return; }
+    if(e.target.closest(".msg-annulla")){ selez = null; disegnaPanel(); return; }
+    var sb = e.target.closest("[data-sel]"); if(sb && selez){ var sid = sb.getAttribute("data-sel"); if(selez[sid]) delete selez[sid]; else selez[sid] = true; disegnaPanel(); return; }
+    if(e.target.closest(".msg-elimina")){ eliminaScelti(); return; }
+    if(e.target.closest(".msg-svuota")){ svuota(); return; }
+    if(e.target.closest(".msg-togli-del")){ togliEliminati(); return; }
+    var ok = e.target.closest("[data-ok]"); if(ok){ ok.disabled = true; cambiaConv(convSel, function(m){ return m.filter(function(x){ return x.id !== ok.getAttribute("data-ok"); }); }, "Messaggio eliminato tolto dal Master"); return; }
     if(e.target.closest(".msg-invia")){ invia(); return; }
     if(e.target.closest(".msg-tolgi")){ allegato = null; disegnaPanel(); return; }
     var im = e.target.closest(".msg-img"); if(im){ var id = im.getAttribute("data-img"), x = CONV[convSel].m.filter(function(m){ return m.id === id; })[0]; if(x) mostraASchermo(x, true); }
@@ -422,14 +463,14 @@
     if(!x && !allegato) return;
     var mostra = !!(panel.querySelector("#msg-mostra") || {}).checked, tutti = !!(panel.querySelector("#msg-tutti") || {}).checked;
     var lgv = (panel.querySelector("#msg-lingua") || {}).value || "", lingua = lgv === "sua" ? true : lgv, blocca = lingua && !!(panel.querySelector("#msg-blocca") || {}).checked;
-    var dest = me === "master" ? (tutti ? CH.slice() : [convSel]) : [me];
+    var dest = convSel === "gruppo" ? ["gruppo"] : me === "master" ? (tutti ? CH.slice() : [convSel]) : [me];
     var msg = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), da: me, t: Date.now(), x: x.slice(0, 4000) };
     if(allegato) msg.img = allegato; if(mostra && me === "master") msg.mostra = true;
-    if(lingua && me === "master" && x){ msg.lingua = lingua; if(blocca) msg.blocca = true; }
+    if(lingua && me === "master" && x && convSel !== "gruppo"){ msg.lingua = lingua; if(blocca) msg.blocca = true; }
     inviando = true; errore(""); panel.querySelector(".msg-invia").disabled = true; panel.querySelector(".msg-invia").textContent = "Invio…";
     Promise.all(dest.map(function(k){
       var tok = tokPer(k);
-      return modificaFile(tok, OWNER + "/tcj-" + k, MSGF, function(d){
+      return modificaFile(tok, repoDi(k), fileDi(k), function(d){
         var m = Array.isArray(d.m) ? d.m : [];
         var mm = msg; if(msg.lingua){ mm = JSON.parse(JSON.stringify(msg)); mm.dest = k; }
         m.push(mm);
@@ -437,11 +478,11 @@
         if(m.length > 80) m = m.slice(-80);
         var conImg = 0; for(var i = m.length - 1; i >= 0; i--){ if(m[i].img){ conImg++; if(conImg > 15){ delete m[i].img; m[i].imgVia = 1; } } }
         d.m = m; d.tipo = "messaggi";
-      }, "Messaggio " + (me === "master" ? "del Master" : "di " + (CORTO[me] || me))).then(function(d){ CONV[k].m = d.m; CONV[k].etag = null; salvaJ("tcjmsg_" + k, { m: d.m.slice(-60) }); });
+      }, (k === "gruppo" ? "Chat di gruppo: messaggio " : "Messaggio ") + (me === "master" ? "del Master" : "di " + (CORTO[me] || me))).then(function(d){ CONV[k].m = d.m; CONV[k].etag = null; salvaJ("tcjmsg_" + k, { m: d.m.slice(-60) }); });
     })).then(function(){
       inviando = false; allegato = null;
       if(!panel) return;
-      t = panel.querySelector("#msg-txt"); if(t) t.value = "";
+      t = panel.querySelector("#msg-txt"); if(t) t.value = ""; panel._bozza = "";
       disegnaPanel(); suono("ping");
     }).catch(function(e){
       inviando = false;
@@ -450,6 +491,42 @@
       var b = panel && panel.querySelector(".msg-invia"); if(b){ b.disabled = false; b.textContent = "Invia"; }
     });
   }
+  /* ---------- eliminare i messaggi ---------- */
+  function conferma(o){ return typeof tcjConferma === "function" ? tcjConferma(o) : Promise.resolve(window.confirm(o.titolo)); }
+  /* cambia la lista dei messaggi di una conversazione e la salva; fn(m) restituisce la lista nuova */
+  function cambiaConv(k, fn, msg){
+    errore("");
+    return modificaFile(tokPer(k), repoDi(k), fileDi(k), function(d){
+      d.m = fn(Array.isArray(d.m) ? d.m : []); d.tipo = "messaggi";
+    }, msg).then(function(d){
+      CONV[k].m = d.m; CONV[k].etag = null; salvaJ("tcjmsg_" + k, { m: d.m.slice(-60) }); disegnaPanel(); disegnaTab();
+    }).catch(function(e){
+      var st = e && e.status;
+      errore(st === 401 ? "Il token di questo dispositivo non è più valido." : st === 404 || st === 403 ? "Il token di questo dispositivo non può modificare questi messaggi." : "Non riesco a salvare: controlla la connessione e riprova.");
+      disegnaPanel(true);
+    });
+  }
+  function eliminaScelti(){
+    var me = io(), k = convSel, ids = Object.keys(selez || {}); if(!ids.length) return;
+    conferma({ titolo: ids.length === 1 ? "Eliminare il messaggio?" : "Eliminare " + ids.length + " messaggi?",
+      testo: me === "master" ? "Spariscono per tutti." : "Spariscono per tutti" + (k === "gruppo" ? " gli Slayer" : "") + ".", si: "Sì, elimina", attesa: 1 }).then(function(ok){
+      if(!ok) return;
+      var scelti = {}; ids.forEach(function(i){ scelti[i] = 1; }); selez = null;
+      cambiaConv(k, function(m){
+        if(me === "master") return m.filter(function(x){ return !scelti[x.id]; });
+        /* il giocatore: i suoi messaggi restano segnati come eliminati, così il Master può ancora leggerli */
+        return m.map(function(x){ if(scelti[x.id] && x.da === me && !x.del) x.del = { da: me, t: Date.now() }; return x; });
+      }, me === "master" ? "Messaggi eliminati dal Master" : "Messaggi eliminati da " + (CORTO[me] || me));
+    });
+  }
+  function svuota(){
+    var k = convSel;
+    conferma({ titolo: "Svuotare tutta la chat?", testo: k === "gruppo" ? "Si cancellano tutti i messaggi della chat di gruppo, per tutti." : "Si cancellano tutti i messaggi con " + esc(CORTO[k]) + ", anche per lui.", si: "Sì, svuota", attesa: 2 }).then(function(ok){
+      if(!ok) return; selez = null; cambiaConv(k, function(){ return []; }, "Chat svuotata dal Master");
+    });
+  }
+  function togliEliminati(){ cambiaConv(convSel, function(m){ return m.filter(function(x){ return !x.del; }); }, "Messaggi eliminati tolti dal Master"); }
+
   /* «Il Master ti mostra»: immagine o messaggio in grande, si chiude quando si vuole */
   function mostraASchermo(x, rivedi){
     var o = document.createElement("div"); o.className = "msg-show"; o.setAttribute("role", "dialog"); o.setAttribute("aria-modal", "true"); o.setAttribute("aria-label", "Il Master ti mostra");

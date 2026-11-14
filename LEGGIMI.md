@@ -294,3 +294,11 @@ Un capitolo della Zona Master, subito dopo «Sessione di gioco»: si tocca una f
 ## /incontri (bot Telegram · js/master-sessioni.js)
 
 `/incontri Nome` manda la foto di quel personaggio, solo con il nome sotto. Il bot cerca **solo** tra i personaggi pubblicati sul sito (`dati/incontri.json`) e con il nome con cui li conoscono i giocatori: un personaggio nascosto, o un nome che i giocatori non conoscono, non dà niente. Maiuscole e accenti non contano; basta anche una parola del nome se è l'unico che ce l'ha («/incontri Arkan»); se il nome è scritto male propone i nomi simili (sempre tra i pubblicati). `/incontri` da solo dà l'elenco dei personaggi incontrati. Come gli altri comandi, risponde finché la Zona Master è aperta su un dispositivo con il bot collegato.
+
+## Messaggi: chat di gruppo ed eliminazione (js/sessioni.js · css/47-sessioni.css)
+
+- La linguetta ✉ ha due conversazioni per i giocatori: **🔒 Con il Master** (privata, `tcj-<personaggio>/messaggi.json`) e **👥 Gruppo** (tutti gli Slayer e il Master, `gruppo/chat-gruppo.json`). Il Master ha i tre Slayer più «Gruppo». Nella chat di gruppo il Master ha solo «Mostra a schermo» (niente lingue, niente «A tutti»); un'immagine del Master nel gruppo va in grande solo se segnata «Mostra a schermo».
+- **☑ Seleziona** → si toccano i messaggi → **🗑 Elimina**. I giocatori possono scegliere solo i propri, il Master tutti.
+- Messaggio eliminato da un giocatore: resta nel file con `del: { da, t }`, sparisce per tutti tranne il Master, che lo vede in trasparenza con «🗑 eliminato» e un **OK** per toglierlo davvero; in cima compare «N messaggi eliminati (li vedi solo tu) · Togli gli eliminati». Quello che elimina il Master sparisce subito per tutti.
+- **Svuota chat** (solo Master, in modalità Seleziona): cancella l'intera conversazione, con conferma.
+- Nota: un messaggio eliminato da un giocatore resta nel file finché il Master non preme OK; chi sa leggere i file di GitHub con il proprio token potrebbe ancora trovarlo (la chat privata la legge solo quel giocatore, quella di gruppo tutti).
