@@ -119,20 +119,36 @@
   /* barra «Torna alla libreria», spostata dentro il capitolo aperto */
   var torna = document.createElement("div");
   torna.className = "mb-torna";
-  torna.innerHTML = '<button type="button" class="mb-torna-b">◂ Torna alla libreria</button>';
-  torna.querySelector("button").addEventListener("click", function(){ chiudi(true); });
+  /* con i salti rapidi: tutti i capitoli in fila, si passa dall'uno all'altro senza tornare alla libreria */
+  torna.innerHTML = '<button type="button" class="mb-torna-b">◂ Libreria</button>'
+    + '<button type="button" class="mb-freccia" data-dir="-1" aria-label="Capitolo precedente">◀</button>'
+    + '<div class="mb-salti" role="navigation" aria-label="Vai a un altro capitolo">' + libri.map(function(b, i){
+      return '<button type="button" class="mb-salto" data-i="' + i + '" title="' + esc(b._t) + '"><span class="mb-salto-n">' + (ROMANI[i] || (i + 1)) + '</span>' + esc(b._princ) + '</button>'; }).join("") + '</div>'
+    + '<button type="button" class="mb-freccia" data-dir="1" aria-label="Capitolo successivo">▶</button>';
+  torna.addEventListener("click", function(e){
+    if(e.target.closest(".mb-torna-b")){ chiudi(true); return; }
+    var s = e.target.closest(".mb-salto"), f = e.target.closest(".mb-freccia"), i = -1;
+    if(s) i = +s.getAttribute("data-i");
+    else if(f && aperta){ var n = secs.length; i = (secs.indexOf(aperta) + +f.getAttribute("data-dir") + n) % n; }
+    if(i >= 0 && secs[i] && secs[i] !== aperta){ suono("paper"); aperta.classList.remove("lb-vis"); mostra(secs[i]); }
+  });
+  function segnaSalto(sec){
+    var i = secs.indexOf(sec), sel = null;
+    [].forEach.call(torna.querySelectorAll(".mb-salto"), function(x){ var on = +x.getAttribute("data-i") === i; x.classList.toggle("on", on); x.setAttribute("aria-current", on ? "true" : "false"); if(on) sel = x; });
+    if(sel){ var nv = sel.parentNode; nv.scrollLeft = sel.offsetLeft - (nv.clientWidth - sel.offsetWidth) / 2; }
+  }
 
   var aperta = null, inVolo = false;
   function mostra(sec){
     box.hidden = true;
     secs.forEach(function(s){ s.classList.toggle("lb-vis", s === sec); });
-    sec.insertBefore(torna, sec.firstChild);
+    sec.insertBefore(torna, sec.firstChild); segnaSalto(sec);
     if(sec._open) sec._open(); else sec.classList.add("open");
     aperta = sec;
     setTimeout(function(){ window.dispatchEvent(new Event("resize")); }, 60);
     var y = sec.getBoundingClientRect().top + window.scrollY - 70;
     window.scrollTo({ top: y, behavior: RM ? "auto" : "smooth" });
-    var bt = torna.querySelector("button"); try{ bt.focus({ preventScroll: true }); }catch(_){}
+    var bt = torna.querySelector(".mb-salto.on") || torna.querySelector("button"); try{ bt.focus({ preventScroll: true }); }catch(_){}
   }
   /* il volo del libro: dal dorso alla copertina, poi la copertina si apre */
   function vola(b, fine){

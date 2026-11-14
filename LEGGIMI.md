@@ -302,3 +302,8 @@ Un capitolo della Zona Master, subito dopo «Sessione di gioco»: si tocca una f
 - Messaggio eliminato da un giocatore: resta nel file con `del: { da, t }`, sparisce per tutti tranne il Master, che lo vede in trasparenza con «🗑 eliminato» e un **OK** per toglierlo davvero; in cima compare «N messaggi eliminati (li vedi solo tu) · Togli gli eliminati». Quello che elimina il Master sparisce subito per tutti.
 - **Svuota chat** (solo Master, in modalità Seleziona): cancella l'intera conversazione, con conferma.
 - Nota: un messaggio eliminato da un giocatore resta nel file finché il Master non preme OK; chi sa leggere i file di GitHub con il proprio token potrebbe ancora trovarlo (la chat privata la legge solo quel giocatore, quella di gruppo tutti).
+
+## Zona Master: caricamento e salti rapidi
+
+- **Solo per il Master.** I programmi e gli stili della Zona Master (`js/master-*.js` tranne `master-cache.js` e `master-accesso.js`, `js/plancia-galleria.js` e i loro CSS) in `index.html` sono dentro `tcjSoloMaster('…')` (definita in `js/master-cache.js`, che ora sta prima dei CSS): si scaricano solo dove c'è il token del Master con i contenuti già scaricati. Per tutti restano l'accesso (🔒 Master) e l'animazione del sigillo. Un nuovo file solo-Master va aggiunto allo stesso modo.
+- **Salti rapidi** (`js/master-libreria.js`): dentro un capitolo aperto, la barra in alto (resta ferma mentre si scorre) ha «◂ Libreria», ◀ ▶ per il capitolo precedente/successivo e tutti i capitoli in fila: un tocco apre l'altro capitolo senza tornare alla libreria.

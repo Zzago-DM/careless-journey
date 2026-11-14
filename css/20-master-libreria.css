@@ -161,3 +161,15 @@
 .mv-pag{position:relative;flex:none;overflow:hidden;border-radius:16px}
 .mv-scala{width:840px;height:1188px;transform-origin:0 0}
 .mv-stato{width:100%;padding:3rem 1rem;text-align:center;font-family:"Cinzel",serif;font-size:.8rem;letter-spacing:.1em;color:#c9a0a0}
+
+/* salti rapidi tra i capitoli: barra che resta in alto mentre si scorre il capitolo */
+.mb-torna{position:sticky;top:var(--mb-top,58px);z-index:60;flex-wrap:nowrap;gap:.45rem;padding:.5rem .4rem;margin:0 -.4rem 1.4rem;background:color-mix(in srgb,#08090e 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid color-mix(in srgb,var(--master) 30%,transparent)}
+.mb-torna-b{flex-shrink:0;padding:.5rem .8rem}
+.mb-salti{display:flex;gap:.35rem;overflow-x:auto;scroll-behavior:smooth;scrollbar-width:thin;flex:1;min-width:0;padding:.1rem}
+.mb-salto,.mb-freccia{flex-shrink:0;font-family:"Cinzel",serif;font-size:.58rem;letter-spacing:.08em;color:var(--text2,#908878);background:transparent;border:1px solid color-mix(in srgb,var(--master) 28%,transparent);border-radius:4px;padding:.45rem .65rem;min-height:38px;cursor:pointer;white-space:nowrap;transition:color .2s,border-color .2s,background .2s}
+.mb-salto-n{opacity:.55;margin-right:.35rem;font-size:.52rem}
+.mb-salto:hover,.mb-salto:focus-visible,.mb-freccia:hover,.mb-freccia:focus-visible{color:#fff;border-color:var(--master2);outline:none}
+.mb-salto.on{color:#fff;border-color:var(--master2);background:color-mix(in srgb,var(--master) 22%,transparent);box-shadow:0 0 10px color-mix(in srgb,var(--master2) 30%,transparent)}
+.mb-freccia{padding:.45rem .55rem}
+@media (max-width:600px){.mb-freccia{display:none}.mb-torna-b{font-size:.55rem;padding:.45rem .6rem}}
+@media (prefers-reduced-motion:reduce){.mb-salti{scroll-behavior:auto}}
