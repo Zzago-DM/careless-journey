@@ -1,0 +1,61 @@
+/* Zona Master › «Mostra su Telegram» (js/master-telegram.js) */
+#mtg .mtg-intro{font-family:"Crimson Pro",Georgia,serif;font-size:1.05rem;color:var(--text,#d0c8b8);max-width:70ch}
+#mtg .mtg-n,#mtg .mtg-st{font-family:"Crimson Pro",Georgia,serif;font-size:1rem;color:var(--text2,#908878)}
+#mtg .mtg-st b{color:#9adfa9;font-weight:600}
+#mtg .mtg-err,.mtg-box .mtg-err{font-family:"Crimson Pro",Georgia,serif;color:#ff8a7a}
+#mtg .mtg-pic{font-size:.92rem}
+#mtg code{font-size:.85em;background:rgba(0,0,0,.35);padding:.1rem .35rem;user-select:all}
+#mtg .mtg-tabs{display:flex;gap:.4rem;margin:1rem 0 .8rem;border-bottom:1px solid rgba(200,56,56,.25)}
+#mtg .mtg-tabs button{font-family:"Cinzel",Georgia,serif;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;padding:.6rem 1rem;min-height:42px;background:transparent;border:1px solid transparent;border-bottom:none;color:var(--text2,#908878);cursor:pointer;margin-bottom:-1px}
+#mtg .mtg-tabs button[aria-selected=true]{color:#ffcfc5;border-color:rgba(200,56,56,.35);background:rgba(200,56,56,.07)}
+#mtg .mtg-tabs button:focus-visible{outline:2px solid rgba(200,56,56,.6);outline-offset:-2px}
+#mtg .mtg-barra,#mtg .mtg-riga,.mtg-box .mtg-riga{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.6rem 0}
+#mtg input[type=search],.mtg-box input[type=text]{flex:1 1 14rem;min-width:0;background:rgba(0,0,0,.3);color:var(--text,#d0c8b8);border:1px solid rgba(var(--gold-rgb,200,168,75),.3);padding:.55rem .65rem;font-family:"Crimson Pro",Georgia,serif;font-size:1rem}
+#mtg .mtg-sec,.mtg-box .mtg-sec{opacity:.75}
+#mtg .mtg-big,.mtg-box .mtg-big{font-size:.75rem;padding:.8rem 1.3rem;min-height:44px}
+#mtg .bk-btn{min-height:40px}
+/* percorso e cartelle */
+#mtg .mtg-bric{display:flex;flex-wrap:wrap;align-items:center;gap:.3rem;font-family:"Cinzel",Georgia,serif;font-size:.66rem;letter-spacing:.08em;margin:.4rem 0 .8rem;color:#ffcfc5}
+#mtg .mtg-bric i{font-style:normal;opacity:.5}
+#mtg .mtg-bric button{font:inherit;letter-spacing:inherit;background:none;border:none;color:var(--text2,#908878);cursor:pointer;padding:.35rem .2rem;text-decoration:underline;text-underline-offset:3px}
+#mtg .mtg-bric button:hover,#mtg .mtg-bric button:focus-visible{color:#ffcfc5;outline:none}
+#mtg .mtg-cart{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}
+#mtg .mtg-c{font-family:"Crimson Pro",Georgia,serif;font-size:1rem;padding:.55rem .9rem;min-height:42px;background:rgba(200,56,56,.05);border:1px solid rgba(200,56,56,.3);color:var(--text,#d0c8b8);cursor:pointer;text-align:left}
+#mtg .mtg-c:hover,#mtg .mtg-c:focus-visible{border-color:#e06060;background:rgba(200,56,56,.12);outline:none}
+/* griglia delle foto */
+#mtg .mtg-griglia{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:.7rem}
+#mtg .mtg-t{position:relative;display:flex;flex-direction:column;gap:.35rem;padding:.4rem;background:rgba(0,0,0,.25);border:1px solid rgba(var(--gold-rgb,200,168,75),.18);color:var(--text,#d0c8b8);cursor:pointer;text-align:center;transition:border-color .2s,transform .2s}
+#mtg .mtg-t:hover:not(:disabled),#mtg .mtg-t:focus-visible{border-color:#e06060;transform:translateY(-2px);outline:none}
+#mtg .mtg-t:disabled{opacity:.45;cursor:default}
+#mtg .mtg-m{display:flex;align-items:center;justify-content:center;aspect-ratio:4/5;overflow:hidden;background:repeating-conic-gradient(rgba(255,255,255,.035) 0 25%,transparent 0 50%) 0 0/16px 16px}
+#mtg .mtg-m img,#mtg .mtg-m canvas{max-width:100%;max-height:100%;object-fit:contain;display:block}
+#mtg .mtg-m img:not([src]){visibility:hidden}
+#mtg .mtg-nf{font-family:"Crimson Pro",Georgia,serif;font-style:italic;font-size:.85rem;color:var(--text2,#908878)}
+#mtg .mtg-nome{font-family:"Crimson Pro",Georgia,serif;font-size:.95rem;line-height:1.2;overflow-wrap:anywhere}
+#mtg .mtg-dove{font-size:.72rem;color:var(--text2,#908878);overflow-wrap:anywhere}
+#mtg .mtg-bdg,#mtg .mtg-piu{position:absolute;top:.5rem;font-family:"Cinzel",Georgia,serif;font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .35rem;background:rgba(10,8,6,.85)}
+#mtg .mtg-bdg{left:.5rem;color:#ffb0a0;border:1px solid rgba(255,140,120,.45)}
+#mtg .mtg-piu{right:.5rem;color:var(--gold2,#e8c870);border:1px solid rgba(232,200,112,.4)}
+/* finestra di invio */
+html.mtg-aperta{overflow:hidden}
+.mtg-ov{position:fixed;inset:0;z-index:9500;background:rgba(3,4,8,.82);display:flex;align-items:center;justify-content:center;padding:max(14px,env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) max(14px,env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px));animation:mtgIn .25s ease both}
+@keyframes mtgIn{from{opacity:0}to{opacity:1}}
+.mtg-box{width:min(560px,100%);max-height:100%;overflow:auto;background:linear-gradient(180deg,#16100e,#0c0908);border:1px solid rgba(200,56,56,.4);box-shadow:0 30px 80px rgba(0,0,0,.6);padding:1.1rem;color:var(--text,#d0c8b8)}
+.mtg-ft{font-family:"Cinzel",Georgia,serif;font-size:1rem;letter-spacing:.08em;color:#ffcfc5;margin-bottom:.5rem;overflow-wrap:anywhere}
+.mtg-nota{font-family:"Crimson Pro",Georgia,serif;font-style:italic;color:#ffb0a0;margin:.2rem 0 .6rem}
+.mtg-prev{display:flex;align-items:center;justify-content:center;min-height:180px;max-height:52vh;background:repeating-conic-gradient(rgba(255,255,255,.035) 0 25%,transparent 0 50%) 0 0/18px 18px;margin-bottom:.7rem}
+.mtg-prev img{max-width:100%;max-height:52vh;object-fit:contain;display:block}
+.mtg-prev .mtg-n{font-family:"Crimson Pro",Georgia,serif;font-style:italic;color:var(--text2,#908878)}
+.mtg-scelte{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.6rem}
+.mtg-scelte button{font-family:"Cinzel",Georgia,serif;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:.45rem .7rem;min-height:38px;background:transparent;border:1px solid rgba(var(--gold-rgb,200,168,75),.3);color:var(--text2,#908878);cursor:pointer}
+.mtg-scelte button[aria-pressed=true]{border-color:#e06060;color:#ffcfc5;background:rgba(200,56,56,.1)}
+.mtg-box .mtg-ck{display:flex;gap:.5rem;align-items:center;font-family:"Crimson Pro",Georgia,serif;font-size:1rem;margin:.5rem 0;cursor:pointer}
+.mtg-box .mtg-l{display:flex;flex-direction:column;gap:.3rem;font-family:"Cinzel",Georgia,serif;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text2,#908878);margin:.5rem 0}
+.mtg-box .mtg-l input{text-transform:none;letter-spacing:0}
+/* Zona Master in oro */
+html[data-zm=oro] #mtg .mtg-tabs{border-color:rgba(232,200,112,.3)}
+html[data-zm=oro] #mtg .mtg-tabs button[aria-selected=true],html[data-zm=oro] #mtg .mtg-bric{color:#f6e7bf}
+html[data-zm=oro] #mtg .mtg-tabs button[aria-selected=true]{border-color:rgba(232,200,112,.45);background:rgba(232,200,112,.07)}
+html[data-zm=oro] #mtg .mtg-c{border-color:rgba(232,200,112,.3);background:rgba(232,200,112,.05)}
+html[data-zm=oro] #mtg .mtg-t:hover:not(:disabled),html[data-zm=oro] #mtg .mtg-t:focus-visible,html[data-zm=oro] #mtg .mtg-c:hover{border-color:#e8c870}
+@media (prefers-reduced-motion:reduce){.mtg-ov{animation:none}#mtg .mtg-t{transition:none}}

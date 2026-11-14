@@ -278,3 +278,18 @@ e incolla il risultato al posto dell'impronta di quel personaggio. Maiuscole e m
 - I dati veri stanno nel repository privato `tcj-master`: `incontri/personaggi.json` (elenco completo, note del Master, interruttori di visibilità) e `incontri/foto/` (galleria delle foto originali).
 - Si lavora dalla Zona Master, capitolo «Incontri — Registro dei personaggi» (`js/master-incontri.js`). «📣 Pubblica sul sito» riscrive `dati/incontri.json` e le foto in un'unica modifica: il token del Master deve includere anche `careless-journey` (Contents: Read and write).
 - Le note dei giocatori sui personaggi stanno nel loro pacchetto (`tcj-inc-<personaggio>`) e seguono il loro salvataggio online.
+
+## Mostra su Telegram (Zona Master · js/master-telegram.js + css/48-master-telegram.css)
+
+Un capitolo della Zona Master, subito dopo «Sessione di gioco»: si tocca una foto e il bot la manda nel gruppo della campagna. Usa il bot collegato in «Sessione di gioco» (`window.TCJTG` in `js/master-sessioni.js`); se il bot non è collegato su quel dispositivo, il capitolo lo dice.
+
+- **👤 Personaggi.** Tutti i personaggi degli Incontri, anche quelli non pubblicati (`tcj-master/incontri/personaggi.json`), con la foto ritagliata come nell'editor. Si cerca per nome. Se un personaggio ha più foto si sceglie quale. «Scrivi il nome sotto la foto» parte acceso solo per i personaggi pubblicati, così il nome vero di chi è ancora nascosto non scappa.
+- **📁 Cartella.** «Collega la cartella» apre una cartella del computer (per esempio «Careless Journey» sul Desktop): sottocartelle, miniature, ricerca per nome in tutta la cartella. Le immagini non passano da GitHub né dal sito: vanno dal browser a Telegram. Si può aggiungere una scritta sotto la foto, oppure scegliere «Qualità piena» (parte come file: per le mappe grandi e le GIF animate).
+  - Chrome, Edge, Opera/Opera GX: il browser si ricorda la cartella (in IndexedDB, solo su quel dispositivo); al massimo chiede un clic su «Riapri». Ricorda anche l'ultima sottocartella aperta.
+  - Brave: la funzione è spenta di serie; si accende con `brave://flags/#file-system-access-api` → Enabled e riavvio.
+  - Negli altri browser (e su telefono, dove possibile) la cartella si sceglie ogni volta.
+- Le foto partono come JPEG con il lato lungo al massimo di 2560 px (le parti trasparenti diventano scure), sotto il limite di 10 MB di Telegram.
+
+## /incontri (bot Telegram · js/master-sessioni.js)
+
+`/incontri Nome` manda la foto di quel personaggio, solo con il nome sotto. Il bot cerca **solo** tra i personaggi pubblicati sul sito (`dati/incontri.json`) e con il nome con cui li conoscono i giocatori: un personaggio nascosto, o un nome che i giocatori non conoscono, non dà niente. Maiuscole e accenti non contano; basta anche una parola del nome se è l'unico che ce l'ha («/incontri Arkan»); se il nome è scritto male propone i nomi simili (sempre tra i pubblicati). `/incontri` da solo dà l'elenco dei personaggi incontrati. Come gli altri comandi, risponde finché la Zona Master è aperta su un dispositivo con il bot collegato.

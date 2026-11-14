@@ -15,9 +15,12 @@
    - il token del bot resta SOLO in questo browser (localStorage «tcjtg»), non va mai nel codice del sito né su GitHub;
    - i messaggi partono da qui direttamente verso api.telegram.org. «Trova il gruppo» legge il /start scritto nel gruppo.
    - a fine sessione il bot scrive solo che la sessione è finita: il riepilogo lo chiedono i giocatori con i comandi
-     /parti, /monete, /risorse, /riepilogo e /help. Non c'è un server: risponde questa pagina, finché è aperta
+     /parti, /monete, /risorse, /riepilogo, /incontri e /help. Non c'è un server: risponde questa pagina, finché è aperta
      (Zona Master su questo dispositivo, scheda del browser aperta). Rilegge Telegram ogni pochi secondi; i comandi più
-     vecchi di 15 minuti li lascia perdere. I comandi compaiono anche nel menu «/» di Telegram (setMyCommands). */
+     vecchi di 15 minuti li lascia perdere. I comandi compaiono anche nel menu «/» di Telegram (setMyCommands).
+   - /incontri Nome manda la foto di un personaggio degli Incontri, cercandolo SOLO tra quelli pubblicati sul sito
+     (dati/incontri.json) e con il nome con cui lo conoscono i giocatori; /incontri da solo dà l'elenco dei nomi.
+   - window.TCJTG serve al capitolo «Mostra su Telegram» (js/master-telegram.js) per mandare foto nel gruppo. */
 (function(){
   "use strict";
   var ms = document.getElementById("ms");
@@ -42,12 +45,51 @@
     return fetch("https://api.telegram.org/bot" + t.token + "/" + metodo, { method: "POST", body: corpo }).then(function(r){ return r.json(); }).then(function(j){ if(!j.ok) throw j; return j.result; });
   }
   function tgInvia(testo){ var t = tg(); if(!t.token || !t.chat) return Promise.resolve(false); return tgApi("sendMessage", { chat_id: t.chat, text: testo, parse_mode: "HTML", disable_web_page_preview: "true" }).then(function(){ return true; }); }
+  /* foto pronta per Telegram: JPEG, lato lungo al massimo 2560 px, sotto i 10 MB; la trasparenza diventa sfondo scuro */
+  function fotoPronta(src){
+    var apri = src instanceof Blob ? createImageBitmap(src) : Promise.resolve(src);
+    return apri.then(function(im){
+      var w0 = im.naturalWidth || im.width, h0 = im.naturalHeight || im.height, lato = 2560;
+      function giro(){
+        var k = Math.min(1, lato / Math.max(w0, h0)), cv = document.createElement("canvas");
+        cv.width = Math.max(1, Math.round(w0 * k)); cv.height = Math.max(1, Math.round(h0 * k));
+        var x = cv.getContext("2d"); x.fillStyle = "#15110d"; x.fillRect(0, 0, cv.width, cv.height); x.imageSmoothingQuality = "high"; x.drawImage(im, 0, 0, cv.width, cv.height);
+        return new Promise(function(ris){ cv.toBlob(ris, "image/jpeg", 0.9); }).then(function(b){
+          if(b && b.size > 9.5e6 && lato > 800){ lato = Math.round(lato * 0.75); return giro(); }
+          return b;
+        });
+      }
+      return giro();
+    });
+  }
+  /* invio di un file (foto o documento) con FormData: niente server, parte da questo browser */
+  function tgFile(metodo, campo, blob, nome, param){
+    var t = tg(); if(!t.token || !t.chat) return Promise.reject(new Error("bot"));
+    var fd = new FormData(); fd.append("chat_id", t.chat);
+    Object.keys(param || {}).forEach(function(k){ if(param[k] != null && param[k] !== "") fd.append(k, param[k]); });
+    fd.append(campo, blob, nome || "foto.jpg");
+    return fetch("https://api.telegram.org/bot" + t.token + "/" + metodo, { method: "POST", body: fd }).then(function(r){ return r.json(); }).then(function(j){ if(!j.ok) throw j; return j.result; });
+  }
+  function tgFoto(src, didascalia, param){
+    return fotoPronta(src).then(function(b){ return tgFile("sendPhoto", "photo", b, "foto.jpg", Object.assign({ caption: didascalia || "", parse_mode: didascalia ? "HTML" : "" }, param || {})); });
+  }
+  window.TCJTG = {
+    pronto: function(){ var t = tg(); return !!(t.token && t.chat); },
+    gruppo: function(){ return tg().nome || ""; },
+    foto: function(src, didascalia){ return tgFoto(src, didascalia ? "<b>" + h(didascalia) + "</b>" : ""); },
+    /* qualità piena: il file così com'è (mappe grandi, GIF animate) */
+    file: function(blob, nome, didascalia){
+      var gif = /\.gif$/i.test(nome || "") || blob.type === "image/gif";
+      return tgFile(gif ? "sendAnimation" : "sendDocument", gif ? "animation" : "document", blob, nome, didascalia ? { caption: "<b>" + h(didascalia) + "</b>", parse_mode: "HTML" } : null);
+    }
+  };
   function tgInviaTutti(L){ return L.reduce(function(p, x){ return p.then(function(){ return tgInvia(x); }); }, Promise.resolve()); }
   function h(s){ return esc(s); }
 
   /* ---------- comandi dei giocatori (/parti, /monete, /risorse, /riepilogo, /help) ---------- */
   var COMANDI = [["parti", "Parti di mostro ottenute nell'ultima sessione"], ["monete", "Monete guadagnate e spese nell'ultima sessione"],
-    ["risorse", "Risorse comprate e usate nell'ultima sessione"], ["riepilogo", "Tutto il riepilogo dell'ultima sessione"], ["help", "I comandi che potete usare"]];
+    ["risorse", "Risorse comprate e usate nell'ultima sessione"], ["riepilogo", "Tutto il riepilogo dell'ultima sessione"],
+    ["incontri", "Foto di un personaggio incontrato: /incontri Nome"], ["help", "I comandi che potete usare"]];
   var cmdStato = "", inAscolto = false, tCmd = null;
   function ultimaChiusa(){ var L = S.doc().diario.filter(function(c){ return c.fine && c.fine.blocchi; }); return L.length ? L[L.length - 1] : null; }
   function bloccoTesto(b){ return "<b>" + h(b.i + " " + b.t) + "</b>\n" + (b.righe && b.righe.length ? b.righe.map(function(r){ return "• " + h(r); }).join("\n") : h(b.vuoto || "Niente da segnalare.")); }
@@ -63,6 +105,45 @@
     if(!bl.length) return testa + "Niente da segnalare.";
     return testa + bl.map(bloccoTesto).join("\n\n") + (cmd === "riepilogo" && c.fine.note ? "\n\n📜 " + h(c.fine.note) : "");
   }
+  /* /incontri: solo i personaggi pubblicati sul sito, con il nome che conoscono i giocatori */
+  function pubblicati(){
+    return fetch("dati/incontri.json?t=" + Date.now(), { cache: "no-store" }).then(function(r){ if(!r.ok) throw r.status; return r.json(); })
+      .then(function(d){ return ((d && d.personaggi) || []).filter(function(p){ return p && p.nome; }); });
+  }
+  function nn(s){ return String(s || "").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim(); }
+  function distanza(a, b){
+    if(Math.abs(a.length - b.length) > 3) return 9;
+    var r = []; for(var j = 0; j <= b.length; j++) r[j] = j;
+    for(var i = 1; i <= a.length; i++){ var pr = r[0]; r[0] = i;
+      for(var k = 1; k <= b.length; k++){ var tmp = r[k]; r[k] = Math.min(r[k] + 1, r[k - 1] + 1, pr + (a[i - 1] === b[k - 1] ? 0 : 1)); pr = tmp; } }
+    return r[b.length];
+  }
+  function cercaIncontro(L, q){
+    var nq = nn(q); if(!nq) return { tutti: L };
+    var esatti = L.filter(function(p){ return nn(p.nome) === nq; }); if(esatti.length) return { p: esatti[0] };
+    /* «Arkan» trova «Arkan Drew» se è l'unico che ha quella parola nel nome */
+    var parole = L.filter(function(p){ return (" " + nn(p.nome) + " ").indexOf(" " + nq + " ") >= 0; });
+    if(parole.length === 1) return { p: parole[0] };
+    if(parole.length > 1) return { forse: parole };
+    var vicini = L.filter(function(p){
+      var n = nn(p.nome), lim = nq.length > 5 ? 2 : 1;
+      return distanza(n, nq) <= lim || n.split(" ").some(function(w){ return distanza(w, nq) <= lim; });
+    });
+    return { forse: vicini };
+  }
+  function rispostaIncontri(arg, a, chat){
+    function testo(t){ return tgApi("sendMessage", { chat_id: chat, text: t, parse_mode: "HTML", reply_to_message_id: String(a), allow_sending_without_reply: "true" }); }
+    return pubblicati().then(function(L){
+      L.sort(function(x, y){ return x.nome.localeCompare(y.nome, "it"); });
+      var r = cercaIncontro(L, arg);
+      if(r.tutti) return testo(L.length ? "👥 <b>Personaggi incontrati</b>\n" + L.map(function(p){ return h(p.nome); }).join(" · ") + "\n\nScrivete /incontri e il nome per vedere la foto." : "Non avete ancora incontrato nessuno.");
+      if(!r.p) return testo(r.forse && r.forse.length ? "Non conosco nessuno che si chiami così. Forse intendevi: " + r.forse.slice(0, 6).map(function(p){ return "<b>" + h(p.nome) + "</b>"; }).join(", ") + "?" : "Non conosco nessuno che si chiami così.");
+      var src = (r.p.foti && r.p.foti[0]) || r.p.foto;
+      if(!src) return testo("Di <b>" + h(r.p.nome) + "</b> non avete ancora una foto.");
+      return fetch(src, { cache: "no-store" }).then(function(x){ if(!x.ok) throw x.status; return x.blob(); })
+        .then(function(b){ return tgFoto(b, "<b>" + h(r.p.nome) + "</b>", { reply_to_message_id: String(a), allow_sending_without_reply: "true" }); });
+    }).catch(function(){ return testo("Non riesco a prendere la foto in questo momento: riprovate tra poco.").catch(function(){}); });
+  }
   function scriviStatoCmd(t){ cmdStato = t; var p = document.getElementById("mses-cmdst"); if(p) p.textContent = t; }
   function ascolta(){
     clearTimeout(tCmd);
@@ -74,20 +155,21 @@
       (L || []).forEach(function(u){
         t2.off = Math.max(int(t2.off), u.update_id + 1);
         var m = u.message; if(!m || !m.text || String(m.chat && m.chat.id) !== String(t2.chat) || ora - m.date > 900) return;
-        var mm = /^\/([a-zA-Z]+)(?:@(\w+))?/.exec(m.text.trim()); if(!mm) return;
+        var mm = /^\/([a-zA-Z]+)(?:@(\w+))?(?:\s+([\s\S]*))?$/.exec(m.text.trim()); if(!mm) return;
         if(mm[2] && t2.bot && mm[2].toLowerCase() !== String(t2.bot).toLowerCase()) return;   /* comando per un altro bot (per esempio quello dei dadi) */
+        if(mm[1].toLowerCase() === "incontri"){ coda.push({ inc: mm[3] || "", a: m.message_id }); return; }
         var r = risposta(mm[1].toLowerCase()); if(r) coda.push({ testo: r, a: m.message_id });
       });
       salvaTg(t2);
-      return coda.reduce(function(p, x){ return p.then(function(){ return tgApi("sendMessage", { chat_id: t2.chat, text: x.testo, parse_mode: "HTML", reply_to_message_id: String(x.a), allow_sending_without_reply: "true" }); }); }, Promise.resolve())
+      return coda.reduce(function(p, x){ return p.then(function(){ if(x.inc != null) return rispostaIncontri(x.inc, x.a, t2.chat); return tgApi("sendMessage", { chat_id: t2.chat, text: x.testo, parse_mode: "HTML", reply_to_message_id: String(x.a), allow_sending_without_reply: "true" }); }); }, Promise.resolve())
         .then(function(){ scriviStatoCmd("In ascolto: rispondo ai comandi finché questa pagina resta aperta" + (coda.length ? " · ultima risposta alle " + S.oraIt(Date.now()) : "") + "."); });
     }).catch(function(e){ scriviStatoCmd("Non riesco a leggere i comandi da Telegram" + (e && e.description ? " (" + e.description + ")" : "") + ". Riprovo tra poco."); })
       .then(function(){ inAscolto = false; tCmd = setTimeout(ascolta, document.hidden ? 15000 : 4000); });
   }
   /* i comandi nel menu «/» di Telegram: una volta per token */
   function registraComandi(){
-    var t = tg(); if(!t.token || t.reg === t.token.slice(-6)) return;
-    tgApi("setMyCommands", { commands: JSON.stringify(COMANDI.map(function(c){ return { command: c[0], description: c[1] }; })) }).then(function(){ var t2 = tg(); t2.reg = t2.token.slice(-6); salvaTg(t2); }).catch(function(){});
+    var t = tg(); if(!t.token || t.reg === t.token.slice(-6) + "-2") return;
+    tgApi("setMyCommands", { commands: JSON.stringify(COMANDI.map(function(c){ return { command: c[0], description: c[1] }; })) }).then(function(){ var t2 = tg(); t2.reg = t2.token.slice(-6) + "-2"; salvaTg(t2); }).catch(function(){});
   }
   setTimeout(function(){ registraComandi(); ascolta(); }, 2500);
 
@@ -175,7 +257,7 @@
         : (!t.chat ? '<p class="mses-n">Scrivi <b>/start</b> nel gruppo della campagna (con il bot già dentro), poi premi «Trova il gruppo».</p>' : '')
           + '<div class="mses-riga"><button type="button" class="bk-btn" data-az="trova">🔎 Trova il gruppo</button>' + (t.chat ? '<button type="button" class="bk-btn" data-az="prova">✉ Messaggio di prova</button>' : "")
           + '<button type="button" class="bk-btn mses-sec" data-az="scollega">Dimentica il token</button></div><div id="mses-gruppi"></div>'
-          + (t.chat ? '<label class="mses-ck"><input type="checkbox" id="mses-cmd"' + (t.cmd !== false ? " checked" : "") + '> Rispondi ai comandi dei giocatori (/parti, /monete, /risorse, /riepilogo, /help) finché questa pagina è aperta</label>'
+          + (t.chat ? '<label class="mses-ck"><input type="checkbox" id="mses-cmd"' + (t.cmd !== false ? " checked" : "") + '> Rispondi ai comandi dei giocatori (/parti, /monete, /risorse, /riepilogo, /incontri, /help) finché questa pagina è aperta</label>'
             + '<p class="mses-n" id="mses-cmdst">' + esc(cmdStato) + '</p>' : ""))
       + '</div>';
   }
@@ -298,7 +380,7 @@
       }, "Sessione " + int(c0.n) + " · fine").then(function(){
         S.mostra(scena); bozza = null;
         if(!manda) return;
-        var testi = ["🏁 <b>Fine della sessione " + int(c0.n) + "</b>" + (titf ? " · " + h(titf) : "") + "\n\nIl riepilogo lo chiedete a me: /parti · /monete · /risorse · /riepilogo\n/help per tutti i comandi"];
+        var testi = ["🏁 <b>Fine della sessione " + int(c0.n) + "</b>" + (titf ? " · " + h(titf) : "") + "\n\nIl riepilogo lo chiedete a me: /parti · /monete · /risorse · /riepilogo\n/incontri Nome per rivedere un personaggio · /help per tutti i comandi"];
         return tgInviaTutti(testi).catch(function(e){ stato("Sessione chiusa, ma Telegram non ha ricevuto il riepilogo" + (e && e.description ? ": " + e.description : ".")); throw "tg"; });
       }).then(function(){ stato("Sessione " + int(c0.n) + " chiusa: la cassetta è nel Diario di bordo."); }).catch(function(e){ if(e !== "tg") errore(e); }).then(function(){ disegna(); });
       return;
