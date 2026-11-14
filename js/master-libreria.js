@@ -2,6 +2,10 @@
    Ogni capitolo è un libro con il titolo sul dorso: passando sopra il libro esce un poco dallo scaffale e la targa
    sotto la libreria mostra titolo e sottotitolo; toccandolo il libro viene estratto, si gira, si apre e compare
    solo quel capitolo. «◂ Torna alla libreria» rimette tutto a posto.
+   PLANCIA DI COMANDO (vista principale): gli stessi capitoli come riquadri divisi in gruppi, con in cima gli
+   strumenti rapidi (Incontri, Reliquie, Mostra su Telegram). Il gruppo e l'icona di un capitolo si ricavano dal suo
+   titolo (elenco GRUPPI qui sotto); quello che non si riconosce va in «Altri capitoli». «📚 Libreria» / «▦ Plancia»
+   passa da una vista all'altra e il dispositivo se lo ricorda.
    Colori: cuoio cremisi con fregi d'oro; con il tema «Oro del Master» (html[data-el=oro]) cuoio scuro e foglia d'oro.
    Qui c'è anche la finestra delle Schede dei Mael: le pagine stanno nel repository privato tcj-master
    (cartella mael/) e si scaricano con il token del Master, come il resto della Zona. */
@@ -116,11 +120,70 @@
   /* la Zona Master può comparire dopo (prima è nascosta): misura quando diventa visibile */
   if("ResizeObserver" in window) new ResizeObserver(function(){ disponi(); }).observe(mobile);
 
+  /* ---------- la plancia di comando ---------- */
+  function nn(t){ return String(t || "").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
+  var GRUPPI = [
+    { id: "rapidi", t: "⚡ Strumenti rapidi", regole: [[/incontr/, "👥"], [/reliqui|artefatt/, "🏺"], [/telegram/, "📤"]] },
+    { id: "tavolo", t: "🎲 Al tavolo", regole: [[/sessione/, "🎬"], [/aree dei giocatori|giocatori online|in diretta/, "🧾"], [/plancia/, "🐉"], [/stiva/, "📦"], [/combatt|iniziativ/, "⚔"]] },
+    { id: "mondo", t: "🌍 Mondo e personaggi", regole: [[/\bmael\b/, "🌀"], [/maestr/, "🎓"], [/npc|png|personagg/, "🎭"], [/behemoth|bestiar|mostr/, "🐲"], [/fazion|gilda/, "⚜"], [/mapp|luogh|isol|contin/, "🗺"]] },
+    { id: "appunti", t: "📝 Appunti e segreti", regole: [[/note|appunt/, "📝"], [/dossier/, "🗂"], [/segret|twist|trama|lore|retroscen/, "🔒"], [/timeline|calendar|cronolog/, "📅"]] }
+  ];
+  var VISTA_K = "tcj-zm-vista", vista = "plancia";
+  try { vista = localStorage.getItem(VISTA_K) === "libreria" ? "libreria" : "plancia"; } catch(_){}
+  var plancia = document.createElement("div");
+  plancia.className = "pc-box"; plancia.setAttribute("aria-label", "Plancia di comando della Zona Master");
+  (function(){
+    var per = {}; GRUPPI.concat([{ id: "altro", t: "✦ Altri capitoli", regole: [] }]).forEach(function(g){ per[g.id] = { g: g, L: [] }; });
+    libri.forEach(function(b, i){
+      var t = nn(b._t + " " + b._sub), dove = "altro", ico = "✦", ord = 99;
+      GRUPPI.some(function(g){ return g.regole.some(function(r, k){ if(r[0].test(t)){ dove = g.id; ico = r[1]; ord = k; return true; } }); });
+      per[dove].L.push({ i: i, b: b, ico: ico, ord: ord });
+    });
+    var h = '<div class="pc-testa"><span class="pc-titolo">Plancia di comando</span><button type="button" class="pc-vista" data-vista="libreria">📚 Libreria</button></div>';
+    Object.keys(per).forEach(function(id){
+      var x = per[id]; if(!x.L.length) return;
+      x.L.sort(function(a, b){ return a.ord - b.ord || a.i - b.i; });
+      h += '<div class="pc-gruppo pc-' + id + '" role="group" aria-label="' + esc(x.g.t.replace(/^\S+\s/, "")) + '"><h3 class="pc-gt">' + x.g.t + '</h3><div class="pc-griglia">' + x.L.map(function(o){
+        var sec = secs[o.i];
+        return '<button type="button" class="pc-tile" data-i="' + o.i + '"><span class="pc-ico" aria-hidden="true">' + o.ico + '</span>'
+          + '<span class="pc-txt"><span class="pc-num">' + (ROMANI[o.i] || (o.i + 1)) + (o.b._sub ? " · " + esc(o.b._sub) : "") + '</span><b>' + esc(o.b._princ) + '</b>' + (o.b._sec ? '<small>' + esc(o.b._sec) + '</small>' : "")
+          + '<span class="pc-stato" data-id="' + esc(sec.id || "") + '"></span></span></button>';
+      }).join("") + '</div></div>';
+    });
+    plancia.innerHTML = h;
+  })();
+  box.insertAdjacentElement("afterend", plancia);
+  box.hidden = vista !== "libreria"; plancia.hidden = vista !== "plancia";
+  box.querySelector(".lb-cresta").insertAdjacentHTML("afterend", '<div class="pc-testa pc-lb"><button type="button" class="pc-vista" data-vista="plancia">▦ Plancia di comando</button></div>');
+  function scegliVista(v){
+    vista = v; try { localStorage.setItem(VISTA_K, v); } catch(_){}
+    if(!aperta){ box.hidden = v !== "libreria"; plancia.hidden = v !== "plancia"; if(v === "libreria"){ ultimaL = 0; disponi(); } }
+    torna.querySelector(".mb-torna-b").textContent = v === "plancia" ? "◂ Plancia" : "◂ Libreria";
+    suono("swish");
+  }
+  ms.addEventListener("click", function(e){
+    var v = e.target.closest(".pc-vista"); if(v){ scegliVista(v.getAttribute("data-vista")); return; }
+    var t = e.target.closest(".pc-tile"); if(t){ suono("paper"); mostra(secs[+t.getAttribute("data-i")]); }
+  });
+  /* piccole informazioni dal vivo sui riquadri */
+  function statoTile(){
+    if(plancia.hidden || document.hidden) return;
+    [].forEach.call(plancia.querySelectorAll(".pc-stato"), function(el){
+      var id = el.getAttribute("data-id"), t = "";
+      try {
+        if(id === "m-sessione" && window.SESS){ var c = SESS.doc().corrente; t = c ? "● Sessione " + c.n + " in corso" : ""; }
+        if(id === "m-telegram" && window.TCJTG) t = TCJTG.pronto() ? "● Bot collegato" : "○ Bot da collegare";
+      } catch(_){}
+      if(el.textContent !== t) el.textContent = t;
+    });
+  }
+  setInterval(statoTile, 5000); setTimeout(statoTile, 1500);
+
   /* barra «Torna alla libreria», spostata dentro il capitolo aperto */
   var torna = document.createElement("div");
   torna.className = "mb-torna";
   /* con i salti rapidi: tutti i capitoli in fila, si passa dall'uno all'altro senza tornare alla libreria */
-  torna.innerHTML = '<button type="button" class="mb-torna-b">◂ Libreria</button>'
+  torna.innerHTML = '<button type="button" class="mb-torna-b">' + (vista === "plancia" ? "◂ Plancia" : "◂ Libreria") + '</button>'
     + '<button type="button" class="mb-freccia" data-dir="-1" aria-label="Capitolo precedente">◀</button>'
     + '<div class="mb-salti" role="navigation" aria-label="Vai a un altro capitolo">' + libri.map(function(b, i){
       return '<button type="button" class="mb-salto" data-i="' + i + '" title="' + esc(b._t) + '"><span class="mb-salto-n">' + (ROMANI[i] || (i + 1)) + '</span>' + esc(b._princ) + '</button>'; }).join("") + '</div>'
@@ -140,7 +203,8 @@
 
   var aperta = null, inVolo = false;
   function mostra(sec){
-    box.hidden = true;
+    box.hidden = true; plancia.hidden = true;
+    if(aperta && aperta !== sec) aperta.classList.remove("lb-vis");
     secs.forEach(function(s){ s.classList.toggle("lb-vis", s === sec); });
     sec.insertBefore(torna, sec.firstChild); segnaSalto(sec);
     if(sec._open) sec._open(); else sec.classList.add("open");
@@ -192,14 +256,16 @@
   function chiudi(scorri){
     if(aperta) aperta.classList.remove("lb-vis");
     var era = aperta; aperta = null;
-    box.hidden = false;
+    box.hidden = vista !== "libreria"; plancia.hidden = vista !== "plancia";
     suono("swish");
-    ultimaL = 0; disponi();
+    if(vista === "libreria"){ ultimaL = 0; disponi(); } else statoTile();
+    var cima = vista === "plancia" ? plancia : box;
     if(scorri){
-      var y = box.getBoundingClientRect().top + window.scrollY - 70;
+      var y = cima.getBoundingClientRect().top + window.scrollY - 70;
       window.scrollTo({ top: y, behavior: RM ? "auto" : "smooth" });
     }
-    if(era){ var i = secs.indexOf(era); if(libri[i]){ try{ libri[i].focus({ preventScroll: true }); }catch(_){} libri[i].classList.add("rimesso"); setTimeout(function(){ libri[i].classList.remove("rimesso"); }, 700); } }
+    if(era && vista === "plancia"){ var pt = plancia.querySelector('.pc-tile[data-i="' + secs.indexOf(era) + '"]'); if(pt) try{ pt.focus({ preventScroll: true }); }catch(_){} }
+    if(era && vista === "libreria"){ var i = secs.indexOf(era); if(libri[i]){ try{ libri[i].focus({ preventScroll: true }); }catch(_){} libri[i].classList.add("rimesso"); setTimeout(function(){ libri[i].classList.remove("rimesso"); }, 700); } }
   }
 
   /* i collegamenti interni (#m-…) aprono il capitolo giusto */

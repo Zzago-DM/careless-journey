@@ -173,3 +173,31 @@
 .mb-freccia{padding:.45rem .55rem}
 @media (max-width:600px){.mb-freccia{display:none}.mb-torna-b{font-size:.55rem;padding:.45rem .6rem}}
 @media (prefers-reduced-motion:reduce){.mb-salti{scroll-behavior:auto}}
+
+/* plancia di comando: i capitoli come riquadri, divisi in gruppi */
+.pc-box{max-width:1080px;margin:1.6rem auto 2.4rem;padding:0 1rem}
+.pc-box[hidden]{display:none}
+.pc-testa{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.pc-testa.pc-lb{justify-content:flex-end;margin:.2rem 0 .8rem}
+.pc-titolo{font-family:"Cinzel Decorative","Cinzel",serif;font-size:clamp(1.1rem,3vw,1.5rem);color:var(--master2);letter-spacing:.06em}
+.pc-vista{font-family:"Cinzel",serif;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--master2);background:transparent;border:1px solid color-mix(in srgb,var(--master) 50%,transparent);border-radius:999px;padding:.5rem 1rem;min-height:38px;cursor:pointer}
+.pc-vista:hover,.pc-vista:focus-visible{color:#fff;border-color:var(--master2);outline:none}
+.pc-gruppo{margin:0 0 1.6rem}
+.pc-gt{font-family:"Cinzel",serif;font-size:.68rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:color-mix(in srgb,var(--master2) 80%,#fff);margin:0 0 .7rem;padding-bottom:.4rem;border-bottom:1px solid color-mix(in srgb,var(--master) 25%,transparent)}
+.pc-griglia{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.7rem}
+.pc-tile{display:flex;align-items:flex-start;gap:.75rem;text-align:left;padding:.85rem .9rem;min-height:84px;background:linear-gradient(160deg,color-mix(in srgb,var(--master) 10%,#0b0c12),#090a0f);border:1px solid color-mix(in srgb,var(--master) 30%,transparent);border-radius:6px;color:var(--text,#d0c8b8);cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}
+.pc-tile:hover,.pc-tile:focus-visible{transform:translateY(-2px);border-color:var(--master2);box-shadow:0 6px 22px color-mix(in srgb,var(--master) 25%,transparent);outline:none}
+.pc-ico{font-size:1.5rem;line-height:1;flex-shrink:0;width:2.2rem;height:2.2rem;display:flex;align-items:center;justify-content:center;border-radius:50%;background:color-mix(in srgb,var(--master) 14%,transparent);border:1px solid color-mix(in srgb,var(--master) 30%,transparent)}
+.pc-txt{display:flex;flex-direction:column;gap:.15rem;min-width:0}
+.pc-txt b{font-family:"Cinzel",serif;font-size:.88rem;font-weight:600;color:var(--master2);line-height:1.25;overflow-wrap:anywhere}
+.pc-txt small{font-family:"Crimson Pro",Georgia,serif;font-style:italic;font-size:.85rem;color:var(--text2,#908878)}
+.pc-num{font-family:"Cinzel",serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text2,#908878);opacity:.8}
+.pc-stato{font-family:system-ui,sans-serif;font-size:.7rem;color:#9adfa9}
+.pc-stato:empty{display:none}
+/* strumenti rapidi: riquadri più grandi */
+.pc-rapidi .pc-griglia{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.pc-rapidi .pc-tile{min-height:104px;padding:1.1rem;border-color:color-mix(in srgb,var(--master2) 55%,transparent);background:linear-gradient(160deg,color-mix(in srgb,var(--master) 22%,#0b0c12),#0a0b10)}
+.pc-rapidi .pc-ico{font-size:1.9rem;width:2.8rem;height:2.8rem}
+.pc-rapidi .pc-txt b{font-size:1rem}
+@media (max-width:560px){.pc-griglia,.pc-rapidi .pc-griglia{grid-template-columns:1fr 1fr;gap:.5rem}.pc-tile{flex-direction:column;gap:.45rem;min-height:0;padding:.7rem}.pc-txt b{font-size:.8rem}}
+@media (prefers-reduced-motion:reduce){.pc-tile{transition:none}.pc-tile:hover{transform:none}}
