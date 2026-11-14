@@ -9,6 +9,11 @@
    - Chrome, Edge, Opera (anche GX): il browser si ricorda la cartella (al massimo chiede un clic per riaprirla).
      Brave: va accesa la funzione in brave://flags/#file-system-access-api. Negli altri browser la cartella
      si sceglie ogni volta che si apre il sito.
+   CATEGORIE (Mappe, Mostri, Oggetti, Altro, più le immagini di personaggi trovate nella cartella)
+   - il sito legge tutta la cartella collegata e mette ogni immagine in una categoria guardando i nomi delle
+     sue cartelle (dalla più esterna: «NPC › Ramsgate» resta tra i Personaggi) e poi del file: per esempio «Mappe» → Mappe, «NPC» → Personaggi.
+   - se una cartella finisce nella categoria sbagliata, si sposta dal menu accanto al suo nome: la scelta vale
+     per quella cartella e per tutto quello che contiene, ed è ricordata su questo dispositivo.
    L'invio passa dal bot collegato nel capitolo «Sessione di gioco» (window.TCJTG, js/master-sessioni.js). */
 (function(){
   "use strict";
@@ -59,16 +64,40 @@
   function quandoVisibile(el, f){ if(vista){ el._carica = f; vista.observe(el); } else f(); }
 
   /* ---------- stato del capitolo ---------- */
-  var scheda = pref().scheda === "cartella" ? "cartella" : "pers";
+  var CAT = [["pers", "👤 Personaggi"], ["mappe", "🗺 Mappe"], ["mostri", "🐉 Mostri"], ["oggetti", "🗡 Oggetti"], ["altro", "📦 Altro"], ["cartella", "📁 Cartella"]];
+  var NOMI_CAT = { pers: "Personaggi", mappe: "Mappe", mostri: "Mostri", oggetti: "Oggetti", altro: "Altro" };
+  var scheda = CAT.some(function(c){ return c[0] === pref().scheda; }) ? pref().scheda : "pers";
+  var filtroK = "";
+  /* parole che fanno riconoscere la categoria (nomi di cartelle e di file, senza accenti, in minuscolo) */
+  var PAROLE = [
+    ["mostri", /behemoth|mostr|monster|creatur|bestia|bestiar|\bbeh\b|drago|draghi/],
+    ["pers", /\bnpc|png\b|personagg|ritratt|maestr|\bmael\b|slayer|\bpg\b|player|giocator|eroi|alleat|nemic|villain|mercant|abitant|higher|lower|masters?\b/],
+    ["mappe", /mapp|\bmaps?\b|paesagg|luog|region|isol|citta|villagg|ambient|scenar|panoram|terre|contin|ramsgate|maelstrom|dungeon|interni|esterni|edific|locand|porto|nave/],
+    ["oggetti", /oggett|\barm[ai]\b|\barmi\b|artefatt|reliqui|tesor|bottin|item|equip|pozion|tonic|nucle|armatur|scud|spad|lame|gioiell|amulet|anell|libr[oi]\b|pergamen|chiav|corone|cell[ae]\b|loot|risors/]
+  ];
+  function scelte(){ return pref().cat || {}; }
+  function categoria(dove, nome){
+    var parti = dove ? dove.split(" › ") : [], sc = scelte();
+    for(var i = parti.length; i > 0; i--){ var k = parti.slice(0, i).join(" › "); if(sc[k]) return sc[k]; }
+    var prove = parti.concat([nome.replace(/\.[^.]+$/, "")]);
+    for(var j = 0; j < prove.length; j++){
+      var t = norm(prove[j]).replace(/[_\-.]+/g, " ");
+      for(var q = 0; q < PAROLE.length; q++) if(PAROLE[q][1].test(t)) return PAROLE[q][0];
+    }
+    return "altro";
+  }
   var P = null, pErr = "", pCarico = false, filtroP = "";
   var radice = null, percorso = [], filtroC = "", indice = null, urls = [];
 
   function disegna(){
     var html = '<p class="mtg-intro">Tocca una foto e il bot la manda subito nel gruppo, senza aprire Telegram né cercare nei file.</p><div id="mtg-stato">' + statoBot() + '</div>';
-    html += '<div class="mtg-tabs" role="tablist"><button type="button" role="tab" data-tab="pers" aria-selected="' + (scheda === "pers") + '">👤 Personaggi</button>'
-      + '<button type="button" role="tab" data-tab="cartella" aria-selected="' + (scheda === "cartella") + '">📁 Cartella</button></div><div class="mtg-corpo" id="mtg-corpo"></div>';
+    html += '<div class="mtg-tabs" role="tablist">' + CAT.map(function(c){ return '<button type="button" role="tab" data-tab="' + c[0] + '" aria-selected="' + (scheda === c[0]) + '">' + c[1] + '</button>'; }).join("")
+      + '</div><div class="mtg-corpo" id="mtg-corpo"></div>';
     box.innerHTML = html;
-    if(scheda === "pers") disegnaPers(); else disegnaCartella();
+    disegnaScheda();
+  }
+  function disegnaScheda(){
+    if(scheda === "pers") disegnaPers(); else if(scheda === "cartella") disegnaCartella(); else disegnaCategoria(scheda);
   }
   function statoBot(){
     if(!window.TCJTG) return '<p class="mtg-err">Manca il capitolo «Sessione di gioco»: ricarica la pagina.</p>';
@@ -136,7 +165,9 @@
           + '<span class="mtg-nome">' + esc(p.nome) + '</span>'
           + (p.pub ? "" : '<span class="mtg-bdg" title="I giocatori non lo vedono ancora nella sezione Incontri">non pubblicato</span>')
           + (p.foti.length > 1 ? '<span class="mtg-piu">' + p.foti.length + ' foto</span>' : "") + '</button>';
-      }).join("") + '</div>' : '<p class="mtg-n">' + (P.length ? "Nessun personaggio con questo nome." : "Nella sezione Incontri non c'è ancora nessuno.") + '</p>');
+      }).join("") + '</div>' : '<p class="mtg-n">' + (P.length ? "Nessun personaggio con questo nome." : "Nella sezione Incontri non c'è ancora nessuno.") + '</p>')
+      + '<div class="mtg-g">Dalla cartella</div><div id="mtg-el"></div>';
+    riempiCategoria("pers", filtroP);
     c.querySelectorAll(".mtg-t[data-pid]").forEach(function(el){
       var p = trovaP(el.getAttribute("data-pid")); if(!p || !p.foti.length) return;
       var cv = el.querySelector("canvas");
@@ -216,7 +247,7 @@
       if(!vecchio.length) return Promise.resolve();
       var nome = vecchio.shift();
       return percorso[percorso.length - 1].elenca().then(function(r){ var s = r.cart.filter(function(c){ return c.nome === nome; })[0]; if(s){ percorso.push(s); return giu(); } });
-    })().catch(function(){}).then(function(){ if(scheda === "cartella") disegnaCartella(); });
+    })().catch(function(){}).then(function(){ disegnaScheda(); });
   }
   function scegli(){
     if(FS){
@@ -230,22 +261,26 @@
   }
   function riapri(){
     if(!maniglia) return scegli();
-    maniglia.requestPermission({ mode: "read" }).then(function(s){ permesso = s; if(s === "granted") apri(nodoFS(maniglia, maniglia.name)); else disegnaCartella(); })
+    maniglia.requestPermission({ mode: "read" }).then(function(s){ permesso = s; if(s === "granted") apri(nodoFS(maniglia, maniglia.name)); else disegnaScheda(); })
       .catch(function(){ scegli(); });
+  }
+  /* invito a collegare la cartella (o a riaprirla), uguale in tutte le schede che ne hanno bisogno */
+  function invitoCartella(el, da){
+    if(!el) return;
+    if(FS && !controllato){ el.innerHTML = '<p class="mtg-n">Controllo la cartella collegata…</p>'; controlla().then(function(){ if(!radice && scheda === da) disegnaScheda(); }); return; }
+    var h = '<p class="mtg-n">' + (da === "pers" ? "Collega la cartella della campagna per vedere qui anche le immagini dei personaggi che tieni sul computer."
+      : 'Collega la cartella dove tieni le immagini della campagna (per esempio <b>«Careless Journey»</b> sul Desktop). Il sito la legge e basta: non carica niente su GitHub.') + '</p>';
+    if(maniglia && permesso !== "granted") h += '<div class="mtg-riga"><button type="button" class="bk-btn mtg-big" data-az="riapri">🔓 Riapri «' + esc(maniglia.name) + '»</button><button type="button" class="bk-btn mtg-sec" data-az="scegli">Scegli un\'altra cartella</button></div>';
+    else h += '<div class="mtg-riga"><button type="button" class="bk-btn mtg-big" data-az="scegli">📁 Collega la cartella</button></div>';
+    if(!FS && da !== "pers") h += '<p class="mtg-n mtg-pic">' + (/Brave/i.test(navigator.userAgent) || navigator.brave
+      ? 'Su Brave il sito non può ricordarsi la cartella finché non accendi la funzione: scrivi <code>brave://flags/#file-system-access-api</code> nella barra degli indirizzi, metti <b>Enabled</b> e riavvia Brave.'
+      : 'Questo browser non permette di ricordare la cartella: andrà scelta ogni volta che riapri il sito. Con Chrome, Edge oppure Opera GX se la ricorda.') + '</p>';
+    el.innerHTML = h;
   }
   function disegnaCartella(){
     var c = corpo(); if(!c) return;
     liberaUrl();
-    if(!radice){
-      if(FS && !controllato){ c.innerHTML = '<p class="mtg-n">Controllo la cartella collegata…</p>'; controlla().then(function(){ if(!radice && scheda === "cartella") disegnaCartella(); }); return; }
-      var h = '<p class="mtg-n">Collega la cartella dove tieni le immagini della campagna (per esempio <b>«Careless Journey»</b> sul Desktop). Il sito la legge e basta: non carica niente su GitHub.</p>';
-      if(maniglia && permesso !== "granted") h += '<div class="mtg-riga"><button type="button" class="bk-btn mtg-big" data-az="riapri">🔓 Riapri «' + esc(maniglia.name) + '»</button><button type="button" class="bk-btn mtg-sec" data-az="scegli">Scegli un\'altra cartella</button></div>';
-      else h += '<div class="mtg-riga"><button type="button" class="bk-btn mtg-big" data-az="scegli">📁 Collega la cartella</button></div>';
-      if(!FS) h += '<p class="mtg-n mtg-pic">' + (/Brave/i.test(navigator.userAgent) || navigator.brave
-        ? 'Su Brave il sito non può ricordarsi la cartella finché non accendi la funzione: scrivi <code>brave://flags/#file-system-access-api</code> nella barra degli indirizzi, metti <b>Enabled</b> e riavvia Brave.'
-        : 'Questo browser non permette di ricordare la cartella: andrà scelta ogni volta che riapri il sito. Con Chrome, Edge oppure Opera GX se la ricorda.') + '</p>';
-      c.innerHTML = h; return;
-    }
+    if(!radice){ c.innerHTML = '<div id="mtg-el"></div>'; invitoCartella(document.getElementById("mtg-el"), "cartella"); return; }
     var qui = percorso[percorso.length - 1];
     var briciole = percorso.map(function(n, i){ return i === percorso.length - 1 ? '<span>' + esc(n.nome) + '</span>' : '<button type="button" data-su="' + i + '">' + esc(n.nome) + '</button>'; }).join('<i>›</i>');
     c.innerHTML = '<div class="mtg-barra"><input type="search" id="mtg-cc" placeholder="Cerca in tutta la cartella…" value="' + esc(filtroC) + '" aria-label="Cerca un\'immagine per nome">'
@@ -260,6 +295,40 @@
           : '<p class="mtg-n">' + (r.cart.length ? "Qui ci sono solo cartelle." : "In questa cartella non ci sono immagini.") + '</p>');
       el._r = r; collegaTessere(el, r.file);
     }).catch(function(){ var el = document.getElementById("mtg-el"); if(el) el.innerHTML = '<p class="mtg-err">Non riesco più a leggere questa cartella: forse è stata spostata o rinominata. Premi «Cambia cartella».</p>'; });
+  }
+  /* =================== CATEGORIE =================== */
+  var MAX_CAT = 400;
+  function disegnaCategoria(cat){
+    var c = corpo(); if(!c) return;
+    liberaUrl();
+    if(!radice){ c.innerHTML = '<div id="mtg-el"></div>'; invitoCartella(document.getElementById("mtg-el"), cat); return; }
+    c.innerHTML = '<div class="mtg-barra"><input type="search" id="mtg-cq" placeholder="Cerca in ' + esc(NOMI_CAT[cat]) + '…" value="' + esc(filtroK) + '" aria-label="Cerca per nome">'
+      + '<button type="button" class="bk-btn mtg-sec" data-az="aggiorna" title="Rileggi la cartella (dopo aver aggiunto o modificato file)">↻</button></div><div id="mtg-el"></div>';
+    riempiCategoria(cat, filtroK);
+  }
+  /* le immagini di una categoria, divise per cartella; accanto al nome della cartella si può cambiare categoria */
+  function riempiCategoria(cat, filtro){
+    var el = document.getElementById("mtg-el"); if(!el) return;
+    if(!radice){ if(cat === "pers") invitoCartella(el, "pers"); return; }
+    el.innerHTML = '<p class="mtg-n">Leggo la cartella…</p>';
+    costruisciIndice().then(function(L){
+      var el2 = document.getElementById("mtg-el"); if(!el2 || scheda !== cat) return;
+      var q = norm(filtro || ""), parole = q ? q.split(/\s+/) : [];
+      var R = L.filter(function(x){ if(categoria(x.dove, x.f.nome) !== cat) return false; var t = x.k + " " + norm(x.dove); return parole.every(function(w){ return t.indexOf(w) >= 0; }); });
+      liberaUrl();
+      if(!R.length){ el2.innerHTML = '<p class="mtg-n">' + (q ? "Nessuna immagine con questo nome." : cat === "pers" ? "Nella cartella non ho trovato immagini di personaggi." : "Nella cartella non ho trovato immagini per questa categoria.") + '</p>'; return; }
+      var tanti = R.length > MAX_CAT; R = R.slice(0, MAX_CAT);
+      var gruppi = [], per = {};
+      R.forEach(function(x){ var k = x.dove || ""; if(!per[k]){ per[k] = []; gruppi.push(k); } per[k].push(x); });
+      gruppi.sort(ord);
+      var flat = [], html = tanti ? '<p class="mtg-n">Mostro le prime ' + MAX_CAT + ' immagini: cerca per nome per trovare le altre.</p>' : "";
+      gruppi.forEach(function(k){
+        html += '<div class="mtg-gr"><span class="mtg-grn">📁 ' + esc(k || radice.nome) + '</span>' + (k ? '<label class="mtg-sp">Sposta in <select data-sposta="' + esc(k) + '">'
+          + Object.keys(NOMI_CAT).map(function(z){ return '<option value="' + z + '"' + (z === cat ? " selected" : "") + '>' + NOMI_CAT[z] + '</option>'; }).join("") + '</select></label>' : "") + '</div>'
+          + '<div class="mtg-griglia">' + per[k].map(function(x){ flat.push(x.f); return tessera(x.f, flat.length - 1, ""); }).join("") + '</div>';
+      });
+      el2.innerHTML = html; collegaTessere(el2, flat);
+    });
   }
   function tessera(f, i, dove){
     return '<button type="button" class="mtg-t" data-f="' + i + '" title="' + esc((dove ? dove + " › " : "") + f.nome) + '"><span class="mtg-m"><img alt=""></span>'
@@ -358,12 +427,12 @@
   /* =================== eventi =================== */
   box.addEventListener("click", function(e){
     var t = e.target.closest("[data-tab]");
-    if(t){ scheda = t.getAttribute("data-tab"); salvaPref({ scheda: scheda }); disegna(); return; }
+    if(t){ scheda = t.getAttribute("data-tab"); filtroK = ""; salvaPref({ scheda: scheda }); disegna(); return; }
     var b = e.target.closest("[data-az]"), az = b && b.getAttribute("data-az");
     if(az === "ricaricaP"){ P = null; pErr = ""; immagini = {}; disegnaPers(); return; }
     if(az === "scegli"){ scegli(); return; }
     if(az === "riapri"){ riapri(); return; }
-    if(az === "aggiorna"){ indice = null; if(radice) disegnaCartella(); return; }
+    if(az === "aggiorna"){ indice = null; if(radice) disegnaScheda(); return; }
     var su = e.target.closest("[data-su]");
     if(su){ percorso = percorso.slice(0, +su.getAttribute("data-su") + 1); filtroC = ""; salvaPref({ percorso: percorso.slice(1).map(function(n){ return n.nome; }) }); disegnaCartella(); return; }
     var cr = e.target.closest("[data-cart]"), el = document.getElementById("mtg-el");
@@ -374,10 +443,20 @@
     if(tp){ var p = trovaP(tp.getAttribute("data-pid")); if(p && p.foti.length) apriPers(p); }
   });
   var tRic = null;
+  box.addEventListener("change", function(e){
+    var k = e.target.getAttribute && e.target.getAttribute("data-sposta"); if(k == null) return;
+    var sc = scelte(); sc[k] = e.target.value; salvaPref({ cat: sc });
+    avviso("«" + k.split(" › ").pop() + "» ora sta in " + NOMI_CAT[e.target.value]);
+    if(scheda === "pers") disegnaPers(); else riempiCategoria(scheda, filtroK);
+  });
   box.addEventListener("input", function(e){
     if(e.target.id === "mtg-cp"){
       filtroP = e.target.value; clearTimeout(tRic);
       tRic = setTimeout(function(){ disegnaPers(); var i = document.getElementById("mtg-cp"); if(i){ i.focus(); i.setSelectionRange(i.value.length, i.value.length); } }, 200);
+    }
+    if(e.target.id === "mtg-cq"){
+      filtroK = e.target.value; clearTimeout(tRic);
+      tRic = setTimeout(function(){ riempiCategoria(scheda, filtroK); }, 300);
     }
     if(e.target.id === "mtg-cc"){
       filtroC = e.target.value; clearTimeout(tRic);

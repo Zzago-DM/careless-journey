@@ -288,6 +288,7 @@ Un capitolo della Zona Master, subito dopo «Sessione di gioco»: si tocca una f
   - Chrome, Edge, Opera/Opera GX: il browser si ricorda la cartella (in IndexedDB, solo su quel dispositivo); al massimo chiede un clic su «Riapri». Ricorda anche l'ultima sottocartella aperta.
   - Brave: la funzione è spenta di serie; si accende con `brave://flags/#file-system-access-api` → Enabled e riavvio.
   - Negli altri browser (e su telefono, dove possibile) la cartella si sceglie ogni volta.
+- **🗺 Mappe · 🐉 Mostri · 🗡 Oggetti · 📦 Altro.** Il sito legge tutta la cartella collegata e mette ogni immagine in una categoria guardando i nomi delle cartelle, dalla più esterna (così «NPC › Ramsgate» resta tra i Personaggi), e alla fine il nome del file: per esempio «Mappe», «paesaggi», «isola» → Mappe; «Behemoth», «token mostri» → Mostri; «armi», «reliquie», «artefatti», «tonici» → Oggetti; «NPC», «Maestri», «Mael» → Personaggi (in fondo alla scheda Personaggi, sotto «Dalla cartella»); il resto va in Altro. Le immagini sono divise per cartella; accanto al nome di ogni cartella «Sposta in» la cambia di categoria (vale anche per le sue sottocartelle ed è ricordato su quel dispositivo). Le parole sono nell'elenco `PAROLE` in cima a `js/master-telegram.js`. ↻ rilegge la cartella dopo aver aggiunto file.
 - Le foto partono come JPEG con il lato lungo al massimo di 2560 px (le parti trasparenti diventano scure), sotto il limite di 10 MB di Telegram.
 
 ## /incontri (bot Telegram · js/master-sessioni.js)
