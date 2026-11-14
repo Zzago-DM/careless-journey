@@ -10,10 +10,11 @@
      Brave: va accesa la funzione in brave://flags/#file-system-access-api. Negli altri browser la cartella
      si sceglie ogni volta che si apre il sito.
    CATEGORIE (Mappe, Mostri, Oggetti, Altro, più le immagini di personaggi trovate nella cartella)
-   - il sito legge tutta la cartella collegata e mette ogni immagine in una categoria guardando i nomi delle
-     sue cartelle (dalla più esterna: «NPC › Ramsgate» resta tra i Personaggi) e poi del file: per esempio «Mappe» → Mappe, «NPC» → Personaggi.
-   - se una cartella finisce nella categoria sbagliata, si sposta dal menu accanto al suo nome: la scelta vale
-     per quella cartella e per tutto quello che contiene, ed è ricordata su questo dispositivo.
+   - nessun riconoscimento automatico: ogni cartella va nella categoria che decide il Master. Le scelte stanno nel
+     repository privato tcj-master, file telegram/categorie.json ({ cartelle: { "Mappe": "mappe", "NPC › Mael": "pers" } }),
+     così valgono su tutti i dispositivi; la scelta di una cartella vale anche per le sue sottocartelle, salvo scelte loro.
+   - le cartelle non ancora assegnate stanno in «Da sistemare»; «Non mostrare» le toglie dalle categorie
+     (restano solo nella scheda Cartella).
    L'invio passa dal bot collegato nel capitolo «Sessione di gioco» (window.TCJTG, js/master-sessioni.js). */
 (function(){
   "use strict";
@@ -49,6 +50,12 @@
       headers: { "Authorization": "Bearer " + token(), "Accept": raw ? "application/vnd.github.raw+json" : "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" }, cache: "no-store"
     }).then(function(r){ if(!r.ok) throw r.status; return r; });
   }
+  function b64e(str){ var by = new TextEncoder().encode(str), bin = ""; for(var i = 0; i < by.length; i += 0x8000) bin += String.fromCharCode.apply(null, by.subarray(i, i + 0x8000)); return btoa(bin); }
+  function ghScrivi(percorso, corpo){
+    return fetch("https://api.github.com/repos/" + PRIV + percorso, { method: "PUT", body: JSON.stringify(corpo),
+      headers: { "Authorization": "Bearer " + token(), "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "Content-Type": "application/json" } })
+      .then(function(r){ if(!r.ok) throw r.status; return r.json(); });
+  }
   function pref(){ try { return JSON.parse(localStorage.getItem(LOC) || "null") || {}; } catch(e){ return {}; } }
   function salvaPref(o){ try { localStorage.setItem(LOC, JSON.stringify(Object.assign(pref(), o))); } catch(e){} }
   function bot(){ return window.TCJTG && TCJTG.pronto(); }
@@ -64,27 +71,36 @@
   function quandoVisibile(el, f){ if(vista){ el._carica = f; vista.observe(el); } else f(); }
 
   /* ---------- stato del capitolo ---------- */
-  var CAT = [["pers", "👤 Personaggi"], ["mappe", "🗺 Mappe"], ["mostri", "🐉 Mostri"], ["oggetti", "🗡 Oggetti"], ["altro", "📦 Altro"], ["cartella", "📁 Cartella"]];
-  var NOMI_CAT = { pers: "Personaggi", mappe: "Mappe", mostri: "Mostri", oggetti: "Oggetti", altro: "Altro" };
+  var CAT = [["pers", "👤 Personaggi"], ["mappe", "🗺 Mappe"], ["mostri", "🐉 Mostri"], ["oggetti", "🗡 Oggetti"], ["altro", "📦 Altro"], ["da", "❔ Da sistemare"], ["cartella", "📁 Cartella"]];
+  var NOMI_CAT = { pers: "Personaggi", mappe: "Mappe", mostri: "Mostri", oggetti: "Oggetti", altro: "Altro", nascosta: "Non mostrare", da: "Da sistemare" };
   var scheda = CAT.some(function(c){ return c[0] === pref().scheda; }) ? pref().scheda : "pers";
   var filtroK = "";
-  /* parole che fanno riconoscere la categoria (nomi di cartelle e di file, senza accenti, in minuscolo) */
-  var PAROLE = [
-    ["mostri", /behemoth|mostr|monster|creatur|bestia|bestiar|\bbeh\b|drago|draghi/],
-    ["pers", /\bnpc|png\b|personagg|ritratt|maestr|\bmael\b|slayer|\bpg\b|player|giocator|eroi|alleat|nemic|villain|mercant|abitant|higher|lower|masters?\b/],
-    ["mappe", /mapp|\bmaps?\b|paesagg|luog|region|isol|citta|villagg|ambient|scenar|panoram|terre|contin|ramsgate|maelstrom|dungeon|interni|esterni|edific|locand|porto|nave/],
-    ["oggetti", /oggett|\barm[ai]\b|\barmi\b|artefatt|reliqui|tesor|bottin|item|equip|pozion|tonic|nucle|armatur|scud|spad|lame|gioiell|amulet|anell|libr[oi]\b|pergamen|chiav|corone|cell[ae]\b|loot|risors/]
-  ];
-  function scelte(){ return pref().cat || {}; }
-  function categoria(dove, nome){
-    var parti = dove ? dove.split(" › ") : [], sc = scelte();
-    for(var i = parti.length; i > 0; i--){ var k = parti.slice(0, i).join(" › "); if(sc[k]) return sc[k]; }
-    var prove = parti.concat([nome.replace(/\.[^.]+$/, "")]);
-    for(var j = 0; j < prove.length; j++){
-      var t = norm(prove[j]).replace(/[_\-.]+/g, " ");
-      for(var q = 0; q < PAROLE.length; q++) if(PAROLE[q][1].test(t)) return PAROLE[q][0];
-    }
-    return "altro";
+  /* categorie scelte dal Master: tcj-master/telegram/categorie.json, con una copia su questo dispositivo */
+  var F_CAT = "telegram/categorie.json", MAPPA = (pref().mappa || {}), shaCat = pref().shaCat || null, tCat = null;
+  function caricaMappa(){
+    if(!token()) return Promise.resolve();
+    return gh("/contents/" + F_CAT).then(function(r){ return r.json(); }).then(function(j){
+      var d = JSON.parse(b64d(j.content || "")); shaCat = j.sha;
+      if(!pref().mappaSporca){ MAPPA = d.cartelle || {}; salvaPref({ mappa: MAPPA, shaCat: shaCat }); } else salvaMappa();
+    }).catch(function(e){ if(e === 404){ shaCat = null; if(pref().mappaSporca) salvaMappa(); } });
+  }
+  function salvaMappa(){
+    salvaPref({ mappa: MAPPA, mappaSporca: true }); clearTimeout(tCat);
+    tCat = setTimeout(function(){
+      var corpo = { message: "Mostra su Telegram: categorie delle cartelle", content: b64e(JSON.stringify({ v: 1, cartelle: MAPPA }, null, 1)) };
+      if(shaCat) corpo.sha = shaCat;
+      ghScrivi("/contents/" + F_CAT, corpo).then(function(j){ shaCat = j.content && j.content.sha; salvaPref({ shaCat: shaCat, mappaSporca: false }); })
+        .catch(function(e){
+          if(e === 409 || e === 422) return gh("/contents/" + F_CAT).then(function(r){ return r.json(); }).then(function(j){ shaCat = j.sha; salvaMappa(); });
+          avviso("Scelta salvata solo su questo dispositivo: non riesco a scrivere su tcj-master.", true);
+        });
+    }, 1200);
+  }
+  function categoria(dove){
+    var parti = dove ? dove.split(" › ") : [];
+    for(var i = parti.length; i > 0; i--){ var k = parti.slice(0, i).join(" › "); if(MAPPA[k]) return MAPPA[k]; }
+    if(!parti.length && MAPPA["."]) return MAPPA["."];
+    return "da";
   }
   var P = null, pErr = "", pCarico = false, filtroP = "";
   var radice = null, percorso = [], filtroC = "", indice = null, urls = [];
@@ -314,18 +330,19 @@
     costruisciIndice().then(function(L){
       var el2 = document.getElementById("mtg-el"); if(!el2 || scheda !== cat) return;
       var q = norm(filtro || ""), parole = q ? q.split(/\s+/) : [];
-      var R = L.filter(function(x){ if(categoria(x.dove, x.f.nome) !== cat) return false; var t = x.k + " " + norm(x.dove); return parole.every(function(w){ return t.indexOf(w) >= 0; }); });
+      var R = L.filter(function(x){ if(categoria(x.dove) !== cat) return false; var t = x.k + " " + norm(x.dove); return parole.every(function(w){ return t.indexOf(w) >= 0; }); });
       liberaUrl();
-      if(!R.length){ el2.innerHTML = '<p class="mtg-n">' + (q ? "Nessuna immagine con questo nome." : cat === "pers" ? "Nella cartella non ho trovato immagini di personaggi." : "Nella cartella non ho trovato immagini per questa categoria.") + '</p>'; return; }
+      if(!R.length){ el2.innerHTML = '<p class="mtg-n">' + (q ? "Nessuna immagine con questo nome." : cat === "da" ? "Tutte le cartelle hanno la loro categoria." : "Nessuna cartella è ancora in questa categoria: le scegli da «Da sistemare».") + '</p>'; return; }
       var tanti = R.length > MAX_CAT; R = R.slice(0, MAX_CAT);
       var gruppi = [], per = {};
-      R.forEach(function(x){ var k = x.dove || ""; if(!per[k]){ per[k] = []; gruppi.push(k); } per[k].push(x); });
+      /* in «Da sistemare» si sceglie per cartella principale (vale per tutto quello che c'è dentro) */
+      R.forEach(function(x){ var k = cat === "da" ? (x.dove || "").split(" › ")[0] : (x.dove || ""); if(!per[k]){ per[k] = []; gruppi.push(k); } per[k].push(x); });
       gruppi.sort(ord);
       var flat = [], html = tanti ? '<p class="mtg-n">Mostro le prime ' + MAX_CAT + ' immagini: cerca per nome per trovare le altre.</p>' : "";
       gruppi.forEach(function(k){
-        html += '<div class="mtg-gr"><span class="mtg-grn">📁 ' + esc(k || radice.nome) + '</span>' + (k ? '<label class="mtg-sp">Sposta in <select data-sposta="' + esc(k) + '">'
-          + Object.keys(NOMI_CAT).map(function(z){ return '<option value="' + z + '"' + (z === cat ? " selected" : "") + '>' + NOMI_CAT[z] + '</option>'; }).join("") + '</select></label>' : "") + '</div>'
-          + '<div class="mtg-griglia">' + per[k].map(function(x){ flat.push(x.f); return tessera(x.f, flat.length - 1, ""); }).join("") + '</div>';
+        html += '<div class="mtg-gr"><span class="mtg-grn">📁 ' + esc(k || radice.nome) + '</span><label class="mtg-sp">' + (cat === "da" ? "Metti in" : "Sposta in") + ' <select data-sposta="' + esc(k || ".") + '">'
+          + Object.keys(NOMI_CAT).map(function(z){ return '<option value="' + z + '"' + (z === cat ? " selected" : "") + '>' + NOMI_CAT[z] + '</option>'; }).join("") + '</select></label></div>'
+          + '<div class="mtg-griglia">' + per[k].map(function(x){ flat.push(x.f); return tessera(x.f, flat.length - 1, cat === "da" && x.dove !== k ? x.dove : ""); }).join("") + '</div>';
       });
       el2.innerHTML = html; collegaTessere(el2, flat);
     });
@@ -445,8 +462,8 @@
   var tRic = null;
   box.addEventListener("change", function(e){
     var k = e.target.getAttribute && e.target.getAttribute("data-sposta"); if(k == null) return;
-    var sc = scelte(); sc[k] = e.target.value; salvaPref({ cat: sc });
-    avviso("«" + k.split(" › ").pop() + "» ora sta in " + NOMI_CAT[e.target.value]);
+    if(e.target.value === "da") delete MAPPA[k]; else MAPPA[k] = e.target.value;
+    salvaMappa(); avviso("«" + (k === "." ? radice.nome : k.split(" › ").pop()) + "» ora sta in " + NOMI_CAT[e.target.value]);
     if(scheda === "pers") disegnaPers(); else riempiCategoria(scheda, filtroK);
   });
   box.addEventListener("input", function(e){
@@ -466,7 +483,7 @@
 
   /* il capitolo si prepara solo quando viene aperto */
   var pronto = false;
-  function avvia(){ if(pronto) return; pronto = true; disegna(); }
+  function avvia(){ if(pronto) return; pronto = true; disegna(); caricaMappa().then(function(){ if(scheda !== "pers" && scheda !== "cartella") disegnaScheda(); }); }
   if("IntersectionObserver" in window){
     var io = new IntersectionObserver(function(L){ if(L.some(function(x){ return x.isIntersecting; })){ io.disconnect(); avvia(); } });
     io.observe(box);
