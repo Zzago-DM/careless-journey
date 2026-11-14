@@ -65,6 +65,10 @@
       "<b>Armi pesanti</b> (martello, ascia): -1 DES, +2 COST. <b>Armi leggere</b> (pugni aetherici, lame a catena): +2 DES, -1 COST. <b>Armi bilanciate</b> (spada, lancia): +1 DES, +1 COST.",
       "Il numero si aggiorna da solo quando scegliete la categoria dell'arma principale: verde se aumenta, rosso se diminuisce."
     ]}
+    ,{ id: "2026-11-ritratti", i: "🎨", t: "Nuovi ritratti", p: [
+      "Per avvicinarsi di più allo <b>stile originale di Dauntless</b>, i disegni dei personaggi che avete incontrato sono stati <b>rifatti</b>: adesso seguono lo stesso stile del videogioco.",
+      "Li trovate nella sezione <b>Incontri</b>."
+    ]}
   ];
   var KV = "tcj-novita-viste", KD = "tcj-dispositivo";
   var L = null; try { L = window.localStorage; L.setItem("tcj-prova", "1"); L.removeItem("tcj-prova"); } catch(e){ L = null; }
