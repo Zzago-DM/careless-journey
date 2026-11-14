@@ -25,7 +25,7 @@ function tcjSezione(h){var s=document.currentScript;s.insertAdjacentHTML("before
 <script>/* Versione della pagina: la scrive strumenti/versiona.js a ogni pubblicazione.
    Se il browser ha aperto una copia vecchia rimasta in memoria, il sito se ne accorge:
    nei primi secondi si aggiorna da solo, più tardi propone «Aggiorna» (senza mai interrompere chi sta scrivendo). */
-var TCJ_VERSIONE="0f9d304f";
+var TCJ_VERSIONE="bb24b6f0";
 (function(){
   var nascita=Date.now(),ultimo=0;
   function nuova(v){location.replace(location.pathname+"?v="+v+location.hash);}
@@ -81,9 +81,10 @@ var TCJ_VERSIONE="0f9d304f";
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Pinyon+Script&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/02-mappe-continenti.css?v=2f981e86" id="cj-styles">
 <link rel="stylesheet" href="css/03-hero-animazioni.css?v=fc52480b" id="hero-anim-css">
-<link rel="stylesheet" href="css/04-master-icone.css?v=229c6e9b" id="ms-extra-css">
-<link rel="stylesheet" href="css/05-plancia-galleria.css?v=3b462e3a" id="plp-css">
-<link rel="stylesheet" href="css/06-master-animazioni.css?v=66458e0d" id="ms-anim-css">
+<script src="js/master-cache.js?v=522e20b5"></script>
+<script>tcjSoloMaster('<link rel="stylesheet" href="css/04-master-icone.css?v=229c6e9b">')</script>
+<script>tcjSoloMaster('<link rel="stylesheet" href="css/05-plancia-galleria.css?v=3b462e3a">')</script>
+<script>tcjSoloMaster('<link rel="stylesheet" href="css/06-master-animazioni.css?v=66458e0d">')</script>
 <link rel="stylesheet" href="css/19-manuale.css?v=00cafc51">
 <link rel="stylesheet" href="css/39-leggero.css?v=8aa18a2b">
 <link rel="stylesheet" href="css/40-novita.css?v=aa0ba69e">
@@ -94,7 +95,6 @@ var TCJ_VERSIONE="0f9d304f";
 <script src="dati/behemoth.js?v=63f7e5ad"></script>
 <script src="dati/manuale.js?v=d8e639f1"></script>
 <script src="dati/plancia.js?v=a20310b9"></script>
-<script src="js/master-cache.js?v=cf236a1a"></script>
 <script src="dati/continenti.js?v=e1883e2d"></script>
 <script src="dati/terra.js?v=5e606a2f"></script>
 </head>
@@ -257,7 +257,7 @@ if(!window.TCJ_LEGGERO)document.write('<script src="js/intro.js?v=fdb394c0"><\/s
 </div>
 <link rel="stylesheet" href="css/16-behemoth-schede.css?v=30aef67b" id="beh-css">
 <script src="js/behemoth-schede.js?v=5e452daa" id="beh-js"></script>
-<script src="js/master-icone.js?v=8ad64bb9" id="ms-extra-js"></script>
+<script>tcjSoloMaster('<script src="js/master-icone.js?v=8ad64bb9"><\/script>')</script>
 <div class="plp-ov" id="plp-ov" role="dialog" aria-modal="true" aria-labelledby="plp-t" hidden>
  <div class="plp-box">
   <div class="plp-top"><div class="plp-t" id="plp-t">Scegli un Behemoth</div><button type="button" class="plp-x" id="plp-x" aria-label="Chiudi">✕</button></div>
@@ -267,8 +267,8 @@ if(!window.TCJ_LEGGERO)document.write('<script src="js/intro.js?v=fdb394c0"><\/s
   <div class="plp-none" id="plp-none" hidden>Nessun Behemoth corrisponde.</div>
  </div>
 </div>
-<script src="js/plancia-galleria.js?v=785c3d6a" id="plp-js"></script>
-<script src="js/master-animazioni.js?v=c6491196" id="ms-anim-js"></script>
+<script>tcjSoloMaster('<script src="js/plancia-galleria.js?v=785c3d6a"><\/script>')</script>
+<script>tcjSoloMaster('<script src="js/master-animazioni.js?v=c6491196"><\/script>')</script>
 <script src="js/conferma.js?v=3974277a"></script>
 <script src="js/sync-giocatori.js?v=683462f2"></script>
 <script src="js/gruppo.js?v=d8030d7c"></script>
@@ -278,7 +278,7 @@ if(!window.TCJ_LEGGERO)document.write('<script src="js/intro.js?v=fdb394c0"><\/s
 <script src="js/nave-esplora.js?v=d47ecc08"></script>
 <link rel="stylesheet" href="css/44-stiva-modulare.css?v=64c7c064">
 <link rel="stylesheet" href="css/47-sessioni.css?v=fa86f4c7">
-<link rel="stylesheet" href="css/48-master-telegram.css?v=5abd190e">
+<script>tcjSoloMaster('<link rel="stylesheet" href="css/48-master-telegram.css?v=5abd190e">')</script>
 <script src="js/stiva-modulare.js?v=8142d609"></script>
 <script src="js/nave-alloggi.js?v=4185ddd4"></script>
 <script src="js/nave-mensa.js?v=b66a1150"></script>
@@ -294,18 +294,18 @@ if(!window.TCJ_LEGGERO)document.write('<script src="js/intro.js?v=fdb394c0"><\/s
 <script src="dati/viaggi.js?v=6260533e"></script>
 <link rel="stylesheet" href="css/26-viaggi.css?v=07e8bfa7">
 <script src="js/viaggi.js?v=310696f0"></script>
-<link rel="stylesheet" href="css/24-master-mael.css?v=68231070">
-<script src="js/master-mael.js?v=c0c8cd60"></script>
+<script>tcjSoloMaster('<link rel="stylesheet" href="css/24-master-mael.css?v=68231070">')</script>
+<script>tcjSoloMaster('<script src="js/master-mael.js?v=c0c8cd60"><\/script>')</script>
 <script src="js/master-accesso.js?v=0167c6d5"></script>
-<script src="js/master-dati.js?v=cd6401ee"></script>
-<script src="js/master-reliquie.js?v=9c43ed4e"></script>
-<script src="js/master-stiva.js?v=e95231a2"></script>
+<script>tcjSoloMaster('<script src="js/master-dati.js?v=cd6401ee"><\/script>')</script>
+<script>tcjSoloMaster('<script src="js/master-reliquie.js?v=9c43ed4e"><\/script>')</script>
+<script>tcjSoloMaster('<script src="js/master-stiva.js?v=e95231a2"><\/script>')</script>
 <script src="js/lingue.js?v=638d7a55"></script>
 <script src="js/sessioni.js?v=4fcb36fc"></script>
-<script src="js/master-sessioni.js?v=ef0e6a37"></script>
-<script src="js/master-telegram.js?v=f2c2cbd5"></script>
-<link rel="stylesheet" href="css/20-master-libreria.css?v=a852d381">
-<script src="js/master-libreria.js?v=09a78135"></script>
+<script>tcjSoloMaster('<script src="js/master-sessioni.js?v=ef0e6a37"><\/script>')</script>
+<script>tcjSoloMaster('<script src="js/master-telegram.js?v=f2c2cbd5"><\/script>')</script>
+<script>tcjSoloMaster('<link rel="stylesheet" href="css/20-master-libreria.css?v=a852d381">')</script>
+<script>tcjSoloMaster('<script src="js/master-libreria.js?v=09a78135"><\/script>')</script>
 <link rel="stylesheet" href="css/29-tema-oro-auto.css?v=9662033c">
 <link rel="stylesheet" href="css/30-tema-oro.css?v=7f2d2bcb">
 <script src="js/tema-oro.js?v=55e2f2f3"></script>
@@ -315,7 +315,7 @@ if(!window.TCJ_LEGGERO)document.write('<script src="js/intro.js?v=fdb394c0"><\/s
 <script src="js/reliquie-bacheca.js?v=5d5596d7"></script>
 <script src="js/nave-reliquie.js?v=808b76f7"></script>
 <script src="js/incontri.js?v=fea1ffd4"></script>
-<script src="js/master-incontri.js?v=434307da"></script>
+<script>tcjSoloMaster('<script src="js/master-incontri.js?v=434307da"><\/script>')</script>
 <script src="js/particelle-sfondo.js?v=51bcbc83"></script>
 <script src="js/risparmio.js?v=7a45fb6b"></script>
 <script>/* Stili dei temi del sito: si scarica solo quello del tema scelto (gli altri non pesano sulla pagina).

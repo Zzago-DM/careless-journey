@@ -18,3 +18,8 @@ var MD = [], AD = [], MND = [], TCJ_MASTER = null;
 function tcjMasterSezione(){
   tcjSezione(TCJ_MASTER ? TCJ_MASTER.html : '<div id="ms" style="display:none"></div>');
 }
+
+/* I programmi e gli stili della Zona Master si scaricano SOLO sui dispositivi con il token del Master:
+   in index.html sono scritti dentro tcjSoloMaster('…'). Per tutti gli altri non partono nemmeno.
+   Restano per tutti solo questo file, l'accesso (master-accesso.js) e l'animazione del sigillo (sezioni/sblocco-master.js). */
+function tcjSoloMaster(tag){ if(TCJ_MASTER) document.write(tag); }
