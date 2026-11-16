@@ -76,18 +76,18 @@
   var scheda = CAT.some(function(c){ return c[0] === pref().scheda; }) ? pref().scheda : "pers";
   var filtroK = "";
   /* categorie scelte dal Master: tcj-master/telegram/categorie.json, con una copia su questo dispositivo */
-  var F_CAT = "telegram/categorie.json", MAPPA = (pref().mappa || {}), shaCat = pref().shaCat || null, tCat = null;
+  var F_CAT = "telegram/categorie.json", MAPPA = (pref().mappa || {}), CHIUSE = (pref().chiuse || {}), shaCat = pref().shaCat || null, tCat = null;
   function caricaMappa(){
     if(!token()) return Promise.resolve();
     return gh("/contents/" + F_CAT).then(function(r){ return r.json(); }).then(function(j){
       var d = JSON.parse(b64d(j.content || "")); shaCat = j.sha;
-      if(!pref().mappaSporca){ MAPPA = d.cartelle || {}; salvaPref({ mappa: MAPPA, shaCat: shaCat }); } else salvaMappa();
+      if(!pref().mappaSporca){ MAPPA = d.cartelle || {}; CHIUSE = {}; (d.chiuse || []).forEach(function(k){ CHIUSE[k] = 1; }); salvaPref({ mappa: MAPPA, chiuse: CHIUSE, shaCat: shaCat }); } else salvaMappa();
     }).catch(function(e){ if(e === 404){ shaCat = null; if(pref().mappaSporca) salvaMappa(); } });
   }
   function salvaMappa(){
-    salvaPref({ mappa: MAPPA, mappaSporca: true }); clearTimeout(tCat);
+    salvaPref({ mappa: MAPPA, chiuse: CHIUSE, mappaSporca: true }); clearTimeout(tCat);
     tCat = setTimeout(function(){
-      var corpo = { message: "Mostra su Telegram: categorie delle cartelle", content: b64e(JSON.stringify({ v: 1, cartelle: MAPPA }, null, 1)) };
+      var corpo = { message: "Mostra su Telegram: categorie delle cartelle", content: b64e(JSON.stringify({ v: 1, cartelle: MAPPA, chiuse: Object.keys(CHIUSE).sort() }, null, 1)) };
       if(shaCat) corpo.sha = shaCat;
       ghScrivi("/contents/" + F_CAT, corpo).then(function(j){ shaCat = j.content && j.content.sha; salvaPref({ shaCat: shaCat, mappaSporca: false }); })
         .catch(function(e){
@@ -357,10 +357,15 @@
       R.forEach(function(x){ var k = cat === "da" ? (x.dove || "").split(" › ")[0] : (x.dove || ""); if(!per[k]){ per[k] = []; gruppi.push(k); } per[k].push(x); });
       gruppi.sort(ord);
       var flat = [], html = tanti ? '<p class="mtg-n">Mostro le prime ' + MAX_CAT + ' immagini: cerca per nome per trovare le altre.</p>' : "";
+      /* le cartelle chiuse mostrano solo il nome: le loro miniature si caricano quando le apri (cercando, si aprono tutte) */
+      var chiusa = function(k){ return !q && CHIUSE[k || "."]; };
+      el2._gr = {};
       gruppi.forEach(function(k){
-        html += '<div class="mtg-gr"><span class="mtg-grn">📁 ' + esc(k || radice.nome) + '</span><label class="mtg-sp">' + (cat === "da" ? "Metti in" : "Sposta in") + ' <select data-sposta="' + esc(k || ".") + '">'
+        var ch = chiusa(k), da = flat.length, tess = per[k].map(function(x){ flat.push(x.f); return tessera(x.f, flat.length - 1, cat === "da" && x.dove !== k ? x.dove : ""); }).join("");
+        el2._gr[k || "."] = tess;
+        html += '<div class="mtg-gr' + (ch ? " mtg-chiuso" : "") + '"><button type="button" class="mtg-grn" data-tendina="' + esc(k || ".") + '" aria-expanded="' + !ch + '" title="' + (ch ? "Apri" : "Chiudi") + ' la cartella"><span class="mtg-fr" aria-hidden="true">▾</span>📁 ' + esc(k || radice.nome) + ' <span class="mtg-cnt">' + per[k].length + '</span></button><label class="mtg-sp">' + (cat === "da" ? "Metti in" : "Sposta in") + ' <select data-sposta="' + esc(k || ".") + '">'
           + Object.keys(NOMI_CAT).map(function(z){ return '<option value="' + z + '"' + (z === cat ? " selected" : "") + '>' + NOMI_CAT[z] + '</option>'; }).join("") + '</select></label></div>'
-          + '<div class="mtg-griglia">' + per[k].map(function(x){ flat.push(x.f); return tessera(x.f, flat.length - 1, cat === "da" && x.dove !== k ? x.dove : ""); }).join("") + '</div>';
+          + '<div class="mtg-griglia" data-di="' + esc(k || ".") + '">' + (ch ? "" : tess) + '</div>';
       });
       el2.innerHTML = html; collegaTessere(el2, flat);
     });
@@ -475,6 +480,16 @@
     if(su){ percorso = percorso.slice(0, +su.getAttribute("data-su") + 1); filtroC = ""; salvaPref({ percorso: percorso.slice(1).map(function(n){ return n.nome; }) }); disegnaCartella(); return; }
     var cr = e.target.closest("[data-cart]"), el = document.getElementById("mtg-el");
     if(cr && el && el._r){ percorso.push(el._r.cart[+cr.getAttribute("data-cart")]); salvaPref({ percorso: percorso.slice(1).map(function(n){ return n.nome; }) }); disegnaCartella(); return; }
+    var td = e.target.closest("[data-tendina]");
+    if(td){
+      var kd = td.getAttribute("data-tendina"), hd = td.closest("#mtg-el"), gr = td.closest(".mtg-gr"), apri = gr.classList.contains("mtg-chiuso");
+      if(apri) delete CHIUSE[kd]; else CHIUSE[kd] = 1;
+      gr.classList.toggle("mtg-chiuso", !apri); td.setAttribute("aria-expanded", String(apri)); td.title = (apri ? "Chiudi" : "Apri") + " la cartella";
+      var gg = Array.prototype.filter.call(hd.querySelectorAll(".mtg-griglia[data-di]"), function(g){ return g.getAttribute("data-di") === kd; })[0];
+      if(gg && apri && !gg.children.length && hd._gr){ gg.innerHTML = hd._gr[kd] || ""; collegaTessere(gg, hd._file); hd._file = gg._file; }
+      else if(gg && !apri){ gg.querySelectorAll("img[src^='blob:']").forEach(function(i){ try { URL.revokeObjectURL(i.src); } catch(_){} }); gg.innerHTML = ""; }
+      salvaMappa(); return;
+    }
     var tf = e.target.closest(".mtg-t[data-f]");
     if(tf){ var host = tf.closest("#mtg-el"); if(host && host._file) apriFile(host._file[+tf.getAttribute("data-f")]); return; }
     var tp = e.target.closest(".mtg-t[data-pid]");
