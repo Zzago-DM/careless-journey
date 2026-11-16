@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-11-16T17:37:58.000Z",
+ "aggiornato": "2026-11-16T17:56:15.784Z",
  "personaggi": [
   {
    "id": "r-arkan-drew",
@@ -30,7 +30,7 @@
    "id": "pmvexyrhyprg7",
    "nome": "Atreo Silver",
    "continente": "glaciale",
-   "foto": "img/incontri/pmvexyrhyprg7-1x7b274.webp",
+   "foto": "img/incontri/pmvexyrhyprg7-azsr5e.webp",
    "formati": [
     "3:4"
    ]
@@ -42,7 +42,7 @@
    "fazioni": [
     "Slayer"
    ],
-   "foto": "img/incontri/pmvfjzoxddmq3-1ghmmb4.webp",
+   "foto": "img/incontri/pmvfjzoxddmq3-1h2bypk.webp",
    "formati": [
     "3:4"
    ]
@@ -64,7 +64,7 @@
    "fazioni": [
     "Guardie di Ostia"
    ],
-   "foto": "img/incontri/pmvexqygit6c0-e6wdu3.webp",
+   "foto": "img/incontri/pmvexqygit6c0-1dvkt27.webp",
    "formati": [
     "3:4"
    ]
@@ -107,9 +107,9 @@
     "Governatore",
     "Mael"
    ],
-   "foto": "img/estarossa.webp",
+   "foto": "img/incontri/r-estarossa-1i8w8ls.webp",
    "formati": [
-    "1:1"
+    "4:5"
    ]
   },
   {
