@@ -165,7 +165,7 @@
       var d = JSON.parse(b64d(j.content || ""));
       P = (d.personaggi || []).filter(function(p){ return p && p.id; }).map(function(p){
         var foti = (p.foti || (p.foto ? [p.foto] : [])).filter(function(f){ return f && f.file; });
-        return { id: p.id, nome: p.nome || "", vista: p.nome || "(senza nome)", foti: foti, pub: !!(p.vis && p.vis.mostra) };
+        return { id: p.id, nome: p.nome || "", vista: p.nome || "…", foti: foti, pub: !!(p.vis && p.vis.mostra) };
       }).sort(function(a, b){ return ord(a.vista, b.vista); });
     }).catch(function(e){
       pErr = e === 401 ? "Il token del Master non è più valido." : (e === 403 || e === 404) ? "Il token del Master non apre tcj-master." : "Non riesco a raggiungere GitHub: controlla la connessione e riprova.";

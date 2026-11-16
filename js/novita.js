@@ -69,6 +69,10 @@
       "Per avvicinarsi di più allo <b>stile originale di Dauntless</b>, i disegni dei personaggi che avete incontrato sono stati <b>rifatti</b>: adesso seguono lo stesso stile del videogioco.",
       "Li trovate nella sezione <b>Incontri</b>."
     ]}
+    ,{ id: "2026-11-chat-gruppo", i: "👥", t: "Chat di gruppo", p: [
+      "Nella linguetta <b>✉ Messaggi</b>, sul lato destro, adesso ci sono due chat: <b>🔒 Con il Master</b>, la vostra chat privata come prima, e <b>👥 Gruppo</b>, dove scrivete tutti insieme, Master compreso.",
+      "Con <b>☑ Seleziona</b> potete scegliere i vostri messaggi ed eliminarli con <b>🗑 Elimina</b>: spariscono per tutti."
+    ]}
   ];
   var KV = "tcj-novita-viste", KD = "tcj-dispositivo";
   var L = null; try { L = window.localStorage; L.setItem("tcj-prova", "1"); L.removeItem("tcj-prova"); } catch(e){ L = null; }
