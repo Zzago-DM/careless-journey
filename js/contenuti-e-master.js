@@ -112,14 +112,18 @@ function npcStep(d){
 function npcSyncLvl(){
   document.getElementById("npc-lvl-val").textContent=document.getElementById("npc-lvl").value;
 }
+/* Quantità: un numero da scrivere (1–99), con − e + accanto */
+const NPC_QMAX=99;
 function npcSetQty(q){
-  npcQty=q;
-  buildNpcQtyBtns();
+  q=parseInt(q,10);npcQty=Math.max(1,Math.min(NPC_QMAX,isNaN(q)?1:q));
+  const inp=document.getElementById("npc-qty");if(inp&&+inp.value!==npcQty)inp.value=npcQty;
 }
 function buildNpcQtyBtns(){
   const el=document.getElementById("npc-qty-btns");
   if(!el)return;
-  el.innerHTML=[1,2,3,4,5,6].map(q=>`<button onclick="npcSetQty(${q})" style="flex:1;padding:.45rem;font-family:'Cinzel',serif;font-size:.7rem;border:1px solid ${q===npcQty?'var(--master)':'rgba(200,56,56,.2)'};background:${q===npcQty?'rgba(200,56,56,.15)':'transparent'};color:${q===npcQty?'var(--master2)':'#a08080'};cursor:pointer;transition:all .2s">${q}</button>`).join("");
+  el.innerHTML=`<div class="npc-qty"><button type="button" class="sc-cnt-btn" onclick="npcSetQty(npcQty-1)" aria-label="Uno in meno">−</button>`
+    +`<input type="number" id="npc-qty" min="1" max="${NPC_QMAX}" step="1" inputmode="numeric" value="${npcQty}" aria-label="Quanti dossier generare" oninput="if(this.value!=='')npcSetQty(this.value)" onchange="npcSetQty(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();npcSetQty(this.value);npcGenerate()}">`
+    +`<button type="button" class="sc-cnt-btn" onclick="npcSetQty(npcQty+1)" aria-label="Uno in più">+</button></div>`;
 }
 /* Dossier umanoidi: tenuti come dati (NPC_DOSS) così si possono salvare e ritrovare su ogni dispositivo del Master */
 let NPC_DOSS=[];
@@ -138,30 +142,30 @@ function npcGenerate(){
   npcRender();npcSalva();
 }
 function npcCard(d){
-  const cls="sc"+(d.cur===0?" npc-down":(d.cur<=d.hp/4?" npc-low":""));
+  const cls="sc npc-card"+(d.cur===0?" npc-down":(d.cur<=d.hp/4?" npc-low":""));
   const anim=d.nuovo?` style="animation:npcStamp .4s ease-out both;animation-delay:${(d.nuovo-1)*70}ms"`:"";
   return `<div class="${cls}" data-id="${d.id}"${anim}>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
-        <div style="flex:1;min-width:0"><span class="scl" style="margin-bottom:0">${plEsc(d.role)}</span></div>
-        <div style="text-align:right;flex-shrink:0;margin-left:.6rem;display:flex;align-items:center;gap:.6rem">
+      <div class="npc-head">
+        <div class="npc-tit"><span class="scl" style="margin-bottom:0">${plEsc(d.role)}</span></div>
+        <div class="npc-ctl">
           <div class="npc-pv"><div class="npc-pv-l">PV</div><div class="npc-pv-n"><span class="npc-cur">${d.cur}</span><span class="npc-max">/${d.hp}</span></div></div>
           <div class="npc-dmg"><input type="number" inputmode="numeric" placeholder="0" aria-label="PV da togliere" title="Scrivi i danni e premi Invio (un numero negativo cura)" onkeydown="if(event.key==='Enter'){event.preventDefault();npcDmg(this)}"><button type="button" onclick="npcDmg(this.previousElementSibling)" title="Togli PV">−</button></div>
           <span style="font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.08em;border:1px solid var(--master);color:var(--master2);padding:.15rem .55rem">LV. ${d.level}</span>
           <button type="button" class="npc-x" onclick="npcDel('${d.id}')" title="Elimina questo dossier" aria-label="Elimina questo dossier">✕</button>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
-        ${NPC_STATS.map(s=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:.45rem .65rem;background:rgba(255,255,255,.02);border:1px solid rgba(200,56,56,.1)">
-          <span style="color:#a08080;font-size:.76rem">${s.l}</span>
-          <span style="font-family:'Cinzel',serif;font-size:.85rem;color:var(--text)">${d.stats[s.k]} <b style="color:var(--master2)">${npcMod(d.stats[s.k])}</b></span>
+      <div class="npc-stats">
+        ${NPC_STATS.map(s=>`<div class="npc-st" title="${s.l}">
+          <span class="npc-st-l">${s.k}</span>
+          <span class="npc-st-v">${d.stats[s.k]} <b>${npcMod(d.stats[s.k])}</b></span>
         </div>`).join("")}
       </div>
-      <div style="margin-top:.5rem;font-size:.68rem;color:#806060;font-style:italic">PV = (5 + bonus COST ${npcMod(d.stats.COST)}) × Lv.${d.level} = ${d.hp}</div>
+      <div class="npc-form">PV = (5 + bonus COST ${npcMod(d.stats.COST)}) × Lv.${d.level} = ${d.hp}</div>
     </div>`;
 }
 function npcRender(){
   const el=document.getElementById("npc-results");if(!el)return;
-  el.innerHTML=(NPC_DOSS.length?`<div class="npc-tools"><span>${NPC_DOSS.length} ${NPC_DOSS.length===1?"dossier":"dossier"} salvati</span><button type="button" class="npc-clear" onclick="npcClear()">Svuota tutti</button></div>`:"")+NPC_DOSS.map(npcCard).join("");
+  el.innerHTML=(NPC_DOSS.length?`<div class="npc-tools"><span>${NPC_DOSS.length} ${NPC_DOSS.length===1?"dossier":"dossier"} salvati</span><button type="button" class="npc-clear" onclick="npcClear()">Svuota tutti</button></div>`:"")+(NPC_DOSS.length?`<div class="npc-griglia">${NPC_DOSS.map(npcCard).join("")}</div>`:"");
   NPC_DOSS.forEach(d=>{delete d.nuovo;});
 }
 function npcDel(id){const d=NPC_DOSS.find(x=>x.id===id);tcjConferma({titolo:"Eliminare questo dossier?",testo:"Il dossier"+(d&&d.role?" <b>"+String(d.role).replace(/</g,"&lt;")+"</b>":"")+" verrà tolto dai dossier umanoidi.",si:"Sì, elimina",attesa:0}).then(function(ok){if(!ok)return;NPC_DOSS=NPC_DOSS.filter(d=>d.id!==id);sfxPlay("drop");npcRender();npcSalva();});}
