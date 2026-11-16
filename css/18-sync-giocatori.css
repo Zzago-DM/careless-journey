@@ -154,3 +154,6 @@ html.tcj-attesa, html.tcj-attesa *{cursor:progress!important}
 html[data-zm=oro] .npc-st{border-color:rgba(242,177,27,.15)}
 html[data-zm=oro] .npc-st-l{color:#bca671}
 html[data-zm=oro] .npc-qty input{border-color:rgba(242,177,27,.35)}
+.npc-tit{display:flex;align-items:center;gap:.5rem;min-width:0}
+.npc-num{flex-shrink:0;font-family:"Cinzel",serif;font-size:.72rem;font-weight:700;color:#fff;background:rgba(200,56,56,.35);border:1px solid var(--master);padding:.1rem .45rem;border-radius:3px}
+html[data-zm=oro] .npc-num{background:rgba(242,177,27,.25);border-color:rgba(242,177,27,.6)}

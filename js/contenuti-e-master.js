@@ -133,10 +133,13 @@ function npcGenerate(){
   const level=parseInt(document.getElementById("npc-lvl").value);
   const role=document.getElementById("npc-role").value.trim()||"Umanoide";
   const nuovi=[];
+  npcNumera();
+  /* numero progressivo per ruolo: la nuova Guardia di Ostia continua da dove arriva l'ultima */
+  let base=NPC_DOSS.filter(d=>d.role===role).reduce((m,d)=>Math.max(m,d.num||0),0);
   for(let i=0;i<npcQty;i++){
     const stats=npcRollStats(level);
     const hp=(5+Math.floor((stats.COST-10)/2))*level;
-    nuovi.push({id:"d"+Date.now().toString(36)+i+Math.random().toString(36).slice(2,5),role:role,level:level,stats:stats,hp:hp,cur:hp,nuovo:i+1});
+    nuovi.push({id:"d"+Date.now().toString(36)+i+Math.random().toString(36).slice(2,5),role:role,num:base+i+1,level:level,stats:stats,hp:hp,cur:hp,nuovo:i+1});
   }
   NPC_DOSS=nuovi.concat(NPC_DOSS);
   npcRender();npcSalva();
@@ -146,7 +149,7 @@ function npcCard(d){
   const anim=d.nuovo?` style="animation:npcStamp .4s ease-out both;animation-delay:${(d.nuovo-1)*70}ms"`:"";
   return `<div class="${cls}" data-id="${d.id}"${anim}>
       <div class="npc-head">
-        <div class="npc-tit"><span class="scl" style="margin-bottom:0">${plEsc(d.role)}</span></div>
+        <div class="npc-tit"><span class="npc-num">#${d.num||"?"}</span><span class="scl" style="margin-bottom:0">${plEsc(d.role)}</span></div>
         <div class="npc-ctl">
           <div class="npc-pv"><div class="npc-pv-l">PV</div><div class="npc-pv-n"><span class="npc-cur">${d.cur}</span><span class="npc-max">/${d.hp}</span></div></div>
           <div class="npc-dmg"><input type="number" inputmode="numeric" placeholder="0" aria-label="PV da togliere" title="Scrivi i danni e premi Invio (un numero negativo cura)" onkeydown="if(event.key==='Enter'){event.preventDefault();npcDmg(this)}"><button type="button" onclick="npcDmg(this.previousElementSibling)" title="Togli PV">−</button></div>
@@ -163,7 +166,14 @@ function npcCard(d){
       <div class="npc-form">PV = (5 + bonus COST ${npcMod(d.stats.COST)}) × Lv.${d.level} = ${d.hp}</div>
     </div>`;
 }
+/* i dossier salvati prima dei numeri: li numero per ruolo, dal più vecchio */
+function npcNumera(){
+  const per={};
+  NPC_DOSS.slice().reverse().forEach(d=>{per[d.role]=Math.max(per[d.role]||0,d.num||0);});
+  NPC_DOSS.slice().reverse().forEach(d=>{if(!d.num){per[d.role]=(per[d.role]||0)+1;d.num=per[d.role];}});
+}
 function npcRender(){
+  npcNumera();
   const el=document.getElementById("npc-results");if(!el)return;
   el.innerHTML=(NPC_DOSS.length?`<div class="npc-tools"><span>${NPC_DOSS.length} ${NPC_DOSS.length===1?"dossier":"dossier"} salvati</span><button type="button" class="npc-clear" onclick="npcClear()">Svuota tutti</button></div>`:"")+(NPC_DOSS.length?`<div class="npc-griglia">${NPC_DOSS.map(npcCard).join("")}</div>`:"");
   NPC_DOSS.forEach(d=>{delete d.nuovo;});
