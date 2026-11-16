@@ -123,11 +123,13 @@
   /* ---------- la plancia di comando ---------- */
   function nn(t){ return String(t || "").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
   var GRUPPI = [
-    { id: "rapidi", t: "⚡ Strumenti rapidi", regole: [[/incontr/, "👥"], [/reliqui|artefatt/, "🏺"], [/telegram/, "📤"]] },
-    { id: "tavolo", t: "🎲 Al tavolo", regole: [[/sessione/, "🎬"], [/aree dei giocatori|giocatori online|in diretta/, "🧾"], [/plancia/, "🐉"], [/stiva/, "📦"], [/combatt|iniziativ/, "⚔"]] },
+    { id: "rapidi", t: "⚡ Strumenti rapidi", regole: [[/incontr/, "👥"], [/reliqui/, "🏺"], [/telegram/, "📤"]] },
+    { id: "tavolo", t: "🎲 Al tavolo", regole: [[/sessione/, "🎬"], [/aree dei giocatori|giocatori online|in diretta/, "🧾"], [/plancia/, "🐉"], [/stiva/, "📦"], [/omnicell/, "🔓"], [/generatore|statistiche/, "🎲"], [/combatt|iniziativ/, "⚔"]] },
     { id: "mondo", t: "🌍 Mondo e personaggi", regole: [[/\bmael\b/, "🌀"], [/maestr/, "🎓"], [/npc|png|personagg/, "🎭"], [/behemoth|bestiar|mostr/, "🐲"], [/fazion|gilda/, "⚜"], [/mapp|luogh|isol|contin/, "🗺"]] },
-    { id: "appunti", t: "📝 Appunti e segreti", regole: [[/note|appunt/, "📝"], [/dossier/, "🗂"], [/segret|twist|trama|lore|retroscen/, "🔒"], [/timeline|calendar|cronolog/, "📅"]] }
+    { id: "appunti", t: "📝 Appunti e segreti", regole: [[/note|appunt/, "📝"], [/dossier/, "🗂"], [/tradiment|storia reale/, "🕯"], [/voidstar/, "🗡"], [/mediatore|identita nascost/, "🎭"], [/segret|nascost|twist|trama|lore|retroscen/, "🔒"], [/timeline|calendar|cronolog/, "📅"]] }
   ];
+  /* ordine in cui si cercano le regole: i segreti prima del mondo («Segreti dei Personaggi» va tra i segreti) */
+  var PRIORITA = ["rapidi", "tavolo", "appunti", "mondo"];
   var VISTA_K = "tcj-zm-vista", vista = "plancia";
   try { vista = localStorage.getItem(VISTA_K) === "libreria" ? "libreria" : "plancia"; } catch(_){}
   var plancia = document.createElement("div");
@@ -136,7 +138,7 @@
     var per = {}; GRUPPI.concat([{ id: "altro", t: "✦ Altri capitoli", regole: [] }]).forEach(function(g){ per[g.id] = { g: g, L: [] }; });
     libri.forEach(function(b, i){
       var t = nn(b._t + " " + b._sub), dove = "altro", ico = "✦", ord = 99;
-      GRUPPI.some(function(g){ return g.regole.some(function(r, k){ if(r[0].test(t)){ dove = g.id; ico = r[1]; ord = k; return true; } }); });
+      PRIORITA.some(function(id){ var g = GRUPPI.filter(function(x){ return x.id === id; })[0]; return g.regole.some(function(r, k){ if(r[0].test(t)){ dove = g.id; ico = r[1]; ord = k; return true; } }); });
       per[dove].L.push({ i: i, b: b, ico: ico, ord: ord });
     });
     var h = '<div class="pc-testa"><span class="pc-titolo">Plancia di comando</span><button type="button" class="pc-vista" data-vista="libreria">📚 Libreria</button></div>';
