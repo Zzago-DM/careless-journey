@@ -126,13 +126,17 @@
   /* =================== PERSONAGGI =================== */
   var RAPP = { "3:4": [600, 800], "4:3": [800, 600], "9:16": [540, 960], "16:9": [960, 540] };
   function misura(fo){ return RAPP[fo && fo.r] || [640, 800]; }
-  var immagini = {};
-  function immagine(fo){
-    var sito = /^sito:/.test(fo.file), chiave = (sito ? "" : fo.sfondo ? "s:" : "f:") + fo.file;
+  var immagini = {}, ORIG = {};
+  /* sf: true = versione con lo sfondo (incontri/originali), false = scontornata (incontri/foto); di base quella scelta nell'editor */
+  function conSfondo(fo, sf){ return sf == null ? !!fo.sfondo : sf; }
+  function haDue(fo){ return !/^sito:/.test(fo.file) && !!ORIG[fo.file]; }
+  function immagine(fo, sf){
+    sf = conSfondo(fo, sf) && !/^sito:/.test(fo.file);
+    var sito = /^sito:/.test(fo.file), chiave = (sito ? "" : sf ? "s:" : "f:") + fo.file;
     if(immagini[chiave]) return immagini[chiave];
     var pr = inCoda(function(){
       var b = sito ? fetch(fo.file.replace(/^sito:/, "")).then(function(r){ if(!r.ok) throw r.status; return r.blob(); })
-        : gh("/contents/" + (fo.sfondo ? D_ORIG : D_FOTO) + "/" + encodeURIComponent(fo.file), true).then(function(r){ return r.blob(); });
+        : gh("/contents/" + (sf ? D_ORIG : D_FOTO) + "/" + encodeURIComponent(fo.file), true).then(function(r){ return r.blob(); });
       return b.then(function(bl){ return new Promise(function(ris, rif){ var im = new Image(), u = URL.createObjectURL(bl); im.onload = function(){ ris(im); }; im.onerror = rif; im.src = u; }); });
     });
     immagini[chiave] = pr; pr.catch(function(){ delete immagini[chiave]; });
@@ -155,12 +159,14 @@
   function caricaPers(){
     if(pCarico) return; pCarico = true; pErr = "";
     if(!token()){ pErr = "Serve il token GitHub del Master su questo dispositivo."; pCarico = false; disegnaPers(); return; }
-    gh("/contents/" + F_DATI).then(function(r){ return r.json(); }).then(function(j){
+    /* quali foto hanno anche la versione con lo sfondo */
+    gh("/contents/" + D_ORIG).then(function(r){ return r.json(); }).then(function(L){ ORIG = {}; (L || []).forEach(function(f){ if(f && f.name) ORIG[f.name] = 1; }); }).catch(function(){})
+    .then(function(){ return gh("/contents/" + F_DATI); }).then(function(r){ return r.json(); }).then(function(j){
       var d = JSON.parse(b64d(j.content || ""));
-      P = (d.personaggi || []).filter(function(p){ return p && p.nome; }).map(function(p){
+      P = (d.personaggi || []).filter(function(p){ return p && p.id; }).map(function(p){
         var foti = (p.foti || (p.foto ? [p.foto] : [])).filter(function(f){ return f && f.file; });
-        return { id: p.id, nome: p.nome, foti: foti, pub: !!(p.vis && p.vis.mostra) };
-      }).sort(function(a, b){ return ord(a.nome, b.nome); });
+        return { id: p.id, nome: p.nome || "", vista: p.nome || "(senza nome)", foti: foti, pub: !!(p.vis && p.vis.mostra) };
+      }).sort(function(a, b){ return ord(a.vista, b.vista); });
     }).catch(function(e){
       pErr = e === 401 ? "Il token del Master non è più valido." : (e === 403 || e === 404) ? "Il token del Master non apre tcj-master." : "Non riesco a raggiungere GitHub: controlla la connessione e riprova.";
     }).then(function(){ pCarico = false; if(scheda === "pers") disegnaPers(); });
@@ -172,13 +178,14 @@
       if(!pErr) caricaPers();
       return;
     }
-    var L = P.filter(function(p){ return !filtroP || norm(p.nome).indexOf(norm(filtroP)) >= 0; });
+    var L = P.filter(function(p){ return !filtroP || norm(p.vista).indexOf(norm(filtroP)) >= 0; });
     c.innerHTML = '<div class="mtg-barra"><input type="search" id="mtg-cp" placeholder="Cerca un personaggio…" value="' + esc(filtroP) + '" aria-label="Cerca un personaggio">'
       + '<button type="button" class="bk-btn mtg-sec" data-az="ricaricaP" title="Rileggi l\'elenco">↻</button></div>'
+      + '<div class="mtg-g mtg-g1">Dalla sezione Incontri</div><p class="mtg-n mtg-pic">Tutti i personaggi del registro degli Incontri. «Non pubblicato» vuol dire che i giocatori non lo vedono ancora sul sito.</p>'
       + (L.length ? '<div class="mtg-griglia">' + L.map(function(p){
         return '<button type="button" class="mtg-t" data-pid="' + esc(p.id) + '"' + (p.foti.length ? "" : " disabled") + '>'
           + '<span class="mtg-m">' + (p.foti.length ? '<canvas width="150" height="190"></canvas>' : '<span class="mtg-nf">senza foto</span>') + '</span>'
-          + '<span class="mtg-nome">' + esc(p.nome) + '</span>'
+          + '<span class="mtg-nome">' + esc(p.vista) + '</span>'
           + (p.pub ? "" : '<span class="mtg-bdg" title="I giocatori non lo vedono ancora nella sezione Incontri">non pubblicato</span>')
           + (p.foti.length > 1 ? '<span class="mtg-piu">' + p.foti.length + ' foto</span>' : "") + '</button>';
       }).join("") + '</div>' : '<p class="mtg-n">' + (P.length ? "Nessun personaggio con questo nome." : "Nella sezione Incontri non c'è ancora nessuno.") + '</p>')
@@ -197,15 +204,26 @@
     x.drawImage(src, (cv.width - src.width * k) / 2, (cv.height - src.height * k) / 2, src.width * k, src.height * k);
   }
   function apriPers(p){
-    var i = 0;
+    var i = 0, sf = null;
+    function opzSfondo(){
+      var fo = p.foti[i]; if(!haDue(fo)) return "";
+      var con = conSfondo(fo, sf);
+      return '<div class="mtg-sf" role="radiogroup" aria-label="Sfondo"><label><input type="radio" name="mtg-sf" value="senza"' + (con ? "" : " checked") + '> Senza sfondo</label>'
+        + '<label><input type="radio" name="mtg-sf" value="con"' + (con ? " checked" : "") + '> Con sfondo</label></div>';
+    }
     finestra({
-      titolo: p.nome, nota: p.pub ? "" : "Non è ancora pubblicato: i giocatori non lo trovano nella sezione Incontri.",
+      titolo: p.vista, nota: p.pub ? "" : "Non è ancora pubblicato: i giocatori non lo trovano nella sezione Incontri.",
       foti: p.foti.length > 1 ? p.foti : null,
-      anteprima: function(img, k){ i = k == null ? i : k; return immagine(p.foti[i]).then(function(im){ img.src = ritaglio(im, p.foti[i], 1).toDataURL("image/png"); }); },
-      opzioni: '<label class="mtg-ck"><input type="checkbox" id="mtg-nm"' + (p.pub ? " checked" : "") + '> Scrivi il nome sotto la foto</label>',
+      anteprima: function(img, k, ov){
+        if(k != null && k !== i){ i = k; sf = null; }
+        var box = ov && ov.querySelector(".mtg-sfbox"); if(box) box.innerHTML = opzSfondo();
+        return immagine(p.foti[i], sf).then(function(im){ img.src = ritaglio(im, p.foti[i], 1).toDataURL("image/png"); });
+      },
+      cambia: function(e){ if(e.target.name === "mtg-sf"){ sf = e.target.value === "con"; return true; } },
+      opzioni: '<div class="mtg-sfbox"></div>' + (p.nome ? '<label class="mtg-ck"><input type="checkbox" id="mtg-nm"' + (p.pub ? " checked" : "") + '> Scrivi il nome sotto la foto</label>' : ""),
       manda: function(ov){
-        var col = ov.querySelector("#mtg-nm").checked;
-        return immagine(p.foti[i]).then(function(im){ return TCJTG.foto(ritaglio(im, p.foti[i], 1.5), col ? p.nome : ""); });
+        var nm = ov.querySelector("#mtg-nm"), col = nm && nm.checked;
+        return immagine(p.foti[i], sf).then(function(im){ return TCJTG.foto(ritaglio(im, p.foti[i], 1.5), col ? p.nome : ""); });
       }
     });
   }
@@ -347,9 +365,11 @@
       el2.innerHTML = html; collegaTessere(el2, flat);
     });
   }
+  /* nomi dei file con l'iniziale maiuscola (solo nella vista: i file restano come sono) */
+  function bello(n){ return String(n || "").replace(/\.[^.]+$/, "").replace(/(^|[\s\-“"(])([a-zà-ù])/g, function(_, a, b){ return a + b.toUpperCase(); }); }
   function tessera(f, i, dove){
     return '<button type="button" class="mtg-t" data-f="' + i + '" title="' + esc((dove ? dove + " › " : "") + f.nome) + '"><span class="mtg-m"><img alt=""></span>'
-      + '<span class="mtg-nome">' + esc(f.nome.replace(/\.[^.]+$/, "")) + '</span>' + (dove ? '<span class="mtg-dove">' + esc(dove) + '</span>' : "") + '</button>';
+      + '<span class="mtg-nome">' + esc(bello(f.nome)) + '</span>' + (dove ? '<span class="mtg-dove">' + esc(dove) + '</span>' : "") + '</button>';
   }
   function collegaTessere(el, file){
     el._file = file;
@@ -398,7 +418,7 @@
   function apriFile(f){
     var file = null;
     finestra({
-      titolo: f.nome.replace(/\.[^.]+$/, ""),
+      titolo: bello(f.nome),
       anteprima: function(img){ return f.prendi().then(function(fl){ file = fl; var u = URL.createObjectURL(fl); img.onload = function(){ setTimeout(function(){ URL.revokeObjectURL(u); }, 1000); }; img.src = u; }); },
       opzioni: '<label class="mtg-l">Scritta sotto la foto (facoltativa)<input type="text" id="mtg-did" maxlength="200" placeholder="Es. Il porto di Ramsgate"></label>'
         + '<label class="mtg-ck"><input type="checkbox" id="mtg-file"' + (/\.gif$/i.test(f.nome) ? " checked" : "") + '> Qualità piena (come file: per le mappe grandi, le GIF animate)</label>',
@@ -423,11 +443,12 @@
       + '<div class="mtg-riga"><button type="button" class="bk-btn mtg-big" data-az="manda"' + (bot() ? "" : " disabled") + '>📤 Manda nel gruppo</button><button type="button" class="bk-btn mtg-sec" data-az="annulla">Annulla</button></div></div>';
     document.body.appendChild(ov); document.documentElement.classList.add("mtg-aperta");
     var img = ov.querySelector(".mtg-prev img"), att = ov.querySelector(".mtg-prev .mtg-n"), inviando = false;
-    function prev(k){ att.hidden = false; img.hidden = true; o.anteprima(img, k).then(function(){ att.hidden = true; img.hidden = false; }).catch(function(){ att.textContent = "Non riesco a leggere l'immagine."; }); }
+    function prev(k){ att.hidden = false; img.hidden = true; o.anteprima(img, k, ov).then(function(){ att.hidden = true; img.hidden = false; }).catch(function(){ att.textContent = "Non riesco a leggere l'immagine."; }); }
     prev(0);
     function chiudi(){ ov.remove(); document.documentElement.classList.remove("mtg-aperta"); document.removeEventListener("keydown", tasto, true); }
     function tasto(e){ if(e.key === "Escape" && !inviando){ e.stopPropagation(); chiudi(); } }
     document.addEventListener("keydown", tasto, true);
+    ov.addEventListener("change", function(e){ if(o.cambia && o.cambia(e)) prev(); });
     ov.addEventListener("click", function(e){
       if(e.target === ov && !inviando) return chiudi();
       var k = e.target.closest("[data-k]");

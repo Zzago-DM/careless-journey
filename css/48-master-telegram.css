@@ -69,3 +69,7 @@ html[data-zm=oro] #mtg .mtg-t:hover:not(:disabled),html[data-zm=oro] #mtg .mtg-t
 #mtg .mtg-sp select{background:rgba(0,0,0,.35);color:var(--text,#d0c8b8);border:1px solid rgba(var(--gold-rgb,200,168,75),.3);padding:.35rem .4rem;min-height:36px;font-family:"Crimson Pro",Georgia,serif;font-size:.95rem;text-transform:none;letter-spacing:0}
 html[data-zm=oro] #mtg .mtg-g{color:var(--gold2,#e8c870);border-color:rgba(232,200,112,.25)}
 html[data-zm=oro] #mtg .mtg-grn{color:#f6e7bf}
+#mtg .mtg-g1{margin-top:.8rem;padding-top:0;border-top:none}
+.mtg-sf{display:flex;flex-wrap:wrap;gap:.4rem;margin:.2rem 0 .5rem}
+.mtg-sf label{display:flex;align-items:center;gap:.4rem;font-family:"Crimson Pro",Georgia,serif;font-size:1rem;padding:.4rem .7rem;min-height:38px;border:1px solid rgba(var(--gold-rgb,200,168,75),.3);cursor:pointer}
+.mtg-sf label:has(input:checked){border-color:#e06060;background:rgba(200,56,56,.1);color:#ffcfc5}
