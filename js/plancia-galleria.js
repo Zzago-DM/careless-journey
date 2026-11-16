@@ -6,11 +6,17 @@ function plCatTag(n){if(typeof BD==="undefined")return "";var b=BD.filter(functi
 var plPickFor=null,plPickBuilt=false,plPickF="all",plPickBack=null;
 function plPickApply(){var q=document.getElementById("plp-q").value.trim().toLowerCase(),n=0;
   document.querySelectorAll("#plp-grid .plp-it").forEach(function(it){var ok=(plPickF==="all"||it.dataset.cat===plPickF||it.dataset.ae===plPickF)&&(!q||it.dataset.n.indexOf(q)>=0);it.classList.toggle("hidden",!ok);if(ok)n++;});
+  document.querySelectorAll("#plp-grid .plp-gt").forEach(function(t){t.hidden=!document.querySelector('#plp-grid .plp-it[data-g="'+t.dataset.g+'"]:not(.hidden)');});
   document.getElementById("plp-none").hidden=n>0;}
 function plPickBuild(){if(plPickBuilt)return;plPickBuilt=true;
   var byName={};if(typeof BD!=="undefined")BD.forEach(function(b){byName[b.n]=b;});
-  document.getElementById("plp-grid").innerHTML=PL_BEHEMOTHS.map(function(b,i){var d=byName[b.nome]||{};
-    return '<button type="button" class="plp-it" data-i="'+i+'" data-n="'+b.nome.toLowerCase()+'" data-cat="'+(d.c||"")+'" data-ae="'+(d.a||String(b.aether).toLowerCase())+'">'+behIco(b.nome)+'<span class="nm">'+b.nome+'</span><span class="tg">'+(d.a&&typeof aI!=="undefined"?(aI[d.a]||"")+" ":"")+b.aether+(d.c&&typeof cL!=="undefined"?" · "+(cL[d.c]||d.c):"")+'</span></button>';}).join("");
+  /* divisi per elemento: un titolo per ogni Aether, i Behemoth in ordine alfabetico */
+  var ORD=["Glaciale","Ardente","Folgorante","Terrestre","Radiante","Oscuro","Neutro"],gr={};
+  PL_BEHEMOTHS.forEach(function(b,i){var a=b.aether||"Neutro";(gr[a]=gr[a]||[]).push(i);});
+  var ks=Object.keys(gr).sort(function(x,y){var i=ORD.indexOf(x),j=ORD.indexOf(y);return(i<0?99:i)-(j<0?99:j);});
+  document.getElementById("plp-grid").innerHTML=ks.map(function(a){
+    return '<div class="plp-gt" data-g="'+a+'">'+(typeof aI!=="undefined"&&aI[a.toLowerCase()]?aI[a.toLowerCase()]+" ":"")+a+'</div>'+gr[a].sort(function(x,y){return PL_BEHEMOTHS[x].nome.localeCompare(PL_BEHEMOTHS[y].nome,"it");}).map(function(i){var b=PL_BEHEMOTHS[i],d=byName[b.nome]||{};
+    return '<button type="button" class="plp-it" data-g="'+a+'" data-i="'+i+'" data-n="'+b.nome.toLowerCase()+'" data-cat="'+(d.c||"")+'" data-ae="'+(d.a||String(b.aether).toLowerCase())+'">'+behIco(b.nome)+'<span class="nm">'+b.nome+'</span><span class="tg">'+(d.a&&typeof aI!=="undefined"?(aI[d.a]||"")+" ":"")+b.aether+(d.c&&typeof cL!=="undefined"?" · "+(cL[d.c]||d.c):"")+'</span></button>';}).join("");}).join("");
   var F=[["all","Tutti"]];if(typeof cL!=="undefined")Object.keys(cL).forEach(function(k){F.push([k,cL[k]]);});
   if(typeof aI!=="undefined")Object.keys(aI).forEach(function(k){F.push([k,aI[k]+" "+k.charAt(0).toUpperCase()+k.slice(1)]);});
   var fb=document.getElementById("plp-f");fb.innerHTML=F.map(function(f){return '<button type="button" data-f="'+f[0]+'"'+(f[0]==="all"?' class="on" aria-pressed="true"':' aria-pressed="false"')+'>'+f[1]+'</button>';}).join("");

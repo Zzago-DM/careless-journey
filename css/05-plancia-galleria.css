@@ -24,3 +24,9 @@
 .plp-it .tg{font-size:.6rem;color:#a08080}
 .plp-it.hidden{display:none}
 .plp-none{color:#a08080;font-style:italic;padding:1rem 0}
+/* titolo della scheda in plancia: si cambia Behemoth dalla galleria; galleria divisa per elemento */
+.pl-title-btn{flex:1;display:flex;flex-direction:column;align-items:flex-start;gap:.1rem;text-align:left;background:#1a0e0e;border:1px solid rgba(200,56,56,.3);color:#e8d8d8;font-family:'Cinzel',serif;font-size:1rem;padding:.45rem .65rem;border-radius:3px;cursor:pointer}
+.pl-title-btn small{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#c08080}
+.pl-title-btn:hover,.pl-title-btn:focus-visible{border-color:var(--master2);outline:none}
+.plp-gt{grid-column:1/-1;font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--master2);margin:.6rem 0 .1rem;padding-bottom:.3rem;border-bottom:1px solid rgba(200,56,56,.2)}
+.plp-gt[hidden]{display:none}

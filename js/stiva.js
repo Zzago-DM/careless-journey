@@ -297,7 +297,7 @@
     + '</div>'
     + '<div class="stv-corpo" id="stv-corpo">'
     + '<div class="stv-sp on" id="stv-s-str"></div>'
-    + '<div class="stv-sp" id="stv-s-par"><label class="stv-lbl" for="stv-beh">Behemoth affrontato</label><select class="stv-sel" id="stv-beh"></select>'
+    + '<div class="stv-sp" id="stv-s-par"><div class="stv-lbl">Behemoth affrontato</div><button type="button" class="stv-beh" id="stv-beh" data-az="scegli-beh"></button>'
     + '<p class="stv-nota">Toccate ＋ sulle parti che avete ottenuto: finiscono nel deposito qui sotto. Quando le vendete o le regalate, toglietele con − o ✕.</p>'
     + '<div class="stv-parts" id="stv-parts"></div><div class="stv-dep"><div class="stv-lbl">Nel deposito</div><div id="stv-dep"></div></div></div>'
     + '<div class="stv-sp" id="stv-s-var"><label class="stv-lbl" for="stv-vari">Oggetti vari · comune a tutto il gruppo</label>'
@@ -337,14 +337,14 @@
       }).join("") + '</div><div class="stv-asse" aria-hidden="true"></div></div>';
     s.innerHTML = h;
   }
+  /* il Behemoth si sceglie da una finestra con i token, divisi per elemento (js/scegli-behemoth.js) */
   function behemoth(){
-    var sel = $("stv-beh"); if(!sel || sel.options.length) return;
-    var B = (typeof PL_BEHEMOTHS !== "undefined" ? PL_BEHEMOTHS : []), gr = {}, ord = [];
-    B.forEach(function(b){ if(!gr[b.aether]){ gr[b.aether] = []; ord.push(b.aether); } gr[b.aether].push(b.nome); });
-    sel.innerHTML = '<option value="">— Scegli il Behemoth —</option>' + ord.map(function(a){
-      return '<optgroup label="' + esc(a) + '">' + gr[a].map(function(n){ return '<option>' + esc(n) + '</option>'; }).join("") + '</optgroup>';
-    }).join("");
-    if(behScelto) sel.value = behScelto;
+    var bt = $("stv-beh"); if(!bt) return;
+    var aet = "";
+    if(behScelto && typeof PL_BEHEMOTHS !== "undefined") PL_BEHEMOTHS.some(function(b){ if(b.nome === behScelto){ aet = b.aether; return true; } });
+    bt.innerHTML = behScelto
+      ? (window.tcjBehToken ? tcjBehToken(behScelto, "stv-beh-tok") : "") + '<span class="stv-beh-n"><b>' + esc(behScelto) + '</b>' + (aet ? '<small>' + esc(aet) + '</small>' : "") + '</span><span class="stv-beh-c">Cambia ▾</span>'
+      : '<span class="stv-beh-n"><b>— Scegli il Behemoth —</b><small>Tocca per vedere tutti i Behemoth con il loro token</small></span><span class="stv-beh-c">▾</span>';
   }
   function parti(){
     var box = $("stv-parts"); if(!box) return;
@@ -495,11 +495,11 @@
     var az = b.getAttribute("data-az"), id = b.getAttribute("data-id"), d = parseInt(b.getAttribute("data-d"), 10) || 0;
     if(az === "str") cambiaStr(id, d);
     else if(az === "disp") cambiaDisp(d);
+    else if(az === "scegli-beh"){ if(window.tcjScegliBehemoth) tcjScegliBehemoth({ titolo: "Quale Behemoth avete affrontato?", scelto: behScelto }).then(function(n){ if(n){ behScelto = n; behemoth(); parti(); } }); }
     else if(az === "parte+") aggiungiParte(b.getAttribute("data-m"), b.getAttribute("data-r"));
     else if(az === "parte") cambiaParte(parseInt(id, 10), d);
     else if(az === "parte-via") cambiaParte(parseInt(id, 10), -9999);
   });
-  box.addEventListener("change", function(e){ if(e.target.id === "stv-beh"){ behScelto = e.target.value || null; parti(); } });
   box.addEventListener("input", function(e){ if(e.target.id === "stv-vari") scriviVari(e.target.value); });
   document.addEventListener("keydown", function(e){ if(e.key === "Escape" && !ov.hidden && !eqOv.classList.contains("on")) chiudi(); });
 

@@ -1,0 +1,36 @@
+/* Scelta del Behemoth con i token, divisi per elemento (js/scegli-behemoth.js) — per tutti */
+html.sb-aperta{overflow:hidden}
+.sb-ov{position:fixed;inset:0;z-index:9600;display:flex;align-items:center;justify-content:center;padding:max(12px,env(safe-area-inset-top,0px)) 12px max(12px,env(safe-area-inset-bottom,0px));background:rgba(4,6,10,.82);backdrop-filter:blur(4px)}
+.sb-box{width:min(960px,100%);max-height:100%;display:flex;flex-direction:column;background:linear-gradient(180deg,#121722,#0b0e15);border:1px solid rgba(var(--gold-rgb,200,168,75),.35);border-radius:12px;padding:1rem;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.sb-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.7rem}
+.sb-t{font-family:"Cinzel",serif;font-size:1.02rem;color:var(--gold2,#e8c870);letter-spacing:.04em}
+.sb-x{flex-shrink:0;width:2.4rem;height:2.4rem;border-radius:999px;background:none;border:1px solid rgba(var(--gold-rgb,200,168,75),.4);color:var(--text,#ddd);cursor:pointer}
+.sb-q{width:100%;box-sizing:border-box;background:rgba(0,0,0,.35);border:1px solid rgba(var(--gold-rgb,200,168,75),.3);color:var(--text,#ddd);padding:.65rem .8rem;border-radius:8px;font:inherit;font-size:1rem;margin-bottom:.6rem}
+.sb-q:focus{outline:none;border-color:var(--gold2,#e8c870)}
+.sb-el{display:flex;gap:.35rem;overflow-x:auto;padding-bottom:.5rem;margin-bottom:.4rem;scrollbar-width:thin}
+.sb-el button{flex-shrink:0;font-family:"Cinzel",serif;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:.45rem .7rem;min-height:36px;border-radius:999px;background:transparent;border:1px solid rgba(var(--gold-rgb,200,168,75),.3);color:var(--text2,#999);cursor:pointer}
+.sb-el button[aria-pressed=true]{background:rgba(var(--gold-rgb,200,168,75),.16);border-color:var(--gold2,#e8c870);color:var(--gold2,#e8c870)}
+.sb-lista{overflow-y:auto;overscroll-behavior:contain;padding:.2rem}
+.sb-gr[hidden],.sb-it[hidden]{display:none}
+.sb-gt{font-family:"Cinzel",serif;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold2,#e8c870);margin:.9rem 0 .5rem;padding-bottom:.3rem;border-bottom:1px solid rgba(var(--gold-rgb,200,168,75),.2)}
+.sb-gr:first-child .sb-gt{margin-top:.2rem}
+.sb-griglia{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:.5rem}
+.sb-it{display:flex;flex-direction:column;align-items:center;gap:.25rem;padding:.55rem .35rem;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(var(--gold-rgb,200,168,75),.15);color:var(--text,#ddd);font:inherit;cursor:pointer;transition:border-color .2s,background .2s,transform .2s}
+.sb-it:hover,.sb-it:focus-visible{border-color:var(--gold2,#e8c870);background:rgba(var(--gold-rgb,200,168,75),.08);transform:translateY(-2px);outline:none}
+.sb-it.on{border-color:var(--gold2,#e8c870);box-shadow:0 0 0 1px var(--gold2,#e8c870) inset}
+.sb-tok{width:68px;height:68px;object-fit:contain}
+.sb-nm{font-family:"Cinzel",serif;font-size:.66rem;text-align:center;line-height:1.25;color:var(--text,#ddd)}
+.sb-cat{font-size:.58rem;color:var(--text2,#999)}
+.sb-none{color:var(--text2,#999);font-style:italic}
+@media (max-width:520px){.sb-griglia{grid-template-columns:repeat(3,minmax(0,1fr))}.sb-tok{width:56px;height:56px}}
+@media (prefers-reduced-motion:reduce){.sb-it{transition:none}.sb-it:hover{transform:none}}
+/* Stiva: il pulsante «Behemoth affrontato» */
+.stv-beh{display:flex;align-items:center;gap:.7rem;width:100%;min-height:56px;padding:.45rem .7rem;background:rgba(0,0,0,.4);border:1px solid var(--border,#444);color:var(--text,#ddd);font:inherit;text-align:left;cursor:pointer;margin-bottom:.6rem}
+.stv-beh:hover,.stv-beh:focus-visible{border-color:var(--gold2,#e8c870);outline:none}
+.stv-beh-tok{width:46px;height:46px;object-fit:contain;flex-shrink:0}
+.stv-beh-n{flex:1;display:flex;flex-direction:column;min-width:0}
+.stv-beh-n b{font-family:"Cinzel",serif;font-size:.9rem;font-weight:600}
+.stv-beh-n small{font-size:.75rem;color:var(--text2,#999)}
+.stv-beh-c{flex-shrink:0;font-family:"Cinzel",serif;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold2,#e8c870)}
+.sb-top,.sb-q,.sb-el{flex-shrink:0}
+.sb-lista{flex:1;min-height:0}
